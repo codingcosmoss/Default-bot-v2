@@ -5,7 +5,7 @@
 		<div
 			class="login-content flex-row-fluid d-flex flex-column justify-content-center position-relative overflow-hidden p-7 mx-auto">
 			<!--begin::Content body-->
-			<div class="d-flex flex-column-fluid flex-center">
+			<div class="login-box">
 				<!--begin::Signin-->
 				<div class="login-form login-signin">
 					<!--begin::Form-->
@@ -56,6 +56,40 @@ export default {
 }
 
 #kt_login {
-	background-color: #262747;
+    background-color: #262747;
 }
+.login-form{
+    width: 440px;
+    height: 500px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+}
+.login-box{
+    display: flex;
+    justify-content: center;
+}
+.login-content{
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+    align-items: center;
+}
+.my-link{
+    font-weight: bold;
+}
+@media (max-width: 461px) {
+    .login-form{
+        width: 360px;
+        box-shadow: none;
+    }
+    .login-content{
+        background: #2f3056;
+
+    }
+
+}
+
+
 </style>

@@ -2,11 +2,10 @@
     <form class="form" @submit.prevent >
         <!--begin::Title-->
         <div class="pb-13 pt-lg-0 pt-5 mb-4">
-            <h3 class="font-weight-bolder text-dark title font-size-h4 font-size-h1-lg ">{{Title}}</h3>
+            <h3 class="title-box font-weight-bolder text-dark title font-size-h4 font-size-h1-lg ">{{Title}}</h3>
             <span class="text-muted font-weight-bold font-size-h4 d-flex" style="flex-direction: column;;">
                 <!-- <a class="text-danger font-weight-bolder" >Malumotlarini o'zgartirish taqiqlanadi !</a> -->
-                
-                <a v-if="isError"   class="text-danger font-weight-bolder">Login yoki parol noto'g'ri !</a></span>
+                <a v-if="isError"   class="text-danger error-text font-weight-bolder">Login yoki parol noto'g'ri !</a></span>
         </div>
         <!--begin::Title-->
         <!--begin::Form group-->
@@ -18,12 +17,9 @@
 
         <!--end::Form group-->
         <!--begin::Form group-->
-        <div class="">
-            <div class="d-flex justify-content-between mt-n5">
-                <label class="font-size-h6 font-weight-bolder text-white pt-5">Password</label>
-<!--                <a href="javascript:;" class="text-primary font-size-h6 font-weight-bolder text-hover-primary pt-5"-->
-<!--                    id="kt_login_forgot">Forgot Password ?</a>-->
-            </div>
+        <div class="form-group">
+
+            <label class="font-size-h6 font-weight-bolder text-white pt-5">Password</label>
 
 
             <input class="form-control h-auto py-3 px-6 mb-5 rounded-lg bg-dark" type="password" :value="password"
@@ -71,7 +67,7 @@
                         password : this.password
                     });
 
-                    localStorage.setItem('token',  response.data.data);
+                    localStorage.setItem('0008a78764c2',  response.data.data);
 
                     if (response.data.success == 200){
                         this.isError = false;
@@ -105,6 +101,42 @@ input {
 	background-color: #262747 !important;
     color: white !important;
 }
+.form{
+    width: 100%;
+}
+.title-box{
+    font-size: 27px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.error-text{
+    font-size: 17px;
+    font-weight: bold;
+    height: 30px;
+}
+.form-group{
+    display: flex;
+    flex-direction: column;
+    margin: 30px 0;
+}
+label{
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+input{
+    height: 60px;
+    font-size: 18px;
+}
+button{
+    width: 100%;
+    background: #029af8;
+    font-weight: bold;
+    color: white;
+}
+
+
+
+
 
 
 </style>

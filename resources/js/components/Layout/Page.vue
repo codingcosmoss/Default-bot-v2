@@ -70,7 +70,16 @@ export default {
     methods:{
         log(e){
             console.log(e)
-        }
+        },
+        checkTokenInLocalStorage() {
+            const token = localStorage.getItem('0008a78764c2');
+            if (!token) {
+                this.$router.push('/login')
+            }
+        },
+    },
+    mounted() {
+        this.checkTokenInLocalStorage()
     }
 }
 </script>
