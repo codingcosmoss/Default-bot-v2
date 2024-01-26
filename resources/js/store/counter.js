@@ -6,6 +6,7 @@ export const useConterStore = defineStore({
 
     state: () => ({
         activePage: 'Home',
+        sidebarToggle: '',
     }),
 
     getters: {
@@ -17,7 +18,10 @@ export const useConterStore = defineStore({
         updatePage(val){
             this.activePage = val;
         },
-      
+        updateSidebarToggle(val){
+            this.sidebarToggle = val;
+        },
+
     }
 
 })

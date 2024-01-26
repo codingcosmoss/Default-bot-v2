@@ -2512,7 +2512,7 @@ body{
   background-color: rgb(49 61 74 / var(--tw-bg-opacity)) !important;
 }
 
-.dark .apexcharts-xaxistooltip,.dark 
+.dark .apexcharts-xaxistooltip,.dark
 .apexcharts-yaxistooltip{
   --tw-border-opacity: 1 !important;
   border-color: rgb(49 61 74 / var(--tw-border-opacity)) !important;
@@ -2598,7 +2598,7 @@ body{
   top: 1.75rem !important;
 }
 
-.dark .flatpickr-months .flatpickr-prev-month,.dark 
+.dark .flatpickr-months .flatpickr-prev-month,.dark
 .flatpickr-months .flatpickr-next-month{
   fill: #FFFFFF !important;
   --tw-text-opacity: 1 !important;
@@ -2615,7 +2615,7 @@ body{
   right: 1.75rem !important;
 }
 
-.dark span.flatpickr-weekday,.dark 
+.dark span.flatpickr-weekday,.dark
 .flatpickr-months .flatpickr-month{
   fill: #FFFFFF !important;
   --tw-text-opacity: 1 !important;
@@ -2632,9 +2632,9 @@ body{
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
 }
 
-.dark .flatpickr-day.selected,.dark 
-.flatpickr-day.startRange,.dark 
-.flatpickr-day.selected,.dark 
+.dark .flatpickr-day.selected,.dark
+.flatpickr-day.startRange,.dark
+.flatpickr-day.selected,.dark
 .flatpickr-day.endRange{
   --tw-text-opacity: 1 !important;
   color: rgb(255 255 255 / var(--tw-text-opacity)) !important;
@@ -2740,11 +2740,11 @@ body{
 }
 
 .custom-input-date-1::-webkit-calendar-picker-indicator {
-  background-image: url(../images/icon/icon-calendar.svg);
+  background-image: url(http://127.0.0.1:8000/images/icon/icon-calendar.svg);
 }
 
 .custom-input-date-2::-webkit-calendar-picker-indicator {
-  background-image: url(../images/icon/icon-arrow-down.svg);
+  background-image: url(http://127.0.0.1:8000/images/icon/icon-arrow-down.svg);
 }
 
 [x-cloak] {

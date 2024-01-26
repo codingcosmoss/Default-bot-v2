@@ -6,8 +6,9 @@ const routes = [
     // DASHBOARD
     {
         path: '/',
-        component: () => import('../components/Pages/Dashboard.vue'),
+        component: () => import('../components/Pages/Components.vue'),
     },
+
     {
         path: '/login',
         component: () => import('../components/Pages/Login.vue'),
@@ -15,7 +16,7 @@ const routes = [
 
     {
         path: '/:pathMatch(.*)*',
-        component: () => import('../components/Pages/Dashboard.vue'),
+        component: () => import('../components/Pages/Components.vue'),
     },
 
 ];
