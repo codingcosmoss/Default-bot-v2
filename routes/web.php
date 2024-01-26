@@ -16,3 +16,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('index');
 });
+
+Route::get('login', [\App\Http\Controllers\AuthController::class, 'unauthorized'])->name('login');
+
+Route::get('/{pathMatch}', function () {
+    return view('index');
+})->where('pathMatch', '.*' );
