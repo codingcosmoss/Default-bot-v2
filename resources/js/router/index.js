@@ -6,17 +6,17 @@ const routes = [
     // DASHBOARD
     {
         path: '/',
-        component: () => import('../components/Pages/Components.vue'),
+        component: () => import('../components/Pages/Components/Components.vue'),
     },
 
     {
         path: '/login',
-        component: () => import('../components/Pages/Login.vue'),
+        component: () => import('../components/Pages/Login/index.vue'),
     },
 
     {
         path: '/:pathMatch(.*)*',
-        component: () => import('../components/Pages/Components.vue'),
+        component: () => import('../components/Pages/Components/Components.vue'),
     },
 
 ];

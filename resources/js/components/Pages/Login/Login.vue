@@ -10,9 +10,9 @@
 <script>
 
 import axios from "axios";
-import loginBox from '../../ui-components/Layout/login-box.vue';
-import LoginForm from '../../ui-components/Form/LoginForm.vue';
-import {GetUser} from "../../Api.js";
+import loginBox from '../../../ui-components/Layout/login-box.vue';
+import LoginForm from '../../../ui-components/Form/LoginForm.vue';
+import {GetUser} from "../../../Api.js";
 
 export default {
     components: {loginBox, LoginForm},
