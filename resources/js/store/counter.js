@@ -1,4 +1,5 @@
 import {defineStore} from 'pinia';
+import {Languages} from "../Localization.js";
 
 export const useConterStore = defineStore({
 
@@ -7,6 +8,8 @@ export const useConterStore = defineStore({
     state: () => ({
         activePage: 'Home',
         sidebarToggle: '',
+        Localization: Languages,
+        Lang: '',
     }),
 
     getters: {
@@ -20,6 +23,12 @@ export const useConterStore = defineStore({
         },
         updateSidebarToggle(val){
             this.sidebarToggle = val;
+        },
+        updateLang(val){
+            this.Lang = val;
+        },
+        getName(val){
+            return  this.Localization[localStorage.getItem('lang')][val];
         },
 
     }

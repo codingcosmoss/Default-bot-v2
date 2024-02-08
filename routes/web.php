@@ -17,7 +17,7 @@ Route::get('/', function () {
     return view('index');
 });
 
-Route::get('login', [\App\Http\Controllers\AuthController::class, 'unauthorized'])->name('login');
+Route::get('login', [\App\Http\Controllers\Api\AuthController::class, 'unauthorized'])->name('login');
 
 Route::get('/{pathMatch}', function () {
     return view('index');

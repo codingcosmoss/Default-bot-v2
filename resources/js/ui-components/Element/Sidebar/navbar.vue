@@ -7,6 +7,12 @@
             Icon = "fa-solid fa-window-restore"
         />
 
+        <Menu
+            Path = "/employees"
+            :Title = "getName('employees')"
+            Icon = "fa-solid fa-user-group"
+        />
+
 <!--        <MenuList>-->
 <!--            <Menu />-->
 <!--        </MenuList>-->
@@ -19,6 +25,7 @@
 <script >
 import MenuList from './menuList.vue';
 import Menu from './menu.vue';
+import {useConterStore} from "../../../store/counter.js";
 export default {
     components: {Menu, MenuList},
     data(){
@@ -27,5 +34,16 @@ export default {
             page: '',
         }
     },
+
+
+    methods:{
+        getName(val){
+            return useConterStore().getName(val)
+        }
+    },
+
+    mounted() {
+        this.getName()
+    }
 }
 </script>

@@ -23,17 +23,16 @@
             <!-- ===== Content Area Start ===== -->
             <div class="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
                 <!-- ===== Header Start ===== -->
-                <Header @darkMode = "darkMode = $event"  @sidebarToggle = "onSidebarToggle = $event" ></Header>
-
+                <Header @darkMode = "onDarkMode"  @sidebarToggle = "onSidebarToggle = $event" ></Header>
                 <!-- ===== Header End ===== -->
 
                 <!-- ===== Main Content Start ===== -->
                 <main>
                     <div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
 
-                        <Contents title="Page/ Contents" ></Contents>
+<!--                        <Contents title="Page/ Contents" ></Contents>-->
 
-                        <div class="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
+                        <div :class=" Classes ? 'mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5' : '' ">
 
                             <slot>
 
@@ -67,16 +66,34 @@ export default {
             onSidebarToggle: null
         }
     },
+    props:{
+        Classes:{
+            type: Boolean,
+            default: true
+        }
+    },
     methods:{
         log(e){
             console.log(e)
         },
         checkTokenInLocalStorage() {
+            if (localStorage.getItem('darkMode') == 'true'){
+                this.darkMode = true;
+            }else {
+                this.darkMode = false;
+            }
             const token = localStorage.getItem('0008a78764c2');
             if (!token) {
                 this.$router.push('/login')
             }
         },
+        onDarkMode(){
+            localStorage.setItem('darkMode', !this.darkMode );
+            this.darkMode =  localStorage.getItem('darkMode') == 'true' ? true : false;
+            console.log('Update:', localStorage.getItem('darkMode'))
+            // location.reload();
+
+        }
     },
     mounted() {
         this.checkTokenInLocalStorage()

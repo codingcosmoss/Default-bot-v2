@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\JsonResponse;
 use App\Http\Requests\LoginRequest;
 use App\Models\Settings\Configuration;
 use App\Models\User;
-use Illuminate\Auth\Events\Login;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Mockery\Exception;
@@ -20,7 +21,7 @@ class AuthController extends Controller
     {
         try {
 
-            $user = User::where('email', $loginRequest->input('email'))->first();
+            $user = User::where('login', $loginRequest->input('login'))->first();
             if (empty($user) || !Hash::check($loginRequest->input('password'), $user->password)) {
 
                 return $this->error($this->unAuthorized, "User not fount");
@@ -58,7 +59,7 @@ class AuthController extends Controller
     }
 
     public function unauthorized(){
-        return $this->error($this->unAuthorized, 'Unauthorized user :( ');
+        return $this->error($this->ok, 'Unauthorized user :( ');
     }
 
     public function test(){

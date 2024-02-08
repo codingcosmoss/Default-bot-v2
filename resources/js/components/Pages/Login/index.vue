@@ -7,14 +7,19 @@
 
         <!--     Label, Value, Icon | @Result     -->
           <InputText
-              @Result = "login = $event"
+              @result = "login = $event"
               :Value = "login"
               Icon = "fa-solid fa-right-to-bracket"
+              Plholder = "Enter your login"
+              Label = "Login"
           />
           <InputText
-              @Result = "password = $event"
+              @result = "password = $event"
               :Value = "password"
               Icon = "fa-solid fa-lock"
+              Plholder = "Enter your password"
+              Label = "Password"
+
           />
 
           <PrimaryButton @click = "addForm" ></PrimaryButton>
@@ -36,8 +41,8 @@
         components: {PrimaryButton, InputText, Layout, Image, Form},
         data(){
             return{
-                login:'user@gmail.com',
-                password: 'user',
+                login:'admin',
+                password: '121212',
                 isError: false
             }
         },
@@ -45,6 +50,7 @@
             async getUser(){
 
                 const response = await GetUser();
+                console.log(response)
                 if (response.success == 200){
                     this.$router.push('/');
                 }
@@ -53,13 +59,14 @@
                 try {
 
                     const response = await axios.post('/login', {
-                        email : this.login,
+                        login : this.login,
                         password : this.password
                     });
 
+                    localStorage.setItem('lang', 'uz');
                     localStorage.setItem('0008a78764c2',  response.data.data);
 
-                    if (response.data.success == 200){
+                    if (response.status == 200){
                         this.isError = false;
                         this.$router.push('/'); //  sizning hedef rout'ingiz nomi
                     }

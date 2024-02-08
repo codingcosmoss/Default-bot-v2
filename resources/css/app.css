@@ -47,3 +47,14 @@ body {
 #kt_login {
   /*background-image: #262747;*/
 }
+
+
+.table-header-text {
+    /*font-size: 15px;*/
+    background: #3C50E0;
+    text-transform: lowercase;
+}
+
+.table-header-text::first-letter {
+    text-transform: uppercase;
+}

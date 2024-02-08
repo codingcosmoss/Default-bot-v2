@@ -3,7 +3,6 @@
         <div class="flex flex-grow items-center justify-between py-4 px-4 shadow-2 md:px-6 2xl:px-11">
             <div class="flex items-center gap-2 sm:gap-4 lg:hidden">
                 <!-- Hamburger Toggle BTN 1 -->
-
                 <i  @click = "onClickMenu()" class="fa-solid fa-bars fa-2x"></i>
                 <!-- Hamburger Toggle BTN 2-->
                 <a class="block flex-shrink-0 lg:hidden" href="index.html">
@@ -37,7 +36,7 @@
 
                         <!-- Dark Mode Toggler -->
                         <label :class="darkMode ? 'bg-stroke':'bg-primary' " class="relative m-0 block h-7.5 w-14 rounded-full">
-                            <input type="checkbox" :value="darkMode" @change="darkMode = !darkMode" @click = "this.$emit('darkMode', darkMode)"
+                            <input type="checkbox" :value="darkMode" @change="darkMode = !darkMode" @click = "onDarkMode"
                                    class="absolute top-0 z-50 m-0 h-full w-full cursor-pointer opacity-0" />
                             <span :class="darkMode && '!right-[3px] !translate-x-full'"
                                   class="absolute top-1/2 left-[3px] flex h-6 w-6 -translate-y-1/2 translate-x-0 items-center justify-center rounded-full bg-white shadow-switcher duration-75 ease-linear">
@@ -266,7 +265,12 @@
                     </li>
                     <!-- Chat Notification Area -->
                 </ul>
-
+                <ul>
+                    <select class="select-lang" @input = "setLang($event.target.value)" >
+                        <option value="uz" :selected = " lang == 'uz'" >UZ</option>
+                        <option value="ru" :selected = " lang == 'ru'" >RU</option>
+                    </select>
+                </ul>
                 <!-- User Area -->
                 <UserArea>
 
@@ -289,8 +293,13 @@ export default {
             sidebarToggle: true,
             dropdownOpen: false,
             notifying: 'hidden',
-            defaultValue: false
+            defaultValue: false,
+            lang: localStorage.getItem('lang')
         }
+    },
+    setup(){
+        const counterStore = useConterStore();
+        return {counterStore};
     },
 
     methods:{
@@ -299,6 +308,16 @@ export default {
             this.$emit('sidebarToggle', this.defaultValue );
             // console.log('ok click')
         },
+
+        setLang(lang){
+             localStorage.setItem('lang', lang);
+            location.reload();
+        },
+        onDarkMode(){
+           this.$emit('darkMode', true);
+
+        }
+
         // updateData(){
         //     this.sidebarToggle = useConterStore().sidebarToggle
         // }
@@ -312,6 +331,13 @@ export default {
 
 }
 </script>
-<style lang="">
+<style >
+    .select-lang{
+        background: #3C50E0;
+        padding: 5px 10px;
+        border-radius: 10px;
+        border: none;
+        color: #ffffff;
+    }
 
 </style>

@@ -1,6 +1,6 @@
 <template >
-  <aside :class="sidebarToggle ? 'translate-x-0' : '-translate-x-full'"
-    class="absolute left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-black duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0"
+  <aside  :class="sidebarToggle ? 'translate-x-0' : '-translate-x-full'"
+    class="absolute navbar01  left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-black duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0"
     >
     <!-- SIDEBAR HEADER -->
     <div class="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
@@ -22,9 +22,9 @@
 
     <!-- SIDEBAR HEADER -->
 
-    <div class="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
+    <div class="no-scrollbar  flex flex-col overflow-y-auto duration-300 ease-linear" >
       <!-- Sidebar Menu -->
-      <nav class="mt-5 py-4 px-4 lg:mt-9 lg:px-6" x-data="{selected: $persist('Dashboard')}">
+      <nav class=" sidebar01 mt-5 py-4 px-4 lg:mt-9 lg:px-6" x-data="{selected: $persist('Dashboard')}" >
 
         <!-- Menu Group -->
         <div>
@@ -80,9 +80,15 @@ export default {
 
 
 
-  methods:{
-
-  },
+      methods:{
+        onMenu(e){
+            if (e ==1){
+                console.log(1)
+            }else{
+                console.log(0)
+            }
+        }
+      },
 
     mounted() {
     }
@@ -90,6 +96,37 @@ export default {
 
 }
 </script>
-<style scoped>
+<style >
+    @media (min-width: 1024px) {
+        .navbar01{
+            width: 80px;
+            //padding: 0;
+            animation: box-nav 0.5s linear alternate;
+        }
+        .sidebar01{
+            padding:0 10px;
+        }
+        .navbar01:hover{
+            width: 280px;
+            .sidebar01{
+                padding: 0 25px;
+            }
+            .text01{
+                display: block !important;
+            }
+        }
+        .text01{
+            display: none;
+        }
+
+    }
+    @keyframes box-nav {
+        from{
+            width: 280px;
+        }to{
+                     width: 80px;
+                 }
+
+    }
 
 </style>

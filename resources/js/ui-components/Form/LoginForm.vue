@@ -40,7 +40,8 @@
 </template>
 
 <script>
- import axios from "axios";
+
+import {Login} from '../../Api.js';
 
     export default {
         name: 'LoginForm',
@@ -52,8 +53,8 @@
         },
         data(){
             return{
-                email:'user@gmail.com',
-                password: 'user',
+                email:'admin',
+                password: '121212',
                 isError: false
             }
         },
@@ -61,14 +62,16 @@
         methods:{
             async addForm(){
                 try {
-
-                    const response = await axios.post('/login', {
-                        email : this.email,
+                    var data = {
+                        login : this.email,
                         password : this.password
-                    });
+                    };
+
+                    const response = await Login(data);
+                    console.log(response)
+
 
                     localStorage.setItem('0008a78764c2',  response.data.data);
-
                     if (response.data.success == 200){
                         this.isError = false;
                         this.$router.push('/'); //  sizning hedef rout'ingiz nomi
