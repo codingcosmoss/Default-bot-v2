@@ -4,10 +4,9 @@
         <label class="mb-2.5 block text-black dark:text-white">
             {{Label}}
         </label>
-        <input :value="Value" :type="Type" :class="isError == true ? 'isError' : '' "  placeholder="Select subject" @input = "this.$emit('onInput', $event.target.value)"
-
-               class=" w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary" />
-        <p v-if="isError" class="text-danger" >{{message}}</p>
+        <input :value="Value" :type="Type" :class="isError == true ? 'isError' : '' "   @input = "this.$emit('onInput', $event.target.value)"
+                style="width: 80px; height: 40px"
+               class=" rounded border-[1.5px] border-stroke bg-transparent py-20 px-2 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary" />
     </div>
 
 </template>
@@ -35,16 +34,7 @@
             isError:{
                 type: Boolean,
                 default: false
-            },
-            isLoginError:{
-                type: Boolean,
-                default: false
-            },
-            message:{
-                type: String,
-                default: ''
             }
-
 
         }
     }

@@ -58,3 +58,7 @@ body {
 .table-header-text::first-letter {
     text-transform: uppercase;
 }
+
+.setting-icon{
+    font-size: 20px;
+}

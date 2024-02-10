@@ -15,7 +15,7 @@
 
 
             <!-- ===== Sidebar Start ===== -->
-            <Sidebar :onSidebarToggle = "onSidebarToggle"  ></Sidebar>
+            <Sidebar :onSidebarToggle = "onSidebarToggle" :navbarAnime = "Animation"  ></Sidebar>
             <!-- ===== Sidebar End ===== -->
 
 
@@ -70,6 +70,10 @@ export default {
         Classes:{
             type: Boolean,
             default: true
+        },
+        Animation:{
+            type: Boolean,
+            default: true
         }
     },
     methods:{
@@ -93,11 +97,14 @@ export default {
             console.log('Update:', localStorage.getItem('darkMode'))
             // location.reload();
 
-        }
+        },
+
+
     },
     mounted() {
         this.checkTokenInLocalStorage()
     }
+
 }
 </script>
 <style ></style>

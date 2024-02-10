@@ -2,8 +2,10 @@
 
 namespace App\Services\Api;
 
+use App\Models\Image;
 use App\Traits\Status;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class AbstractService
@@ -128,5 +130,49 @@ class AbstractService
             'statusCode' => $statusCode,
             'data' => $data
         ];
+    }
+    public function uploadImages($model, $file)
+    {
+
+        if ($file->hasFile('images')) {
+            $arxivImages = $model->images; // O'chirishni istagan faylning nomi
+            if ($arxivImages != null) {
+                foreach ($arxivImages as $arxivImage){
+                    Storage::disk('public')->delete($arxivImage->url);
+                }
+                $model->images()->delete();
+            }
+
+            $images = $file->file('images');
+            foreach ($images as $image){
+                $path = $image->store('images', 'public'); // 'images' papkasi ichiga saqlaydi
+                $newImage = new Image();
+                $newImage->url = $path;
+                $model->images()->save($newImage);
+
+            }
+        }
+        return true;
+    }
+    public function uploadImagesOne($model, $file)
+    {
+
+        if ($file->hasFile('image')) {
+            $arxivImages = $model->image; // O'chirishni istagan faylning nomi
+            if ($arxivImages != null) {
+                foreach ($arxivImages as $arxivImage){
+                    Storage::disk('public')->delete($arxivImage->url);
+                }
+                $model->image()->delete();
+            }
+
+            $image = $file->file('image');
+            $path = $image->store('images', 'public'); // 'images' papkasi ichiga saqlaydi
+            $newImage = new Image();
+            $newImage->url = $path;
+            $model->image()->save($newImage);
+
+        }
+        return true;
     }
 }

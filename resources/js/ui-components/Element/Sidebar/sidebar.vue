@@ -1,6 +1,6 @@
 <template >
   <aside  :class="sidebarToggle ? 'translate-x-0' : '-translate-x-full'"
-    class="absolute navbar01  left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-black duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0"
+    class="absolute  aside01 left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-black duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0"
     >
     <!-- SIDEBAR HEADER -->
     <div class="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
@@ -63,6 +63,10 @@ export default {
             default:false,
             required: false
         },
+        navbarAnime:{
+            type: Boolean,
+            default:true,
+        },
         MyLogo:{
             type: String,
             default: function () {
@@ -87,10 +91,21 @@ export default {
             }else{
                 console.log(0)
             }
+        },
+        animation(){
+            const aside = document.querySelector('.aside01');
+            if (this.navbarAnime){
+                aside.classList.remove('navbar02')
+                aside.classList.add('navbar01')
+            }else {
+                aside.classList.remove('navbar01')
+                aside.classList.add('navbar02')
+            }
         }
       },
 
     mounted() {
+        this.animation()
     }
 
 
@@ -102,6 +117,9 @@ export default {
             width: 80px;
             //padding: 0;
             animation: box-nav 0.5s linear alternate;
+        }
+        .navbar02{
+            width: 80px ;
         }
         .sidebar01{
             padding:0 10px;

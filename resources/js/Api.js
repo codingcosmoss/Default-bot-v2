@@ -23,12 +23,12 @@ export const testLogin = async ($data) => {
     return  POST('employee/test-login', $data);
 };
 
-export const employeeCreate = async ($data) => {
-    return  POST('employee/create', $data);
+export const employeeCreate = async (data) => {
+    return  POST('employee/create', data);
 };
 
-export const Employees = async () => {
-    return  GET('/employee/index');
+export const Employees = async (id, pages) => {
+    return  GET('/employee/index?page='+id+'&pages='+pages);
 };
 export const showEmployee = async (data) => {
     return  GET('/employee/show/'+data);
@@ -41,5 +41,12 @@ export const searchEmployee = async (data) => {
     return  POST('/employee/search', data );
 };
 
+export const deleteEmployee = async (data) => {
+    return  GET('/employee/delete/'+ data );
+};
+
+export const updatePassword = async (data) => {
+    return  POST('/employee/update-password', data );
+};
 
 

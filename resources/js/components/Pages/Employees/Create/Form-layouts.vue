@@ -17,6 +17,7 @@
     <div class="grid grid-cols-1 gap-9 sm:grid-cols-2">
         <div class="flex flex-col gap-9">
             <!-- Contact Form -->
+
             <div
                 class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
                 <div class="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
@@ -26,8 +27,12 @@
                 </div>
                 <form action="#">
                     <div class="p-6.5">
+                        <ImageInput
+                            @image = "image = $event"
+                        />
 
                         <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
+
                             <Input
                                 :Couple = "false"
                                 :Label = "getName('employee_name')"
@@ -134,6 +139,7 @@
                     />
 
                 </div>
+
                 <p class="pt-0 p-6.5" > {{getName('employee_roles')}}:</p>
                 <ul class="list01">
                    <ul>
@@ -167,11 +173,13 @@
 </template>
 <script >
 import {testLogin} from "../../../../Api.js";
-import Input from "./Input.vue";
+import Input from "./Inputs/Input.vue";
 import {useConterStore} from "../../../../store/counter.js";
-import Checkbox from "./Checkbox.vue";
-import InputColor from "./InputColor.vue";
+import Checkbox from "./Inputs/Checkbox.vue";
+import InputColor from "./Inputs/InputColor.vue";
 import {employeeCreate} from "../../../../Api.js";
+import ImageInput from "../Update/Inputs/ImageInput.vue";
+import {Alert} from "../../../../Config.js";
 
 export default {
         data(){
@@ -188,11 +196,12 @@ export default {
                 reset_password: '',
                 isLoginError: false,
                 color: '#FFFFFF',
-                errorObj: {}
+                errorObj: {},
+                image: ''
 
             }
         },
-        components:{InputColor, Checkbox, Input},
+        components:{ImageInput, InputColor, Checkbox, Input},
         methods:{
             getName(val){
                 return useConterStore().getName(val)
@@ -218,10 +227,12 @@ export default {
                         'percent_salary': this.percent_salary,
                         'salary_static': this.salary_static,
                         'sort_order': this.sort_order,
-                        'color': this.color
+                        'color': this.color,
+                        'image': this.image
                     }
                     const response = await employeeCreate(data);
                     if (response.status){
+                        Alert('success', 'Created successfully !')
                         this.$router.push('/employees')
                     }else {
                         console.log(response.data)
@@ -236,7 +247,6 @@ export default {
                 const response = await testLogin({
                     'login': val
                 });
-
                 if (response.status){
                     this.isLoginError = true;
                 }else {

@@ -30,9 +30,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/create', [\App\Http\Controllers\Api\EmployeesController::class, 'create']);
         Route::get('/show/{id}', [\App\Http\Controllers\Api\EmployeesController::class, 'show']);
         Route::post('/update/{id}', [\App\Http\Controllers\Api\EmployeesController::class, 'update']);
-        Route::delete('/delete/{id}', [\App\Http\Controllers\Api\EmployeesController::class, 'delete']);
+        Route::get('/delete/{id}', [\App\Http\Controllers\Api\EmployeesController::class, 'delete']);
         Route::post('/test-login', [\App\Http\Controllers\Api\EmployeesController::class, 'testLogin']);
         Route::post('/search', [\App\Http\Controllers\Api\EmployeesController::class, 'search']);
+        Route::post('/update-password', [\App\Http\Controllers\Api\EmployeesController::class, 'updatePassword']);
     });
 
 

@@ -20,9 +20,10 @@ export const Languages =  {
         Determination__salary: "Oylik maosh uchun foiz belgilash",
         Fixed_salary: 'O`zgarmas oylik maosh',
         Serial_number: "Tartib raqami",
-        reset_password: 'Parolni takrorlang'
-
-
+        reset_password: 'Parolni takrorlang',
+        image: 'Rasmi',
+        show: "Ko'rish",
+        edit_password: "Parolni o'zgartirish"
 
     },
     ru:{
@@ -45,7 +46,11 @@ export const Languages =  {
         Determination__salary: "Определение процентов к ежемесячной зарплате",
         Fixed_salary: 'Фиксированная ежемесячная зарплата',
         Serial_number: "Серийный номер",
-        reset_password: 'Повторите пароль'
+        reset_password: 'Повторите пароль',
+        image: 'Фото',
+        show: "Видеть",
+        edit_password: "Изменить пароль"
+
 
 
 

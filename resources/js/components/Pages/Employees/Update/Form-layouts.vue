@@ -27,6 +27,10 @@
                 <form action="#">
                     <div class="p-6.5">
 
+                        <ImageInput
+                            @image = "image = $event"
+                        />
+
                         <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
                             <Input
                                 :Couple = "false"
@@ -159,14 +163,15 @@
 </template>
 <script >
 import {testLogin} from "../../../../Api.js";
-import Input from "./Input.vue";
+import Input from "./Inputs/Input.vue";
 import {useConterStore} from "../../../../store/counter.js";
-import Checkbox from "./Checkbox.vue";
-import InputColor from "./InputColor.vue";
+import Checkbox from "./Inputs/Checkbox.vue";
+import InputColor from "./Inputs/InputColor.vue";
 import {employeeCreate} from "../../../../Api.js";
 import {showEmployee} from "../../../../Api.js";
 import {updateEmployee} from "../../../../Api.js";
-
+import ImageInput from "./Inputs/ImageInput.vue";
+import {Alert} from "../../../../Config.js";
 export default {
         data(){
             return{
@@ -181,11 +186,12 @@ export default {
                 reset_password: '',
                 isLoginError: false,
                 color: '#FFFFFF',
-                errorObj: {}
+                errorObj: {},
+                image: ''
 
             }
         },
-        components:{InputColor, Checkbox, Input},
+        components:{ImageInput, InputColor, Checkbox, Input},
         methods:{
             getName(val){
                 return useConterStore().getName(val)
@@ -209,12 +215,15 @@ export default {
                     'percent_salary': this.percent_salary,
                     'salary_static': this.salary_static,
                     'sort_order': this.sort_order,
-                    'color': this.color
+                    'color': this.color,
+                    'image': this.image
                 }
+                console.log(data)
 
                 const response = await updateEmployee(this.$route.query.id, data);
 
                 if (response.status){
+                    Alert('success', 'Updated successfully !')
                     this.$router.push('/employees')
                 }else {
                     console.log('data',response.data)
@@ -237,7 +246,6 @@ export default {
                     this.salary_static = item.salary_static
                     this.sort_order = item.sort_order
                     this.color = item.color == null ? '#ffffff' :  item.color;
-                    console.log('yes');
                 }else {
                     console.log('data:', response.data)
                     this.errorObj = response.data;

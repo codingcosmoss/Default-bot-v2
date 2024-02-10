@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\User;
 use App\Services\Api\EmployeesService;
+use Illuminate\Http\Client\Request;
 
 class EmployeesController extends AbstractController
 {
@@ -17,6 +19,12 @@ class EmployeesController extends AbstractController
     public function index()
     {
         $item = $this->service->index(request()->all());
+
+        return $this->sendResponse($item);
+    }
+    public function updatePassword()
+    {
+        $item = $this->service->updatePassword(request()->all());
 
         return $this->sendResponse($item);
     }
@@ -37,7 +45,11 @@ class EmployeesController extends AbstractController
      */
     public function create()
     {
-        $item = $this->service->store(request()->all());
+        $item = $this->service->store(request()->all(), request()->file('image'));
+
+        if ($item['status'] == true ){
+            $this->uploadImagesOne(User::find($item['data']['id']), request());
+        }
 
         return $this->sendResponse($item);
     }
@@ -49,7 +61,9 @@ class EmployeesController extends AbstractController
     {
 
         $item = $this->service->update(request()->all(), $id);
-
+        if ($item['status'] == true ){
+            $this->uploadImagesOne(User::find($item['data']['id']), request());
+        }
         return $this->sendResponse($item);
     }
 
@@ -59,6 +73,12 @@ class EmployeesController extends AbstractController
     public function checkSortOrder()
     {
         $item = $this->service->checkSortOrder();
+
+        return $this->sendResponse($item);
+    }
+    public function delete($id)
+    {
+        $item = $this->service->destroy($id);
 
         return $this->sendResponse($item);
     }

@@ -1,6 +1,7 @@
 import axios from "axios";
 import {useConterStore} from "./store/counter.js";
-
+import {useToast} from 'vue-toast-notification';
+import 'vue-toast-notification/dist/theme-sugar.css';
 export const GET = async (url) => {
     try {
         const response = await axios.get(url,{
@@ -57,6 +58,20 @@ export const DELETE = async ( url) => {
 
 export const getName = (val) => {
     console.log(useConterStore().getLang(val))
+}
+
+export const Alert = (type, message) => {
+    // type = [ warning, info, default, success, error]
+    const $toast = useToast();
+    let instance = $toast.open({
+        message: message,
+        type: type,
+    });
+
+    setTimeout(()=>{
+        instance.dismiss();
+        $toast.clear();
+    },2000);
 }
 
 // const formData = new FormData();

@@ -12,15 +12,17 @@
                 <div class="grid grid-cols-3 rounded-sm mb-2 sm:grid-cols-5 relative">
 
                     <div >
-                        <input type="text" placeholder="Search" @input = "clickSearch($event.target.value)"
+
+                        <input type="text" placeholder="Search" @input = "clickSearch($event.target.value, order)"
                                class="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"  />
                     </div>
 
                     <div>
-                        <select type="text" placeholder="Search" @input = "onSearch($event.target.value)"
+                        <select  placeholder="Search" @input = "column = $event.target.value"
                                 class="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary ml-4"  >
 
-                            <option value="id">ID</option>
+                            <option selected value="sort_order">{{getName('serial_number')}}</option>
+                            <option value="id">Id</option>
                             <option value="name">{{getName('name')}}</option>
                             <option value="login">{{getName('login')}}</option>
                             <option value="position">{{getName('position')}}</option>
@@ -29,21 +31,18 @@
 
                     </div>
 
-                    <div class="ml-4">
-                        <select type="text" placeholder="Search" @input = "order = $event.target.value"
-                               class="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary ml-4"  >
+                    <div class="ml-4 flex btn01">
 
-                            <option value="desc">{{getName('decrease')}}</option>
-                            <option value="asc">{{getName('growth')}}</option>
+                        <svg @click = "clickSearch(search, 'asc')" :title = "getName('growth')" :class="order == 'asc' ?  'active' : '' " xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M6 17.59L7.41 19L12 14.42L16.59 19L18 17.59l-6-6z"/><path fill="currentColor" d="m6 11l1.41 1.41L12 7.83l4.59 4.58L18 11l-6-6z"/></svg>
 
-                        </select>
+                        <svg @click = "clickSearch(search, 'desc')" :class="order == 'desc' ?  'active' : '' " :title="getName('decrease')" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M18 6.41L16.59 5L12 9.58L7.41 5L6 6.41l6 6z"/><path fill="currentColor" d="m18 13l-1.41-1.41L12 16.17l-4.59-4.58L6 13l6 6z"/></svg>
 
                     </div>
 
 
 
                     <div class="ml-4">
-                        <select type="text" placeholder="Search" @change = "clickSearch" @input = "paginate = $event.target.value"
+                        <select placeholder="Search" @input = "onPaginate($event.target.value)"
                                 class="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary ml-4"  >
 
                             <option value="10">10</option>
@@ -70,6 +69,9 @@
                 <div v-for="(item, index) in items" class="grid grid-cols-6 border-b border-stroke dark:border-strokedark sm:grid-cols-6">
 
                     <div class="flex items-center gap-3 p-2.5 xl:p-5">
+                        <div class="photo-img" :style="'background-image: url(' + item['image'][0]['url'] + ')'" >
+
+                        </div>
                         <p class="font-medium hidden text-black dark:text-white sm:block">{{index+1}}.  {{item.name}}</p>
                     </div>
 
@@ -98,77 +100,150 @@
 
                     <div class="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
                         <p class="font-medium text-meta-5">
-                            <i @click = "this.$router.push({ path: '/employees/update', query: { id: item.id } })" class="fa-solid fa-pen-to-square"></i>
+                            <i @click = "this.$router.push({ path: '/employees/update', query: { id: item.id } })" class="fa-solid setting-icon fa-pen-to-square"></i>
                             &nbsp;
-                            <i class="fa-solid fa-eye"></i>
+                            <i @click = "this.$router.push({ path: '/employees/show', query: { id: item.id } })" class="fa-solid setting-icon fa-eye"></i>
                             &nbsp;
-                            <i class="fa-solid fa-key"></i>
+                            <i @click = "this.$router.push({ path: '/employees/edit-password', query: { id: item.id } })" class="fa-solid setting-icon fa-key"></i>
                             &nbsp;
-                            <i class="fa-solid fa-calendar-days"></i>
+                            <i class="fa-solid fa-calendar-days setting-icon"></i>
                             &nbsp;
-                            <i class="fa-solid fa-trash"></i>
+                            <i @click = "onDelete(item.id)" class="fa-solid fa-trash setting-icon"></i>
                         </p>
                     </div>
 
                 </div>
 
+                <Paginate>
+                    <Pagination01>
+                        <vue-awesome-paginate
+                            :total-items="last_page"
+                            :items-per-page="1"
+                            :max-pages-shown="1"
+                            v-model="currentPage"
+                            :on-click="onClickHandler"
+                        />
+                    </Pagination01>
+                </Paginate>
 
             </div>
+
+
         </div>
     </div>
 
 </template>
-<script>
+<script >
 import {useConterStore} from "../../../store/counter.js";
 import TableHeader from "./Table-header.vue";
 import router from "../../../router/index.js";
-import {Employees} from "../../../Api.js";
+import {deleteEmployee, Employees} from "../../../Api.js";
 import {searchEmployee} from "../../../Api.js";
-
+import Paginate from "./Paginate/paginate.vue";
+import PaginateBtn from "./Paginate/paginate-btn.vue";
+import {VueAwesomePaginate} from "vue-awesome-paginate";
+import {ref} from "vue";
+import {Alert} from "../../../Config.js";
+import Input from "./Update/Inputs/Input.vue";
+import InputDefault from '../../../ui-components/Form/InputDefault.vue';
+import Pagination01 from "../../../ui-components/Element/pagination-01.vue";
 export default {
-    components: {TableHeader},
+    components: {Pagination01, Input, VueAwesomePaginate,InputDefault, PaginateBtn, Paginate, TableHeader},
     data(){
         return{
             items: [],
             search: '',
             column: 'sort_order',
             order: 'asc',
-            paginate: 10
-
+            paginateCount: 10,
+            pagination: {},
+            last_page: 0,
+            currentPage: 1,
+            password_1: '.',
+            password_2: '',
+            isPasswordError: false,
+            ExitModal: false
         }
     },
+
     methods:{
         router() {
             return router
         },
+
+        onClickHandler(id){
+
+            this.paginate = id;
+            this.currentPage = id;
+            this.getItems();
+        },
+
         getName(val){
             return useConterStore().getName(val)
         },
-        async getItems(){
-            const response = await Employees();
-            this.items = response.data.employees;
+        openModal(){
+            const modal = document.querySelector('.modal');
+            modal.classList.remove('hidden')
         },
-        async clickSearch(val){
-            this.search = val;
-            if (val == ''){
-                this.getItems();
+        testPassword(val){
+            if (this.password_1 != val){
+                this.isPasswordError = true;
+                this.ExitModal = false;
             }else {
-                var data = {
-                    'search': this.search,
-                    'order' : '',
-                    'column': '',
-                    'paginate': 10
-                }
-                const response = await searchEmployee(data);
-                this.items = response.data.items;
-                console.log(response.data.items)
+                this.isPasswordError = false;
+                this.ExitModal = true;
+            }
+            this.password_2 = val;
+            return this.isPasswordError;
+
+        },
+        async getItems(){
+            const response = await Employees(this.currentPage, this.paginateCount);
+            this.pagination =  response.data.pagination;
+            this.last_page = response.data.pagination.last_page;
+            this.current_page = response.data.pagination.currentPage;
+            this.items = response.data.employees;
+
+        },
+        async editPassword(val){
+            this.password_1 = val
+            if ( val == this.password_2){
+
+            }
+        },
+        async clickSearch(val, order){
+            this.search = val;
+            this.order = order;
+            var data = {
+                'search': this.search,
+                'order' : this.order,
+                'column': this.column,
+                'paginate': 10
+            }
+            const response = await searchEmployee(data);
+            this.items = response.data.items;
+
+
+        },
+        async onDelete(val){
+            var message = 'Вы уверены, что хотите это удалить?'
+            if (confirm(message)){
+                const response = await deleteEmployee(val);
+                if(response.status == true){
+                    Alert('success', 'Deleted successfully !')
+                    this.getItems();
+                };
             }
 
-
         },
+
         onSearch(val){
             this.order = val;
             this.search();
+        },
+        onPaginate(e){
+          this.paginateCount = e;
+          this.getItems();
         }
 
     },
@@ -179,5 +254,67 @@ export default {
 </script>
 <style >
     .fa-solid{cursor: pointer}
+
+    .btn01{
+        width: 100px;
+        margin-left: 100px;
+        background: rgba(0, 0, 0, 0.12);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 10px;
+
+    }
+    .btn01 svg{
+        background: rgba(46, 58, 71, 0.07);
+        border: 1px solid rgba(245, 245, 245, 0.33);
+        margin: 0 10px;
+        border-radius: 10px;
+        color: white;
+        cursor: pointer;
+    }
+    .btn01 svg:active{
+        transform: scale(0.9);
+    }
+    .active{
+        background: #10B981 !important;
+        color: #2E3A47 !important;
+    }
+    .photo-img{
+        width: 50px;
+        height: 50px;
+        margin-right:10px ;
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+
+    // ...
+    .pagination-container {
+        display: flex;
+        column-gap: 10px;
+    }
+    .paginate-buttons {
+        height: 40px;
+        width: 40px;
+        border-radius: 20px;
+        cursor: pointer;
+        background-color: rgba(242, 242, 242, 0);
+        border: 1px solid rgb(4, 237, 109);
+        color: #17e30d;
+        margin: 0 5px;
+    }
+    .paginate-buttons:hover {
+        background-color: #d8d8d8;
+    }
+    .active-page {
+        background-color: #3498db;
+        border: 1px solid #3498db;
+        color: white;
+    }
+    .active-page:hover {
+        background-color: #2988c8;
+    }
+
 
 </style>

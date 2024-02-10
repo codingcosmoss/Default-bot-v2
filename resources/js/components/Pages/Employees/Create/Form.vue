@@ -1,6 +1,6 @@
 <template>
 
-    <Page :Classes = "false">
+    <Page :Classes = "false" :Animation = "false">
         <FormLayouts></FormLayouts>
     </Page>
 
