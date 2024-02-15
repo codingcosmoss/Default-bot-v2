@@ -2,7 +2,7 @@
     <div class="d-flex flex-column flex-root AdminBox ">
 
 		<login-box>
-            <LoginForm Title = "Muhammadalidev.uz"/>
+            <LoginForm Title = "Muhammadalidev.uz" />
         </login-box>
 
 	</div>

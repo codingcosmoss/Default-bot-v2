@@ -50,3 +50,118 @@ export const updatePassword = async (data) => {
 };
 
 
+// Services
+
+export const services = async (id, pages) => {
+    return  GET('/service/index?page='+id+'&pages='+pages);
+};
+
+export const serviceShow = async (data) => {
+    return  GET('/service/show/'+data);
+};
+
+export const serviceCreate = async (data) => {
+    return  POST('/service/create', data );
+};
+export const serviceUpdate = async (id, data) => {
+    return  POST('/service/update/'+id, data );
+};
+
+export const serviceSearch = async (data) => {
+    return  POST('/service/search', data );
+};
+
+export const serviceDelete = async (data) => {
+    return  GET('/service/delete/'+ data );
+};
+
+
+
+
+// Service Category
+export const service_categorys = async (id, pages) => {
+    if (id != null){
+        return  GET('/service_category/index?page='+id+'&pages='+pages);
+    }else {
+        return  GET('/service_category/index?pages='+pages);
+    }
+};
+
+export const service_categoryShow = async (data) => {
+    return  GET('/service_category/show/'+data);
+};
+
+export const service_categoryCreate = async (data) => {
+    return  POST('/service_category/create', data );
+};
+export const service_categoryUpdate = async (id, data) => {
+    return  POST('/service_category/update/'+id, data );
+};
+
+export const service_categorySearch = async (data) => {
+    return  POST('/service_category/search', data );
+};
+
+export const service_categoryDelete = async (data) => {
+    return  GET('/service_category/delete/'+ data );
+};
+
+// Diseases
+
+export const diseases = async (id, pages) => {
+    if (id != null){
+        return  GET('/disease/index?page='+id+'&pages='+pages);
+    }else {
+        return  GET('/disease/index?pages='+pages);
+    }
+};
+
+export const diseaseShow = async (data) => {
+    return  GET('/disease/show/'+data);
+};
+
+export const diseaseCreate = async (data) => {
+    return  POST('/disease/create', data );
+};
+export const diseaseUpdate = async (id, data) => {
+    return  POST('/disease/update/'+id, data );
+};
+
+export const diseasesSearch = async (data) => {
+    return  POST('/disease/search', data );
+};
+
+export const diseaseDelete = async (data) => {
+    return  GET('/disease/delete/'+ data );
+};
+
+
+// patients
+
+export const patients = async (id, pages) => {
+    if (id != null){
+        return  GET('/patient/index?page='+id+'&pages='+pages);
+    }else {
+        return  GET('/patient/index?pages='+pages);
+    }
+};
+
+export const patientShow = async (data) => {
+    return  GET('/patient/show/'+data);
+};
+
+export const patientCreate = async (data) => {
+    return  POST('/patient/create', data );
+};
+export const patientUpdate = async (id, data) => {
+    return  POST('/patient/update/'+id, data );
+};
+
+export const patientsSearch = async (data) => {
+    return  POST('/patient/search', data );
+};
+
+export const patientDelete = async (data) => {
+    return  GET('/patient/delete/'+ data );
+};
+

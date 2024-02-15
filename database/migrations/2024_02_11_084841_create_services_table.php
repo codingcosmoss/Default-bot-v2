@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('services', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->nullable();
+            $table->string('code')->nullable();
+            $table->string('price')->nullable();
+            $table->integer('category_id')->nullable();
+            $table->string('material_price')->nullable();
+            $table->string('technic_price')->nullable();
+            $table->integer('order')->default(1);
+            $table->integer('status')->default(\App\Traits\Status::$status_active);
+            $table->softDeletes();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('services');
+    }
+};

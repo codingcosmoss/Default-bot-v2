@@ -31,8 +31,8 @@ trait Status
      * @var int
      */
     public static int $status_deleted = 3;
-
-
+    public static int $woman = 4;
+    public static int $male = 5;
     /**
      * @return string[]
      */

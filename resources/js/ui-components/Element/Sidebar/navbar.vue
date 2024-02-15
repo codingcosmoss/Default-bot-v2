@@ -12,6 +12,27 @@
             :Title = "getName('employees')"
             Icon = "fa-solid fa-user-group"
         />
+        <Menu
+            Path = "/services"
+            :Title = "getName('services')"
+            Icon = "fa-regular fa-hospital"
+        />
+        <Menu
+            Path = "/service-categories"
+            :Title = "getName('service_types')"
+            Icon = "fa-solid fa-truck-medical"
+        />
+        <Menu
+            Path = "/patients"
+            :Title = "getName('Patients')"
+            Icon = "fa-solid fa-hospital-user"
+        />
+
+        <Menu
+            Path = "/diseases"
+            :Title = "getName('diseases')"
+            Icon = "fa-solid fa-book"
+        />
 
 <!--        <MenuList>-->
 <!--            <Menu />-->

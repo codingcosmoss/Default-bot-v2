@@ -1,9 +1,9 @@
 <template>
 
 <!--    Text, Logo , FormTitle , isError-->
-  <Layout :isError = "isError" >
+  <Layout :isError = "isError" FormTitle = "Casmetologiya" >
 
-      <Form>
+      <Form >
 
         <!--     Label, Value, Icon | @Result     -->
           <InputText

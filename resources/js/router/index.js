@@ -40,6 +40,85 @@ const routes = [
         path: '/employees/edit-password',
         component: () => import('../components/Pages/Employees/EditPassword/Form.vue'),
     },
+    {
+        path: '/employees/calendar',
+        component: () => import('../components/Pages/Employees/Calendar/index.vue'),
+    },
+    // Services
+    {
+        path: '/services',
+        component: () => import('../components/Pages/Services/index.vue'),
+    },
+    {
+        path: '/service/create',
+        component: () => import('../components/Pages/Services/Create/Form.vue'),
+    },
+    {
+        path: '/service/update',
+        component: () => import('../components/Pages/Services/Update/Form.vue'),
+    },
+    {
+        path: '/service/show',
+        component: () => import('../components/Pages/Employees/Show/index.vue'),
+    },
+    {
+        path: '/service/edit-password',
+        component: () => import('../components/Pages/Employees/EditPassword/Form.vue'),
+    },
+
+    // Service Categories
+    {
+        path: '/service-categories',
+        component: () => import('../components/Pages/ServiceCategories/index.vue'),
+    },
+    {
+        path: '/service-category/create',
+        component: () => import('../components/Pages/ServiceCategories/Create/CreateForm.vue'),
+    },
+    {
+        path: '/service/update',
+        component: () => import('../components/Pages/Employees/Update/Form.vue'),
+    },
+    {
+        path: '/service-category/show',
+        component: () => import('../components/Pages/ServiceCategories/Show/index.vue'),
+    },
+    {
+        path: '/service/edit-password',
+        component: () => import('../components/Pages/Employees/EditPassword/Form.vue'),
+    },
+
+    // Patients
+
+    {
+        path: '/patients',
+        component: () => import('../components/Pages/Patients/index.vue'),
+    },
+    {
+        path: '/patient/create',
+        component: () => import('../components/Pages/Patients/Create/Form.vue'),
+    },
+    {
+        path: '/service/update',
+        component: () => import('../components/Pages/Employees/Update/Form.vue'),
+    },
+    {
+        path: '/service-category/show',
+        component: () => import('../components/Pages/ServiceCategories/Show/index.vue'),
+    },
+    {
+        path: '/service/edit-password',
+        component: () => import('../components/Pages/Employees/EditPassword/Form.vue'),
+    },
+
+    // Diseases
+
+    {
+        path: '/diseases',
+        component: () => import('../components/Pages/Diseases/index.vue'),
+    },
+
+
 
 ];
 

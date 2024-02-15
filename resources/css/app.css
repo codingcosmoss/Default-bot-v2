@@ -62,3 +62,15 @@ body {
 .setting-icon{
     font-size: 20px;
 }
+.breadcrumb-nav{
+    justify-content: flex-end;
+}
+
+.status_box{
+    padding: 5px ;
+    border-radius: 10px;
+    color: white ;
+}
+input{
+    height: 45.5px;
+}

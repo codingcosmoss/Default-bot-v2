@@ -104,11 +104,11 @@
                             &nbsp;
                             <i @click = "this.$router.push({ path: '/employees/show', query: { id: item.id } })" class="fa-solid setting-icon fa-eye"></i>
                             &nbsp;
-                            <i @click = "this.$router.push({ path: '/employees/edit-password', query: { id: item.id } })" class="fa-solid setting-icon fa-key"></i>
+                            <i  @click = "onModal(item.id)"  class="fa-solid setting-icon fa-key"></i>
                             &nbsp;
-                            <i class="fa-solid fa-calendar-days setting-icon"></i>
+                            <i @click = "this.$router.push({ path: '/employees/calendar', query: { id: item.id } })" class="fa-solid fa-calendar-days setting-icon"></i>
                             &nbsp;
-                            <i @click = "onDelete(item.id)" class="fa-solid fa-trash setting-icon"></i>
+                            <i @click = "onDelete(item.id)" class="fa-solid text-danger fa-trash setting-icon"></i>
                         </p>
                     </div>
 
@@ -130,14 +130,32 @@
 
 
         </div>
+        <ModalLayout @Submit = "editPassword" :isModal = "isModal" @closeModal = "isModal = $event" :Title = "getName('edit_password')" >
+            <Input
+                :Label = "getName('password')"
+                @onInput = "password = $event"
+                Type = "password"
+                :isError = "hasKey('password')"
+                :message = "errorObj['password']"
+            />
+            <Input
+                :Label = "getName('reset_password')"
+                @onInput = "testPasswordModal($event)"
+                :isError = "isPasswordError"
+                Type = "password"
+                :Value = "reset_password"
+                message = "The password is not the same"
+            />
+        </ModalLayout>
     </div>
+
 
 </template>
 <script >
 import {useConterStore} from "../../../store/counter.js";
 import TableHeader from "./Table-header.vue";
 import router from "../../../router/index.js";
-import {deleteEmployee, Employees} from "../../../Api.js";
+import {deleteEmployee, Employees, updatePassword} from "../../../Api.js";
 import {searchEmployee} from "../../../Api.js";
 import Paginate from "./Paginate/paginate.vue";
 import PaginateBtn from "./Paginate/paginate-btn.vue";
@@ -147,8 +165,9 @@ import {Alert} from "../../../Config.js";
 import Input from "./Update/Inputs/Input.vue";
 import InputDefault from '../../../ui-components/Form/InputDefault.vue';
 import Pagination01 from "../../../ui-components/Element/pagination-01.vue";
+import ModalLayout from "../../../ui-components/Element/Modal01/ModalLayout.vue";
 export default {
-    components: {Pagination01, Input, VueAwesomePaginate,InputDefault, PaginateBtn, Paginate, TableHeader},
+    components: {ModalLayout, Pagination01, Input, VueAwesomePaginate,InputDefault, PaginateBtn, Paginate, TableHeader},
     data(){
         return{
             items: [],
@@ -161,8 +180,15 @@ export default {
             currentPage: 1,
             password_1: '.',
             password_2: '',
+            ExitModal: false,
+            isModal: false,
+            password: '',
             isPasswordError: false,
-            ExitModal: false
+            reset_password: '',
+            isLoginError: false,
+            color: '#FFFFFF',
+            errorObj: {},
+            user_id: 0
         }
     },
 
@@ -177,6 +203,12 @@ export default {
             this.currentPage = id;
             this.getItems();
         },
+        onModal(id){
+            this.password = ''
+            this.reset_password = ''
+            this.user_id = id;
+            this.isModal = true;
+        },
 
         getName(val){
             return useConterStore().getName(val)
@@ -184,6 +216,33 @@ export default {
         openModal(){
             const modal = document.querySelector('.modal');
             modal.classList.remove('hidden')
+        },
+        testPasswordModal(val){
+            if (this.password != val || this.password == ''){
+                this.isPasswordError = true;
+            }else {
+                this.isPasswordError = false;
+            }
+            this.reset_password = val;
+            return this.isPasswordError;
+
+        },
+        async editPassword(){
+            if (this.testPasswordModal(this.reset_password) != true){
+                var data = {
+                    'id': this.user_id,
+                    'password': this.password,
+                }
+                const response = await updatePassword(data);
+                if (response.status){
+                    this.isModal = false;
+                    Alert('success', 'Update successfully !')
+                }else {
+                    this.errorObj = response.data;
+                }
+            }
+
+
         },
         testPassword(val){
             if (this.password_1 != val){
@@ -205,12 +264,7 @@ export default {
             this.items = response.data.employees;
 
         },
-        async editPassword(val){
-            this.password_1 = val
-            if ( val == this.password_2){
 
-            }
-        },
         async clickSearch(val, order){
             this.search = val;
             this.order = order;
@@ -244,6 +298,9 @@ export default {
         onPaginate(e){
           this.paginateCount = e;
           this.getItems();
+        },
+        hasKey(key) {
+            return key in this.errorObj;
         }
 
     },
