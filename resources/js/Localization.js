@@ -49,7 +49,9 @@ export const Languages =  {
         Address: 'Manzil',
         Gender: 'Jinsi',
         Male: 'Erkak',
-        Woman: 'Ayol'
+        Woman: 'Ayol',
+        Created_at: 'Saqlangan vaqti',
+        Updated_at: 'O\'zgartirilgan vaqti',
 
 
     },
@@ -103,7 +105,9 @@ export const Languages =  {
         Address: 'Адрес',
         Gender: 'Пол',
         Male: 'Мужской',
-        Woman: 'Девушка'
+        Woman: 'Девушка',
+        Created_at: 'Сэкономленное время',
+        Updated_at: 'Изменено время',
 
     }
 

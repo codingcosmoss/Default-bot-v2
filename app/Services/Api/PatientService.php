@@ -227,14 +227,15 @@ class PatientService extends AbstractService
             $model->gender = $data['gender'];
             $model->birthday = $data['birthday'];
             $model->price = $data['price'];
-            $model->profil_photo_path = $data['profil_photo_path'];
             $model->status = Status::$status_active;
 
 
             if ($model->save()) {
                 DB::commit();
                 $model->diseases()->detach();
-                $model->diseases()->attach($data['diseasesIds']);
+                if ($data['diseasesIds'] != 0){
+                    $model->diseases()->attach( $data['diseasesIds']);
+                }
 
             } else {
                 DB::rollback();

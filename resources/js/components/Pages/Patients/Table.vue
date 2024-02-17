@@ -23,10 +23,11 @@
 
                             <option selected value="order">{{getName('serial_number')}}</option>
                             <option value="id">Id</option>
-                            <option value="name">{{getName('name')}}</option>
+                            <option value="last_name">{{getName('last_name')}}</option>
+                            <option value="first_name">{{getName('name')}}</option>
                             <option value="price">{{getName('price')}}</option>
-                            <option value="material_price">{{getName('material_price')}}</option>
-                            <option value="technic_price">{{getName('technic_price')}}</option>
+                            <option value="created_at">{{getName('Created_at')}}</option>
+                            <option value="updated_at">{{getName('Updated_at')}}</option>
 
                         </select>
 
@@ -241,6 +242,7 @@ export default {
             }
             const response = await patientsSearch(data);
             this.items = response.data.items;
+            console.log(response);
 
         },
         async onDelete(val){

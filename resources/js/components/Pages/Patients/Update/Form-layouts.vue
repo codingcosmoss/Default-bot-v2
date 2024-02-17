@@ -148,7 +148,7 @@
                         @onInput = "sort_order = $event"
                         :isError = "hasKey('sort_order')"
                         :message = "errorObj['sort_order']"
-                        :Value = "sort_order"
+                        :Value = "sort_order"   
                         Type = "number"
                     />
 
@@ -195,8 +195,8 @@
 
                 <div class=" pl-7 p-6.5">
 
-                    <button @click="create" class="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray">
-                        {{getName('create')}}
+                    <button @click="update()" class="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray">
+                        {{getName('update')}}
                     </button>
                 </div>
 
@@ -213,7 +213,7 @@ import Input from "./Inputs/Input.vue";
 import {useConterStore} from "../../../../store/counter.js";
 import Checkbox from "./Inputs/Checkbox.vue";
 import InputColor from "./Inputs/InputColor.vue";
-import {serviceCreate, diseases, patientShow,patientCreate} from "../../../../Api.js";
+import {patientUpdate, diseases, patientShow,patientCreate} from "../../../../Api.js";
 import {GET} from "../../../../Config.js"
 import {Alert} from "../../../../Config.js";
 import PrimaryButton from "../../../../ui-components/Form/PrimaryButton.vue";
@@ -265,12 +265,9 @@ export default {
                 return useConterStore().getName(val)
             },
 
-            async getCategories(){
-                const response = await service_categorys(null, 1000);
-                this.categories = response.data.items
-            },
-
-            async create(){
+         
+            async update(){
+              
 
                 var ids = [];
                 if (this.diseasesIds.length > 0){
@@ -280,6 +277,8 @@ export default {
                 }else {
                     ids = 0;
                 }
+
+               
 
 
                 var data = {
@@ -295,10 +294,10 @@ export default {
                     'price' : 0
                 }
 
-                const response = await patientCreate(data);
+                const response = await patientUpdate(this.$route.query.id ,data);
                 console.log(response)
                 if (response.status){
-                    Alert('success', 'Created successfully !')
+                    Alert('success', 'Update successfully !')
                     this.$router.push('/patients')
                 }else {
                     this.errorObj = response.data;
@@ -310,7 +309,6 @@ export default {
 
                 const response = await patientShow(this.$route.query.id);
 
-                console.log(response)
                 if (response.status){
                     this.first_name = response.data.first_name;
                     this.last_name = response.data.last_name;
@@ -321,6 +319,7 @@ export default {
                     this.birthday = response.data.birthday;
                     this.sort_order = response.data.sort_order;
                     this.diseasesIds = response.data.diseases;
+                    this.getDisiases();
 
                 }
 
@@ -330,10 +329,13 @@ export default {
                 const response = await diseases(null, 1000);
                 var arr = [];
                 response.data.items.forEach((item) => {
-                    arr.push({
-                        name: item.name,
-                        id: item.id
-                    })
+                        if (!this.diseasesIds.some(model => model.id == item.id)) {
+                            arr.push({
+                            name: item.name,
+                            id: item.id
+                        })
+                    }
+                    
                 });
                 this.allDiseases = arr;
             },
@@ -362,8 +364,6 @@ export default {
 
         },
         mounted() {
-            this.getCategories()
-            this.getDisiases()
             this.getModel()
         }
 }
