@@ -44,7 +44,7 @@
 
                             <Input
                                 :Couple = "false"
-                                :Label = "getName('first_name')"
+                                :Label = "getName('name')"
                                 @onInput = "first_name = $event"
                                 :isError = "hasKey('first_name')"
                                 :message = "errorObj['first_name']"
@@ -87,17 +87,34 @@
                                 :message = "errorObj['address']"
                                 :Value = "address"
                             />
-                            <Input
-                                :Couple = "false"
 
-                                :Label = "getName('Gender')"
-                                @onInput = "gender = $event"
-                                :isError = "hasKey('gender')"
-                                :message = "errorObj['gender']"
-                                :Value = "gender"
+                            <label class="mb-2.5 block text-black dark:text-white">
+                                {{getName('Gender')}}
+                            </label>
+
+                            <checkbox01
+                                @click = "Checkbox = 5, console.log(Checkbox) "
+                                :onCheck = "Checkbox == 5 ? true : false"
+                                :Title = "getName('Male')"
+                                Class = "genderCheckbox"
                             />
 
+                            <checkbox01
+                                @click = "Checkbox = 4, console.log(Checkbox)"
+                                :onCheck = "Checkbox == 4 ? true : false"
+                                :Title = "getName('Woman')"
+                                Class = "genderCheckbox"
+                            />
+
+
+
                         </div>
+                        <p v-if="hasKey('gender')" style="float: right" class="text-danger">{{errorObj['gender']}}</p>
+
+
+
+
+
 
                     </div>
                 </form>
@@ -122,6 +139,7 @@
                         :isError = "hasKey('birthday')"
                         :message = "errorObj['birthday']"
                         :Value = "birthday"
+                        Type = "date"
                     />
 
                     <Input
@@ -144,15 +162,34 @@
                     <MultiSelect
                         :Couple = "false"
                         :Label = "getName('diseases')"
-                        @onInput = "sort_order = $event"
-                        :isError = "hasKey('sort_order')"
-                        :message = "errorObj['sort_order']"
-                        :Value = "sort_order"
-                        Type = "number"
-                    />
+                        @onSelect = "onSelect($event)"
+                        :Items = "diseasesIds"
+                        @pushArray = "onPush($event)"
+                    >
+                        <option selected >---</option>
+                        <option v-for="item in allDiseases" :value="item['id']" >{{item['name']}}</option>
+
+                    </MultiSelect>
+
+
+                    <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
+
+
+                        <!--                            <Input-->
+                        <!--                                :Couple = "false"-->
+
+                        <!--                                :Label = "getName('Gender')"-->
+                        <!--                                @onInput = "gender = $event"-->
+                        <!--                                :isError = "hasKey('gender')"-->
+                        <!--                                :message = "errorObj['gender']"-->
+                        <!--                                :Value = "gender"-->
+                        <!--                            />-->
+
+                    </div>
 
 
                 </div>
+
 
 
 
@@ -176,15 +213,22 @@ import Input from "./Inputs/Input.vue";
 import {useConterStore} from "../../../../store/counter.js";
 import Checkbox from "./Inputs/Checkbox.vue";
 import InputColor from "./Inputs/InputColor.vue";
-import {serviceCreate, Employees, service_categorys} from "../../../../Api.js";
+import {serviceCreate, diseases, Employees, service_categorys, patientCreate, deleteEmployee} from "../../../../Api.js";
 import {GET} from "../../../../Config.js"
 import {Alert} from "../../../../Config.js";
 import PrimaryButton from "../../../../ui-components/Form/PrimaryButton.vue";
 import PrimaryButton2 from "../../../../ui-components/Form/PrimaryButton2.vue";
 import Select from "./Inputs/Select.vue";
 import MultiSelect from '../../../../ui-components/Form/MultiSelect.vue'
+import Checkbox01 from "../../../../ui-components/Form/Checkbox/Checkbox01.vue";
+import checkbox01 from "../../../../ui-components/Form/Checkbox/Checkbox01.vue";
 
 export default {
+    computed: {
+        checkbox01() {
+            return checkbox01
+        }
+    },
         data(){
             return{
                 name: '',
@@ -198,7 +242,7 @@ export default {
                 isLoginError: false,
                 errorObj: {},
                 categories: [],
-
+                Checkbox: '',
                 // input varables
                 last_name: '',
                 first_name: '',
@@ -209,13 +253,14 @@ export default {
                 birthday: '',
                 sort_order: '',
                 diseasesIds : [],
-                diseases : [],
+                allDiseases : [],
 
 
             }
         },
-        components:{Select, PrimaryButton2,MultiSelect, PrimaryButton, InputColor, Checkbox, Input},
+        components:{Checkbox01, Select, PrimaryButton2,MultiSelect, PrimaryButton, InputColor, Checkbox, Input},
         methods:{
+
             getName(val){
                 return useConterStore().getName(val)
             },
@@ -226,43 +271,89 @@ export default {
             },
 
             async create(){
-                var data = {
-                    'name': this.name,
-                    'order': this.order,
-                    'code': this.code,
-                    'price': this.price,
-                    'category_id': this.category,
-                    'material_price': this.material_price,
-                    'technic_price': this.technic_price,
-                    'status': this.status,
-                    'color': this.color,
-                    'personal_procents': this.personal_procents
-                }
-                const response = await serviceCreate(data);
 
+                var ids = [];
+                if (this.diseasesIds.length > 0){
+                    this.diseasesIds.forEach((e) => {
+                        ids.push(e['id']);
+                    });
+                }else {
+                    ids = 0;
+                }
+
+
+                var data = {
+                    'first_name': this.first_name,
+                    'last_name': this.last_name,
+                    'phone': this.phone,
+                    'job': this.job,
+                    'address': this.address,
+                    'gender': this.Checkbox,
+                    'birthday': this.birthday,
+                    'sort_order': this.sort_order,
+                    'diseasesIds': ids,
+                    'price' : 0
+                }
+
+                const response = await patientCreate(data);
+                console.log(response)
                 if (response.status){
                     Alert('success', 'Created successfully !')
-                    this.$router.push('/services')
+                    this.$router.push('/patients')
                 }else {
                     this.errorObj = response.data;
                 }
 
 
             },
+            async getDisiases(){
+                const response = await diseases(null, 1000);
+                var arr = [];
+                response.data.items.forEach((item) => {
+                    arr.push({
+                        name: item.name,
+                        id: item.id
+                    })
+                });
+                this.allDiseases = arr;
+            },
 
             hasKey(key) {
                 return key in this.errorObj;
             },
 
+
+            onSelect(val){
+
+                if (this.diseasesIds.indexOf(val) == -1){
+                    this.diseasesIds.push({
+                        'name': this.allDiseases.filter(item => item.id == Number(val))[0]['name'],
+                        'id': this.allDiseases.filter(item => item.id == Number(val))[0]['id'],
+                    });
+                    this.allDiseases = this.allDiseases.filter(item => item.id != Number(val))
+                }
+
+            },
+            onPush(val){
+                this.allDiseases.push(val);
+                this.diseasesIds = this.diseasesIds.filter(item => item['id'] != val.id);
+            },
+
+
         },
         mounted() {
             this.getCategories()
+            this.getDisiases()
         }
 }
 </script>
 
 
 <style>
+    .genderCheckbox{
+        display: flex;
+        align-items: flex-end;
+    }
 
     .list01{
         padding: 5px 27px;

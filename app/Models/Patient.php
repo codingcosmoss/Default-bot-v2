@@ -12,7 +12,7 @@ class Patient extends Model
 
     public function diseases()
     {
-        return $this->belongsToMany(Disease::class);
+        return $this->belongsToMany(Disease::class, 'patient_diseases', 'patient_id','disease_id' );
     }
 
 }

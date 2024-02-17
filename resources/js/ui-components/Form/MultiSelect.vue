@@ -9,9 +9,10 @@
             <div class="flex flex-wrap items-center">
 
                 <span v-for="(item,index) in Items"
+
                     class="m-1.5 flex items-center justify-center rounded border-[.5px] border-stroke dark:border-strokedark bg-gray dark:bg-white/30 py-1.5 px-2.5 text-sm font-medium">
-                          {{item.name}}
-                          <span class="cursor-pointer pl-2 hover:text-danger">
+                          {{item['name']}}
+                          <span  @click = "this.$emit('pushArray', item)" class="cursor-pointer pl-2 hover:text-danger">
                             <svg width="12" height="12" viewBox="0 0 12 12" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
                               <path fill-rule="evenodd" clip-rule="evenodd"
@@ -24,7 +25,7 @@
             </div>
 
         </div>
-        <select  @input = "this.$emit('onSelect', $event.target.value)" class=" w-full rounded border-[1.5px] border-stroke bg-transparent px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary">
+        <select  @change = "this.$emit('onSelect', $event.target.value)" class=" w-full rounded border-[1.5px] border-stroke bg-transparent px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary">
             <slot></slot>
         </select >
         <p v-if="isError" class="text-danger" >{{message}}</p>
@@ -81,7 +82,8 @@
                         name: 'item-3'
                     },
                 ]
-            }
+            },
+
 
 
         }

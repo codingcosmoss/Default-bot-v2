@@ -6,8 +6,9 @@
 
         <nav>
             <ol class="flex items-center gap-2">
-                <li><a class="font-medium cursor-pointer" @click = "this.$router.push('/services')"> {{getName('services')}} /</a></li>
-                <li  class=" font-medium text-primary">{{getName('update')}}</li>
+                <li><a class="font-medium cursor-pointer" @click = "this.$router.push('/patients')">
+                    {{getName('Patients')}} /</a></li>
+                <li  class=" font-medium text-primary">{{getName('create')}}</li>
             </ol>
         </nav>
     </div>
@@ -22,7 +23,7 @@
                 class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
                 <div class="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
                     <h3 class="font-semibold text-black dark:text-white">
-                        {{getName('services')}}
+                        {{getName('Patients')}}
                     </h3>
                 </div>
                 <form action="#">
@@ -31,21 +32,46 @@
 
                         <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
 
+
                             <Input
                                 :Couple = "false"
-                                :Label = "getName('name_content')"
-                                @onInput = "name = $event"
-                                :isError = "hasKey('name')"
-                                :message = "errorObj['name']"
-                                :Value = name
+                                :Label = "getName('last_name')"
+                                @onInput = "last_name = $event"
+                                :isError = "hasKey('last_name')"
+                                :message = "errorObj['last_name']"
+                                :Value = "last_name"
                             />
+
                             <Input
                                 :Couple = "false"
-                                :Label = "getName('code')"
-                                @onInput = "code = $event"
-                                :isError = "hasKey('code')"
-                                :message = "errorObj['code']"
-                                :Value = code
+                                :Label = "getName('name')"
+                                @onInput = "first_name = $event"
+                                :isError = "hasKey('first_name')"
+                                :message = "errorObj['first_name']"
+                                :Value = "first_name"
+                            />
+
+                        </div>
+
+
+                        <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
+
+                            <Input
+                                :Couple = "false"
+                                :Label = "getName('phone')"
+                                @onInput = "phone = $event"
+                                :isError = "hasKey('phone')"
+                                :message = "errorObj['phone']"
+                                :Value = "phone"
+                            />
+
+                            <Input
+                                :Couple = "false"
+                                :Label = "getName('Job')"
+                                @onInput = "job = $event"
+                                :isError = "hasKey('job')"
+                                :message = "errorObj['job']"
+                                :Value = "job"
                             />
 
                         </div>
@@ -54,56 +80,41 @@
 
                             <Input
                                 :Couple = "false"
-                                :Label = "getName('price')"
-                                @onInput = "price = $event"
-                                :isError = "hasKey('price')"
-                                :message = "errorObj['price']"
-                                :Value = price
-                                Type = "number"
+
+                                :Label = "getName('Address')"
+                                @onInput = "address = $event"
+                                :isError = "hasKey('address')"
+                                :message = "errorObj['address']"
+                                :Value = "address"
                             />
 
-                            <Select
-                                :Couple = "false"
-                                :Label = "getName('category')"
-                                @onSelect = "this.category = $event"
-                                :isError = "hasKey('category_id')"
-                                :message = "errorObj['category_id']"
-                            >
+                            <label class="mb-2.5 block text-black dark:text-white">
+                                {{getName('Gender')}}
+                            </label>
 
-                                <option>---</option>
-                                <option
-                                    v-for=" category in categories"
-                                    :value="category.id"
-                                    :selected = "category.id == this.category "
-                                > {{category.name}}</option>
+                            <checkbox01
+                                @click = "Checkbox = 5, console.log(Checkbox) "
+                                :onCheck = "Checkbox == 5 ? true : false"
+                                :Title = "getName('Male')"
+                                Class = "genderCheckbox"
+                            />
 
-                            </Select>
+                            <checkbox01
+                                @click = "Checkbox = 4, console.log(Checkbox)"
+                                :onCheck = "Checkbox == 4 ? true : false"
+                                :Title = "getName('Woman')"
+                                Class = "genderCheckbox"
+                            />
+
+
 
                         </div>
+                        <p v-if="hasKey('gender')" style="float: right" class="text-danger">{{errorObj['gender']}}</p>
 
-                        <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
 
-                            <Input
-                                :Couple = "false"
-                                :Label = "getName('material_price')"
-                                @onInput = "material_price = $event"
-                                :isError = "hasKey('material_price')"
-                                :message = "errorObj['material_price']"
-                                Type = "number"
-                                :Value = "material_price"
-                            />
 
-                            <Input
-                                :Couple = "false"
-                                :Label = "getName('technic_price')"
-                                @onInput = "technic_price = $event"
-                                :isError = "hasKey('technic_price')"
-                                :message = "errorObj['technic_price']"
-                                Type = "number"
-                                :Value = technic_price
-                            />
 
-                        </div>
+
 
                     </div>
                 </form>
@@ -120,34 +131,67 @@
                     </h3>
                 </div>
 
-                <div class="mb-4.5 flex flex-col gap-6 xl:flex-row p-6.5">
+                <div class=" flex flex-col gap-6 xl:flex-row p-6.5" >
                     <Input
                         :Couple = "false"
-                        Type = "number"
-                        :Label = "getName('Serial_number')"
-                        @onInput = "order = $event"
-                        :isError = "hasKey('order')"
-                        :message = "errorObj['order']"
-                        :Value = order
+                        :Label = "getName('Date_birth')"
+                        @onInput = "birthday = $event"
+                        :isError = "hasKey('birthday')"
+                        :message = "errorObj['birthday']"
+                        :Value = "birthday"
+                        Type = "date"
                     />
 
-                    <Select
+                    <Input
                         :Couple = "false"
-                        :Label = "getName('status')"
-                        @onSelect = "this.status = $event"
-                    >
+                        :Label = "getName('Serial_number')"
+                        @onInput = "sort_order = $event"
+                        :isError = "hasKey('sort_order')"
+                        :message = "errorObj['sort_order']"
+                        :Value = "sort_order"
+                        Type = "number"
+                    />
 
-                        <option
-                            :value="1"
-                        > Active</option>
-                        <option
-                            :value="0"
-                        > Inactive</option>
-
-                    </Select>
 
 
                 </div>
+
+                <div class="flex flex-col gap-6 xl:flex-row  px-6.5"    >
+
+
+                    <MultiSelect
+                        :Couple = "false"
+                        :Label = "getName('diseases')"
+                        @onSelect = "onSelect($event)"
+                        :Items = "diseasesIds"
+                        @pushArray = "onPush($event)"
+                    >
+                        <option selected >---</option>
+                        <option v-for="item in allDiseases" :value="item['id']" >{{item['name']}}</option>
+
+                    </MultiSelect>
+
+
+                    <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
+
+
+                        <!--                            <Input-->
+                        <!--                                :Couple = "false"-->
+
+                        <!--                                :Label = "getName('Gender')"-->
+                        <!--                                @onInput = "gender = $event"-->
+                        <!--                                :isError = "hasKey('gender')"-->
+                        <!--                                :message = "errorObj['gender']"-->
+                        <!--                                :Value = "gender"-->
+                        <!--                            />-->
+
+                    </div>
+
+
+                </div>
+
+
+
 
                 <div class=" pl-7 p-6.5">
 
@@ -155,6 +199,7 @@
                         {{getName('create')}}
                     </button>
                 </div>
+
             </div>
 
 
@@ -168,14 +213,22 @@ import Input from "./Inputs/Input.vue";
 import {useConterStore} from "../../../../store/counter.js";
 import Checkbox from "./Inputs/Checkbox.vue";
 import InputColor from "./Inputs/InputColor.vue";
-import {serviceUpdate, serviceShow, service_categorys} from "../../../../Api.js";
+import {serviceCreate, diseases, patientShow,patientCreate} from "../../../../Api.js";
 import {GET} from "../../../../Config.js"
 import {Alert} from "../../../../Config.js";
 import PrimaryButton from "../../../../ui-components/Form/PrimaryButton.vue";
 import PrimaryButton2 from "../../../../ui-components/Form/PrimaryButton2.vue";
 import Select from "./Inputs/Select.vue";
+import MultiSelect from '../../../../ui-components/Form/MultiSelect.vue'
+import Checkbox01 from "../../../../ui-components/Form/Checkbox/Checkbox01.vue";
+import checkbox01 from "../../../../ui-components/Form/Checkbox/Checkbox01.vue";
 
 export default {
+    computed: {
+        checkbox01() {
+            return checkbox01
+        }
+    },
         data(){
             return{
                 name: '',
@@ -188,65 +241,129 @@ export default {
                 status: 1,
                 isLoginError: false,
                 errorObj: {},
-                personal_procent: false,
                 categories: [],
+                Checkbox: '',
+                // input varables
+                last_name: '',
+                first_name: '',
+                phone: '',
+                job: '',
+                address: '',
+                gender: '',
+                birthday: '',
+                sort_order: '',
+                diseasesIds : [],
+                allDiseases : [],
+
 
             }
         },
-        components:{Select, PrimaryButton2, PrimaryButton, InputColor, Checkbox, Input},
+        components:{Checkbox01, Select, PrimaryButton2,MultiSelect, PrimaryButton, InputColor, Checkbox, Input},
         methods:{
+
             getName(val){
                 return useConterStore().getName(val)
             },
+
             async getCategories(){
                 const response = await service_categorys(null, 1000);
                 this.categories = response.data.items
             },
-            async getModel(){
-                const response = await serviceShow(this.$route.query.id);
-                var model = response.data;
-                this.name = model.name
-                this.code = model.code
-                this.material_price = model.material_price.replace(/\s+/g, '')
-                this.price = model.price.replace(/\s+/g, '')
-                this.status = model.status
-                this.category = model.category_id
-                this.order = model.order
-                this.technic_price = model.technic_price.replace(/\s+/g, '')
 
-                console.log(response.data)
-
-            },
             async create(){
-                var data = {
-                    'name': this.name,
-                    'order': this.order,
-                    'code': this.code,
-                    'price': this.price,
-                    'category_id': this.category,
-                    'material_price': this.material_price,
-                    'technic_price': this.technic_price,
-                    'status': this.status,
-                }
-                const response = await serviceUpdate(this.$route.query.id, data);
 
+                var ids = [];
+                if (this.diseasesIds.length > 0){
+                    this.diseasesIds.forEach((e) => {
+                        ids.push(e['id']);
+                    });
+                }else {
+                    ids = 0;
+                }
+
+
+                var data = {
+                    'first_name': this.first_name,
+                    'last_name': this.last_name,
+                    'phone': this.phone,
+                    'job': this.job,
+                    'address': this.address,
+                    'gender': this.Checkbox,
+                    'birthday': this.birthday,
+                    'sort_order': this.sort_order,
+                    'diseasesIds': ids,
+                    'price' : 0
+                }
+
+                const response = await patientCreate(data);
+                console.log(response)
                 if (response.status){
                     Alert('success', 'Created successfully !')
-                    this.$router.push('/services')
+                    this.$router.push('/patients')
                 }else {
                     this.errorObj = response.data;
                 }
 
 
             },
+            async getModel(){
+
+                const response = await patientShow(this.$route.query.id);
+
+                console.log(response)
+                if (response.status){
+                    this.first_name = response.data.first_name;
+                    this.last_name = response.data.last_name;
+                    this.phone = response.data.phone;
+                    this.job = response.data.job;
+                    this.address = response.data.address;
+                    this.Checkbox = response.data.gender;
+                    this.birthday = response.data.birthday;
+                    this.sort_order = response.data.sort_order;
+                    this.diseasesIds = response.data.diseases;
+
+                }
+
+
+            },
+            async getDisiases(){
+                const response = await diseases(null, 1000);
+                var arr = [];
+                response.data.items.forEach((item) => {
+                    arr.push({
+                        name: item.name,
+                        id: item.id
+                    })
+                });
+                this.allDiseases = arr;
+            },
 
             hasKey(key) {
                 return key in this.errorObj;
             },
 
+
+            onSelect(val){
+
+                if (this.diseasesIds.indexOf(val) == -1){
+                    this.diseasesIds.push({
+                        'name': this.allDiseases.filter(item => item.id == Number(val))[0]['name'],
+                        'id': this.allDiseases.filter(item => item.id == Number(val))[0]['id'],
+                    });
+                    this.allDiseases = this.allDiseases.filter(item => item.id != Number(val))
+                }
+
+            },
+            onPush(val){
+                this.allDiseases.push(val);
+                this.diseasesIds = this.diseasesIds.filter(item => item['id'] != val.id);
+            },
+
+
         },
         mounted() {
             this.getCategories()
+            this.getDisiases()
             this.getModel()
         }
 }
@@ -254,6 +371,10 @@ export default {
 
 
 <style>
+    .genderCheckbox{
+        display: flex;
+        align-items: flex-end;
+    }
 
     .list01{
         padding: 5px 27px;

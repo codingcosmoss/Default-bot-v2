@@ -46,11 +46,7 @@ class PatientController extends AbstractController
      */
     public function create()
     {
-        $item = $this->service->store(request()->all(), request()->file('image'));
-
-        if ($item['status'] == true ){
-            $this->uploadImagesOne(User::find($item['data']['id']), request());
-        }
+        $item = $this->service->store(request()->all());
 
         return $this->sendResponse($item);
     }

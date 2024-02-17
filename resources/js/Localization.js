@@ -48,6 +48,9 @@ export const Languages =  {
         diseases: 'Kasalliklar',
         Address: 'Manzil',
         Gender: 'Jinsi',
+        Male: 'Erkak',
+        Woman: 'Ayol'
+
 
     },
     ru:{
@@ -99,7 +102,8 @@ export const Languages =  {
         CategoryDiseases: 'Сопутствующие заболевания',
         Address: 'Адрес',
         Gender: 'Пол',
-
+        Male: 'Мужской',
+        Woman: 'Девушка'
 
     }
 

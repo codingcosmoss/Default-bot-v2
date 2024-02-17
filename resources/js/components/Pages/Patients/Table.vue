@@ -97,13 +97,10 @@
 
                     <div class="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
                         <p class="font-medium text-meta-5">
-                            <i @click = "this.$router.push({ path: '/service/update', query: { id: item.id } })" class="fa-solid setting-icon fa-pen-to-square"></i>
+                            <i @click = "this.$router.push({ path: '/patient/update', query: { id: item.id } })" class="fa-solid setting-icon fa-pen-to-square"></i>
                             &nbsp;
                             <i @click = "Show(item.id)" class="fa-solid setting-icon fa-eye"></i>
                             &nbsp;
-                            &nbsp;
-                            &nbsp;
-                            <i @click = "onDelete(item.id)" class="fa-solid text-danger fa-trash setting-icon"></i>
                         </p>
                     </div>
 
@@ -215,6 +212,18 @@ export default {
             console.log(response.data.items[0])
 
         },
+        async getModel(){
+
+            const response = await patientShow(this.$route.query.id);
+
+            if (response.status){
+
+
+
+            }
+
+
+        },
         async editPassword(val){
             this.password_1 = val
             if ( val == this.password_2){
@@ -238,6 +247,7 @@ export default {
             var message = 'Вы уверены, что хотите это удалить?'
             if (confirm(message)){
                 const response = await patientDelete(val);
+                console.log(response)
                 if(response.status == true){
                     Alert('success', 'Deleted successfully !')
                     this.getItems();

@@ -99,8 +99,8 @@ const routes = [
         component: () => import('../components/Pages/Patients/Create/Form.vue'),
     },
     {
-        path: '/service/update',
-        component: () => import('../components/Pages/Employees/Update/Form.vue'),
+        path: '/patient/update',
+        component: () => import('../components/Pages/Patients/Update/Form.vue'),
     },
     {
         path: '/service-category/show',
