@@ -4,10 +4,10 @@
         <label class="mb-2.5 block text-black dark:text-white">
             {{Label}}
         </label>
-        <select  @input = "this.$emit('onSelect', $event.target.value)" class=" w-full rounded border-[1.5px] border-stroke bg-transparent px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary">
+        <select  @input = "this.$emit('onSelect', $event.target.value)" class=" w-full rounded border-[1.5px] border-stroke  px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary select-input">
             <slot></slot>
         </select >
-        <p v-if="isError" class="text-danger" >{{message}}</p>
+        <p v-if="isError" class="text-danger " >{{message}}</p>
 
     </div>
 
@@ -59,4 +59,5 @@
     select{
         padding: 15px 0;
     }
+   
 </style>

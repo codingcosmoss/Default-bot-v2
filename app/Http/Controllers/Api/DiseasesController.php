@@ -24,6 +24,13 @@ class DiseasesController extends AbstractController
 
         return $this->sendResponse($item);
     }
+
+    public function isActives()
+    {
+        $item = $this->service->isActives(request()->all());
+
+        return $this->sendResponse($item);
+    }
     public function updatePassword()
     {
         $item = $this->service->updatePassword(request()->all());

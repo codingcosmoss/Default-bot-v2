@@ -2,9 +2,9 @@
 
 
     <!-- Breadcrumb Start -->
-    <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <div style="justify-content: flex-end;" class="mb-6 flex  flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 
-        <nav>
+        <nav >
             <ol class="flex items-center gap-2">
                 <li><a class="font-medium cursor-pointer" @click = "this.$router.push('/patients')">
                     {{getName('Patients')}} /</a></li>
@@ -213,7 +213,7 @@ import Input from "./Inputs/Input.vue";
 import {useConterStore} from "../../../../store/counter.js";
 import Checkbox from "./Inputs/Checkbox.vue";
 import InputColor from "./Inputs/InputColor.vue";
-import {serviceCreate, diseases, Employees, service_categorys, patientCreate, deleteEmployee} from "../../../../Api.js";
+import {serviceCreate, getDiseases, Employees, service_categorys, patientCreate, deleteEmployee} from "../../../../Api.js";
 import {GET} from "../../../../Config.js"
 import {Alert} from "../../../../Config.js";
 import PrimaryButton from "../../../../ui-components/Form/PrimaryButton.vue";
@@ -307,7 +307,7 @@ export default {
 
             },
             async getDisiases(){
-                const response = await diseases(null, 1000);
+                const response = await getDiseases(null, 1000);
                 var arr = [];
                 response.data.items.forEach((item) => {
                     arr.push({

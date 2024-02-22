@@ -144,6 +144,88 @@ class EmployeesService extends AbstractService
     }
 
 
+
+    public function attachEmployee(array $data)
+    {
+
+        $fields = $this->getFields();
+
+        $rules = [];
+
+        foreach ($fields as $field) {
+
+            $rules[$field->getName()] = $field->getRules();
+        }
+
+        $validator = Validator::make($data, $rules);
+
+        if ($validator->fails()) {
+
+            $errors = [];
+
+            foreach ($validator->errors()->getMessages() as $key => $value) {
+
+                $errors[$key] = $value[0];
+            }
+
+            return [
+                'status' => false,
+                'message' => 'Validation error',
+                'statusCode' => 200,
+                'data' => $errors
+            ];
+        }
+
+        $data = $validator->validated();
+
+        DB::beginTransaction();
+        try {
+            $user = new $this->model;
+            $user->name = $data['name'];
+            $user->position = $data['position'];
+            $user->login = $data['login'];
+            $user->color = $data['color'];
+            $user->password = Hash::make($data['password']);
+            $user->profil_photo_path = $data['profil_photo_path'];
+            $user->percent_salary = $data['percent_salary'];
+            $user->salary_static = $data['salary_static'];
+            $user->sort_order = $data['sort_order'];
+            $user->status = Status::$status_active;
+
+            if ($user->save()) {
+                DB::commit();
+
+            } else {
+                DB::rollback();
+                return [
+                    'status' => false,
+                    'message' => 'save user error',
+                    'statusCode' => 200,
+                    'data' => null
+                ];
+            }
+
+        } catch (\Exception $ex) {
+            DB::rollback();
+            return [
+                'status' => false,
+                'message' => 'Server error',
+                'statusCode' => 200,
+                'data' => $ex->getMessage()
+            ];
+        }
+
+
+        return [
+            'status' => true,
+            'message' => 'success',
+            'statusCode' => 200,
+            'data' => $user
+        ];
+    }
+
+
+
     /**
      * @return array
      */
@@ -159,6 +241,15 @@ class EmployeesService extends AbstractService
             TextField::make('percent_salary')->setRules('required|integer'),
             TextField::make('salary_static')->setRules('required|integer'),
             TextField::make('sort_order')->setRules('required|integer'),
+        ];
+    }
+
+    public function getAttachmentFields()
+    {
+        return [
+            TextField::make('employee_id')->setRules('required|min:3|max:255'),
+            TextField::make('date')->setRules('required|min:3|max:255'),
+            TextField::make('text')->setRules('required|min:5|max:1024'),
         ];
     }
     public function getPasswordFields()

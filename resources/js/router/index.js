@@ -103,8 +103,12 @@ const routes = [
         component: () => import('../components/Pages/Patients/Update/Form.vue'),
     },
     {
-        path: '/service-category/show',
-        component: () => import('../components/Pages/ServiceCategories/Show/index.vue'),
+        path: '/update',
+        component: () => import('../components/Pages/Patients/Update/Form.vue'),
+    },
+    {
+        path: '/patient/show',
+        component: () => import('../components/Pages/Patients/Show/index.vue'),
     },
     {
         path: '/service/edit-password',

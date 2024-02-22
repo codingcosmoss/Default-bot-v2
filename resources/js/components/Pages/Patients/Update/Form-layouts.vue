@@ -213,7 +213,7 @@ import Input from "./Inputs/Input.vue";
 import {useConterStore} from "../../../../store/counter.js";
 import Checkbox from "./Inputs/Checkbox.vue";
 import InputColor from "./Inputs/InputColor.vue";
-import {patientUpdate, diseases, patientShow,patientCreate} from "../../../../Api.js";
+import {patientUpdate, getDiseases, patientShow,patientCreate} from "../../../../Api.js";
 import {GET} from "../../../../Config.js"
 import {Alert} from "../../../../Config.js";
 import PrimaryButton from "../../../../ui-components/Form/PrimaryButton.vue";
@@ -326,7 +326,7 @@ export default {
 
             },
             async getDisiases(){
-                const response = await diseases(null, 1000);
+                const response = await getDiseases(null, 1000);
                 var arr = [];
                 response.data.items.forEach((item) => {
                         if (!this.diseasesIds.some(model => model.id == item.id)) {

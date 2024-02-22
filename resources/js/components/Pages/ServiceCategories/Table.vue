@@ -323,7 +323,8 @@ export default {
     }
     .active{
         background: #10B981 !important;
-        color: #2E3A47 !important;
+        color: white;
+
     }
     .photo-img{
         width: 50px;
@@ -334,7 +335,7 @@ export default {
         background-repeat: no-repeat;
     }
 
-    // ...
+
     .pagination-container {
         display: flex;
         column-gap: 10px;
@@ -360,10 +361,7 @@ export default {
     .active-page:hover {
         background-color: #2988c8;
     }
-    .status_box{
-        padding: 5px ;
-        border-radius: 10px;
-    }
+
     .inactive{
         background: rgba(247, 16, 16, 0.71);
         color: white;

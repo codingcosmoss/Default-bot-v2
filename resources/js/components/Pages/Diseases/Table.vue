@@ -83,7 +83,7 @@
 
                     <div class="flex items-center justify-center p-2.5 xl:p-5">
                         <div  class="status_box" :class="item.status == 1 ? 'active' : 'inactive' ">
-                            {{item.status ? 'active' : 'inactive' }}
+                            {{item.status == 1 ? 'active' : 'inactive' }} 
                         </div>
                     </div>
 
@@ -141,6 +141,12 @@
             :message = "errorObj['color']"
             :Value = "color"
         />
+        <Switch
+            :isSwitch="status == 1 ? true : false"
+            @onClick = "status = $event, console.log($event)"
+
+        />
+
 
     </ModalLayout>
 
@@ -151,6 +157,7 @@
 import {useConterStore} from "../../../store/counter.js";
 import TableHeader from "./Table-header.vue";
 import router from "../../../router/index.js";
+import Switch from "../../../ui-components/Element/Switch.vue";
 import {
     diseases,
     diseaseShow,
@@ -172,6 +179,7 @@ export default {
     components: {
         Paginate,
         Input,
+        Switch,
         InputColor,
         Select,
         ModalLayout, VueAwesomePaginate,InputDefault, PaginateBtn, TableHeader},
@@ -191,7 +199,9 @@ export default {
             crud:'',
             // input varables
             name: '',
-            color: '#000000'
+            color: '#000000',
+            status: true,
+
 
 
         }
@@ -205,6 +215,7 @@ export default {
             if (id == null){
                 this.crud = 'created';
                 this.name = '';
+                this.status = false;
             }else {
                 this.crud = '';
                 this.UpdatedId = id;
@@ -219,13 +230,19 @@ export default {
             const response = await diseaseShow(this.UpdatedId);
             this.name = response.data.name;
             this.color = response.data.color;
+            this.status = response.data.status ;
+
         },
 
         async crudPatient(){
+
             var data = {
                 'name': this.name,
                 'color': this.color,
+                'status': this.status
+
             }
+            
             var response = '';
             if(this.crud == 'created'){
                 response = await diseaseCreate(data);
@@ -233,6 +250,7 @@ export default {
             }else {
                 response = await diseaseUpdate( this.UpdatedId, data);
             }
+            console.log(response);
             if (response.status){
                 this.name = '';
                 this.color = '#000000';
@@ -337,8 +355,18 @@ export default {
     }
     .active{
         background: #10B981 !important;
-        color: #2E3A47 !important;
+        color: #ffffff !important;
+        /* border: 2px solid  #10B981; */
+        border-radius: 50%;
+     
     }
+    .inactive{
+        background: #e70909bf !important;
+        color: #ffffff !important;
+        /* border: 2px solid #e70909bf; */
+
+    }
+    
     .photo-img{
         width: 50px;
         height: 50px;
@@ -348,7 +376,6 @@ export default {
         background-repeat: no-repeat;
     }
 
-    // ...
     .pagination-container {
         display: flex;
         column-gap: 10px;

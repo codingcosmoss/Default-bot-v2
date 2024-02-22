@@ -1,7 +1,7 @@
 <template>
 
     <li>
-        <input type="checkbox" @input = "this.$emit('onCheck', true)" ></input>
+        <input type="checkbox" @input = "this.$emit('onCheck', true)" />
         &nbsp;
         {{Title}}
     </li>

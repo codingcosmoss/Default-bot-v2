@@ -55,6 +55,32 @@ class DiseasesService extends AbstractService
         ];
     }
 
+    public function isActives($data = null)
+    {
+        $models = $this->model::where('status', Status::$status_active)
+            ->orderBy('updated_at', 'desc')
+            ->paginate($data['pages']);
+
+        $data = [
+            'items' => $this->resource::collection($models),
+            'pagination' => [
+                'total' => $models->total(),
+                'per_page' => $models->perPage(),
+                'current_page' => $models->currentPage(),
+                'last_page' => $models->lastPage(),
+                'from' => $models->firstItem(),
+                'to' => $models->lastItem(),
+            ],
+        ];
+
+        return [
+            'status' => true,
+            'message' => 'Success',
+            'statusCode' => 200,
+            'data' => $data
+        ];
+    }
+
     /**
      * @return array
      */
@@ -63,6 +89,7 @@ class DiseasesService extends AbstractService
         return [
             TextField::make('name')->setRules('required|min:3|max:255'),
             TextField::make('color')->setRules('required|min:3|max:255'),
+            TextField::make('status')->setRules('nullable'),
         ];
     }
 
@@ -109,7 +136,7 @@ class DiseasesService extends AbstractService
             $model = new $this->model;
             $model->name = $data['name'];
             $model->color = $data['color'];
-            $model->status = Status::$status_active;
+            $model->status = $data['status'] == 'true' ? Status::$status_active :  Status::$status_inactive;
 
             if ($model->save()) {
                 DB::commit();
@@ -152,8 +179,7 @@ class DiseasesService extends AbstractService
     public function update(array $data, $id)
     {
 
-        $model = $this->model::where('status', Status::$status_active)
-            ->where('id', $id)
+        $model = $this->model::where('id', $id)
             ->first();
 
         if (!$model) {
@@ -208,7 +234,8 @@ class DiseasesService extends AbstractService
 
             $model->name = $data['name'];
             $model->color = $data['color'];
-            $model->status = Status::$status_active;
+            $model->status = $data['status'] == 'true' ? Status::$status_active :  Status::$status_inactive;
+
 
 
             if ($model->save()) {

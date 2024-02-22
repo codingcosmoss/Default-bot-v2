@@ -52,6 +52,13 @@ export const Languages =  {
         Woman: 'Ayol',
         Created_at: 'Saqlangan vaqti',
         Updated_at: 'O\'zgartirilgan vaqti',
+        AddDoctor: 'Doktorga biriktrish',
+        Doctor: 'Shifokor',
+        ReceptionTime: 'Qabul vaqti',
+        Classification: 'Tasnif',
+        Duration: 'Davomiyligi',
+        Summa: 'Miqdori',
+        
 
 
     },
@@ -108,6 +115,12 @@ export const Languages =  {
         Woman: 'Девушка',
         Created_at: 'Сэкономленное время',
         Updated_at: 'Изменено время',
+        AddDoctor: 'Привязанность к доктору',
+        Doctor: 'Врач',
+        ReceptionTime: 'Время приема',
+        Classification: 'Классификация',
+        Duration: 'Продолжительность',
+        Summa: 'Количество',
 
     }
 

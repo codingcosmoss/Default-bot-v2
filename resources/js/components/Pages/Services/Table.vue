@@ -303,7 +303,6 @@ export default {
         background-repeat: no-repeat;
     }
 
-    // ...
     .pagination-container {
         display: flex;
         column-gap: 10px;

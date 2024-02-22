@@ -63,6 +63,12 @@ class PatientController extends AbstractController
         }
         return $this->sendResponse($item);
     }
+    public function joinDr()
+    {
+        $item = $this->service->joinDr(request()->all());
+        return $this->sendResponse($item);
+    }
+    
 
     /**
      * @return array|JsonResponse

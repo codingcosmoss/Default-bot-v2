@@ -19,5 +19,8 @@ class DatabaseSeeder extends Seeder
              'login' => 'admin',
              'password' =>  Hash::make('121212') ,
          ]);
+        $this->call([
+            MoneyTypeSeeder::class,
+        ]);
     }
 }

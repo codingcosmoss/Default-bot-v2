@@ -68,9 +68,16 @@ body {
 
 .status_box{
     padding: 5px ;
-    border-radius: 10px;
+    border-radius: 50%;
     color: white ;
+    font-size: 10px;
+    transform: scale(1.2);
 }
 input{
     height: 45.5px;
+}
+
+.select-input{
+    height: 46px;
+    padding: 0 10px;
 }

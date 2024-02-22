@@ -33,6 +33,8 @@ trait Status
     public static int $status_deleted = 3;
     public static int $woman = 4;
     public static int $male = 5;
+    public static int $cash = 6;
+
     /**
      * @return string[]
      */

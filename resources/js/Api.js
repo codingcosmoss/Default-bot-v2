@@ -28,6 +28,9 @@ export const employeeCreate = async (data) => {
 };
 
 export const Employees = async (id, pages) => {
+    if (id == null) {
+        return  GET('/employee/index?pages='+pages);
+    }
     return  GET('/employee/index?page='+id+'&pages='+pages);
 };
 export const showEmployee = async (data) => {
@@ -116,6 +119,14 @@ export const diseases = async (id, pages) => {
     }
 };
 
+export const getDiseases = async (id, pages) => {
+    if (id != null){
+        return  GET('/disease/is-actives?page='+id+'&pages='+pages);
+    }else {
+        return  GET('/disease/is-actives?pages='+pages);
+    }
+};
+
 export const diseaseShow = async (data) => {
     return  GET('/disease/show/'+data);
 };
@@ -165,3 +176,6 @@ export const patientDelete = async (data) => {
     return  GET('/patient/delete/'+ data );
 };
 
+export const joinDr = async (data) => {
+    return  POST('patient/join-doctor', data );
+};

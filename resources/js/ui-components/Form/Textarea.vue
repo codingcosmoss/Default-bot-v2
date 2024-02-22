@@ -1,0 +1,60 @@
+<template>
+  <div>
+   
+    <label class="mb-2.5 block text-black dark:text-white">
+      {{ Label }}
+    </label>
+    
+    <textarea
+      :type="Type"
+      min="0"
+      :class="isError == true ? 'isError' : ''"
+      placeholder="..."
+      @input="this.$emit('onInput', $event.target.value)"
+      rows="6"
+      class="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+    >{{ Value }}</textarea>
+    <p v-if="isError" class="text-danger">{{ message }}</p>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    Couple: {
+      type: Boolean,
+      default: true,
+    },
+    Label: {
+      type: String,
+      default: "Input label",
+    },
+    Value: {
+      type: [String, Boolean, Number],
+      default: "",
+    },
+    Type: {
+      type: String,
+      default: "text",
+    },
+    isError: {
+      type: Boolean,
+      default: false,
+    },
+    isLoginError: {
+      type: Boolean,
+      default: false,
+    },
+    message: {
+      type: String,
+      default: "",
+    },
+  },
+};
+</script>
+
+<style>
+.isError {
+  border: 1px solid #ff0000 !important;
+}
+</style>

@@ -95,10 +95,14 @@ export default {
         animation(){
             const aside = document.querySelector('.aside01');
             if (this.navbarAnime){
-                aside.classList.remove('navbar02')
+                if(aside.classList.contains("navbar02")){
+                    aside.classList.remove('navbar02')
+                }
                 aside.classList.add('navbar01')
             }else {
-                aside.classList.remove('navbar01')
+                if(aside.classList.contains("navbar01")){
+                    aside.classList.remove('navbar01')
+                }
                 aside.classList.add('navbar02')
             }
         }
@@ -112,10 +116,16 @@ export default {
 }
 </script>
 <style >
+    .navbar01{
+
+    }
+    .navbar02{
+
+    }
+
     @media (min-width: 1024px) {
         .navbar01{
             width: 80px;
-            //padding: 0;
             animation: box-nav 0.5s linear alternate;
         }
         .navbar02{
