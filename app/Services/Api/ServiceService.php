@@ -8,6 +8,7 @@ use App\Http\Resources\ServiceCategoryResource;
 use App\Http\Resources\ServiceResource;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\UserResources;
+use App\Models\PersonalPrice;
 use App\Models\Service;
 use App\Models\ServiceCategory;
 use App\Models\User;
@@ -106,10 +107,20 @@ class ServiceService extends AbstractService
             $item->order = $data['order'];
             $item->status = $data['status'];
 
-            if ($item->save()) {
-                DB::commit();
 
-            } else {
+            if ($item->save()) {
+                foreach ($data['personal_procents'] as $key => $value) {
+                    $model = new PersonalPrice();
+                    $model->employee_id = $value['employee_id'];
+                    $model->service_id = $item->id;
+                    $model->type = $value['type'];
+                    $model->amount = $value['amount'];
+                    $model->result_price = $value['result_price'];
+                    $model->save();
+                }
+                DB::commit();
+            }
+             else {
                 DB::rollback();
                 return [
                     'status' => false,
@@ -128,8 +139,6 @@ class ServiceService extends AbstractService
                 'data' => $ex->getMessage()
             ];
         }
-
-
         return [
             'status' => true,
             'message' => 'success',
@@ -153,6 +162,7 @@ class ServiceService extends AbstractService
             TextField::make('technic_price')->setRules('required|integer'),
             TextField::make('order')->setRules('required|integer'),
             TextField::make('status')->setRules('required|integer'),
+            TextField::make('personal_procents')->setRules('nullable'),
         ];
     }
 
@@ -226,6 +236,23 @@ class ServiceService extends AbstractService
             $item->technic_price = $data['technic_price'];
             $item->order = $data['order'];
             $item->status = $data['status'];
+
+            if (isset($data['personal_procents'])){
+                if (count($data['personal_procents']) > 0){
+                    $deleteModels =  PersonalPrice::where('service_id', $item->id )->delete();
+                    foreach ($data['personal_procents'] as $key => $value) {
+                        $model = new PersonalPrice();
+                        $model->employee_id = $value['employee_id'];
+                        $model->service_id = $item->id;
+                        $model->type = $value['type'];
+                        $model->amount = $value['amount'];
+                        $model->result_price = $value['result_price'];
+                        $model->save();
+                    }
+                }
+
+            }
+
 
             if ($item->save()) {
                 DB::commit();

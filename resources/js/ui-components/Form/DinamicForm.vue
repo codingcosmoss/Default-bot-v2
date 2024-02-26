@@ -3,7 +3,7 @@
     <ul class="list01" >
         <li class="flex mt-5 " v-for="(item, index) in personal_procents">
             <Select
-                :isError ="errors.includes(index)"
+                :isError ="errors.includes(index)  || summError"
                 :Couple = "false"
                 :Label = "getName('employees')"
                 @onSelect ="this.personal_procents[index]['employee'] = $event, sendData()"
@@ -19,7 +19,7 @@
             </Select>
 
             <Input
-                :isError ="errors.includes(index)"
+                :isError ="errors.includes(index) || summError"
                 style="margin-left: 20px"
                 Type = "number"
                 :Couple = "false"
@@ -29,7 +29,7 @@
             />
 
             <Select
-                :isError ="errors.includes(index)"
+                :isError ="errors.includes(index) || summError"
                 style="width: 100px; margin: 0 20px"
                 :Couple = "false"
                 Label = "Type"
@@ -46,6 +46,7 @@
             </div>
 
         </li>
+        <p v-if="summError" class="text-danger mt-5">{{ getName('summError') }}  </p>
 
         <PrimaryButton2 @click ="addTodo" Class ="btn-primary" class="btn mt-5" Icon = "fa-solid fa-plus" Title = "" />
 
@@ -71,6 +72,16 @@ import { useConterStore } from "../../store/counter";
             errors:{
                 type: [Object, Array],
                 default: []
+            },
+
+            personalProcents:{
+                type: [Object, Array, String],
+                default: []
+            },
+
+            summError:{
+                type: [Boolean],
+                default: false
             }
         },
         methods:{
@@ -82,11 +93,18 @@ import { useConterStore } from "../../store/counter";
                     index: 0,
                 })
             },
+            async getData(){
+                if (this.personalProcents.length > 0){
+                    this.personal_procents =  this.personalProcents;
+                }
+
+            },
             removeTudo(key){
+
                 if (confirm('Do you really want to delete it?')) {
-                    
                     this.personal_procents.splice(key, 1);
                 }
+
             },
             async getEmployes(){
                 const response = await GET('/employee/index?pages=1000');
@@ -104,7 +122,13 @@ import { useConterStore } from "../../store/counter";
 
         },
         mounted() {
-            this.getEmployes()
+            this.getEmployes(),
+            this.getData()
+        },
+        watch:{
+            personalProcents: function (val1, val2){
+                this.getData();
+            }
         }
     }
 </script>

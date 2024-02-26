@@ -121,6 +121,10 @@ const routes = [
         path: '/diseases',
         component: () => import('../components/Pages/Diseases/index.vue'),
     },
+    {
+        path: '/treatmetns',
+        component: () => import('../components/Pages/Treatments/index.vue'),
+    },
 
 
 

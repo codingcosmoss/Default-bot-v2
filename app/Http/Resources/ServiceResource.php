@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\PersonalPrice;
 use App\Models\ServiceCategory;
 use App\Traits\Action;
 use Illuminate\Http\Request;
@@ -30,6 +31,7 @@ class ServiceResource extends JsonResource
             'technic_price' => Action::decimal($this->technic_price),
             'order' => $this->order,
             'status' => $this->status,
+            'personalPrices' => PersonalPrice::where('service_id', $this->id )->get()
         ];
     }
 }

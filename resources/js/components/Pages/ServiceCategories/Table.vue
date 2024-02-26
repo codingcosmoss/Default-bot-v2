@@ -53,15 +53,18 @@
                     </div>
 
                     <div class="flex items-center justify-center p-2.5 xl:p-5">
-                        <p class="font-medium text-black dark:text-white"> {{getName('serial_number')}}</p>
+                        <p   class="font-medium text-black dark:text-white">
+                            {{ item.services.length }}
+                         </p>
                     </div>
 
 
                     <div class="flex items-center justify-center p-2.5 xl:p-5">
                         <div  class="status_box" :class="item.status == 1 ? 'active' : 'inactive' ">
-                            {{item.status ? 'active' : 'inactive' }}
+                            {{item.status ? 'active' : 'inactive' }} 
                         </div>
                     </div>
+
 
                     <div class="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
                         <p class="font-medium text-meta-5">

@@ -74,7 +74,7 @@
                                 <option
                                     v-for=" category in categories"
                                     :value="category.id"
-                                    :selected = "category.id == this.category "
+                                    :selected ="category.id == this.category "
                                 > {{category.name}}</option>
 
                             </Select>
@@ -135,12 +135,15 @@
                         :Couple = "false"
                         :Label = "getName('status')"
                         @onSelect = "this.status = $event"
+
                     >
 
                         <option
+                            :selected="status == 1"
                             :value="1"
                         > Active</option>
                         <option
+                            :selected="status == 0"
                             :value="0"
                         > Inactive</option>
 
@@ -149,6 +152,7 @@
 
                 </div>
 
+                <DinamicForm  :personalProcents = "personalAllProcents" :summError ="summError" :errors="FormErrors" @Data =" personalAllProcents = $event , validate(personalAllProcents)"></DinamicForm>
                 <div class=" pl-7 p-6.5">
 
                     <button @click="create" class="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray">
@@ -168,12 +172,13 @@ import Input from "./Inputs/Input.vue";
 import {useConterStore} from "../../../../store/counter.js";
 import Checkbox from "./Inputs/Checkbox.vue";
 import InputColor from "./Inputs/InputColor.vue";
-import {serviceUpdate, serviceShow, service_categorys} from "../../../../Api.js";
+import {serviceUpdate, serviceShow, service_categorys, serviceCreate} from "../../../../Api.js";
 import {GET} from "../../../../Config.js"
 import {Alert} from "../../../../Config.js";
 import PrimaryButton from "../../../../ui-components/Form/PrimaryButton.vue";
 import PrimaryButton2 from "../../../../ui-components/Form/PrimaryButton2.vue";
 import Select from "./Inputs/Select.vue";
+import DinamicForm from "../../../../ui-components/Form/DinamicForm.vue";
 
 export default {
         data(){
@@ -190,10 +195,13 @@ export default {
                 errorObj: {},
                 personal_procent: false,
                 categories: [],
+                personalAllProcents:[],
+                FormErrors: [],
+                summError: false
 
             }
         },
-        components:{Select, PrimaryButton2, PrimaryButton, InputColor, Checkbox, Input},
+        components:{DinamicForm, Select, PrimaryButton2, PrimaryButton, InputColor, Checkbox, Input},
         methods:{
             getName(val){
                 return useConterStore().getName(val)
@@ -201,6 +209,54 @@ export default {
             async getCategories(){
                 const response = await service_categorys(null, 1000);
                 this.categories = response.data.items
+            },
+            validate(items){
+                console.log('item',items)
+                if (items.length == 0) {
+                    return true;
+                }
+                let errors = [];
+                let summ = 0;
+                items.forEach((item, index) => {
+                    if (
+                        item.employee == '' ||
+                        item.procent < 0 ||
+                        item.procent == ''
+                    ) {
+                        errors.push(index);
+                    }else if(
+                        item.type == '%' &&
+                        item.procent > 100
+                    ) {
+                        errors.push(index);
+                    }else if( item.procent.length > 1 ){
+                        if (item.procent.split('')[0] == 0) {
+                            errors.push(index);
+                        }
+                    }
+                    // Summ
+                    if (item.type == '%') {
+                        summ += (this.price*Number(item.procent))/100;
+                    }else{
+                        summ += Number(item.procent);
+                    }
+
+                });
+
+                if (this.price < summ || this.price <= 0) {
+                    this.summError = true;
+                    return false;
+                }else{
+                    this.summError = false;
+                }
+
+                this.FormErrors =  errors;
+
+                if (errors.length == 0) {
+                    return true;
+                }
+                return false
+
             },
             async getModel(){
                 const response = await serviceShow(this.$route.query.id);
@@ -214,29 +270,62 @@ export default {
                 this.order = model.order
                 this.technic_price = model.technic_price.replace(/\s+/g, '')
 
-                console.log(response.data)
+                let arrData = [];
+                model.personalPrices.forEach((item, index) => {
+                    arrData.push({
+                        employee: item.employee_id,
+                        procent: item.amount,
+                        type: item.type,
+                        index: index,
+                    })
+                });
+
+                this.personalAllProcents = arrData;
 
             },
             async create(){
-                var data = {
-                    'name': this.name,
-                    'order': this.order,
-                    'code': this.code,
-                    'price': this.price,
-                    'category_id': this.category,
-                    'material_price': this.material_price,
-                    'technic_price': this.technic_price,
-                    'status': this.status,
-                }
-                const response = await serviceUpdate(this.$route.query.id, data);
 
-                if (response.status){
-                    Alert('success', 'Created successfully !')
-                    this.$router.push('/services')
-                }else {
-                    this.errorObj = response.data;
-                }
+                if (this.validate(this.personalAllProcents)) {
+                    let summData = [];
+                    this.personalAllProcents.forEach((item, index) => {
+                        let summ = 0;
+                        // Summ
+                        if (item.type == '%') {
+                            summ += (this.price*Number(item.procent))/100;
+                        }else{
+                            summ += Number(item.procent);
+                        }
+                        summData.push({
+                            employee_id: item.employee,
+                            amount: item.procent,
+                            result_price: summ,
+                            type: item.type,
+                        });
 
+                    });
+
+                    var data = {
+                        name: this.name,
+                        order: this.order,
+                        code: this.code,
+                        price: this.price,
+                        category_id: this.category,
+                        material_price: this.material_price,
+                        technic_price: this.technic_price,
+                        status: this.status,
+                        personal_procents: summData,
+                    };
+
+                    const response = await serviceUpdate(this.$route.query.id, data);
+                    if (response.status){
+                        Alert('success', 'Created successfully !')
+                        this.$router.push('/services')
+                    }else {
+                        this.errorObj = response.data;
+                        Alert('error', 'There is an error in the form');
+
+                    }
+                }
 
             },
 

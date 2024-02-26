@@ -137,7 +137,7 @@
           </p>
         </div>
 
-        <DinamicForm :errors="FormErrors" @Data ="personalProcents = $event, validate(personalProcents)"></DinamicForm>
+        <DinamicForm :summError ="summError" :errors="FormErrors" @Data ="personalProcents = $event, validate(personalProcents)"></DinamicForm>
 
         <div class="pl-7 p-6.5">
           <button
@@ -156,7 +156,6 @@
 import Input from "./Inputs/Input.vue";
 import { useConterStore } from "../../../../store/counter.js";
 import Checkbox from "./Inputs/Checkbox.vue";
-import InputColor from "./Inputs/InputColor.vue";
 import { serviceCreate, Employees, service_categorys } from "../../../../Api.js";
 import { GET } from "../../../../Config.js";
 import { Alert } from "../../../../Config.js";
@@ -170,7 +169,7 @@ export default {
       name: "",
       order: "",
       code: "",
-      price: "",
+      price: 0,
       category: "",
       material_price: "",
       technic_price: "",
@@ -180,15 +179,15 @@ export default {
       personal_procent: false,
       categories: [],
       personalProcents:[],
-      FormErrors: []
-    
+      FormErrors: [],
+      summError: false
+
     };
   },
   components: {
     Select,
     PrimaryButton2,
     PrimaryButton,
-    InputColor,
     Checkbox,
     Input,
     DinamicForm,
@@ -203,11 +202,29 @@ export default {
       this.categories = response.data.items;
     },
 
+
     async create() {
+
       if (this.validate(this.personalProcents)) {
-        Alert("success", "Created successfully !");
-        return true;
-          var data = {
+        let summData = [];
+        this.personalProcents.forEach((item, index) => {
+          let summ = 0;
+          // Summ
+          if (item.type == '%') {
+              summ += (this.price*Number(item.procent))/100;
+          }else{
+              summ += Number(item.procent);
+          }
+          summData.push({
+              employee_id: item.employee,
+              amount: item.procent,
+              result_price: summ,
+              type: item.type,
+          });
+
+      });
+
+        var data = {
           name: this.name,
           order: this.order,
           code: this.code,
@@ -216,11 +233,11 @@ export default {
           material_price: this.material_price,
           technic_price: this.technic_price,
           status: this.status,
-          color: this.color,
-          personal_procents: this.personalProcents,
+          personal_procents: summData,
         };
-        const response = await serviceCreate(data);
 
+        const response = await serviceCreate(data);
+          console.log('Response:', response);
         if (response.status) {
           Alert("success", "Created successfully !");
           this.$router.push("/services");
@@ -230,24 +247,25 @@ export default {
       }
 
       Alert('error', 'There is an error in the form');
-      
+
     },
     validate(items){
       console.log(items);
       if (items.length == 0) {
         return true;
       }
-      let errors = []; 
+      let errors = [];
+      let summ = 0;
       items.forEach((item, index) => {
           if (
             item.employee == '' ||
-            item.procent < 0 || 
+            item.procent < 0 ||
             item.procent == ''
             ) {
               errors.push(index);
           }else if(
             item.type == '%' &&
-            item.procent > 100 
+            item.procent > 100
             ) {
               errors.push(index);
           }else if( item.procent.length > 1 ){
@@ -255,7 +273,21 @@ export default {
               errors.push(index);
             }
           }
+          // Summ
+          if (item.type == '%') {
+              summ += (this.price*Number(item.procent))/100;
+          }else{
+              summ += Number(item.procent);
+          }
+
       });
+
+      if (this.price < summ || this.price <= 0) {
+          this.summError = true;
+          return false;
+      }else{
+        this.summError = false;
+      }
 
       this.FormErrors =  errors;
 
@@ -263,7 +295,6 @@ export default {
           return true;
       }
       return false
-
 
     },
     hasKey(key) {

@@ -179,3 +179,14 @@ export const patientDelete = async (data) => {
 export const joinDr = async (data) => {
     return  POST('patient/join-doctor', data );
 };
+
+
+// Treatment
+
+export const Treatments = async (id, pages) => {
+    if (id != null){
+        return  GET('/treatmetn/index?page='+id+'&pages='+pages);
+    }else {
+        return  GET('/treatmetn/index?pages='+pages);
+    }
+};

@@ -34,6 +34,12 @@
             Icon = "fa-solid fa-book"
         />
 
+        <Menu
+            Path = "/treatmetns"
+            :Title = "getName('Treatmetns')"
+            Icon = "fs-5 fas fa-book-medical"
+        />
+
 <!--        <MenuList>-->
 <!--            <Menu />-->
 <!--        </MenuList>-->

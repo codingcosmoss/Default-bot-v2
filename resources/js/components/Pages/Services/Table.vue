@@ -68,15 +68,17 @@
 
                 <TableHeader></TableHeader>
 
-                <div v-for="(item, index) in items" class="grid grid-cols-8 border-b border-stroke dark:border-strokedark sm:grid-cols-8">
+                <div v-for="(item, index) in items" class="grid grid-cols-7 border-b border-stroke dark:border-strokedark sm:grid-cols-7">
 
                     <div class="flex items-center gap-3 p-2.5 xl:p-5">
                         <p class="font-medium hidden text-black dark:text-white sm:block">{{index+1}}.  {{item.name}}</p>
                     </div>
 
+                    <!--
                     <div class="flex items-center justify-center p-2.5 xl:p-5">
                         <p class="font-medium text-black dark:text-white">{{item.code}}</p>
                     </div>
+                    -->
 
                     <div class="flex items-center justify-center p-2.5 xl:p-5">
                         <p class="font-medium text-black dark:text-white">{{item.price}}</p>

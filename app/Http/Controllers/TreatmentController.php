@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Treatment;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
 
 class TreatmentController extends Controller
 {
@@ -60,6 +61,6 @@ class TreatmentController extends Controller
      */
     public function destroy(Treatment $treatment)
     {
-        //
+
     }
 }

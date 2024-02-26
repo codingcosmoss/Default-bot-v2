@@ -58,7 +58,11 @@ export const Languages =  {
         Classification: 'Tasnif',
         Duration: 'Davomiyligi',
         Summa: 'Miqdori',
-        
+        summError: "Jami summa xizmat narxidan oshib ketmasligi kerak",
+        Treatmetns: 'Davolanishlar',
+        TreatmentStarted_at: 'Davolash sanasi'
+
+
 
 
     },
@@ -121,6 +125,9 @@ export const Languages =  {
         Classification: 'Классификация',
         Duration: 'Продолжительность',
         Summa: 'Количество',
+        summError: "Общая сумма не должна превышать стоимость услуги",
+        Treatmetns: 'Лечение',
+        TreatmentStarted_at: 'Дата лечения'
 
     }
 

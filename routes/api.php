@@ -64,11 +64,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/update/{id}', [\App\Http\Controllers\Api\PatientController::class, 'update']);
         Route::get('/delete/{id}', [\App\Http\Controllers\Api\PatientController::class, 'delete']);
         Route::post('/search', [\App\Http\Controllers\Api\PatientController::class, 'search']);
-        
+
         Route::post('/join-doctor', [\App\Http\Controllers\Api\PatientController::class, 'joinDr']);
     });
 
-    // Diseases  
+    // Diseases
     Route::group(['prefix' => 'disease'], function () {
         Route::get('/index', [\App\Http\Controllers\Api\DiseasesController::class, 'index']);
         Route::get('/is-actives', [\App\Http\Controllers\Api\DiseasesController::class, 'isActives']);
@@ -79,8 +79,16 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/search', [\App\Http\Controllers\Api\DiseasesController::class, 'search']);
     });
 
-
-
+    // Treatmetns
+    Route::group(['prefix' => 'treatmetn'], function () {
+        Route::get('/index', [\App\Http\Controllers\Api\DiseasesController::class, 'index']);
+//        Route::get('/is-actives', [\App\Http\Controllers\Api\DiseasesController::class, 'isActives']);
+//        Route::post('/create', [\App\Http\Controllers\Api\DiseasesController::class, 'create']);
+//        Route::get('/show/{id}', [\App\Http\Controllers\Api\DiseasesController::class, 'show']);
+//        Route::post('/update/{id}', [\App\Http\Controllers\Api\DiseasesController::class, 'update']);
+//        Route::get('/delete/{id}', [\App\Http\Controllers\Api\DiseasesController::class, 'delete']);
+//        Route::post('/search', [\App\Http\Controllers\Api\DiseasesController::class, 'search']);
+    });
 
 
 

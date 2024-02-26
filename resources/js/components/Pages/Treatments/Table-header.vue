@@ -4,36 +4,33 @@
     <div class="grid grid-cols-7 border-b border-stroke dark:border-strokedark sm:grid-cols-7 overflow-x-auto" >
 
         <div class="flex items-center justify-center p-2.5 xl:p-5">
-            <p  class="font-medium text-black dark:text-white"> {{getName('name_content')}}</p>
-        </div>
-
-        <!--
-        <div class="flex items-center justify-center p-2.5 xl:p-5">
-            <p class="font-medium text-black dark:text-white"> {{getName('code')}}</p>
-        </div>
-        -->
-
-        <div class="flex items-center justify-center p-2.5 xl:p-5">
-            <p class="font-medium text-black dark:text-white"> {{getName('price')}}</p>
+            <p class="font-medium text-black dark:text-white"> {{getName('name')}}</p>
         </div>
 
         <div class="flex items-center justify-center p-2.5 xl:p-5">
-            <p class="font-medium text-black dark:text-white"> {{getName('category')}}</p>
+            <p class="font-medium text-black dark:text-white"> {{getName('last_name')}}</p>
         </div>
 
         <div class="flex items-center justify-center p-2.5 xl:p-5">
-            <p class="font-medium text-black dark:text-white"> {{getName('material_price')}}</p>
+            <p class="font-medium text-black dark:text-white"> {{getName('Doctor')}}</p>
         </div>
+
         <div class="flex items-center justify-center p-2.5 xl:p-5">
-            <p class="font-medium text-black dark:text-white"> {{getName('technic_price')}}</p>
+            <p class="font-medium text-black dark:text-white"> {{getName('TreatmentStarted_at')}}</p>
         </div>
+
         <div class="flex items-center justify-center p-2.5 xl:p-5">
             <p class="font-medium text-black dark:text-white"> {{getName('status')}}</p>
         </div>
 
         <div class="flex items-center justify-center p-2.5 xl:p-5">
+            <p class="font-medium text-black dark:text-white"> {{getName('Payment_status')}}</p>
+        </div>
+
+        <div class="flex items-center justify-center p-2.5 xl:p-5">
             <p class="font-medium text-black dark:text-white"> {{getName('actions')}}</p>
         </div>
+
     </div>
 
 </template>

@@ -4,7 +4,7 @@
       class="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1"
     >
       <h4 class="mb-6 text-xl font-bold text-black dark:text-white">
-        {{ getName("Patients") }}
+        {{ getName("Treatmetns") }}
       </h4>
 
       <div class="flex flex-col">
@@ -219,7 +219,7 @@ import Input from "../../../ui-components/Form/Input.vue";
 import InputDefault from "../../../ui-components/Form/InputDefault.vue";
 import ModalLayout from "../../../ui-components/Element/Modal01/ModalLayout.vue";
 import {
-  patients,
+  Treatments,
   patientShow,
   patientDelete,
   patientsSearch,
@@ -377,7 +377,7 @@ export default {
     },
 
     async getItems() {
-      const response = await patients(this.currentPage, this.paginateCount);
+      const response = await Treatments(this.currentPage, this.paginateCount);
 
       this.pagination = response.data.pagination;
       this.last_page = response.data.pagination.last_page;
