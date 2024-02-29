@@ -1,7 +1,7 @@
 <template>
 
     <!-- Menu Item Calendar -->
-    <li @click = "this.$router.push(Path)" style="cursor: pointer">
+    <li @click = "this.$router.push(Path)" style="cursor: pointer" class="nav_menu_box" :class="this.$route.path == Path ? 'navbar-active' : '' " >
         <a class="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4"
             @click="selected = (selected === 'Calendar' ? '' : 'Calendar')"
            :class="{ 'bg-graydark dark:bg-meta-4': (selected === 'Calendar') && (page === 'calendar') }">
@@ -34,6 +34,7 @@ export default {
             default: '/'
         }
     }
+
 }
 </script>
 
@@ -44,5 +45,7 @@ export default {
         }
 
     }
+
+
 
 </style>

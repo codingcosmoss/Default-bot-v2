@@ -4,7 +4,7 @@
       class="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1"
     >
       <h4 class="mb-6 text-xl font-bold text-black dark:text-white">
-        {{ getName("Treatmetns") }}
+        {{ getName("Payments") }}
       </h4>
 
       <div class="flex flex-col">
@@ -24,13 +24,11 @@
               @input="column = $event.target.value"
               class="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary ml-4"
             >
-              <option selected value="sort_order">{{ getName("serial_number") }}</option>
               <option value="id">Id</option>
-              <option value="start">{{ getName("TreatmentStarted_at") }}</option>
-              <option value="status">{{ getName("New") }}</option>
-              <!-- <option value="price">{{getName('price')}}</option> -->
-              <option value="created_at">{{ getName("Created_at") }}</option>
-              <option value="updated_at">{{ getName("Updated_at") }}</option>
+            <option value="amount">{{getName('name')}}</option>
+            <option value="amount">{{getName('Amount')}}</option>
+              <option selected value="created_at">{{ getName("Created_at") }}</option>
+              <option  value="updated_at">{{ getName("Updated_at") }}</option>
             </select>
           </div>
 

@@ -81,13 +81,36 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Treatmetns
     Route::group(['prefix' => 'treatmetn'], function () {
-        Route::get('/index', [\App\Http\Controllers\Api\DiseasesController::class, 'index']);
+        Route::get('/index', [\App\Http\Controllers\Api\TreatmentController::class, 'index']);
 //        Route::get('/is-actives', [\App\Http\Controllers\Api\DiseasesController::class, 'isActives']);
 //        Route::post('/create', [\App\Http\Controllers\Api\DiseasesController::class, 'create']);
-//        Route::get('/show/{id}', [\App\Http\Controllers\Api\DiseasesController::class, 'show']);
+        Route::get('/show/{id}', [\App\Http\Controllers\Api\TreatmentController::class, 'show']);
 //        Route::post('/update/{id}', [\App\Http\Controllers\Api\DiseasesController::class, 'update']);
 //        Route::get('/delete/{id}', [\App\Http\Controllers\Api\DiseasesController::class, 'delete']);
 //        Route::post('/search', [\App\Http\Controllers\Api\DiseasesController::class, 'search']);
+    });
+
+
+    // Paymetn Types
+    Route::group(['prefix' => 'payment-type'], function () {
+        Route::get('/index', [\App\Http\Controllers\Api\PaymentTypeController::class, 'index']);
+        Route::get('/is-actives', [\App\Http\Controllers\Api\PaymentTypeController::class, 'isActives']);
+        Route::post('/create', [\App\Http\Controllers\Api\PaymentTypeController::class, 'create']);
+        Route::get('/show/{id}', [\App\Http\Controllers\Api\PaymentTypeController::class, 'show']);
+        Route::post('/update/{id}', [\App\Http\Controllers\Api\PaymentTypeController::class, 'update']);
+        Route::get('/delete/{id}', [\App\Http\Controllers\Api\PaymentTypeController::class, 'delete']);
+        Route::post('/search', [\App\Http\Controllers\Api\PaymentTypeController::class, 'search']);
+    });
+
+    // Paymetns
+    Route::group(['prefix' => 'payment'], function () {
+        Route::get('/index', [\App\Http\Controllers\Api\PaymentTypeController::class, 'index']);
+        Route::get('/is-actives', [\App\Http\Controllers\Api\PaymentTypeController::class, 'isActives']);
+        Route::post('/create', [\App\Http\Controllers\Api\PaymentTypeController::class, 'create']);
+        Route::get('/show/{id}', [\App\Http\Controllers\Api\PaymentTypeController::class, 'show']);
+        Route::post('/update/{id}', [\App\Http\Controllers\Api\PaymentTypeController::class, 'update']);
+        Route::get('/delete/{id}', [\App\Http\Controllers\Api\PaymentTypeController::class, 'delete']);
+        Route::post('/search', [\App\Http\Controllers\Api\PaymentTypeController::class, 'search']);
     });
 
 

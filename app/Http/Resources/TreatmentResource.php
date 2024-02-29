@@ -19,10 +19,16 @@ class TreatmentResource extends JsonResource
             'id' => $this->id,
             'patient_id' => $this->patient_id,
             'patient' => $this->patient,
+            'doctor_id' => $this->user_id,
+            'doctor' => $this->user,
             'start' => $this->start,
             'status' => $this->status,
+            'payment_status' => $this->payment_status,
             'user_payment' => $this->user_payment,
-            'payment_amount' => $this->payment_amount,
+            'payment_amount' => $this->payment_amount, // To'lanadigan miqdor
+            'discount_total_sum' => $this->discount_total_sum, // Berilgan chegirma miqdor
+            'service_real_price' => $this->service_real_price, // Xizimat narxi
+            'payment_type' => $this->payment_type, // Payment type
         ];
     }
 }

@@ -60,8 +60,25 @@ export const Languages =  {
         Summa: 'Miqdori',
         summError: "Jami summa xizmat narxidan oshib ketmasligi kerak",
         Treatmetns: 'Davolanishlar',
-        TreatmentStarted_at: 'Davolash sanasi'
-
+        TreatmentStarted_at: 'Davolash sanasi',
+        New: 'Yangi',
+        DoctorFinished: 'Doktor tomonidan tugatildi',
+        Finished: 'Tugatildi',
+        Unpaint: "To'lanmagan",
+        NotFullPaint: "To'liq to'lanmagan",
+        Closed: "Yopilgan",
+        PatientEndPayment: "Bemorning oxirgi to'lovi",
+        AmountOwed: 'Qarzdorlik summasi',
+        PaymentAmount: 'To\'lov summasi',
+        AmountOwedType: "Bemorning oxirgi to'lov turi",
+        Payments: "To'lovlar",
+        PaymentTypes: "To'lov turlari",
+        DebtTreatments: "Qarzdor davolanishlar",
+        EmployeeReports: "Xodimlar hisobotlar",
+        PayingEmployees: "Xodimlarga pul berish",
+        DailyExpenses: "Kunlik xarajatlar",
+        Reports: "Hisobotlar",
+        Amount: "Miqdori",
 
 
 
@@ -127,7 +144,25 @@ export const Languages =  {
         Summa: 'Количество',
         summError: "Общая сумма не должна превышать стоимость услуги",
         Treatmetns: 'Лечение',
-        TreatmentStarted_at: 'Дата лечения'
+        TreatmentStarted_at: 'Дата лечения',
+        New: 'Новый',
+        DoctorFinished: 'Завершено доктором',
+        Finished: 'Законченный',
+        Unpaint: 'Неоплачиваемый',
+        NotFullPaint: 'Оплачено не полностью',
+        Closed: 'Закрыто',
+        PatientEndPayment: "Последний платеж пациента",
+        AmountOwed: 'Причитающаяся сумма',
+        AmountOwedType: "Последний вид оплаты пациента",
+        PaymentAmount: 'К оплате',
+        Payments: "Платежи",
+        PaymentTypes: "Виды оплаты",
+        DebtTreatments: "Лечение долга",
+        EmployeeReports: "Отчеты сотрудников",
+        PayingEmployees: "Оплата сотрудников",
+        DailyExpenses: "Ежедневные расходы",
+        Reports: "Отчеты",
+        Amount: "Количество",
 
     }
 

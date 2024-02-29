@@ -3,7 +3,7 @@
       <div class="switch">
 
         <label class="mb-2.5 block text-black dark:text-white">
-            sasasa
+            {{Title}}
         </label>
 
         <div x-data="{ isSwitch: false }">
@@ -19,7 +19,7 @@
                       </div>
                     </label>
                   </div>
-                  
+
 
       </div>
 
@@ -28,12 +28,16 @@
 <script>
 
 export default {
-   
+
     props:
     {
         isSwitch:{
             type: Boolean,
             default:false
+        },
+        Title:{
+            type: String,
+            default: 'Status'
         }
     }
 }

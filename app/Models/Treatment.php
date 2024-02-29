@@ -14,4 +14,11 @@ class Treatment extends Model
     {
         return $this->belongsTo(Patient::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }
+

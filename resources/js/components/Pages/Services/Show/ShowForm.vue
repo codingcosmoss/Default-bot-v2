@@ -2,11 +2,13 @@
 
     <ModalLayout :isSubmit = "false"   :isModal = "isCreateModal" @closeModal = "this.$emit('closeModal', $event) " :Title = "getName('create')" >
 
-        <table v-if="Model != []">
+        <table class="table01" v-if="Model != []" >
+
             <tr>
                 <th>ID: &nbsp;&nbsp;</th>
                 <td>{{Model['id']}}</td>
             </tr>
+
             <tr>
                 <th>{{getName('code')}}: &nbsp;&nbsp;</th>
                 <td>{{Model['code']}}</td>
@@ -102,10 +104,18 @@ export default {
 </script>
 
 <style scoped>
-    th{
-        text-align: left;
-    }
-    td{
-        font-weight: 100;
-    }
+table{
+    width: 100%;
+}
+th{
+    text-align: left;
+    border: 2px solid rgba(37, 154, 230, 0.7);
+    padding: 10px;
+}
+td{
+    font-weight: 100;
+    border: 2px solid rgba(37, 154, 230, 0.7);
+    padding: 10px;
+}
+
 </style>

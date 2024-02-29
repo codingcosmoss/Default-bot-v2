@@ -40,7 +40,48 @@
             Icon = "fs-5 fas fa-book-medical"
         />
 
-<!--        <MenuList>-->
+        <Menu
+            Path = "/payments"
+            :Title = "getName('Payments')"
+            Icon = "fa-solid fa-money-check-dollar"
+        />
+
+        <Menu
+            Path = "/payment-types"
+            :Title = "getName('PaymentTypes')"
+            Icon = "fa-solid fa-credit-card"
+        />
+
+        <Menu
+            Path = "/debt-treatments"
+            :Title = "getName('DebtTreatments')"
+            Icon = "fa-solid fa-money-check-dollar"
+        />
+
+        <Menu
+            Path = "/employee-reports"
+            :Title = "getName('EmployeeReports')"
+            Icon = "fa-solid fa-money-check"
+        />
+
+        <Menu
+            Path = "/paying-employees"
+            :Title = "getName('PayingEmployees')"
+            Icon = "fa-solid fa-money-bills"
+        />
+
+        <Menu
+            Path = "/daily-expenses"
+            :Title = "getName('DailyExpenses')"
+            Icon = "fa-solid fa-file-contract"
+        />
+
+        <Menu
+            Path = "/reports"
+            :Title = "getName('Reports')"
+            Icon = "fa-solid fa-layer-group"
+        />
+        <!--        <MenuList>-->
 <!--            <Menu />-->
 <!--        </MenuList>-->
 

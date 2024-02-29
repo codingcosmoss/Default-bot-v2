@@ -126,6 +126,20 @@ const routes = [
         component: () => import('../components/Pages/Treatments/index.vue'),
     },
 
+    // PaymentTypes
+
+    {
+        path: '/payment-types',
+        component: () => import('../components/Pages/PaymentTypes/index.vue'),
+    },
+
+    // Payments
+    {
+        path: '/payments',
+        component: () => import('../components/Pages/Payments/index.vue'),
+    },
+
+
 
 
 ];

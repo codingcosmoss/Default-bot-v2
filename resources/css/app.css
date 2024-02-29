@@ -81,3 +81,16 @@ input{
     height: 46px;
     padding: 0 10px;
 }
+.disabled{
+    pointer-events: none;
+    color: rgba(0, 255, 255, 0.41);
+}
+
+
+.nav_menu_box{
+    border-radius: 10px;
+    box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.3);
+}
+.navbar-active{
+    background: rgba(37, 154, 230, 0.62);
+}

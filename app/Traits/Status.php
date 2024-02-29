@@ -35,6 +35,14 @@ trait Status
     public static int $male = 5;
     public static int $cash = 6;
 
+    // Treatments
+    public static int $new = 7;
+    public static int $doctorFinished = 8;
+    public static int $finished = 9;
+    public static int $unpaid = 10;
+    public static int $notFullyPaid = 11;
+    public static int $Closed = 12;
+
     /**
      * @return string[]
      */
@@ -45,6 +53,12 @@ trait Status
             self::$status_inactive => 'Nofaol',
             self::$status_waiting => "Kutish holatida",
             self::$status_deleted => "O'chirilgan",
+            self::$new => "Yangi",
+            self::$doctorFinished => "Shifokor tomonidan tugatildi",
+            self::$finished => "Tugatilgan",
+            self::$unpaid => "To'lanmagan",
+            self::$notFullyPaid => "To'liq to'lanmagan",
+            self::$Closed => "Yopilgan",
         ];
     }
 

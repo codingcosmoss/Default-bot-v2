@@ -190,3 +190,74 @@ export const Treatments = async (id, pages) => {
         return  GET('/treatmetn/index?pages='+pages);
     }
 };
+
+export const TreatmentShow = async (data) => {
+    return  GET('/treatmetn/show/'+data);
+};
+
+// Payment types
+
+export const PaymentTypes = async (id, pages) => {
+    if (id != null){
+        return  GET('/payment-type/index?page='+id+'&pages='+pages);
+    }else {
+        return  GET('/payment-type/index?pages='+pages);
+    }
+};
+
+
+
+export const paymentTypesShow = async (data) => {
+    return  GET('/payment-type/show/'+data);
+};
+
+export const paymentTypesCreate = async (data) => {
+    return  POST('/payment-type/create', data );
+};
+export const paymentTypesUpdate = async (id, data) => {
+    return  POST('/payment-type/update/'+id, data );
+};
+
+export const paymentTypessSearch = async (data) => {
+    return  POST('/payment-type/search', data );
+};
+
+export const paymentTypesDelete = async (data) => {
+    return  GET('/payment-type/delete/'+ data );
+};
+
+
+// Payments
+
+export const payments = async (id, pages) => {
+    if (id != null){
+        return  GET('/payment/index?page='+id+'&pages='+pages);
+    }else {
+        return  GET('/payment/index?pages='+pages);
+    }
+};
+
+export const paymentShow = async (data) => {
+    return  GET('/payment/show/'+data);
+};
+
+export const paymentCreate = async (data) => {
+    return  POST('/payment/create', data );
+};
+export const paymentUpdate = async (id, data) => {
+    return  POST('/payment/update/'+id, data );
+};
+
+export const paymentsSearch = async (data) => {
+    return  POST('/payment/search', data );
+};
+
+export const paymentDelete = async (data) => {
+    return  GET('/payment/delete/'+ data );
+};
+
+export const joinDr = async (data) => {
+    return  POST('payment/join-doctor', data );
+};
+
+

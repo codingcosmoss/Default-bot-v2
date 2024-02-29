@@ -1,52 +1,18 @@
 <template >
     <div class="col-span-12 xl:col-span-12">
         <!-- Breadcrumb Start -->
-        <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between" style="justify-content: flex-end">
 
             <nav>
                 <ol class="flex items-center gap-2">
-                    <li><a class="font-medium cursor-pointer" @click = "this.$router.push('/service-categories')"> {{getName('service_types')}} /</a></li>
+                    <li><a class="font-medium cursor-pointer" @click = "this.$router.push('/employees')"> {{getName('employees')}} /</a></li>
                     <li  class=" font-medium text-primary">{{getName('show')}}</li>
                 </ol>
             </nav>
         </div>
-
-        <h4 class="text-title-md font-bold text-black dark:text-white mb-5">
-            Name
-        </h4>
-
-        <ContentBox style="margin-bottom: 25px ">
-            <ContentBlock
-                Title = "name"
-                Text = " "
-                :Icon = "1"
-                Item = ""
-            />
-            <ContentBlock
-                Title = "name"
-                Text = " "
-                :Icon = "1"
-                Item = ""
-            />
-            <ContentBlock
-                Title = "name"
-                Text = " "
-                :Icon = "1"
-                Item = ""
-            />
-            <ContentBlock
-                Title = "name"
-                Text = " "
-                :Icon = "1"
-                Item = ""
-            />
-        </ContentBox>
-
-
-
         <div
-
-            class="rounded-sm border mb-5 border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+            style="max-width: 500px; margin: 0 auto"
+            class="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
             <h4 class="mb-6 text-xl font-bold text-black dark:text-white">
                 {{item.name}}
             </h4>
@@ -54,31 +20,47 @@
             <table border="1" >
 
                 <tr>
-                    <th>{{getName('name_content')}}:</th>
+                    <th>{{getName('fio')}}:</th>
                     <td>{{item.name}}</td>
                 </tr>
                 <tr>
-                    <th>{{getName('status')}}:</th>
-                    <td>{{item.status == 1 ? 'Active' : 'Inactive'}}</td>
+                    <th>{{getName('position')}}:</th>
+                    <td>{{item.position}}</td>
+                </tr>
+                <tr>
+                    <th>{{getName('login')}}:</th>
+                    <td>{{item.login}}</td>
+                </tr>
+                <tr>
+                    <th>{{getName('color')}}:</th>
+                    <td>
+                        <div style="width: 40px; height: 20px; " :style = " 'background:'+item.color +'' " ></div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>{{getName('serial_number')}}:</th>
+                    <td>{{item.sort_order}}</td>
+                </tr>
+                <tr>
+                    <th>{{getName('image')}}:</th>
+                    <td style="border: 2px solid rgba(235,152,8,0.82)" > <div class="photo-img" :style="'background-image: url(' + item.image + ')'" style="width: 100px; height: 100px" ></div></td>
                 </tr>
 
             </table>
 
-        </div>
 
+        </div>
     </div>
 
 </template>
 <script>
 import {useConterStore} from "../../../../store/counter.js";
 import TableHeader from "./Table-header.vue";
-import {service_categoryShow} from "../../../../Api.js";
-import Contents from "../../../../ui-components/Element/Contents.vue";
-import ContentBox from "../../../../ui-components/Element/Contents/ContentBox.vue";
-import ContentBlock from "../../../../ui-components/Element/Contents/ContentBlock.vue";
+import {showEmployee} from "../../../../Api.js";
+import Table from "../Table.vue";
 
 export default {
-    components: {ContentBlock, ContentBox, Contents, TableHeader},
+    components: {Table, TableHeader},
     data(){
         return{
             item: [],
@@ -98,7 +80,7 @@ export default {
             return useConterStore().getName(val)
         },
         async getItem(){
-            const response = await service_categoryShow(this.$route.query.id);
+            const response = await showEmployee(this.$route.query.id);
             console.log( response.data)
             this.item = response.data;
 
@@ -136,11 +118,6 @@ export default {
         border-radius: 10px;
 
     }
-    .contents{
-        width: 100%;
-        background: blueviolet;
-        display: flex;
-    }
     .btn01 svg{
         background: rgba(46, 58, 71, 0.07);
         border: 1px solid rgba(245, 245, 245, 0.33);
@@ -155,7 +132,6 @@ export default {
     .active{
         background: #10B981 !important;
         color: #2E3A47 !important;
-
     }
 
 
