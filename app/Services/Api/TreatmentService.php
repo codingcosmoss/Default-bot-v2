@@ -443,16 +443,16 @@ class TreatmentService extends AbstractService
     public function search(array $data)
     {
         $key = $data['search'] ?? '';
-        $column = $data['column'] ?? 'sort_order';
+        $column = $data['column'] ?? 'updated_at';
         $sort = $data['order'] ?? 'asc';
 
-        $models = $this->model::where(function ($query) use ($key) {
-            empty($key) ? $query : $query->orWhere('first_name', 'like', '%' . $key . '%')
-                ->orWhere('last_name', 'like', '%' . $key . '%')
-                ->orWhere('phone', 'like', '%' . $key . '%')
-                ->orWhere('address', 'like', '%' . $key . '%');
+        $models = $this->model::join('patients', 'treatments.patient_id', '=', 'patients.id')
+            ->select('patients.first_name', 'patients.last_name', 'treatments.*')
+            ->where(function ($query) use ($key) {
+            empty($key) ? $query : $query->orWhere('patients.first_name', 'like', '%' . $key . '%')
+                ->orWhere('patients.last_name', 'like', '%' . $key . '%')
+                ->orWhere('treatments.start', 'like', '%' . $key . '%');
         })
-            ->where('status', '!=', Status::$status_deleted)
             ->orderBy($column, $sort)
             ->paginate($data['paginate']);
 

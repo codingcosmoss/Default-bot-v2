@@ -36,7 +36,9 @@ class PaymentService extends AbstractService
      */
     public function index($data = null)
     {
-        $models = $this->model::orderBy('updated_at', 'desc')
+        $models = $this->model::join('patients', 'payments.patient_id', '=', 'patients.id')
+            ->select('payments.*', 'patients.first_name', 'patients.last_name')
+            ->orderBy('payments.updated_at', 'desc')
             ->paginate($data['pages']);
 
         $data = [
@@ -347,11 +349,17 @@ class PaymentService extends AbstractService
     public function search(array $data)
     {
         $key = $data['search'] ?? '';
-        $column = $data['column'] ?? 'updated_at';
+        $column = $data['column'] ?? 'payments.updated_at';
         $sort = $data['order'] ?? 'asc';
 
-        $models = $this->model::where(function ($query) use ($key) {
-            empty($key) ? $query : $query->where('name', 'like', '%' . $key . '%');
+        $models = $this->model::join('patients', 'payments.patient_id', '=', 'patients.id')
+            ->select('payments.*', 'patients.first_name', 'patients.last_name')
+            ->where(function ($query) use ($key) {
+                empty($key) ? $query : $query->where('patients.first_name', 'like', '%' . $key . '%');
+                empty($key) ? $query : $query->where('patients.last_name', 'like', '%' . $key . '%');
+                empty($key) ? $query : $query->where('payments.amount', 'like', '%' . $key . '%');
+                empty($key) ? $query : $query->where('payments.updated_at', 'like', '%' . $key . '%');
+                empty($key) ? $query : $query->where('payments.created_at', 'like', '%' . $key . '%');
         })
             ->orderBy($column, $sort)
             ->paginate($data['paginate']);

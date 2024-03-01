@@ -94,7 +94,7 @@ export default {
     }
 }
 </script>
-<style >
+<style scoped >
     .fa-solid{cursor: pointer}
     table {
         border-collapse: separate;

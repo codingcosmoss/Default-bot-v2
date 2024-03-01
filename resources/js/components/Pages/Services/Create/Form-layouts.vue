@@ -1,10 +1,10 @@
 <template>
   <!-- Breadcrumb Start -->
-  <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+  <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between" style="justify-content: flex-end">
     <nav>
       <ol class="flex items-center gap-2">
         <li>
-          <a class="font-medium cursor-pointer" @click="this.$router.push('/services')">
+          <a  class="font-medium cursor-pointer" @click="this.$router.push('/services')">
             {{ getName("services") }} /</a
           >
         </li>

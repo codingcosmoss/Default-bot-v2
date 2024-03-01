@@ -27,6 +27,3 @@ export const paymentDelete = async (data) => {
     return  GET('/payment/delete/'+ data );
 };
 
-export const joinDr = async (data) => {
-    return  POST('payment/join-doctor', data );
-};

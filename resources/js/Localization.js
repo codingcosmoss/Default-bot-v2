@@ -58,7 +58,7 @@ export const Languages =  {
         Classification: 'Tasnif',
         Duration: 'Davomiyligi',
         Summa: 'Miqdori',
-        summError: "Jami summa xizmat narxidan oshib ketmasligi kerak",
+        summError: "Taqsimlanayotgan summa xizmat narxidan oshib ketmasligi kerak",
         Treatmetns: 'Davolanishlar',
         TreatmentStarted_at: 'Davolash sanasi',
         New: 'Yangi',
@@ -79,11 +79,22 @@ export const Languages =  {
         DailyExpenses: "Kunlik xarajatlar",
         Reports: "Hisobotlar",
         Amount: "Miqdori",
-
+        Type: "Turi",
+        ServicesUsed: "Foydalanilgan xizmatlar",
+        AmountPaid: "To'langan summa ",
+        Indebtedness: "Qarzdorliklar",
+        Balans: 'Balans',
+        PatientAbout: 'Bemor haqida',
+        NotFound: "topilmadi",
+        Finished_at: "Tugash vaqti",
+        Treatment: 'Davolash'
 
 
     },
     ru:{
+        Finished_at: "Время окончания",
+        Treatment: 'Уход',
+        NotFound: "не найдено",
         employees: 'Cотрудники',
         fio:'Ф.И.О.',
         position: 'Позиция',
@@ -139,10 +150,12 @@ export const Languages =  {
         AddDoctor: 'Привязанность к доктору',
         Doctor: 'Врач',
         ReceptionTime: 'Время приема',
+        PatientAbout: 'О пациенте',
+
         Classification: 'Классификация',
         Duration: 'Продолжительность',
         Summa: 'Количество',
-        summError: "Общая сумма не должна превышать стоимость услуги",
+        summError: "Сумма, подлежащая распределению, не должна превышать цену услуги",
         Treatmetns: 'Лечение',
         TreatmentStarted_at: 'Дата лечения',
         New: 'Новый',
@@ -163,7 +176,11 @@ export const Languages =  {
         DailyExpenses: "Ежедневные расходы",
         Reports: "Отчеты",
         Amount: "Количество",
-
+        Type: "Тип",
+        ServicesUsed: "Используемые услуги",
+        AmountPaid: "Оплаченная сумма",
+        Indebtedness: "Задолженность",
+        Balans: 'Баланс',
     }
 
 }

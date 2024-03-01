@@ -1,7 +1,7 @@
 <template >
     <div class="col-span-12 xl:col-span-12">
         <!-- Breadcrumb Start -->
-        <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between" style="justify-content: flex-end">
 
             <nav>
                 <ol class="flex items-center gap-2">
@@ -87,15 +87,11 @@ export default {
     }
 }
 </script>
-<style >
+<style scoped >
     .fa-solid{cursor: pointer}
     table {
         border-collapse: separate;
         border-spacing: 30px; /* Masofani o'zgartiring */
-    }
-    tr{
-        display: flex;
-        margin: 15px 0;
     }
     td{
         margin-left: 30px;

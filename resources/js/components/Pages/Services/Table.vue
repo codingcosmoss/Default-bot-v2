@@ -81,19 +81,19 @@
                     -->
 
                     <div class="flex items-center justify-center p-2.5 xl:p-5">
-                        <p class="font-medium text-black dark:text-white">{{item.price}}</p>
+                        <p class="font-medium text-black dark:text-white">{{item.price}} UZS</p>
                     </div>
 
                     <div class="flex items-center justify-center p-2.5 xl:p-5">
-                        <p class="font-medium text-black dark:text-white">{{item.category_id}}</p>
+                        <p class="font-medium text-black dark:text-white">{{item.category.name}}</p>
                     </div>
 
                     <div class="flex items-center justify-center p-2.5 xl:p-5">
-                        <p class="font-medium text-black dark:text-white">{{item.material_price}}</p>
+                        <p class="font-medium text-black dark:text-white">{{item.material_price}} UZS</p>
                     </div>
 
                     <div class="flex items-center justify-center p-2.5 xl:p-5">
-                        <p class="font-medium text-black dark:text-white">{{item.technic_price}}</p>
+                        <p class="font-medium text-black dark:text-white">{{item.technic_price}} UZS</p>
                     </div>
 
 

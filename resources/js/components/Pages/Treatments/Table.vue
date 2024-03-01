@@ -8,7 +8,8 @@
       </h4>
 
       <div class="flex flex-col">
-        <div class="grid grid-cols-3 rounded-sm mb-2 sm:grid-cols-5 relative">
+
+        <div v-if="Header" class="grid grid-cols-3 rounded-sm mb-2 sm:grid-cols-5 relative">
           <div>
             <input
               type="text"
@@ -27,7 +28,9 @@
               <option selected value="sort_order">{{ getName("serial_number") }}</option>
               <option value="id">Id</option>
               <option value="start">{{ getName("TreatmentStarted_at") }}</option>
-              <option value="status">{{ getName("New") }}</option>
+                <option value="first_name">{{ getName("name") }}</option>
+                <option value="last_name">{{ getName("last_name") }}</option>
+                <option value="status">{{ getName("New") }}</option>
               <!-- <option value="price">{{getName('price')}}</option> -->
               <option value="created_at">{{ getName("Created_at") }}</option>
               <option value="updated_at">{{ getName("Updated_at") }}</option>
@@ -83,24 +86,12 @@
               <option value="100">100</option>
             </select>
           </div>
-
-<!--          <div-->
-<!--            class="flex flex-wrap gap-5 xl:gap-20"-->
-<!--            style="position: absolute; right: 0px; top: 0"-->
-<!--          >-->
-<!--            <a-->
-<!--              @click="this.$router.push('/patient/create')"-->
-<!--              class="cursor-pointer inline-flex items-center justify-center rounded-md bg-primary py-3 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"-->
-<!--            >-->
-<!--              {{ getName("create") }}-->
-<!--            </a>-->
-<!--          </div>-->
         </div>
 
         <TableHeader></TableHeader>
 
         <div
-          v-for="(item, index) in items"
+          v-for="(item, index) in Treatments.length > 0 ? Treatments : items"
           class="grid tableBox grid-cols-7 border-b border-stroke dark:border-strokedark sm:grid-cols-7"
         >
           <div class="flex items-center gap-3 p-2.5 xl:p-5">
@@ -145,6 +136,13 @@
                 @click="Show(item.id)"
                 class="fa-solid setting-icon fa-eye"
               ></i>
+                &nbsp;
+
+                <i
+                    @click="Show(item.id)"
+                    :title="getName('Treatment')"
+                    class="fa-regular setting-icon fa-calendar-plus cursor-pointer"
+                ></i>
 
             </p>
           </div>
@@ -219,11 +217,9 @@ import InputDefault from "../../../ui-components/Form/InputDefault.vue";
 import ModalLayout from "../../../ui-components/Element/Modal01/ModalLayout.vue";
 import {
   Treatments,
-  patientShow,
-  patientDelete,
-  patientsSearch,
+  TreatmentShow,
+  treatmentSearch,
   Employees,
-  joinDr,
 } from "../../../Api.js";
 import CreateForm from "../ServiceCategories/Create/CreateForm.vue";
 import Pagination01 from "../../../ui-components/Element/pagination-01.vue";
@@ -254,11 +250,21 @@ export default {
     InputText,
     Select,
   },
+  props:{
+      Treatments:{
+          type: [Array, Object],
+          default: []
+      },
+      Header:{
+          type: Boolean,
+          default: true
+      }
+  }  ,
   data() {
     return {
       items: [],
       search: "",
-      column: "sort_order",
+      column: "updated_at",
       order: "asc",
       paginateCount: 10,
       pagination: {},
@@ -293,57 +299,6 @@ export default {
       this.Employees = response.data.employees;
     },
 
-    async addReseption() {
-      if (this.Employee_id == 0) {
-        this.errorObj = {
-          user_id: "You need to choose a doctor",
-        };
-        return false;
-      }
-      this.errorObj = [];
-
-      var data = {
-        user_id: this.Employee_id,
-        patient_id: this.patient_id,
-        start: this.DateTime,
-        reception_description: this.TextData == '' ? '...': '',
-        hour: this.Time,
-      };
-
-      var response = "";
-      response = await joinDr(data);
-
-      if (response.status) {
-        this.isModal = false;
-        this.Employee_id = 0;
-        this.patient_id = 0;
-        this.Time = '0';
-        Alert("success", "Attached to Doctor !");
-      } else {
-        this.errorObj = response.data;
-      }
-    },
-    validateTime(time) {
-    // Regex orqali vaqtni formatni tekshiramiz
-    const timeRegex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
-
-    // Kirish qiymatini tekshiramiz
-    if (!timeRegex.test(time)) {
-        return false; // Not valid
-    }
-
-    // Vaqtni soatlarga va daqiqalarga ajratamiz
-    const parts = time.split(':');
-    const hours = parseInt(parts[0], 10);
-    const minutes = parseInt(parts[1], 10);
-
-    // Soat va daqiqalarni tekshiramiz
-    if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
-        return false; // Not valid
-    }
-
-    return true; // Valid
-},
     getDate() {
       const currentDate = new Date();
       const year = currentDate.getFullYear();
@@ -409,8 +364,9 @@ export default {
         paginate: this.paginateCount,
       };
 
-      const response = await patientsSearch(data);
-      this.items = response.data.items;
+      const response = await treatmentSearch(data);
+        this.items = response.data.items;
+
     },
     async onDelete(val) {
       var message = "Вы уверены, что хотите это удалить?";

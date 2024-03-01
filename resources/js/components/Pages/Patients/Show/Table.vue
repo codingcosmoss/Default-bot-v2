@@ -1,70 +1,110 @@
 <template >
     <div class="col-span-12 xl:col-span-12">
         <!-- Breadcrumb Start -->
-        <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between " style="justify-content: flex-end">
 
-            <nav>
+            <nav >
                 <ol class="flex items-center gap-2">
-                    <li><a class="font-medium cursor-pointer" @click = "this.$router.push('/service-categories')"> {{getName('service_types')}} /</a></li>
-                    <li  class=" font-medium text-primary">{{getName('show')}}</li>
+                    <li><a class="font-medium cursor-pointer" @click = "this.$router.push('/patients')"> {{getName('Patients')}} /</a></li>
+                    <li  class=" font-medium text-primary">{{getName('Patients')}}</li>
                 </ol>
             </nav>
         </div>
 
         <h4 class="text-title-md font-bold text-black dark:text-white mb-5">
-            Name
+            {{Patient.first_name + ' '+Patient.last_name}}
         </h4>
 
         <ContentBox style="margin-bottom: 25px ">
             <ContentBlock
-                Title = "name"
-                Text = " "
-                :Icon = "1"
+                :Title = "getName('ServicesUsed')"
+                :Text = "Patient.services_used"
+                Icon = "fa-solid fa-handshake"
                 Item = ""
             />
             <ContentBlock
-                Title = "name"
-                Text = " "
-                :Icon = "1"
+                :Title = "getName('AmountPaid')"
+                :Text = "Patient.amount_paid"
+                Icon = "fa-solid fa-money-check-dollar"
                 Item = ""
             />
             <ContentBlock
-                Title = "name"
+                :Title = "getName('Indebtedness')"
                 Text = " "
-                :Icon = "1"
+                Icon = "fa-solid fa-file-invoice-dollar"
                 Item = ""
             />
             <ContentBlock
-                Title = "name"
+                :Title = "getName('Balans')"
                 Text = " "
-                :Icon = "1"
+                Icon = "fa-solid fa-money-bills"
                 Item = ""
             />
         </ContentBox>
 
 
+        <Treatments :Header = "false" :Treatments = "Treatmets" ></Treatments>
 
-        <div
+        <br>
 
-            class="rounded-sm border mb-5 border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-            <h4 class="mb-6 text-xl font-bold text-black dark:text-white">
-                {{item.name}}
-            </h4>
+        <Payments :Header = "false" :Payments = "Payments" ></Payments>
 
-            <table border="1" >
+        <br>
+
+        <Map01 :Title = "getName('PatientAbout')" >
+            <table class="table01 mt-5"  >
 
                 <tr>
-                    <th>{{getName('name_content')}}:</th>
-                    <td>{{item.name}}</td>
+                    <th>{{getName('name')}}: &nbsp;&nbsp;</th>
+                    <td>{{Patient.last_name}}</td>
+                </tr>
+
+                <tr>
+                    <th>{{getName('last_name')}}: &nbsp;&nbsp;</th>
+                    <td>{{ Patient.first_name }}</td>
+                </tr>
+
+                <tr>
+                    <th>{{getName('phone')}}: &nbsp;&nbsp;</th>
+                    <td>{{Patient.phone}}</td>
+                </tr>
+
+                <tr>
+                    <th>{{getName('Job')}}: &nbsp;&nbsp;</th>
+                    <td>{{Patient.job}}</td>
+                </tr>
+
+                <tr>
+                    <th>{{getName('Gender')}}: &nbsp;&nbsp;</th>
+                    <td>{{Patient.gender}}</td>
+                </tr>
+
+                <tr>
+                    <th>{{getName('Date_birth')}}: &nbsp;&nbsp;</th>
+                    <td>{{Patient.birthday}}</td>
                 </tr>
                 <tr>
-                    <th>{{getName('status')}}:</th>
-                    <td>{{item.status == 1 ? 'Active' : 'Inactive'}}</td>
+                    <th>{{getName('Address')}}: &nbsp;&nbsp;</th>
+                    <td>{{Patient.address}}</td>
                 </tr>
+
+                <tr>
+                    <th>{{getName('diseases')}}: &nbsp;&nbsp;</th>
+                    <td>
+                        <p class="btn" v-for=" (item, index) in Patient.diseases" >{{index+1}}. {{item.name}}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <th>{{getName('Created_at')}}: &nbsp;&nbsp;</th>
+                    <td>{{Patient.created_at}}</td>
+                </tr>
+
+
 
             </table>
 
-        </div>
+        </Map01>
+
 
     </div>
 
@@ -72,22 +112,26 @@
 <script>
 import {useConterStore} from "../../../../store/counter.js";
 import TableHeader from "./Table-header.vue";
-import {service_categoryShow} from "../../../../Api.js";
+import {patientShow} from "../../../../Api.js";
 import Contents from "../../../../ui-components/Element/Contents.vue";
 import ContentBox from "../../../../ui-components/Element/Contents/ContentBox.vue";
 import ContentBlock from "../../../../ui-components/Element/Contents/ContentBlock.vue";
-
+import Treatments from "../../Treatments/Table.vue";
+import Payments from "../../Payments/Table.vue";
+import Map01 from "../../../../ui-components/Element/map-01.vue";
 export default {
-    components: {ContentBlock, ContentBox, Contents, TableHeader},
+    components: {Map01, ContentBlock, ContentBox, Contents, TableHeader, Treatments, Payments},
     data(){
         return{
-            item: [],
+            Patient: [],
             search: '',
             column: 'sort_order',
             order: 'asc',
             paginate: 10,
             pagination: {},
-            current_page: 1
+            current_page: 1,
+            Treatmets: [],
+            Payments: null
         }
     },
     methods:{
@@ -98,11 +142,13 @@ export default {
             return useConterStore().getName(val)
         },
         async getItem(){
-            const response = await service_categoryShow(this.$route.query.id);
-            console.log( response.data)
-            this.item = response.data;
-
+            const response = await patientShow(this.$route.query.id);
+            this.Patient = response.data;
+            this.Treatmets = response.data.treatmets;
+            this.Payments = response.data.payments;
         },
+
+
 
 
 
@@ -115,12 +161,12 @@ export default {
 <style >
     .fa-solid{cursor: pointer}
     table {
-        border-collapse: separate;
+        /* border-collapse: separate; */
         border-spacing: 30px; /* Masofani o'zgartiring */
     }
     tr{
-        display: flex;
-        margin: 15px 0;
+        /* display: flex; */
+        /* margin: 15px 0; */
     }
     td{
         margin-left: 30px;

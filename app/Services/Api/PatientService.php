@@ -5,6 +5,7 @@ namespace App\Services\Api;
 use App\Fields\Store\TextField;
 use App\Http\Resources\OneUserResource;
 use App\Http\Resources\PatientResource;
+use App\Http\Resources\PatientShowResource;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\UserResources;
 use App\Models\Patient;
@@ -394,7 +395,7 @@ class PatientService extends AbstractService
             'status' => true,
             'message' => 'success',
             'statusCode' => 200,
-            'data' => new $this->resource($model)
+            'data' => new PatientShowResource($model)
         ];
     }
 

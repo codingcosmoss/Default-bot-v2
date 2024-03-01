@@ -97,12 +97,12 @@ export default {
 <style >
     .fa-solid{cursor: pointer}
     table {
-        border-collapse: separate;
+        /* /* border-collapse: separate; */ */
         border-spacing: 30px; /* Masofani o'zgartiring */
     }
     tr{
-        display: flex;
-        margin: 15px 0;
+        /* display: flex; */
+        /* margin: 15px 0; */
     }
     td{
         margin-left: 30px;

@@ -194,6 +194,9 @@ export const Treatments = async (id, pages) => {
 export const TreatmentShow = async (data) => {
     return  GET('/treatmetn/show/'+data);
 };
+export const treatmentSearch = async (data) => {
+    return  POST('/treatmetn/search', data );
+};
 
 // Payment types
 
@@ -256,8 +259,5 @@ export const paymentDelete = async (data) => {
     return  GET('/payment/delete/'+ data );
 };
 
-export const joinDr = async (data) => {
-    return  POST('payment/join-doctor', data );
-};
 
 

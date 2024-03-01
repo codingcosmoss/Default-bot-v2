@@ -87,7 +87,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/show/{id}', [\App\Http\Controllers\Api\TreatmentController::class, 'show']);
 //        Route::post('/update/{id}', [\App\Http\Controllers\Api\DiseasesController::class, 'update']);
 //        Route::get('/delete/{id}', [\App\Http\Controllers\Api\DiseasesController::class, 'delete']);
-//        Route::post('/search', [\App\Http\Controllers\Api\DiseasesController::class, 'search']);
+        Route::post('/search', [\App\Http\Controllers\Api\TreatmentController::class, 'search']);
     });
 
 
@@ -104,13 +104,13 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Paymetns
     Route::group(['prefix' => 'payment'], function () {
-        Route::get('/index', [\App\Http\Controllers\Api\PaymentTypeController::class, 'index']);
-        Route::get('/is-actives', [\App\Http\Controllers\Api\PaymentTypeController::class, 'isActives']);
-        Route::post('/create', [\App\Http\Controllers\Api\PaymentTypeController::class, 'create']);
-        Route::get('/show/{id}', [\App\Http\Controllers\Api\PaymentTypeController::class, 'show']);
-        Route::post('/update/{id}', [\App\Http\Controllers\Api\PaymentTypeController::class, 'update']);
-        Route::get('/delete/{id}', [\App\Http\Controllers\Api\PaymentTypeController::class, 'delete']);
-        Route::post('/search', [\App\Http\Controllers\Api\PaymentTypeController::class, 'search']);
+        Route::get('/index', [\App\Http\Controllers\Api\PaymentController::class, 'index']);
+        Route::get('/is-actives', [\App\Http\Controllers\Api\PaymentController::class, 'isActives']);
+        Route::post('/create', [\App\Http\Controllers\Api\PaymentController::class, 'create']);
+        Route::get('/show/{id}', [\App\Http\Controllers\Api\PaymentController::class, 'show']);
+        Route::post('/update/{id}', [\App\Http\Controllers\Api\PaymentController::class, 'update']);
+        Route::get('/delete/{id}', [\App\Http\Controllers\Api\PaymentController::class, 'delete']);
+        Route::post('/search', [\App\Http\Controllers\Api\PaymentController::class, 'search']);
     });
 
 

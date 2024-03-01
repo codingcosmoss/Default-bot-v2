@@ -10,6 +10,7 @@
             :Value = "categoryName"
         />
 
+
         <Select
             :Label = "getName('status')"
             @onSelect = "this.status = $event"
@@ -24,6 +25,7 @@
 
         </Select>
 
+
     </ModalLayout>
 
 </template>
@@ -36,8 +38,9 @@ import {service_categoryCreate} from "../../../../Api.js";
 import {Alert} from "../../../../Config.js";
 import Select from "../../Services/Create/Inputs/Select.vue";
 import Input from "../../Employees/Update/Inputs/Input.vue";
+import Switch from "../../../../ui-components/Element/Switch.vue";
 export default {
-    components:{Input, Select, ModalLayout, Page,},
+    components:{Switch, Input, Select, ModalLayout, Page,},
     data(){
         return{
             status: 1,

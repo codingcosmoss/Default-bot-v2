@@ -8,7 +8,7 @@
       </h4>
 
       <div class="flex flex-col">
-        <div class="grid grid-cols-3 rounded-sm mb-2 sm:grid-cols-5 relative">
+        <div v-if="Header" class="grid grid-cols-3 rounded-sm mb-2 sm:grid-cols-5 relative">
           <div>
             <input
               type="text"
@@ -25,7 +25,8 @@
               class="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary ml-4"
             >
               <option value="id">Id</option>
-            <option value="amount">{{getName('name')}}</option>
+                <option value="first_name">{{getName('name')}}</option>
+                <option value="last_name">{{getName('last_name')}}</option>
             <option value="amount">{{getName('Amount')}}</option>
               <option selected value="created_at">{{ getName("Created_at") }}</option>
               <option  value="updated_at">{{ getName("Updated_at") }}</option>
@@ -82,51 +83,37 @@
             </select>
           </div>
 
-<!--          <div-->
-<!--            class="flex flex-wrap gap-5 xl:gap-20"-->
-<!--            style="position: absolute; right: 0px; top: 0"-->
-<!--          >-->
-<!--            <a-->
-<!--              @click="this.$router.push('/patient/create')"-->
-<!--              class="cursor-pointer inline-flex items-center justify-center rounded-md bg-primary py-3 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"-->
-<!--            >-->
-<!--              {{ getName("create") }}-->
-<!--            </a>-->
-<!--          </div>-->
+
         </div>
 
         <TableHeader></TableHeader>
-
         <div
           v-for="(item, index) in items"
           class="grid tableBox grid-cols-7 border-b border-stroke dark:border-strokedark sm:grid-cols-7"
         >
           <div class="flex items-center gap-3 p-2.5 xl:p-5">
             <p class="font-medium hidden text-black dark:text-white sm:block">
-              {{ index + 1 }}. {{ item.patient.first_name }}
+              {{ index + 1 }}. {{ item.first_name }}
             </p>
           </div>
 
           <div class="flex items-center justify-center p-2.5 xl:p-5">
-            <p class="font-medium text-black dark:text-white">{{ item.patient.last_name }}</p>
+            <p class="font-medium text-black dark:text-white">{{ item.last_name }}</p>
           </div>
 
           <div class="flex items-center justify-center p-2.5 xl:p-5">
-            <p class="font-medium text-black dark:text-white">{{ item.doctor.name }}</p>
+            <p class="font-medium text-black dark:text-white">{{ item.amount }}</p>
           </div>
 
-          <div class="flex items-center justify-center p-2.5 xl:p-5">
-              <p class="font-medium text-black dark:text-white">{{ item.start }}</p>
-          </div>
 
           <div class="flex items-center justify-center p-2.5 xl:p-5">
-            <p class="font-medium text-black dark:text-white status-text">{{ getStatus(item.status) }}</p>
+            <p class="font-medium text-black dark:text-white ">{{ item.created_at}}</p>
           </div>
 
         <div class="flex items-center justify-center p-2.5 xl:p-5">
             <p class="font-medium dark:text-white status-text "
-              :class="getClass(item.payment_status)"
-            >{{ getStatus(item.payment_status) }}</p>
+               :style=" 'background: ' + item.color "
+            >{{ item.payment_type }}</p>
         </div>
 
 
@@ -141,14 +128,19 @@
               &nbsp;
               <i
                 @click="Show(item.id)"
-                class="fa-solid setting-icon fa-eye"
+                class="fa-solid setting-icon fa-eye disabled"
               ></i>
+                &nbsp;
+                <i @click = "onDelete(item.id)" class="fa-solid text-danger fa-trash setting-icon"></i>
+
+
 
             </p>
+
           </div>
-
-
         </div>
+
+          <h1 v-if="items.length == 0" style="margin: 15px auto" > {{getName('Payments')}} {{getName('NotFound')}}</h1>
 
         <Paginate>
           <Pagination01>
@@ -216,12 +208,11 @@ import Input from "../../../ui-components/Form/Input.vue";
 import InputDefault from "../../../ui-components/Form/InputDefault.vue";
 import ModalLayout from "../../../ui-components/Element/Modal01/ModalLayout.vue";
 import {
-  Treatments,
-  patientShow,
-  patientDelete,
-  patientsSearch,
-  Employees,
-  joinDr,
+  payments,
+  paymentShow,
+  paymentDelete,
+  paymentsSearch,
+    paymentUpdate
 } from "../../../Api.js";
 import CreateForm from "../ServiceCategories/Create/CreateForm.vue";
 import Pagination01 from "../../../ui-components/Element/pagination-01.vue";
@@ -233,7 +224,24 @@ import InputDateTime from "../../../ui-components/Form/InputDateTime.vue";
 import InputTime from "../../../ui-components/Form/InputTime.vue";
 import Table from "../Employees/Table.vue";
 import ShowForm from "./Show/ShowForm.vue";
+import Item from "../Employees/Calendar/Item.vue";
 export default {
+    computed: {
+        Item() {
+            return Item
+        }
+    },
+
+    props:{
+        Payments:{
+            type: [Array, Object],
+            default: null
+        },
+        Header:{
+            type: Boolean,
+            default: true
+        }
+    },
   components: {
       ShowForm,
       Table,
@@ -256,7 +264,7 @@ export default {
     return {
       items: [],
       search: "",
-      column: "sort_order",
+      column: "updated_at",
       order: "asc",
       paginateCount: 10,
       pagination: {},
@@ -286,10 +294,7 @@ export default {
     router() {
       return router;
     },
-    async getEmployee() {
-      const response = await Employees(null, 1000);
-      this.Employees = response.data.employees;
-    },
+
 
     async addReseption() {
       if (this.Employee_id == 0) {
@@ -342,17 +347,7 @@ export default {
 
     return true; // Valid
 },
-    getDate() {
-      const currentDate = new Date();
-      const year = currentDate.getFullYear();
-      const month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
-      const day = ("0" + currentDate.getDate()).slice(-2);
-      const hours = ("0" + currentDate.getHours()).slice(-2);
-      const minutes = ("0" + currentDate.getMinutes()).slice(-2);
 
-      var result = `${year}-${month}-${day} ${hours}:${minutes}`;
-      this.DateTime = result;
-    },
     Show(id) {
       this.UpdateId = id;
       this.isShowModal = true;
@@ -379,15 +374,26 @@ export default {
     },
 
     async getItems() {
-      const response = await Treatments(this.currentPage, this.paginateCount);
+        var response = [];
 
-      this.pagination = response.data.pagination;
-      this.last_page = response.data.pagination.last_page;
-      this.current_page = response.data.pagination.currentPage;
-      this.items = response.data.items;
+        if (this.Payments == null){
+            response = await payments(this.currentPage, this.paginateCount);
+            this.pagination = response.data.pagination;
+            this.last_page = response.data.pagination.last_page;
+            this.current_page = response.data.pagination.currentPage;
+            this.items = response.data.items;
+
+        }else{
+            response = this.Payments;
+            this.pagination = response.pagination;
+            this.last_page = response.pagination.last_page;
+            this.current_page = response.pagination.currentPage;
+            this.items = response.items;
+        }
+
     },
     async getModel() {
-      const response = await patientShow(this.$route.query.id);
+      const response = await paymentShow(this.$route.query.id);
 
       if (response.status) {
       }
@@ -407,13 +413,13 @@ export default {
         paginate: this.paginateCount,
       };
 
-      const response = await patientsSearch(data);
+      const response = await paymentsSearch(data);
       this.items = response.data.items;
     },
     async onDelete(val) {
       var message = "Вы уверены, что хотите это удалить?";
       if (confirm(message)) {
-        const response = await patientDelete(val);
+        const response = await paymentDelete(val);
         if (response.status == true) {
           Alert("success", "Deleted successfully !");
           this.getItems();
@@ -459,9 +465,12 @@ export default {
   },
   mounted() {
     this.getItems();
-    this.getEmployee();
-    this.getDate();
   },
+    watch:{
+        Payments: function (val1, val2){
+            this.getItems();
+        }
+    }
 };
 </script>
 <style lang="scss">
@@ -534,7 +543,7 @@ export default {
 .status-text{
     background: #39aa07;
     font-size: 13px;
-    padding: 3px 8px ;
+    padding: 5px 20px ;
     border-radius: 10px;
     font-weight: bold;
     color: white;

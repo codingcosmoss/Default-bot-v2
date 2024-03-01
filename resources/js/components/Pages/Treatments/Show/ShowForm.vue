@@ -25,20 +25,22 @@
             </tr>
 
             <tr>
-                <th>{{getName('AmountOwed')}}: &nbsp;&nbsp;</th>
-                <td>{{Patient.service_real_price}}</td>
+                <th>{{getName('Finished_at')}}: &nbsp;&nbsp;</th>
+                <td>{{Model.end}}</td>
             </tr>
+
             <tr>
                 <th>{{getName('PatientEndPayment')}}: &nbsp;&nbsp;</th>
-                <td>{{Patient.first_name}}</td>
+                <td>{{Model.latest_payment != null ? Model.latest_payment.amount : '0 UZS'}}</td>
+            </tr>
+
+            <tr>
+                <th>{{getName('AmountOwedType')}}: &nbsp;&nbsp;</th>
+                <td>{{Model.latest_payment != null ? Model.latest_payment.payment_type : '---'}}</td>
             </tr>
             <tr>
                 <th>{{getName('AmountOwed')}}: &nbsp;&nbsp;</th>
                 <td>{{Patient.first_name}}</td>
-            </tr>
-            <tr>
-                <th>{{getName('AmountOwedType')}}: &nbsp;&nbsp;</th>
-                <td>{{Patient.payment_type}}</td>
             </tr>
             <tr>
                 <th>{{getName('Payment_status')}}: &nbsp;&nbsp;</th>

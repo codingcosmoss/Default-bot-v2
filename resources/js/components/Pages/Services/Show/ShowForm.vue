@@ -1,6 +1,6 @@
 <template>
 
-    <ModalLayout :isSubmit = "false"   :isModal = "isCreateModal" @closeModal = "this.$emit('closeModal', $event) " :Title = "getName('create')" >
+    <ModalLayout :isSubmit = "false"   :isModal = "isCreateModal" @closeModal = "this.$emit('closeModal', $event) " :Title = "Model['name']" >
 
         <table class="table01" v-if="Model != []" >
 
@@ -21,17 +21,17 @@
 
             <tr>
                 <th>{{getName('material_price')}}: &nbsp;&nbsp;</th>
-                <td>{{Model['material_price']}}</td>
+                <td>{{Model['material_price']}} UZS</td>
             </tr>
 
             <tr>
                 <th>{{getName('technic_price')}}: &nbsp;&nbsp;</th>
-                <td>{{Model['technic_price']}}</td>
+                <td>{{Model['technic_price']}} UZS</td>
             </tr>
 
             <tr>
                 <th>{{getName('price')}}: </th>
-                <td>{{Model['price']}}</td>
+                <td>{{Model['price']}} UZS</td>
             </tr>
 
             <tr>

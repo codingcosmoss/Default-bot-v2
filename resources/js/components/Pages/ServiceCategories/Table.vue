@@ -61,7 +61,7 @@
 
                     <div class="flex items-center justify-center p-2.5 xl:p-5">
                         <div  class="status_box" :class="item.status == 1 ? 'active' : 'inactive' ">
-                            {{item.status ? 'active' : 'inactive' }} 
+                            {{item.status ? 'active' : 'inactive' }}
                         </div>
                     </div>
 
@@ -109,22 +109,11 @@
             :Value = "categoryName"
         />
 
+        <Switch
+            :isSwitch="status == 1 ? true : false"
+            @onClick = "status = $event, console.log($event)"
 
-        <Select
-            :Label = "getName('status')"
-            @onSelect = "status = $event"
-        >
-
-            <option
-                :selected = "status == 1"
-                :value="1"
-            > Active</option>
-            <option
-                :selected = "status != 1"
-                :value="0"
-            > Inactive</option>
-
-        </Select>
+        />
 
     </ModalLayout>
 
@@ -152,8 +141,10 @@ import CreateForm from "./Create/CreateForm.vue";
 import UpdateForm from "./Update/UpdateForm.vue";
 import Input from "../Employees/Update/Inputs/Input.vue";
 import Select from "../Services/Create/Inputs/Select.vue";
+import Switch from "../../../ui-components/Element/Switch.vue";
 export default {
     components: {
+        Switch,
         Select,
         Input,
         CreateForm,
@@ -218,7 +209,7 @@ export default {
         async crudCategory(){
             var data = {
                 'name': this.categoryName,
-                'status': this.status,
+                'status': this.status == true ? 1 : 0,
             }
             var response = '';
             if(this.crud == 'created'){

@@ -4,7 +4,7 @@
         class="cursor-pointer rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default dark:border-strokedark dark:bg-boxdark">
         <div
             class="flex h-11.5 w-11.5 items-center justify-center rounded-full bg-meta-2 dark:bg-meta-4">
-            {{Icon}}
+            <i :class="Icon" style="font-size: 25px" ></i>
 <!--            <svg  class="fill-primary dark:fill-white" width="20" height="22" viewBox="0 0 20 22"-->
 <!--                 fill="none" xmlns="http://www.w3.org/2000/svg">-->
 <!--                <path-->
@@ -21,10 +21,10 @@
 
         <div class="mt-4 flex items-end justify-between">
             <div>
-                <h4 class="text-title-md font-bold text-black dark:text-white">
+                <h4 class="text-title-md font-bold text-black dark:text-white mb-3" style="font-size: 20px">
                     {{Title}}
                 </h4>
-                <span class="text-sm font-medium">{{Text}}</span>
+                <span class="text-sm font-bold " style="font-size: 20px;">{{Text}}</span>
             </div>
 
             <span class="flex items-center gap-1 text-sm font-medium text-meta-3">

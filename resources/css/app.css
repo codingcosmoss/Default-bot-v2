@@ -94,3 +94,24 @@ input{
 .navbar-active{
     background: rgba(37, 154, 230, 0.62);
 }
+
+/* Table */
+
+.table01{
+    width: 100%;
+    /*border-collapse: inherit;*/
+}
+.table01 tr th{
+    text-align: left;
+    border: 2px solid rgba(37, 154, 230, 0.7);
+    padding: 10px;
+}
+.table01 tr td{
+    font-weight: 100;
+    border: 2px solid rgba(37, 154, 230, 0.7);
+    padding: 10px;
+}
+
+.table01 tr{
+    /*display: inline !important;*/
+}
