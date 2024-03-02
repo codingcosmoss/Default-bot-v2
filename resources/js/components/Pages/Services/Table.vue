@@ -112,8 +112,6 @@
                             &nbsp;
                             <i @click = "Show(item.id)" class="fa-solid setting-icon fa-eye"></i>
                             &nbsp;
-                            &nbsp;
-                            &nbsp;
                             <i @click = "onDelete(item.id)" class="fa-solid text-danger fa-trash setting-icon"></i>
                         </p>
                     </div>

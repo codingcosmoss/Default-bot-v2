@@ -139,7 +139,7 @@
                 &nbsp;
 
                 <i
-                    @click="Show(item.id)"
+                    @click="this.$router.push({ path: '/treatmetns/treatmetn', query:{ id: item.id } })"
                     :title="getName('Treatment')"
                     class="fa-regular setting-icon fa-calendar-plus cursor-pointer"
                 ></i>

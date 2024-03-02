@@ -115,3 +115,16 @@ input{
 .table01 tr{
     /*display: inline !important;*/
 }
+
+.setting-icon{
+    border-radius: 10px;
+    /*box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.29);*/
+    padding: 5px;
+}
+
+.setting-icon:hover{
+    box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.29);
+}
+.setting-icon:active{
+    transform: scale(1.2);
+}
