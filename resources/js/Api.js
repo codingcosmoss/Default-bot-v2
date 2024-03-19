@@ -197,7 +197,9 @@ export const TreatmentShow = async (data) => {
 export const treatmentSearch = async (data) => {
     return  POST('/treatmetn/search', data );
 };
-
+export const treatmentDiscount = async (data) => {
+    return  POST('/treatmetn/discount', data );
+};
 // Payment types
 
 export const PaymentTypes = async (id, pages) => {
@@ -260,4 +262,313 @@ export const paymentDelete = async (data) => {
 };
 
 
+// _______________________ Warehouse ________________________________________________________
 
+
+export const warehouses = async (id, pages) => {
+    if (id != null){
+        return  GET('/warehouse/index?page='+id+'&pages='+pages);
+    }else {
+        return  GET('/warehouse/index?pages='+pages);
+    }
+};
+
+
+
+export const warehouseShow = async (data) => {
+    return  GET('/warehouse/show/'+data);
+};
+
+export const warehouseCreate = async (data) => {
+    return  POST('/warehouse/create', data );
+};
+export const warehouseUpdate = async (id, data) => {
+    return  POST('/warehouse/update/'+id, data );
+};
+
+export const warehousesSearch = async (data) => {
+    return  POST('/warehouse/search', data );
+};
+
+export const warehouseDelete = async (data) => {
+    return  GET('/warehouse/delete/'+ data );
+};
+
+
+// ____________________________ filial ________________________________________________________
+
+
+export const filials = async (id, pages) => {
+    if (id != null){
+        return  GET('/filial/index?page='+id+'&pages='+pages);
+    }else {
+        return  GET('/filial/index?pages='+pages);
+    }
+};
+
+export const filialShow = async (data) => {
+    return  GET('/filial/show/'+data);
+};
+
+export const filialCreate = async (data) => {
+    return  POST('/filial/create', data );
+};
+export const filialUpdate = async (id, data) => {
+    return  POST('/filial/update/'+id, data );
+};
+
+export const filialsSearch = async (data) => {
+    return  POST('/filial/search', data );
+};
+
+export const filialDelete = async (data) => {
+    return  GET('/filial/delete/'+ data );
+};
+
+// ____________________________ warehouse-category ________________________________________________________
+
+
+export const warehouseCategorys = async (id, pages) => {
+    if (id != null){
+        return  GET('/warehouse-category/index?page='+id+'&pages='+pages);
+    }else {
+        return  GET('/warehouse-category/index?pages='+pages);
+    }
+};
+
+export const warehouseCategoryShow = async (data) => {
+    return  GET('/warehouse-category/show/'+data);
+};
+
+export const warehouseCategoryCreate = async (data) => {
+    return  POST('/warehouse-category/create', data );
+};
+export const warehouseCategoryUpdate = async (id, data) => {
+    return  POST('/warehouse-category/update/'+id, data );
+};
+
+export const warehouseCategorySearch = async (data) => {
+    return  POST('/warehouse-category/search', data );
+};
+
+export const warehouseCategoryDelete = async (data) => {
+    return  GET('/warehouse-category/delete/'+ data );
+};
+
+// ____________________________ group ________________________________________________________
+
+
+export const groups = async (id, pages) => {
+    if (id != null){
+        return  GET('/group/index?page='+id+'&pages='+pages);
+    }else {
+        return  GET('/group/index?pages='+pages);
+    }
+};
+
+export const groupShow = async (data) => {
+    return  GET('/group/show/'+data);
+};
+
+export const groupCreate = async (data) => {
+    return  POST('/group/create', data );
+};
+export const groupUpdate = async (id, data) => {
+    return  POST('/group/update/'+id, data );
+};
+
+export const groupSearch = async (data) => {
+    return  POST('/group/search', data );
+};
+
+export const groupDelete = async (data) => {
+    return  GET('/group/delete/'+ data );
+};
+
+// ____________________________ product ________________________________________________________
+
+
+export const products = async (id, pages) => {
+    if (id != null){
+        return  GET('/product/index?page='+id+'&pages='+pages);
+    }else {
+        return  GET('/product/index?pages='+pages);
+    }
+};
+
+export const productShow = async (data) => {
+    return  GET('/product/show/'+data);
+};
+
+export const productCreate = async (data) => {
+    return  POST('/product/create', data );
+};
+export const productUpdate = async (id, data) => {
+    return  POST('/product/update/'+id, data );
+};
+
+export const productSearch = async (data) => {
+    return  POST('/product/search', data );
+};
+
+export const productDelete = async (data) => {
+    return  GET('/product/delete/'+ data );
+};
+
+
+// ____________________________ collection ________________________________________________________
+
+
+export const collections = async (id, pages) => {
+    if (id != null){
+        return  GET('/collection/index?page='+id+'&pages='+pages);
+    }else {
+        return  GET('/collection/index?pages='+pages);
+    }
+};
+
+export const collectionShow = async (data) => {
+    return  GET('/collection/show/'+data);
+};
+
+export const collectionCreate = async (data) => {
+    return  POST('/collection/create', data );
+};
+export const collectionUpdate = async (id, data) => {
+    return  POST('/collection/update/'+id, data );
+};
+
+export const collectionSearch = async (data) => {
+    return  POST('/collection/search', data );
+};
+
+export const collectionDelete = async (data) => {
+    return  GET('/collection/delete/'+ data );
+};
+
+// ____________________________ productDocument ________________________________________________________
+
+
+export const productDocuments = async (id, pages) => {
+    if (id != null){
+        return  GET('/product-document/index?page='+id+'&pages='+pages);
+    }else {
+        return  GET('/product-document/index?pages='+pages);
+    }
+};
+
+export const productDocumentShow = async (data) => {
+    return  GET('/product-document/show/'+data);
+};
+
+export const productDocumentCreate = async (data) => {
+    return  POST('/product-document/create', data );
+};
+export const productDocumentUpdate = async (id, data) => {
+    return  POST('/product-document/update/'+id, data );
+};
+
+export const productDocumentSearch = async (data) => {
+    return  POST('/product-document/search', data );
+};
+
+export const productDocumentDelete = async (data) => {
+    return  GET('/product-document/delete/'+ data );
+};
+
+
+
+
+// ____________________________ supplier ________________________________________________________
+
+
+export const suppliers = async (id, pages) => {
+    if (id != null){
+        return  GET('/supplier/index?page='+id+'&pages='+pages);
+    }else {
+        return  GET('/supplier/index?pages='+pages);
+    }
+};
+
+export const supplierShow = async (data) => {
+    return  GET('/supplier/show/'+data);
+};
+
+export const supplierCreate = async (data) => {
+    return  POST('/supplier/create', data );
+};
+export const supplierUpdate = async (id, data) => {
+    return  POST('/supplier/update/'+id, data );
+};
+
+export const supplierSearch = async (data) => {
+    return  POST('/supplier/search', data );
+};
+
+export const supplierDelete = async (data) => {
+    return  GET('/supplier/delete/'+ data );
+};
+
+
+export const importedProducts = async (data) => {
+    return  POST('/imported-products', data );
+};
+
+export const getDocumentProducts = async (id) => {
+    return  GET('/product-document/products/' +  id );
+};
+
+
+export const treatmentAddService = async (data) => {
+    return  POST('/treatment-add-service', data );
+};
+
+export const treatmentAddServiceAll = async (id) => {
+    return  GET('/treatment-add-all/'  +  id );
+};
+
+export const getUserPayments = async (id) => {
+    return  GET('/get-user-payments/'  +  id );
+};
+export const getTreatmentUserPayments = async (data) => {
+    return  POST('/get-user-treatment-payments/' , data );
+};
+export const treatmentSavedService = async (data) => {
+    return  POST('/treatment-saved-service', data );
+};
+
+
+
+// ____________________________ owedTreatment ________________________________________________________
+
+
+export const owedTreatments = async (id, pages) => {
+    if (id != null){
+        return  GET('owed-treatment/index?page='+id+'&pages='+pages);
+    }else {
+        return  GET('owed-treatment/index?pages='+pages);
+    }
+};
+
+export const owedTreatmentShow = async (data) => {
+    return  GET('owed-treatment/show/'+data);
+};
+
+export const owedTreatmentCreate = async (data) => {
+    return  POST('owed-treatment/create', data );
+};
+export const owedTreatmentUpdate = async (id, data) => {
+    return  POST('owed-treatment/update/'+id, data );
+};
+
+export const owedTreatmentSearch = async (data) => {
+    return  POST('owed-treatment/search', data );
+};
+
+export const owedTreatmentDelete = async (data) => {
+    return  GET('owed-treatment/delete/'+ data );
+};
+
+export const treatmentFinished = async (data) => {
+    return  GET('/treatment-finished/'+ data );
+};

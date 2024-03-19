@@ -31,6 +31,7 @@ class ServiceResource extends JsonResource
             'technic_price' => Action::decimal($this->technic_price),
             'order' => $this->order,
             'status' => $this->status,
+            'collection_id' => $this->collection_id,
             'personalPrices' => PersonalPrice::where('service_id', $this->id )->get()
         ];
     }

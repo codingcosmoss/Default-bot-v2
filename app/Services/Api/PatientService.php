@@ -382,7 +382,6 @@ class PatientService extends AbstractService
     public function show($id)
     {
         $model = $this->model::find($id);
-
         if (!$model) {
             return [
                 'status' => false,

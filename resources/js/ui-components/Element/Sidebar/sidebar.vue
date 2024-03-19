@@ -60,7 +60,7 @@ export default {
     props:{
         onSidebarToggle:{
             type: Boolean,
-            default:false,
+            default: false ,
             required: false
         },
         navbarAnime:{
@@ -117,10 +117,10 @@ export default {
 </script>
 <style >
     .navbar01{
-
+        position: fixed;
     }
     .navbar02{
-
+        position: fixed;
     }
 
     @media (min-width: 1024px) {

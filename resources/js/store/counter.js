@@ -28,9 +28,16 @@ export const useConterStore = defineStore({
             this.Lang = val;
         },
         getName(val){
+            if (localStorage.getItem('lang') == null){
+                localStorage.setItem('lang', 'uz');
+            }
             return  this.Localization[localStorage.getItem('lang')][val];
         },
+        formatNumber(number) {
+            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+        }
 
-    }
+
+}
 
 })

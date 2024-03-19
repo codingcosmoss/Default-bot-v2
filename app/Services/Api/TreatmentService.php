@@ -5,10 +5,14 @@ namespace App\Services\Api;
 use App\Fields\Store\TextField;
 use App\Http\Resources\OneUserResource;
 use App\Http\Resources\PatientResource;
+use App\Http\Resources\ServiceItemsResource;
 use App\Http\Resources\TreatmentResource;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\UserResources;
+use App\Models\Discount;
 use App\Models\Patient;
+use App\Models\Service;
+use App\Models\TreatmentService as ModelTreatmentService;
 use App\Models\Treatment;
 use App\Models\User;
 use App\Traits\Status;
@@ -33,7 +37,7 @@ class TreatmentService extends AbstractService
      */
     public function index($data = null)
     {
-        $models = $this->model::orderBy('updated_at', 'asc')
+        $models = $this->model::orderBy('updated_at', 'desc')
             ->paginate($data['pages']);
 
         $data = [
@@ -87,6 +91,213 @@ class TreatmentService extends AbstractService
         ];
     }
 
+    public function getDiscountFields()
+    {
+        return [
+            TextField::make('treatment_id')->setRules('required|numeric'),
+            TextField::make('discount_total_sum')->setRules('required|numeric'),
+            TextField::make('discounter')->setRules('required|numeric'),
+            TextField::make('discount_percent')->setRules('required|numeric'),
+            TextField::make('discount_sum')->setRules('required|numeric'),
+        ];
+    }
+
+    public function discount(array $data)
+    {
+        $fields = $this->getDiscountFields();
+
+        $rules = [];
+
+        foreach ($fields as $field) {
+
+            $rules[$field->getName()] = $field->getRules();
+        }
+
+        $validator = Validator::make($data, $rules);
+
+        if ($validator->fails()) {
+
+            $errors = [];
+
+            foreach ($validator->errors()->getMessages() as $key => $value) {
+
+                $errors[$key] = $value[0];
+            }
+
+            return [
+                'status' => false,
+                'message' => 'Validation error',
+                'statusCode' => 200,
+                'data' => $errors
+            ];
+        }
+
+        $data = $validator->validated();
+
+        DB::beginTransaction();
+        try {
+            $model = $this->model::find($data['treatment_id']);
+            $model->type_of_discount = $data['discounter'];
+            $model->discount_total_sum = $data['discount_total_sum']; // Chegirmani umumiy summasi
+            $model->discount_percent = $data['discount_percent']; // Chegrima miqdori foizda
+            $model->discount_sum = $data['discount_sum']; // 	Chegirma miqdori sumda
+            $model->user_id = auth()->user()->id;
+
+            if ($model->save()) {
+                DB::commit();
+            } else {
+                DB::rollback();
+                return [
+                    'status' => false,
+                    'message' => 'save user error',
+                    'statusCode' => 200,
+                    'data' => null
+                ];
+            }
+        } catch (\Exception $ex) {
+            DB::rollback();
+            return [
+                'status' => false,
+                'message' => 'Server error',
+                'statusCode' => 200,
+                'data' => $ex->getMessage()
+            ];
+        }
+
+
+        return [
+            'status' => true,
+            'message' => 'success',
+            'statusCode' => 200,
+            'data' => $model
+        ];
+    }
+    public function treatmentFinished($id)
+    {
+        $treatment =  Treatment::find($id);
+        if ($treatment){
+            $treatment->status = Status::$finished;
+            $treatment->save();
+
+            return [
+                'status' => true,
+                'message' => 'Success',
+                'statusCode' => 200,
+                'data' => null
+            ];
+        }
+        return [
+            'status' => false,
+            'message' => 'Treatment not fount',
+            'statusCode' => 200,
+            'data' => null
+        ];
+    }
+
+    public function treatmentAddServiceAll($id)
+    {
+        $treatmentServices =  ModelTreatmentService::where('treatment_id', $id )
+            ->get();
+
+        $data = [
+            'items' => ServiceItemsResource::collection($treatmentServices),
+        ];
+
+        return [
+            'status' => true,
+            'message' => 'Success',
+            'statusCode' => 200,
+            'data' => $data
+        ];
+    }
+
+    public function treatmentAddService(array $data)
+    {
+
+        try {
+            if (isset($data['items'])){
+                $services = ModelTreatmentService::where( 'treatment_id' , $data['treatment_id'])->delete();
+                foreach ($data['items'] as $item) {
+                    $model = new ModelTreatmentService();
+                    $model->service_id = $item['id'];
+                    $model->amount = $item['count'];
+                    $model->treatment_id = $data['treatment_id'];
+                    $model->save();
+                }
+            }else{
+                return [
+                    'status' => false,
+                    'message' => 'success',
+                    'statusCode' => 403,
+                    'data' => null
+                ];
+            }
+
+        } catch (\Exception $ex) {
+            return [
+                'status' => false,
+                'message' => 'Server error',
+                'statusCode' => 200,
+                'data' => $ex->getMessage()
+            ];
+        }
+
+
+        return [
+            'status' => true,
+            'message' => 'success',
+            'statusCode' => 200,
+            'data' => $model
+        ];
+    }
+
+    public function treatmentSavedService(array $data)
+    {
+
+        try {
+            if (isset($data['items'])){
+                $services = ModelTreatmentService::where( 'treatment_id' , $data['treatment_id'])->delete();
+                $sum = 0;
+                foreach ($data['items'] as $item) {
+                    $model = new ModelTreatmentService();
+                    $model->service_id = $item['id'];
+                    $model->amount = $item['count'];
+                    $model->treatment_id = $data['treatment_id'];
+                    $model->save();
+                    $sum += $model->amount * Service::find($item['id'])->price;
+                }
+                $treatment = Treatment::find($data['treatment_id']);
+                $treatment->service_real_price = $sum;
+                $treatment->status = Status::$doctorFinished;
+                $treatment->save();
+
+            }else{
+                return [
+                    'status' => false,
+                    'message' => 'success',
+                    'statusCode' => 403,
+                    'data' => null
+                ];
+            }
+
+        } catch (\Exception $ex) {
+            return [
+                'status' => false,
+                'message' => 'Server error',
+                'statusCode' => 200,
+                'data' => $ex->getMessage()
+            ];
+        }
+
+
+        return [
+            'status' => true,
+            'message' => 'success',
+            'statusCode' => 200,
+            'data' => $model
+        ];
+    }
+
 
     /**
      * @param array $data
@@ -136,7 +347,7 @@ class TreatmentService extends AbstractService
             $model->sort_order = $data['sort_order'];
             $model->birthday = $data['birthday'];
             $model->price = $data['price'];
-            $model->status = Status::$status_active;
+            $model->status = Status::$notSaved;
 
             if ($model->save()) {
                 DB::commit();
@@ -232,7 +443,7 @@ class TreatmentService extends AbstractService
             $model->start = strtotime($data['start']);
             $model->end =  date('Y-m-d H:i', strtotime($end));
             $model->reception_description = $data['reception_description'];
-            $model->status = Status::$status_active;
+//            $model->status = Status::$status_active;
 
             if ($model->save()) {
                 DB::commit();

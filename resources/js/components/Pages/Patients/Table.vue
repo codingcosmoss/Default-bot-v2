@@ -100,7 +100,7 @@
 
         <div
           v-for="(item, index) in items"
-          class="grid grid-cols-7 border-b border-stroke dark:border-strokedark sm:grid-cols-7"
+          class=" databes_table grid grid-cols-7 border-b border-stroke dark:border-strokedark sm:grid-cols-7"
         >
           <div class="flex items-center gap-3 p-2.5 xl:p-5">
             <p class="font-medium hidden text-black dark:text-white sm:block">
@@ -153,6 +153,9 @@
             </p>
           </div>
         </div>
+
+          <Loader v-if="items.length == 0  && search == '' " ></Loader>
+
 
         <Paginate>
           <Pagination01>
@@ -233,8 +236,10 @@ import Select from "./Create/Inputs/Select.vue";
 import Textarea from "../../../ui-components/Form/Textarea.vue";
 import InputDateTime from "../../../ui-components/Form/InputDateTime.vue";
 import InputTime from "../../../ui-components/Form/InputTime.vue";
+import Loader from "@/ui-components/Element/Loader.vue";
 export default {
   components: {
+      Loader,
     Paginate,
     InputTime,
     InputDateTime,

@@ -6,7 +6,7 @@
         <chart02 title="chart-02" ></chart02>
         <chart03 title="chart-03" ></chart03>
         <Table01 title="table-01"></Table01>
-        <Chat01 title="chat-01"></Chat01>
+        <Chat01 title="Chat-01"></Chat01>
 
     </Page>
 

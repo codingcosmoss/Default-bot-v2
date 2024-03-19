@@ -30,8 +30,9 @@
         <!--begin::Action-->
 
         <div class="pb-lg-0 pb-5">
-            <button @click="this.addForm()" type="button"
-                class="btn btn-primary font-weight-bolder font-size-h6 px-8 w-100 py-3 my-3 mr-3">Sign In</button>
+<!--            <button type="button"  class="btn btn-primary font-weight-bolder font-size-h6 px-8 w-100 py-3 my-3 mr-3" >Sign in </button>-->
+<!--            <button @click="this.addForm()" type="button"-->
+<!--                class="btn btn-primary font-weight-bolder font-size-h6 px-8 w-100 py-3 my-3 mr-3">Sign In</button>-->
 
         </div>
 

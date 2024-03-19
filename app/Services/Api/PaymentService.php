@@ -10,10 +10,12 @@ use App\Http\Resources\PaymentResource;
 use App\Http\Resources\PaymentTypeResource;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\UserResources;
+use App\Models\Discount;
 use App\Models\Disease;
 use App\Models\Patient;
 use App\Models\Payment;
 use App\Models\PaymentType;
+use App\Models\Treatment;
 use App\Models\User;
 use App\Traits\Status;
 use http\Exception\InvalidArgumentException;
@@ -112,6 +114,13 @@ class PaymentService extends AbstractService
             TextField::make('amount')->setRules('required|integer'),
         ];
     }
+    public function paymentFields()
+    {
+        return [
+            TextField::make('patient_id')->setRules('required|integer'),
+            TextField::make('treatment_id')->setRules('required|integer'),
+        ];
+    }
 
 
     /**
@@ -161,6 +170,17 @@ class PaymentService extends AbstractService
 
             if ($model->save()) {
                 DB::commit();
+                $payments = Payment::where('patient_id', $data['patient_id'])
+                    ->where( "treatment_id", $data['treatment_id'] )
+                    ->sum('amount');
+                $treatment = Treatment::find($data['treatment_id']);
+                $realPrice = $treatment->service_real_price - $treatment->discount_sum;
+                if ($payments == $realPrice ){
+                    $treatment->payment_status = Status::$Closed;
+                }else if($payments < $realPrice ){
+                    $treatment->payment_status = Status::$notFullyPaid;
+                }
+                $treatment->save();
             } else {
                 DB::rollback();
                 return [
@@ -187,6 +207,64 @@ class PaymentService extends AbstractService
             'message' => 'success',
             'statusCode' => 200,
             'data' => $model
+        ];
+    }
+
+    public function getUserTreatmentPayments($data)
+    {
+        $fields = $this->getFields();
+
+        $rules = [];
+
+        foreach ($fields as $field) {
+
+            $rules[$field->getName()] = $field->getRules();
+        }
+
+        $validator = Validator::make($data, $rules);
+
+        if ($validator->fails()) {
+
+            $errors = [];
+
+            foreach ($validator->errors()->getMessages() as $key => $value) {
+
+                $errors[$key] = $value[0];
+            }
+
+            return [
+                'status' => false,
+                'message' => 'Validation error',
+                'statusCode' => 200,
+                'data' => $errors
+            ];
+        }
+
+        $data = $validator->validated();
+
+
+        $payments = Payment::where('patient_id', $data['patient_id'])
+            ->where( "treatment_id", $data['treatment_id'] )
+            ->sum('amount');
+
+        return [
+            'status' => true,
+            'message' => 'success',
+            'statusCode' => 200,
+            'data' => $payments
+        ];
+    }
+
+    public function getUserPayments($id)
+    {
+        $payments = Payment::where('patient_id', $id)
+            ->sum('amount');
+
+        return [
+            'status' => true,
+            'message' => 'success',
+            'statusCode' => 200,
+            'data' => $payments
         ];
     }
 

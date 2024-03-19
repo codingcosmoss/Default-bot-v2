@@ -25,12 +25,41 @@ class TreatmentController extends AbstractController
 
         return $this->sendResponse($item);
     }
-    public function updatePassword()
+
+    public function treatmentAddServiceAll($id)
     {
-        $item = $this->service->updatePassword(request()->all());
+        $item = $this->service->treatmentAddServiceAll($id);
 
         return $this->sendResponse($item);
     }
+    public function treatmentFinished($id)
+    {
+        $item = $this->service->treatmentFinished($id);
+
+        return $this->sendResponse($item);
+    }
+    public function treatmentSavedService()
+    {
+        $item = $this->service->treatmentSavedService(request()->all());
+
+        return $this->sendResponse($item);
+    }
+
+    public function discount()
+    {
+        $item = $this->service->discount(request()->all());
+
+        return $this->sendResponse($item);
+    }
+
+    public function treatmentAddService()
+    {
+        $item = $this->service->treatmentAddService(request()->all());
+
+        return $this->sendResponse($item);
+    }
+
+
 
     /**
      * @param $id

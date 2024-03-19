@@ -63,7 +63,7 @@
 
                 <TableHeader></TableHeader>
 
-                <div v-for="(item, index) in items" class="grid grid-cols-5 border-b border-stroke dark:border-strokedark sm:grid-cols-5">
+                <div v-for="(item, index) in items" class="grid grid-cols-5 border-b border-stroke dark:border-strokedark sm:grid-cols-5 databes_table">
 
                     <div class="flex items-center gap-3 p-2.5 xl:p-5">
 
@@ -102,6 +102,8 @@
                     </div>
 
                 </div>
+
+                <Loader v-if="items.length == 0  && search == '' " ></Loader>
 
                 <Paginate>
                     <Pagination01>
@@ -176,8 +178,10 @@ import ModalLayout from "../../../ui-components/Element/Modal01/ModalLayout.vue"
 import Select from "../Services/Create/Inputs/Select.vue";
 import InputColor from "../Employees/Update/Inputs/InputColor.vue";
 import Paginate from "../../../ui-components/Element/Paginate/paginate.vue";
+import Loader from "@/ui-components/Element/Loader.vue";
 export default {
     components: {
+        Loader,
         Paginate,
         Input,
         Switch,

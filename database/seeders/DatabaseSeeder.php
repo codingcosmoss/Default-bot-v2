@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
              'password' =>  Hash::make('121212') ,
          ]);
         $this->call([
-            MoneyTypeSeeder::class,
+//            MoneyTypeSeeder::class,
         ]);
     }
 }

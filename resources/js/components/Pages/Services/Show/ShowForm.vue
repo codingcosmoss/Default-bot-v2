@@ -98,7 +98,9 @@ export default {
         UpdateId: function(newVal, oldVal) { // watch it
             this.getModal()
         }
-    }
+    },
+
+
 
 }
 </script>

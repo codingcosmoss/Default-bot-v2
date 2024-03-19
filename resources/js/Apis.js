@@ -1,29 +1,30 @@
-// payments
+// ____________________________ owedTreatment ________________________________________________________
 
-export const payments = async (id, pages) => {
+
+export const owedTreatments = async (id, pages) => {
     if (id != null){
-        return  GET('/payment/index?page='+id+'&pages='+pages);
+        return  GET('owed-treatment/index?page='+id+'&pages='+pages);
     }else {
-        return  GET('/payment/index?pages='+pages);
+        return  GET('owed-treatment/index?pages='+pages);
     }
 };
 
-export const paymentShow = async (data) => {
-    return  GET('/payment/show/'+data);
+export const owedTreatmentShow = async (data) => {
+    return  GET('owed-treatment/show/'+data);
 };
 
-export const paymentCreate = async (data) => {
-    return  POST('/payment/create', data );
+export const owedTreatmentCreate = async (data) => {
+    return  POST('owed-treatment/create', data );
 };
-export const paymentUpdate = async (id, data) => {
-    return  POST('/payment/update/'+id, data );
-};
-
-export const paymentsSearch = async (data) => {
-    return  POST('/payment/search', data );
+export const owedTreatmentUpdate = async (id, data) => {
+    return  POST('owed-treatment/update/'+id, data );
 };
 
-export const paymentDelete = async (data) => {
-    return  GET('/payment/delete/'+ data );
+export const owedTreatmentSearch = async (data) => {
+    return  POST('owed-treatment/search', data );
+};
+
+export const owedTreatmentDelete = async (data) => {
+    return  GET('owed-treatment/delete/'+ data );
 };
 

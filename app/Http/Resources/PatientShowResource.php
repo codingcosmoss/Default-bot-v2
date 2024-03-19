@@ -3,7 +3,9 @@
 namespace App\Http\Resources;
 
 use App\Models\Payment;
+use App\Models\Treatment;
 use App\Traits\Action;
+use App\Traits\Status;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -34,9 +36,16 @@ class PatientShowResource extends JsonResource
                 'to' => $models->lastItem(),
             ],
         ];
+        $treatmens = Treatment::where('patient_id', $this->id)->get();
+        $debtAmount = 0;
+        $servicesCount = 0;
+        foreach ($treatmens as $treatment){
+            $debtAmount += $treatment->service_real_price - $treatment->discount_sum;
+            $servicesCount += count($treatment->services);
+        }
 
-        $amountPaid = Payment::where('patient_id', $this->id)->sum('amount');
-
+        $paymentSum = Payment::where('patient_id', $this->id )->sum('amount');
+        $realPrice = $debtAmount - $paymentSum;
 
         return [
             'id' => $this->id,
@@ -46,6 +55,7 @@ class PatientShowResource extends JsonResource
             'job' => $this->job,
             'address' => $this->address,
             'gender' => $this->gender,
+            'gender_text' => Status::getStatusName($this->gender),
             'birthday' => $this->birthday,
             'price' =>  $this->price,
             'status' => $this->status,
@@ -55,8 +65,11 @@ class PatientShowResource extends JsonResource
             'treatmets' => TreatmentResource::collection($this->treatments),
             'payments' => $data,
             'sort_order' => $this->sort_order,
-            'services_used' => 0,
-            'amount_paid' => Action::decimal($amountPaid).' '.'UZS',
+            'services_used' => $servicesCount,
+            'balans' => $realPrice < 0 ? Action::decimal(abs($realPrice)).' '.'uzs' : '0 uzs',
+//            'debts' =>  Action::decimal($realPrice).' '.'uzs' ,
+            'debts' => $realPrice > 0 ? Action::decimal($realPrice).' '.'uzs' : '0 uzs',
+            'amount_paid' => Action::decimal($paymentSum).' '.'uzs',
             'created_at' =>  Carbon::parse($this->created_at)->format('Y-m-d H:i'),
             'updated_at' => $this->updated_at
 

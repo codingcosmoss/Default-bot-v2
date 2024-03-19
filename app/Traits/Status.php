@@ -42,6 +42,10 @@ trait Status
     public static int $unpaid = 10;
     public static int $notFullyPaid = 11;
     public static int $Closed = 12;
+    public static int $saved = 13;
+    public static int $notSaved = 14;
+    public static int $clinic = 15; // klinika
+    public static int $doctor = 16; // doctor
 
     /**
      * @return string[]
@@ -59,15 +63,19 @@ trait Status
             self::$unpaid => "To'lanmagan",
             self::$notFullyPaid => "To'liq to'lanmagan",
             self::$Closed => "Yopilgan",
+            self::$male => "Erkak",
+            self::$woman => "Ayol",
+            self::$saved => "Saqlangan",
+            self::$notSaved => "Saqlanmagan",
         ];
     }
 
     /**
      * @return array|\ArrayAccess|mixed|string
      */
-    public function getStatusName()
+    public static function getStatusName($status)
     {
-        return Arr::get(self::statuses(), $this->status);
+        return Arr::get(self::statuses(), $status);
     }
 
     /**

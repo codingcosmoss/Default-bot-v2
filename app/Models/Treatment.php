@@ -14,6 +14,10 @@ class Treatment extends Model
     {
         return $this->belongsTo(Patient::class);
     }
+    public function services()
+    {
+        return $this->hasMany(TreatmentService::class);
+    }
 
     public function user()
     {

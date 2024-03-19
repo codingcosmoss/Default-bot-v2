@@ -62,7 +62,7 @@
 
                 <TableHeader></TableHeader>
 
-                <div v-for="(item, index) in items" class="grid grid-cols-5 border-b border-stroke dark:border-strokedark sm:grid-cols-5">
+                <div v-for="(item, index) in items" class=" databes_table  grid grid-cols-5 border-b border-stroke dark:border-strokedark sm:grid-cols-5 databes_table">
 
                     <div class="flex items-center gap-3 p-2.5 xl:p-5">
 
@@ -83,7 +83,7 @@
 
                     <div class="flex items-center justify-center p-2.5 xl:p-5">
                         <div  class="status_box" :class="item.status == 1 ? 'active' : 'inactive' ">
-                            {{item.status == 1 ? 'active' : 'inactive' }} 
+                            {{item.status == 1 ? 'active' : 'inactive' }}
                         </div>
                     </div>
 
@@ -101,6 +101,9 @@
                     </div>
 
                 </div>
+
+                <Loader v-if="items.length == 0 && search == '' " ></Loader>
+
 
                 <Paginate>
                     <Pagination01>
@@ -143,7 +146,7 @@
         />
         <Switch
             :isSwitch="status == 1 ? true : false"
-            @onClick = "status = $event, console.log($event)"
+            @onClick = "status = $event"
 
         />
 
@@ -175,8 +178,10 @@ import ModalLayout from "../../../ui-components/Element/Modal01/ModalLayout.vue"
 import Select from "../Services/Create/Inputs/Select.vue";
 import InputColor from "../Employees/Update/Inputs/InputColor.vue";
 import Paginate from "../../../ui-components/Element/Paginate/paginate.vue";
+import Loader from "@/ui-components/Element/Loader.vue";
 export default {
     components: {
+        Loader,
         Paginate,
         Input,
         Switch,
@@ -235,6 +240,11 @@ export default {
         },
 
         async crudPatient(){
+            if (this.status == 1){
+                this.status = true;
+            }else if(this.status = 0){
+                this.status = false;
+            }
 
             var data = {
                 'name': this.name,
@@ -242,7 +252,7 @@ export default {
                 'status': this.status
 
             }
-            
+
             var response = '';
             if(this.crud == 'created'){
                 response = await diseaseCreate(data);
@@ -358,7 +368,7 @@ export default {
         color: #ffffff !important;
         /* border: 2px solid  #10B981; */
         border-radius: 50%;
-     
+
     }
     .inactive{
         background: #e70909bf !important;
@@ -366,7 +376,7 @@ export default {
         /* border: 2px solid #e70909bf; */
 
     }
-    
+
     .photo-img{
         width: 50px;
         height: 50px;

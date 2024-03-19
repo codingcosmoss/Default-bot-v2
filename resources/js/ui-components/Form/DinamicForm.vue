@@ -10,6 +10,7 @@
             >
 
                 <option>---</option>
+
                 <option
                     v-for=" employe in employes"
                     :value="employe.id"
@@ -30,14 +31,14 @@
 
             <Select
                 :isError ="errors.includes(index) || summError"
-                style="width: 100px; margin: 0 20px"
+                style="width: 150px; margin: 0 20px"
                 :Couple = "false"
                 Label = "Type"
                 @onSelect ="this.personal_procents[index]['type'] = $event,this.personal_procents[index]['index'] = index, sendData()"
             >
 
-                <option selected value="%">%</option>
-                <option value="sum">Sum</option>
+                <option :selected = "item.type == '%'" value="%" >%</option>
+                <option value="sum"  :selected = "item.type == 'sum'" >Sum</option>
 
             </Select>
 
@@ -48,8 +49,11 @@
         </li>
         <p v-if="summError" class="text-danger mt-5">{{ getName('summError') }}  </p>
 
-        <PrimaryButton2 @click ="addTodo" Class ="btn-primary" class="btn mt-5" Icon = "fa-solid fa-plus" Title = "" />
+        <p v-if="isLoader" class="text-danger mt-5 loader_box">
+            <Loader v-if="personal_procents == 0" ></Loader>
+        </p>
 
+        <PrimaryButton2 @click ="addTodo" Class ="btn-primary" class="btn mt-5" Icon = "fa-solid fa-plus" Title = "" />
     </ul>
 </template>
 <script >
@@ -58,9 +62,10 @@ import Input from "./Input.vue";
 import Select from "./Select.vue";
 import { GET } from "../../Config";
 import { useConterStore } from "../../store/counter";
+import Loader from "@/ui-components/Element/Loader.vue";
 
     export default {
-        components:{PrimaryButton2, Input, Select},
+        components:{Loader, PrimaryButton2, Input, Select},
         data() {
             return{
                 personal_procents: [],
@@ -72,6 +77,11 @@ import { useConterStore } from "../../store/counter";
             errors:{
                 type: [Object, Array],
                 default: []
+            },
+
+            isLoader:{
+                type: Boolean,
+                default: true
             },
 
             personalProcents:{
@@ -100,30 +110,40 @@ import { useConterStore } from "../../store/counter";
 
             },
             removeTudo(key){
-
+                this.removeLoader()
                 if (confirm('Do you really want to delete it?')) {
                     this.personal_procents.splice(key, 1);
                 }
-
             },
             async getEmployes(){
                 const response = await GET('/employee/index?pages=1000');
                 this.employes = response.data.employees;
             },
+
             sendData(){
                 this.$emit('Data', this.personal_procents);
             },
+
             getName(val){
                 return useConterStore().getName(val);
             },
             hasKey(key) {
                 return key in this.errorObj;
             },
+            removeLoader(){
+                const loaderBox = document.querySelector('.loader_box');
+                if (loaderBox != null){
+                    setTimeout(() => {
+                        loaderBox.classList.add('hidden_box');
+                    }, 2000)
+                }
+            }
 
         },
         mounted() {
             this.getEmployes(),
-            this.getData()
+            this.getData(),
+                this.removeLoader()
         },
         watch:{
             personalProcents: function (val1, val2){

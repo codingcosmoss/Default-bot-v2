@@ -22,7 +22,7 @@
 
           />
 
-          <PrimaryButton @click = "addForm" ></PrimaryButton>
+          <PrimaryButton @click = "addForm" Title = "Sign in" ></PrimaryButton>
       </Form>
 
   </Layout>

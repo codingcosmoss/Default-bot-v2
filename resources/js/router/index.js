@@ -143,6 +143,84 @@ const routes = [
         component: () => import('../components/Pages/Payments/index.vue'),
     },
 
+    // Warehouse
+    {
+        path: '/warehouses',
+        component: () => import('../components/Pages/Warehouses/index.vue'),
+    },
+
+    // Warehouse
+    {
+        path: '/filials',
+        component: () => import('../components/Pages/Filials/index.vue'),
+    },
+
+    // WarehouseCategory
+    {
+        path: '/warehouse-categories',
+        component: () => import('../components/Pages/WarehouseCategories/index.vue'),
+    },
+
+    // Groups
+    {
+        path: '/groups',
+        component: () => import('../components/Pages/Groups/index.vue'),
+    },
+    // Products
+    {
+        path: '/products',
+        component: () => import('../components/Pages/Products/index.vue'),
+    },
+
+    {
+        path: '/product/create',
+        component: () => import('../components/Pages/Products/Create/Form.vue'),
+    },
+    {
+        path: '/product/update',
+        component: () => import('../components/Pages/Products/Update/Form.vue'),
+    },
+    // {
+    //     path: '/update',
+    //     component: () => import('../components/Pages/Patients/Update/Form.vue'),
+    // },
+    // {
+    //     path: '/patient/show',
+    //     component: () => import('../components/Pages/Patients/Show/index.vue'),
+    // },
+    // {
+    //     path: '/service/edit-password',
+    //     component: () => import('../components/Pages/Employees/EditPassword/Form.vue'),
+    // },
+
+    // collections
+    {
+        path: '/collections',
+        component: () => import('../components/Pages/Collections/index.vue'),
+    },
+    {
+        path: '/product-documents',
+        component: () => import('../components/Pages/ProductDocuments/index.vue'),
+    },
+
+    {
+        path: '/suppliers',
+        component: () => import('../components/Pages/Suppliers/index.vue'),
+    },
+    {
+        path: '/producy-documents/add-products',
+        component: () => import('../components/Pages/ProductDocuments/AddProducts/index.vue'),
+    },
+
+    {
+        path: '/treatmetn/add-service',
+        component: () => import('../components/Pages/Treatments/Treatment/AddService/index.vue'),
+    },
+    {
+        path: '/check',
+        component: () => import('../components/Pages/Treatments/Check.vue'),
+    }
+
 
 
 

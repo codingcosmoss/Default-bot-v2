@@ -1,6 +1,6 @@
 <template>
 
-    <div class="grid grid-cols-5 border-b border-stroke dark:border-strokedark sm:grid-cols-5 overflow-x-auto" >
+    <div class="grid grid-cols-5 border-b border-stroke dark:border-strokedark sm:grid-cols-5 databes_table overflow-x-auto" >
 
         <div class="flex items-center justify-center p-2.5 xl:p-5 ">
             <p class="font-medium text-black dark:text-white "> {{getName('name_content')}}</p>

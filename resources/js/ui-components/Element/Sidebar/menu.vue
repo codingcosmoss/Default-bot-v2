@@ -5,6 +5,7 @@
         <a class="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4"
             @click="selected = (selected === 'Calendar' ? '' : 'Calendar')"
            :class="{ 'bg-graydark dark:bg-meta-4': (selected === 'Calendar') && (page === 'calendar') }">
+
             <i :class="Icon" style="font-size: 25px" class="icon01"></i>
 
             <span class="text01" >{{Title}}</span>

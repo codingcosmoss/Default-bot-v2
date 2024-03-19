@@ -92,7 +92,7 @@
 
         <div
           v-for="(item, index) in Treatments.length > 0 ? Treatments : items"
-          class="grid tableBox grid-cols-7 border-b border-stroke dark:border-strokedark sm:grid-cols-7"
+          class="grid tableBox grid-cols-7 border-b border-stroke dark:border-strokedark sm:grid-cols-7 databes_table "
         >
           <div class="flex items-center gap-3 p-2.5 xl:p-5">
             <p class="font-medium hidden text-black dark:text-white sm:block">
@@ -109,46 +109,106 @@
           </div>
 
           <div class="flex items-center justify-center p-2.5 xl:p-5">
-              <p class="font-medium text-black dark:text-white">{{ item.start }}</p>
+              <p class="font-medium text-black dark:text-white">{{ item.start }} {{ item.id }}</p>
           </div>
 
           <div class="flex items-center justify-center p-2.5 xl:p-5">
-            <p class="font-medium text-black dark:text-white status-text">{{ getStatus(item.status) }}</p>
+            <p class="font-medium text-black dark:text-white status-text "
+               :class="getClass(item.status)"
+            >{{ getStatus(item.status) }}  </p>
           </div>
+
 
         <div class="flex items-center justify-center p-2.5 xl:p-5">
             <p class="font-medium dark:text-white status-text "
               :class="getClass(item.payment_status)"
-            >{{ getStatus(item.payment_status) }}</p>
+            >{{ getStatus(item.payment_status) }}
+            </p>
         </div>
 
 
-          <div class="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
-            <p class="font-medium text-meta-5" >
-              <i
-                @click="
-                  this.$router.push({ path: '/patient/update', query: { id: item.id } })
-                "
-                class="fa-solid setting-icon fa-pen-to-square disabled "
-              ></i>
-              &nbsp;
-              <i
-                @click="Show(item.id)"
-                class="fa-solid setting-icon fa-eye"
-              ></i>
-                &nbsp;
-
+          <div class="hidden button-box0 items-center justify-center p-2.5 sm:flex xl:p-5">
+            <p class="font-medium text-meta-5 btns " >
                 <i
-                    @click="this.$router.push({ path: '/treatmetns/treatmetn', query:{ id: item.id } })"
+                    @click="Show(item) "
+                    class="fa-solid setting-icon fa-eye"
+                ></i>
+                <i
+                    titile = 'Tahrirlash'
+                    v-if="item.status == 8 && item.payment_status != 12 "
+                    @click="this.$router.push({ path: '/treatmetns/treatmetn', query:{ id: item.patient_id, treatment_id: item.id } })"
+                    class="fa-solid setting-icon fa-pen-to-square "
+                ></i>
+                <i
+                    v-if="item.status == 7"
+                    @click="this.$router.push({ path: '/treatmetns/treatmetn', query:{ id: item.patient_id, treatment_id: item.id } })"
                     :title="getName('Treatment')"
                     class="fa-regular setting-icon fa-calendar-plus cursor-pointer"
+
                 ></i>
+                <i
+                    v-if="item.payment_status != 12 && item.status != 7"
+                    @click="paymentModal(item), userPayments = item.user_payment "
+                    :title="getName('Payments')"
+                    class="fa-regular fas fa-donate setting-icon  cursor-pointer"
+                ></i>
+                <i
+                    title="Wordga chop etish"
+                    @click="debtModal(item)"
+                    :title="getName('Payment')"
+                    class="fa-solid fa-file-word setting-icon  cursor-pointer"
+                ></i>
+                <i
+                    title="Tolov tarixi"
+                    v-if="item.payment_status ==  11 || item.payment_status == 12"
+                    @click="istoryPaymentModal(item)"
+                    :title="getName('Payment')"
+                    class="fa-solid fa-clock-rotate-left setting-icon  cursor-pointer"
+                ></i>
+
+
+                <i
+                    title="Chegirma berish"
+                    v-if="item.payment_status != 12 && item.status != 9 && item.status != 7"
+                    @click="discountModal(item)"
+                    :title="getName('Payment')"
+                    class="fa-regular fas fa-percent setting-icon  cursor-pointer"
+                ></i>
+                <i
+                    title="Qarzga bajarish"
+                    v-if="item.payment_status != 12 && item.status != 9 && item.status != 7"
+                    @click="debtModal(item)"
+                    :title="getName('Payment')"
+                    class="fa-regular fas fa-coins setting-icon  cursor-pointer"
+                ></i>
+
+
+                <a target="_blank" :href="onCheck(item.id)"  >
+                    <i
+                        title="Tolov cheki"
+                        v-if="item.payment_status != 10"
+                        :title="getName('Payment')"
+                        class="fa-regular fas fa-print setting-icon  cursor-pointer"
+                    ></i>
+                </a>
+
+                <i
+                    title="Tugatish"
+                    v-if="item.status != 9 && item.status != 7"
+                    @click="treatementFinished(item.id)"
+                    :title="getName('Payment')"
+                    class="fa-regular fas fa-square-check setting-icon  cursor-pointer"
+                ></i>
+<!--                <div class="button-box01" v-if="item.payment_status != 12 && item.status != 7">-->
+<!--                  -->
+<!--                </div>-->
 
             </p>
           </div>
 
 
         </div>
+
 
         <Paginate>
           <Pagination01>
@@ -163,45 +223,223 @@
         </Paginate>
       </div>
 
-        <ShowForm :UpdateId = "UpdateId"  @closeModal = "isShowModal = $event" :isCreateModal = "isShowModal"  ></ShowForm>
 
-      <ModalLayout
-        @Submit="addReseption()"
-        :isModal="isModal"
-        @closeModal="isModal = false"
-        :Title="getName('AddDoctor')"
-      >
-        <Select
-          :Label="getName('Doctor')"
-          :isError="hasKey('user_id')"
-          :message="errorObj['user_id']"
-          @onSelect="Employee_id = $event"
-        >
-          <option selected>---</option>
-          <option v-for="user in Employees" :value="user['id']">
-            {{ user["name"] }}
-          </option>
-        </Select>
+            <ShowForm @onSubmit = "Modal == '0' ? isShowModal = false : onPayment() "   :UpdateId = "UpdateId"  @closeModal = "isShowModal = $event, errorObj = []" :isShowModal = "isShowModal"  >
 
-        <Input
-          :Label="getName('ReceptionTime')"
-          @onInput="DateTime = $event"
-          :isError="hasKey('start')"
-          :message="errorObj['start']"
-          :Value="DateTime"
-        />
+                <table v-if="Modal == 0 && Model != []  " class="table01" >
 
-        <InputTime
-          :Label="getName('Duration') +' / minute'"
-          style="width: 200px"
-          @onInput="Time = $event"
-          :isError="hasKey('hour')"
-          :message="errorObj['hour']"
-          :Value ="Time"
-        />
+                    <tr>
+                        <th>{{getName('name')}}: &nbsp;&nbsp;</th>
+                        <td>{{Patient.last_name}}</td>
+                    </tr>
 
-        <Textarea :Value ="TextData" :Label="getName('Classification')" @onInput="TextData = $event" />
-      </ModalLayout>
+                    <tr>
+                        <th>{{getName('last_name')}}: &nbsp;&nbsp;</th>
+                        <td>{{ Patient.first_name }}</td>
+                    </tr>
+
+                    <tr>
+                        <th>{{getName('Doctor')}}: &nbsp;&nbsp;</th>
+                        <td>{{doctor.name}}</td>
+                    </tr>
+
+                    <tr>
+                        <th>{{getName('TreatmentStarted_at')}}: &nbsp;&nbsp;</th>
+                        <td>{{Model.start}}</td>
+                    </tr>
+
+                    <tr>
+                        <th>{{getName('Finished_at')}}: &nbsp;&nbsp;</th>
+                        <td>{{Model.end}}</td>
+                    </tr>
+
+                    <tr>
+                        <th>{{getName('PatientEndPayment')}}: &nbsp;&nbsp;</th>
+                        <td>{{Model.latest_payment != null ? Model.latest_payment.amount : '0 UZS'}}</td>
+                    </tr>
+
+                    <tr>
+                        <th>{{getName('AmountOwedType')}}: &nbsp;&nbsp;</th>
+                        <td>{{Model.latest_payment != null ? Model.latest_payment.payment_type : '---'}}</td>
+                    </tr>
+                    <tr>
+                        <th>{{getName('TreatmentPrice')}}: &nbsp;&nbsp;</th>
+                        <td>{{useConterStore().formatNumber(Number(Model.service_real_price))}} uzs</td>
+                    </tr>
+                    <tr>
+                        <th>{{getName('PaymentsUser')}}: &nbsp;&nbsp;</th>
+                        <td>{{useConterStore().formatNumber(Number(Model.payment_amount))}} uzs</td>
+                    </tr>
+                    <tr>
+                        <th>{{getName('AmountOwed')}}: &nbsp;&nbsp;</th>
+                        <td>{{useConterStore().formatNumber(Number(Model.user_payment))}} uzs</td>
+                    </tr>
+                    <tr>
+                        <th>{{getName('Discount')}}: &nbsp;&nbsp;</th>
+                        <td>{{useConterStore().formatNumber(Number(Model.discount_sum))}} uzs</td>
+                    </tr>
+                    <tr>
+                        <th>{{getName('Payment_status')}}: &nbsp;&nbsp;</th>
+                        <td>
+
+                            <p class="font-medium dark:text-white status-text "
+                               :class="getClass(Model.payment_status)"
+                            >{{ getStatus(Model.payment_status)  }}</p>
+
+                        </td>
+                    </tr>
+
+                </table>
+
+                <!--         Tolov tarixi       -->
+                <table v-if="Modal == 'istory-payment' && Model != []  " class="table01" >
+
+                    <tr>
+                        <th>{{getName('Amount')}}</th>
+                        <th>{{getName('Created_at')}}</th>
+                        <th>{{getName('Type')}}</th>
+                    </tr>
+                    <tr v-for="patientPayment in patientPayments ">
+                        <td>{{patientPayment.amount}}</td>
+                        <td>{{patientPayment.created_at}}</td>
+                        <td>
+                            <p class="font-medium dark:text-white status-text "
+                               :style=" 'background: ' + patientPayment.color "
+                            >{{ patientPayment.payment_type }}</p>
+                        </td>
+
+                    </tr>
+
+                </table>
+
+                <div v-else-if = "Modal == 'debt' " >
+
+                    <h1>{{getName('DebitTitle')}}</h1>
+                    <br>
+                    <div class="flex">
+                        <Checkbox01
+                            @click = "debtUser = 'doctor'"
+                            :onCheck =" debtUser == 'doctor' ? true : false"
+                            :Title = "getName('Doctor')"
+                        />
+                        &nbsp;
+                        &nbsp;
+                        &nbsp;
+                        &nbsp;
+                        <Checkbox01
+                            @click = "debtUser = 'polyclinic'"
+                            :onCheck =" debtUser == 'polyclinic' ? true : false"
+                            :Title = "getName('PolyClinic')"
+                        />
+                    </div>
+                    <br>
+                    <Input
+                        :Label="getName('DebitData')"
+                        @onInput="debtData = $event"
+                        :isError="hasKey('debt_data')"
+                        :message="errorObj['debt_data']"
+                        Type = "date"
+                        Value = "2024-03-01"
+                    />
+
+
+                    <Textarea
+                        :Label="getName('Description')"
+                        @onInput="debtText = $event"
+                        :isError="hasKey('debt_text')"
+                        :message="errorObj['debt_text']"
+                        :Value = "debtText"
+                    />
+
+
+
+
+
+                </div>
+                <div v-else-if = "Modal == 'discount' " >
+
+                    <h1>{{getName('Summa')}}: {{counterStore.formatNumber(RealPrice)}} uzs</h1>
+                    <h1>{{getName('PaymentSum')}}: {{counterStore.formatNumber(discount_total_sum)}} uzs</h1>
+
+
+                    <br>
+                    <Input
+                        :Label="getName('Discount') + ' (%)' "
+                        @onInput="percentInput($event)"
+                        :isError="hasKey('discount_percent')"
+                        :message="errorObj['discount_percent']"
+                        :Value = "discount_percent"
+                        Tyoe = "number"
+                    />
+
+                    <Input
+                        :Label="getName('Discount') + ' (sum)' "
+                        @onInput="sumInput($event)"
+                        :isError="hasKey('discount_sum')"
+                        :message="errorObj['discount_sum']"
+                        :Value = "discount_sum"
+                        Tyoe = "number"
+                    />
+                    <p v-if="discountError" class="text-danger"> {{getName('DiscountError')}}</p>
+
+
+                    <h1>{{getName('DebitTitle')}}</h1>
+                    <br>
+
+                    <div class="flex">
+                        <Checkbox01
+                            @click = "debtUser = 'doctor'"
+                            :onCheck =" debtUser == 'doctor' ? true : false"
+                            :Title = "getName('Doctor')"
+                        />
+                        &nbsp;
+                        &nbsp;
+                        &nbsp;
+                        &nbsp;
+                        <Checkbox01
+                            @click = "debtUser = 'polyclinic'"
+                            :onCheck =" debtUser == 'polyclinic' ? true : false"
+                            :Title = "getName('PolyClinic')"
+                        />
+                    </div>
+                    <br>
+
+                </div>
+               <div  v-else-if = "Modal == 'payment'" >
+                   <DangerButton
+                        style="font-size: 20px"
+                        :isActive = "userPayments <= 0 ? true : false"
+                        :Title = "useConterStore().formatNumber(Number(userPayments)) + ' uzs' "
+                   />
+
+                   <Input
+                       Pholder = "0"
+                       Class = "format_input"
+                       :Label="getName('Amount')"
+                       @onInput="paymentNumberFormat($event)"
+                       :isError="hasKey('amount')"
+                       :message="errorObj['amount']"
+                       :Value = "counterStore.formatNumber(Amount)"
+                   />
+
+                   <Select
+                       :Label="getName('PaymentTypes')"
+                       :isError="hasKey('payment_type_id')"
+                       :message="errorObj['payment_type_id']"
+                       @onSelect = "PaymentType = $event"
+
+                   >
+                       <option selected >---</option>
+                       <option v-for="item in paymentTypes" :value="item['id']">
+                           {{ item["name"] }}
+                       </option>
+                   </Select>
+
+               </div>
+
+
+            </ShowForm>
+
     </div>
   </div>
 </template>
@@ -215,11 +453,16 @@ import { Alert } from "../../../Config.js";
 import Input from "../../../ui-components/Form/Input.vue";
 import InputDefault from "../../../ui-components/Form/InputDefault.vue";
 import ModalLayout from "../../../ui-components/Element/Modal01/ModalLayout.vue";
+import {owedTreatmentCreate, patientShow} from "../../../Api.js";
 import {
   Treatments,
+    treatmentDiscount,
   TreatmentShow,
   treatmentSearch,
   Employees,
+    PaymentTypes,
+    paymentCreate,
+    treatmentFinished
 } from "../../../Api.js";
 import CreateForm from "../ServiceCategories/Create/CreateForm.vue";
 import Pagination01 from "../../../ui-components/Element/pagination-01.vue";
@@ -231,8 +474,22 @@ import InputDateTime from "../../../ui-components/Form/InputDateTime.vue";
 import InputTime from "../../../ui-components/Form/InputTime.vue";
 import Table from "../Employees/Table.vue";
 import ShowForm from "./Show/ShowForm.vue";
+import PrimaryButton2 from "@/ui-components/Form/PrimaryButton2.vue";
+import {holdNextTicks} from "alpinejs/src/nextTick.js";
+import DangerButton from "@/ui-components/Form/DangerButton.vue";
+import {getUserPayments} from "@/Api.js";
+import Checkbox01 from "@/ui-components/Form/Checkbox/Checkbox01.vue";
+import {createMemoryHistory} from "vue-router";
+import {indexOf} from "vue-modal-service";
 export default {
+    setup(){
+        const counterStore = useConterStore();
+        return{useConterStore, counterStore}
+    },
   components: {
+      Checkbox01,
+      DangerButton,
+      PrimaryButton2,
       ShowForm,
       Table,
     Paginate,
@@ -248,7 +505,7 @@ export default {
     PaginateBtn,
     TableHeader,
     InputText,
-    Select,
+      Select,
   },
   props:{
       Treatments:{
@@ -265,6 +522,7 @@ export default {
       items: [],
       search: "",
       column: "updated_at",
+        userPayments: 0,
       order: "asc",
       paginateCount: 10,
       pagination: {},
@@ -274,9 +532,11 @@ export default {
       password_2: "",
       isPasswordError: false,
       ExitModal: false,
-      isModal: false,
+        isPaymentModal: false,
       Duration: 0,
       service_id: "",
+        PaymentType: '',
+        Amount: '',
       isShowModal: false,
       errorObj: [],
       UpdateId: 0,
@@ -286,7 +546,26 @@ export default {
       DateTime: "",
       TextData: '',
       Time: "0",
+      Modal: 0,
+      Item: [],
       patient_id: 0,
+        status: 1,
+        categoryName: '',
+        Model: [],
+        doctor: [],
+        Patient: [],
+        paymentTypes: [],
+        PatientId: '',
+        debtUser: 'doctor', // qarz kim tomondan berildi doctor/ polyclinic
+        debtData: '', // qaytarish sanasi
+        debtText: '', // izoh
+        patientPayments: [],
+        discount_percent: 0,
+        discount_sum: 0,
+        discount_total_sum: 0,
+        RealPrice: 0,
+        discountError: false,
+
     };
   },
 
@@ -298,8 +577,154 @@ export default {
       const response = await Employees(null, 1000);
       this.Employees = response.data.employees;
     },
+  sumInput(val){
+        this.discount_sum = val;
+      if (this.RealPrice > 0){
+          this.discount_percent = (100 * val)/this.RealPrice;
+      }else {
+          this.discount_percent = 0;
+      }
+
+  },
+      percentInput(val){
+          if (Number(val) > 100){
+              this.discount_percent = 100;
+          }else {
+              this.discount_percent = val;
+          }
+          if (this.RealPrice > 0){
+              this.discount_sum = (this.RealPrice * val)/100;
+          }else {
+              this.discount_sum = 0;
+          }
+
+      },
+  async treatementFinished(id){
+      const response = await treatmentFinished(id);
+      console.log(response);
+      if (response.status) {
+          Alert('success', 'Treatment is complete');
+          this.getItems();
+      }else {
+          Alert('error', 'Error!');
+      }
+  },
+
+    debtModal(item){
+        this.Item = item;
+        this.debtUser = 'doctor';
+        this.Modal = 'debt';
+        this.getDate();
+        this.UpdateId = item.id;
+        this.isShowModal = true;
+    },
+      discountModal(item){
+          this.Item = item;
+          this.debtUser = item.type_of_discount != 15 ? 'doctor' : 'polyclinic';
+          this.Modal = 'discount';
+          this.discount_sum = item.discount_sum;
+          this.discount_percent = item.discount_percent;
+          this.discount_total_sum = Number(item.user_payment);
+          this.RealPrice = item.service_real_price;
+          this.UpdateId = item.id;
+          this.isShowModal = true;
+          console.log('Item', item);
+      },
+    istoryPaymentModal(item){
+      this.Item = item;
+      this.Modal = 'istory-payment';
+      this.patientPayments = [];
+      this.getPatientPayments(item.patient_id);
+      this.UpdateId = item.id;
+      this.isShowModal = true;
+    },
+    paymentNumberFormat(val){
+        const format_input = document.querySelector('.format_input');
+        let numbers = ['0','1','2','3','4','5','6','7','8','9', ' ', ''];
+        if (numbers.includes(val.slice(val.length-1, val.length)) == true){
+            format_input.value = this.counterStore.formatNumber(val);
+            this.Amount = Number(val.replace(/\s+/g, ''));
+        }else {
+            format_input.value = this.counterStore.formatNumber(this.Amount);
+        }
+        console.log('trih', this.Amount);
+    },
+
+    async getModal(){
+          const response = await TreatmentShow(this.UpdateId);
+          this.Model = response.data;
+          this.doctor = response.data.doctor;
+          this.Patient = response.data.patient;
+    },
+      async sendDiscount(){
+        if (this.discount_sum > this.discount_total_sum){
+            this.discountError = true;
+            console.log('error fkfr0', this.discount_sum)
+            return true;
+        }
+          let data = {
+              discount_sum: this.discount_sum,
+              discount_percent: this.discount_percent,
+              discount_total_sum: this.discount_total_sum,
+              discounter: this.debtUser == 'doctor' ? 16 : 15 ,
+              treatment_id: this.Item.id
+          }
+          const response = await treatmentDiscount(data);
+          console.log('response:', response);
+
+          if (response.status){
+              this.debtUser = "";
+              this.discount_sum = 0;
+              this.discount_total_sum = 0;
+              this.discount_percent = 0;
+              this.errorObj = [];
+              this.isShowModal = false;
+              this.getItems();
+              Alert('success', 'Saved successfully !');
+          }else {
+              this.errorObj = response.data
+              Alert('error', 'There is an error in the form')
+          }
+      },
+    async saveOwed(){
+
+        let data = {
+            'patient_id': this.Item.patient_id,
+            'authorizing': this.debtUser,
+            'treatment_id': this.Item.id,
+            'return_at': this.debtData,
+            'description': this.debtText,
+        }
+
+        const response = await owedTreatmentCreate(data)
+        console.log('Response:->', response);
+        if (response.status){
+            this.debtUser = "";
+            this.debtData = "";
+            this.debtText = "";
+            this.isShowModal = false;
+            Alert('success', 'Saved successfully !');
+        }else {
+            this.errorObj = response.data
+            Alert('error', 'There is an error in the form')
+        }
+    },
+      async getPatientPayments(id){
+          const response = await patientShow(id);
+          this.patientPayments = response.data.payments.items;
+          console.log('Payment:', response.data.payments.items);
+      },
+    async getPayments(id){
+        const response =  await getUserPayments(id);
+        return response.data;
+    },
+    async getPaymentTypes(){
+        const response = await PaymentTypes(1, 1000);
+        this.paymentTypes = response.data.items;
+    },
 
     getDate() {
+
       const currentDate = new Date();
       const year = currentDate.getFullYear();
       const month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
@@ -307,13 +732,26 @@ export default {
       const hours = ("0" + currentDate.getHours()).slice(-2);
       const minutes = ("0" + currentDate.getMinutes()).slice(-2);
 
-      var result = `${year}-${month}-${day} ${hours}:${minutes}`;
-      this.DateTime = result;
+        var result = `${year}-${month}-${day} ${hours}:${minutes}`;
+        var result2 = `${year}-${month}-${day}`;
+        this.DateTime = result;
+        this.debtData = result2;
     },
-    Show(id) {
-      this.UpdateId = id;
+    Show(item) {
+        this.Model = [];
+        this.Model = item;
+        this.Modal = 0;
+      this.UpdateId = item.id;
       this.isShowModal = true;
     },
+      paymentModal(item) {
+        this.Modal = 1;
+          this.UpdateId = item.id;
+          this.PatientId = item.patient_id;
+          this.userPayments = item.user_payment
+          this.isShowModal = true;
+          this.Modal = 'payment';
+      },
     onClickHandler(id) {
       this.paginate = id;
       this.currentPage = id;
@@ -324,7 +762,7 @@ export default {
     },
     onModal(id) {
       this.service_id = id;
-      this.isModal = true;
+      this.isPaymentModal = true;
     },
 
     getName(val) {
@@ -337,11 +775,48 @@ export default {
 
     async getItems() {
       const response = await Treatments(this.currentPage, this.paginateCount);
-
       this.pagination = response.data.pagination;
       this.last_page = response.data.pagination.last_page;
       this.current_page = response.data.pagination.currentPage;
       this.items = response.data.items;
+    },
+    async onPayment(){
+
+        if(this.Modal == 'debt'){
+            this.saveOwed();
+            return true;
+        }else if(this.Modal == 'discount'){
+            this.sendDiscount();
+            return true;
+        }
+
+        if (this.userPayments < this.Amount){
+            Alert( 'error', this.getName('PaymentError'));
+            return false;
+        }
+        const data = {
+            patient_id: this.PatientId,
+            payment_type_id: this.PaymentType,
+            treatment_id: this.UpdateId,
+            amount: this.Amount
+        }
+
+        const response = await paymentCreate(data);
+        console.log('Response:', response);
+        if(response.status){
+            this.PaymentType = '';
+            this.PatientId = '';
+            this.Amount = '';
+            this.isShowModal = false;
+            this.paymentTypes = [];
+            this.getPaymentTypes()
+            this.getItems();
+            Alert('success', 'The payment was made successfully')
+        }else {
+
+            this.errorObj = response.data
+            Alert('error', 'There is an error in the form')
+        }
     },
     async getModel() {
       const response = await patientShow(this.$route.query.id);
@@ -378,6 +853,9 @@ export default {
         }
       }
     },
+    onCheck(id){
+        return  window.location.origin + '#/check' + '?id=' + id;
+    },
     hasKey(key) {
       return this.errorObj.hasOwnProperty(key);
     },
@@ -402,6 +880,8 @@ export default {
             return 'unmount';
         }else if (e == 11){
             return 'fullUnmount';
+        }else if (e == 7){
+            return 'fullUnmount';
         }else{
             return '';
         }
@@ -415,10 +895,17 @@ export default {
       this.getItems();
     },
   },
+
+    watch:{
+        UpdateId: function(newVal, oldVal) { // watch it
+            this.getModal()
+        }
+    },
   mounted() {
     this.getItems();
     this.getEmployee();
     this.getDate();
+    this.getPaymentTypes()
   },
 };
 </script>
@@ -447,6 +934,7 @@ export default {
 .btn01 svg:active {
   transform: scale(0.9);
 }
+
 .active {
   background: #10b981 !important;
   color: #2e3a47 !important;
@@ -517,5 +1005,29 @@ export default {
 //        height: 100%;
 //    }
 //}
-
+    .button-box0{
+        position: relative;
+    }
+    .button-box0:hover{
+        .button-box01{
+            display: flex;
+        }
+    }
+    .button-box01{
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        top: -40px;
+        right: 0px;
+        background: #24303f;
+        border: 1px solid #3C50E0;
+        padding: 10px;
+        display: none;
+    }
+    .btns{
+        i{
+            margin: 5px 8px ;
+        }
+    }
 </style>

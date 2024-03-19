@@ -30,24 +30,23 @@
             />
             <ContentBlock
                 :Title = "getName('Indebtedness')"
-                Text = " "
+                :Text = "Patient.debts"
                 Icon = "fa-solid fa-file-invoice-dollar"
                 Item = ""
             />
             <ContentBlock
                 :Title = "getName('Balans')"
-                Text = " "
+                :Text = "Patient.balans"
                 Icon = "fa-solid fa-money-bills"
                 Item = ""
             />
         </ContentBox>
 
 
-        <Treatments :Header = "false" :Treatments = "Treatmets" ></Treatments>
+        <Treatments :Header = "false" :Treatments = "Treatmets" v-if="Treatmets.length > 0" ></Treatments>
 
         <br>
-
-        <Payments :Header = "false" :Payments = "Payments" ></Payments>
+        <Payments :isIcons = "false" :Header = "false" :Payments = "Payments"  ></Payments>
 
         <br>
 
@@ -76,7 +75,7 @@
 
                 <tr>
                     <th>{{getName('Gender')}}: &nbsp;&nbsp;</th>
-                    <td>{{Patient.gender}}</td>
+                    <td>{{Patient.gender_text}}</td>
                 </tr>
 
                 <tr>
@@ -104,8 +103,6 @@
             </table>
 
         </Map01>
-
-
     </div>
 
 </template>
@@ -120,6 +117,9 @@ import Treatments from "../../Treatments/Table.vue";
 import Payments from "../../Payments/Table.vue";
 import Map01 from "../../../../ui-components/Element/map-01.vue";
 export default {
+    setup(){
+        return{useConterStore}
+    },
     components: {Map01, ContentBlock, ContentBox, Contents, TableHeader, Treatments, Payments},
     data(){
         return{
@@ -131,7 +131,8 @@ export default {
             pagination: {},
             current_page: 1,
             Treatmets: [],
-            Payments: null
+            Payments: [],
+            PaymentItems: []
         }
     },
     methods:{
@@ -146,11 +147,8 @@ export default {
             this.Patient = response.data;
             this.Treatmets = response.data.treatmets;
             this.Payments = response.data.payments;
+            this.PaymentItems = response.data.items;
         },
-
-
-
-
 
     },
     mounted() {

@@ -27,6 +27,19 @@ class PaymentController extends AbstractController
         return $this->sendResponse($item);
     }
 
+    public function getUserTreatmentPayments()
+    {
+        $item = $this->service->getUserPayments(request()->all());
+
+        return $this->sendResponse($item);
+    }
+    public function getUserPayments($id)
+    {
+        $item = $this->service->getUserPayments($id);
+
+        return $this->sendResponse($item);
+    }
+
     public function isActives()
     {
         $item = $this->service->isActives(request()->all());

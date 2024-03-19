@@ -1,59 +1,8 @@
 <template>
 
-    <ModalLayout :isSubmit = "false"   :isModal = "isCreateModal" @closeModal = "this.$emit('closeModal', $event) " :Title = "Patient.last_name+' '+Patient.first_name" >
+    <ModalLayout @Submit = "this.$emit('onSubmit', true)"   :isModal = "isShowModal" @closeModal = "this.$emit('closeModal', $event) " :Title = "Patient.last_name != undefined ? Patient.last_name+' '+Patient.first_name : '' " >
 
-        <table class="table01" v-if="Model != []" >
-
-            <tr>
-                <th>{{getName('name')}}: &nbsp;&nbsp;</th>
-                <td>{{Patient.last_name}}</td>
-            </tr>
-
-            <tr>
-                <th>{{getName('last_name')}}: &nbsp;&nbsp;</th>
-                <td>{{ Patient.first_name }}</td>
-            </tr>
-
-            <tr>
-                <th>{{getName('Doctor')}}: &nbsp;&nbsp;</th>
-                <td>{{doctor.name}}</td>
-            </tr>
-
-            <tr>
-                <th>{{getName('TreatmentStarted_at')}}: &nbsp;&nbsp;</th>
-                <td>{{Model.start}}</td>
-            </tr>
-
-            <tr>
-                <th>{{getName('Finished_at')}}: &nbsp;&nbsp;</th>
-                <td>{{Model.end}}</td>
-            </tr>
-
-            <tr>
-                <th>{{getName('PatientEndPayment')}}: &nbsp;&nbsp;</th>
-                <td>{{Model.latest_payment != null ? Model.latest_payment.amount : '0 UZS'}}</td>
-            </tr>
-
-            <tr>
-                <th>{{getName('AmountOwedType')}}: &nbsp;&nbsp;</th>
-                <td>{{Model.latest_payment != null ? Model.latest_payment.payment_type : '---'}}</td>
-            </tr>
-            <tr>
-                <th>{{getName('AmountOwed')}}: &nbsp;&nbsp;</th>
-                <td>{{Patient.first_name}}</td>
-            </tr>
-            <tr>
-                <th>{{getName('Payment_status')}}: &nbsp;&nbsp;</th>
-                <td>
-
-                    <p class="font-medium dark:text-white status-text "
-                       :class="getClass(Model.payment_status)"
-                    >{{ getStatus(Model.payment_status)  }}</p>
-
-                </td>
-            </tr>
-
-        </table>
+        <slot></slot>
 
     </ModalLayout>
 
@@ -80,7 +29,8 @@ export default {
         }
     },
     props:{
-        isCreateModal:{
+
+        isShowModal:{
             type: Boolean,
             default: false
         },

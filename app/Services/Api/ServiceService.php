@@ -98,13 +98,14 @@ class ServiceService extends AbstractService
         try {
             $item = new $this->model;
             $item->name = $data['name'];
-            $item->code = $data['code'];
+            $item->code = isset( $data['code']) ?  $data['code'] : '';
             $item->price = $data['price'];
             $item->name = $data['name'];
             $item->category_id = $data['category_id'];
             $item->material_price = $data['material_price'];
             $item->technic_price = $data['technic_price'];
             $item->order = $data['order'];
+            $item->collection_id = isset($data['collection_id']) ? $data['collection_id'] : null;
             $item->status = $data['status'];
 
 
@@ -155,7 +156,7 @@ class ServiceService extends AbstractService
     {
         return [
             TextField::make('name')->setRules('required|min:3|max:255'),
-            TextField::make('code')->setRules('required|min:3|max:255'),
+            TextField::make('code')->setRules('nullable|min:3|max:255'),
             TextField::make('price')->setRules('required|integer'),
             TextField::make('category_id')->setRules('required|integer'),
             TextField::make('material_price')->setRules('required|integer'),
@@ -163,6 +164,7 @@ class ServiceService extends AbstractService
             TextField::make('order')->setRules('required|integer'),
             TextField::make('status')->setRules('required|integer'),
             TextField::make('personal_procents')->setRules('nullable'),
+            TextField::make('collection_id')->setRules('nullable|integer'),
         ];
     }
 
@@ -229,17 +231,18 @@ class ServiceService extends AbstractService
         try {
 
             $item->name = $data['name'];
-            $item->code = $data['code'];
+            $item->code = isset( $data['code']) ?  $data['code'] : '';
             $item->price = $data['price'];
             $item->category_id = $data['category_id'];
             $item->material_price = $data['material_price'];
             $item->technic_price = $data['technic_price'];
             $item->order = $data['order'];
+            $item->collection_id = isset($data['collection_id']) ? $data['collection_id'] : null;
             $item->status = $data['status'];
 
+            $deleteModels =  PersonalPrice::where('service_id', $id )->delete();
             if (isset($data['personal_procents'])){
                 if (count($data['personal_procents']) > 0){
-                    $deleteModels =  PersonalPrice::where('service_id', $item->id )->delete();
                     foreach ($data['personal_procents'] as $key => $value) {
                         $model = new PersonalPrice();
                         $model->employee_id = $value['employee_id'];
@@ -250,6 +253,7 @@ class ServiceService extends AbstractService
                         $model->save();
                     }
                 }
+
 
             }
 

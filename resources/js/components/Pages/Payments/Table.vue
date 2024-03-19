@@ -89,7 +89,7 @@
         <TableHeader></TableHeader>
         <div
           v-for="(item, index) in items"
-          class="grid tableBox grid-cols-7 border-b border-stroke dark:border-strokedark sm:grid-cols-7"
+          class=" databes_table grid tableBox grid-cols-7 border-b border-stroke dark:border-strokedark sm:grid-cols-7"
         >
           <div class="flex items-center gap-3 p-2.5 xl:p-5">
             <p class="font-medium hidden text-black dark:text-white sm:block">
@@ -120,16 +120,23 @@
           <div class="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
             <p class="font-medium text-meta-5" >
               <i
-                @click="
-                  this.$router.push({ path: '/patient/update', query: { id: item.id } })
-                "
-                class="fa-solid setting-icon fa-pen-to-square disabled "
+                  v
+                  v-if="isIcons"
+                @click="paymentModal(item)"
+                class="fa-solid setting-icon fa-pen-to-square  "
               ></i>
               &nbsp;
               <i
-                @click="Show(item.id)"
-                class="fa-solid setting-icon fa-eye disabled"
+                  v-if="isIcons"
+                @click="Show(item)"
+                class="fa-solid setting-icon fa-eye "
               ></i>
+                <i
+                    v-if="!isIcons"
+                    @click="this.$router.push('/payments')"
+                    class="fa-solid setting-icon  fa-right-to-bracket "
+                ></i>
+                &nbsp;
                 &nbsp;
                 <i @click = "onDelete(item.id)" class="fa-solid text-danger fa-trash setting-icon"></i>
 
@@ -140,7 +147,10 @@
           </div>
         </div>
 
+          <Loader v-if="items.length == 0  && search == '' " ></Loader>
+
           <h1 v-if="items.length == 0" style="margin: 15px auto" > {{getName('Payments')}} {{getName('NotFound')}}</h1>
+
 
         <Paginate>
           <Pagination01>
@@ -155,45 +165,42 @@
         </Paginate>
       </div>
 
-        <ShowForm :UpdateId = "UpdateId"  @closeModal = "isShowModal = $event" :isCreateModal = "isShowModal"  ></ShowForm>
+        <ModalLayout  @Submit = "onSubmit()"   :UpdateId = "UpdateId"  @closeModal = "isShowModal = $event, errorObj = []" :isModal = "isShowModal">
+            <div >
+                <DangerButton
+                    :isActive = "userPayments <= 0 ? true : false"
+                    style="font-size: 20px"
+                    :Title = "useConterStore().formatNumber(Number(Math.abs(userPayments))) + ' uzs' "
+                />
 
-      <ModalLayout
-        @Submit="addReseption()"
-        :isModal="isModal"
-        @closeModal="isModal = false"
-        :Title="getName('AddDoctor')"
-      >
-        <Select
-          :Label="getName('Doctor')"
-          :isError="hasKey('user_id')"
-          :message="errorObj['user_id']"
-          @onSelect="Employee_id = $event"
-        >
-          <option selected>---</option>
-          <option v-for="user in Employees" :value="user['id']">
-            {{ user["name"] }}
-          </option>
-        </Select>
+                <Input
+                    Pholder = "0"
+                    Class = "format_input"
+                    :Label="getName('Amount')"
+                    @onInput="paymentNumberFormat($event)"
+                    :isError="hasKey('amount')"
+                    :message="errorObj['amount']"
+                    :Value = "counterStore.formatNumber(Amount)"
+                />
 
-        <Input
-          :Label="getName('ReceptionTime')"
-          @onInput="DateTime = $event"
-          :isError="hasKey('start')"
-          :message="errorObj['start']"
-          :Value="DateTime"
-        />
+                <Select
+                    :Label="getName('PaymentTypes')"
+                    :isError="hasKey('payment_type_id')"
+                    :message="errorObj['payment_type_id']"
+                    @onSelect = "paymentTypeId = $event"
 
-        <InputTime
-          :Label="getName('Duration') +' / minute'"
-          style="width: 200px"
-          @onInput="Time = $event"
-          :isError="hasKey('hour')"
-          :message="errorObj['hour']"
-          :Value ="Time"
-        />
+                >
+                    <option selected >---</option>
+                    <option :selected = "paymentTypeId == item['id']"  v-for="item in paymentTypes" :value="item['id']">
+                        {{ item["name"] }}
+                    </option>
+                </Select>
 
-        <Textarea :Value ="TextData" :Label="getName('Classification')" @onInput="TextData = $event" />
-      </ModalLayout>
+            </div>
+
+        </ModalLayout>
+
+
     </div>
   </div>
 </template>
@@ -208,11 +215,11 @@ import Input from "../../../ui-components/Form/Input.vue";
 import InputDefault from "../../../ui-components/Form/InputDefault.vue";
 import ModalLayout from "../../../ui-components/Element/Modal01/ModalLayout.vue";
 import {
-  payments,
-  paymentShow,
-  paymentDelete,
-  paymentsSearch,
-    paymentUpdate
+    payments,
+    paymentShow,
+    paymentDelete,
+    paymentsSearch,
+    paymentUpdate, paymentCreate, PaymentTypes
 } from "../../../Api.js";
 import CreateForm from "../ServiceCategories/Create/CreateForm.vue";
 import Pagination01 from "../../../ui-components/Element/pagination-01.vue";
@@ -225,7 +232,14 @@ import InputTime from "../../../ui-components/Form/InputTime.vue";
 import Table from "../Employees/Table.vue";
 import ShowForm from "./Show/ShowForm.vue";
 import Item from "../Employees/Calendar/Item.vue";
+import Loader from "@/ui-components/Element/Loader.vue";
+import DangerButton from "@/ui-components/Form/DangerButton.vue";
+import Checkbox01 from "@/ui-components/Form/Checkbox/Checkbox01.vue";
 export default {
+    setup(){
+        const counterStore = useConterStore();
+        return{counterStore, useConterStore}
+    },
     computed: {
         Item() {
             return Item
@@ -240,11 +254,19 @@ export default {
         Header:{
             type: Boolean,
             default: true
+        },
+        isIcons:{
+            type: Boolean,
+            default: true
         }
     },
   components: {
+      Checkbox01,
+      DangerButton,
+      Loader,
       ShowForm,
       Table,
+
     Paginate,
     InputTime,
     InputDateTime,
@@ -270,8 +292,6 @@ export default {
       pagination: {},
       last_page: 0,
       currentPage: 1,
-      password_1: ".",
-      password_2: "",
       isPasswordError: false,
       ExitModal: false,
       isModal: false,
@@ -281,12 +301,12 @@ export default {
       errorObj: [],
       UpdateId: 0,
       crud: "",
-      Employees: [],
-      Employee_id: 0,
-      DateTime: "",
-      TextData: '',
-      Time: "0",
-      patient_id: 0,
+        Model: '',
+        userPayments: 0,
+        Amount: '',
+        paymentType: 0,
+        paymentTypes: [],
+        paymentTypeId: 0
     };
   },
 
@@ -294,76 +314,69 @@ export default {
     router() {
       return router;
     },
+      paymentNumberFormat(val){
+          const format_input = document.querySelector('.format_input');
+          let numbers = ['0','1','2','3','4','5','6','7','8','9', ' ', ''];
+          if (numbers.includes(val.slice(val.length-1, val.length)) == true){
+              format_input.value = this.counterStore.formatNumber(val);
+              this.Amount = Number(val.replace(/\s+/g, ''));
+          }else {
+              format_input.value = this.counterStore.formatNumber(this.Amount);
+          }
+          console.log('trih', this.Amount);
+      },
+      async getPaymentTypes(){
+          const response = await PaymentTypes(1, 1000);
+          this.paymentTypes = response.data.items;
+      },
+
+      async onSubmit(){
+
+          const data = {
+              patient_id: this.Model.patient_id,
+              payment_type_id: this.paymentTypeId,
+              treatment_id: this.Model.treatment_id,
+              amount: this.Amount
+          }
+
+          const response = await paymentUpdate(this.Model.id, data);
+          console.log('Response:', response);
+          if(response.status){
+              this.PaymentType = '';
+              this.PatientId = '';
+              this.Amount = '';
+              this.isShowModal = false;
+              this.paymentTypes = [];
+              this.getPaymentTypes()
+              this.getItems();
+              Alert('success', 'The payment was made successfully')
+          }else {
+              this.errorObj = response.data
+              Alert('error', 'There is an error in the form')
+          }
+      },
 
 
-    async addReseption() {
-      if (this.Employee_id == 0) {
-        this.errorObj = {
-          user_id: "You need to choose a doctor",
-        };
-        return false;
-      }
-      this.errorObj = [];
-
-      var data = {
-        user_id: this.Employee_id,
-        patient_id: this.patient_id,
-        start: this.DateTime,
-        reception_description: this.TextData == '' ? '...': '',
-        hour: this.Time,
-      };
-
-      var response = "";
-      response = await joinDr(data);
-
-      if (response.status) {
-        this.isModal = false;
-        this.Employee_id = 0;
-        this.patient_id = 0;
-        this.Time = '0';
-        Alert("success", "Attached to Doctor !");
-      } else {
-        this.errorObj = response.data;
-      }
-    },
-    validateTime(time) {
-    // Regex orqali vaqtni formatni tekshiramiz
-    const timeRegex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
-
-    // Kirish qiymatini tekshiramiz
-    if (!timeRegex.test(time)) {
-        return false; // Not valid
-    }
-
-    // Vaqtni soatlarga va daqiqalarga ajratamiz
-    const parts = time.split(':');
-    const hours = parseInt(parts[0], 10);
-    const minutes = parseInt(parts[1], 10);
-
-    // Soat va daqiqalarni tekshiramiz
-    if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
-        return false; // Not valid
-    }
-
-    return true; // Valid
-},
-
-    Show(id) {
-      this.UpdateId = id;
-      this.isShowModal = true;
+    Show(item) {
+        this.$router.push({ path: '/patient/show', query: { id: item.patient_id } })
     },
     onClickHandler(id) {
       this.paginate = id;
       this.currentPage = id;
       this.getItems();
     },
-    async getEmployees() {
-      const response = await Employees(null, 1000);
-    },
+
     onModal(id) {
       this.service_id = id;
       this.isModal = true;
     },
+      paymentModal(item) {
+        this.getModel(item.id);
+          this.Modal = 'payment';
+          this.UpdateId = item.id;
+          this.Model = item;
+          this.isShowModal = true;
+      },
 
     getName(val) {
       return useConterStore().getName(val);
@@ -392,17 +405,16 @@ export default {
         }
 
     },
-    async getModel() {
-      const response = await paymentShow(this.$route.query.id);
+    async getModel(id) {
+      const response = await paymentShow(id);
 
       if (response.status) {
+          this.paymentTypeId = response.data.payment_type_id;
+          this.Amount = response.data.amount_number;
+          this.userPayments = response.data.real_price;
       }
     },
-    async editPassword(val) {
-      this.password_1 = val;
-      if (val == this.password_2) {
-      }
-    },
+
     async clickSearch(val, order) {
       this.search = val;
       this.order = order;
@@ -465,6 +477,7 @@ export default {
   },
   mounted() {
     this.getItems();
+    this.getPaymentTypes()
   },
     watch:{
         Payments: function (val1, val2){
@@ -502,6 +515,7 @@ export default {
   background: #10b981 !important;
   color: #2e3a47 !important;
 }
+
 .photo-img {
   width: 50px;
   height: 50px;

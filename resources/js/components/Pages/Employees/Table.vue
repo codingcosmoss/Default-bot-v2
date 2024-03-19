@@ -66,31 +66,31 @@
 
                 <TableHeader></TableHeader>
 
-                <div v-for="(item, index) in items" class="grid grid-cols-6 border-b border-stroke dark:border-strokedark sm:grid-cols-6">
+                <div v-for="(item, index) in items" class=" databes_table grid grid-cols-6 border-b border-stroke dark:border-strokedark sm:grid-cols-6">
 
-                    <div class="flex items-center gap-3 p-2.5 xl:p-5">
+                    <div class="flex items-center gap-3 p-2.5 xl:p-5 data_table">
                         <div class="photo-img" :style="'background-image: url(' + item['image'][0]['url'] + ')'" >
 
                         </div>
                         <p class="font-medium hidden text-black dark:text-white sm:block">{{index+1}}.  {{item.name}}</p>
                     </div>
 
-                    <div class="flex items-center justify-center p-2.5 xl:p-5">
+                    <div class="flex items-center justify-center p-2.5 xl:p-5 data_table">
                         <p class="font-medium text-black dark:text-white">{{item.position}}</p>
                     </div>
 
-                    <div class="flex items-center justify-center p-2.5 xl:p-5">
+                    <div class="flex items-center justify-center p-2.5 xl:p-5 data_table">
                         <p class="font-medium text-meta-3">{{item.login}}</p>
                     </div>
 
-                    <div class="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
+                    <div class="hidden items-center justify-center p-2.5 sm:flex xl:p-5 data_table">
                         <p class="font-medium text-black dark:text-white">
                             <div style="width: 40px; height: 20px; " :style = " 'background:'+item.color +'' " >
                             </div>
                         </p>
                     </div>
 
-                    <div class="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
+                    <div class="hidden items-center justify-center p-2.5 sm:flex xl:p-5 data_table">
                         <p class="font-medium text-meta-5">
                             {{item.sort_order}}
                         </p>
@@ -98,7 +98,7 @@
 
 
 
-                    <div class="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
+                    <div class="hidden items-center justify-center p-2.5 sm:flex xl:p-5 data_table">
                         <p class="font-medium text-meta-5">
                             <i @click = "this.$router.push({ path: '/employees/update', query: { id: item.id } })" class="fa-solid setting-icon fa-pen-to-square"></i>
                             &nbsp;
@@ -113,6 +113,8 @@
                     </div>
 
                 </div>
+
+                <Loader v-if="items.length == 0  && search == '' " ></Loader>
 
                 <Paginate>
                     <Pagination01>
@@ -166,8 +168,11 @@ import Input from "./Update/Inputs/Input.vue";
 import InputDefault from '../../../ui-components/Form/InputDefault.vue';
 import Pagination01 from "../../../ui-components/Element/pagination-01.vue";
 import ModalLayout from "../../../ui-components/Element/Modal01/ModalLayout.vue";
+import Loader from "@/ui-components/Element/Loader.vue";
 export default {
-    components: {ModalLayout, Pagination01, Input, VueAwesomePaginate,InputDefault, PaginateBtn, Paginate, TableHeader},
+    components: {
+        Loader,
+        ModalLayout, Pagination01, Input, VueAwesomePaginate,InputDefault, PaginateBtn, Paginate, TableHeader},
     data(){
         return{
             items: [],

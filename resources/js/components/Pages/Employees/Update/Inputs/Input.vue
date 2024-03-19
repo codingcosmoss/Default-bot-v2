@@ -4,7 +4,7 @@
         <label class="mb-2.5 block text-black dark:text-white">
             {{Label}}
         </label>
-        <input :value="Value" :type="Type" :class="isError == true ? 'isError' : '' "  placeholder="..." @input = "this.$emit('onInput', $event.target.value)"
+        <input :value="Value" :type="Type" :class="isError == true ? 'isError' : '' "  :placeholder="Pholder" @input = "this.$emit('onInput', $event.target.value)"
 
                class=" w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary" />
         <p v-if="isError" class="text-danger" >{{message}}</p>
@@ -19,6 +19,10 @@
             Couple:{
                 type: Boolean,
                 default: true
+            },
+            Pholder:{
+                type: String,
+                default: '...'
             },
             Label:{
                 type: String,

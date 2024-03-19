@@ -104,7 +104,25 @@
                             />
 
                         </div>
+                        <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
 
+                            <Select
+                                :Couple="false"
+                                :Label="getName('Collection')"
+                                @onSelect="this.CollectionId = $event"
+                                :isError="hasKey('collection_id')"
+                                :message="errorObj['collection_id']"
+                            >
+                                <option>---</option>
+                                <option
+                                    v-for="collection in Collections"
+                                    :value="collection.id"
+                                    :selected="collection.id == this.CollectionId"
+                                >
+                                    {{ collection.name }}
+                                </option>
+                            </Select>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -153,10 +171,11 @@
                 </div>
 
                 <DinamicForm  :personalProcents = "personalAllProcents" :summError ="summError" :errors="FormErrors" @Data =" personalAllProcents = $event , validate(personalAllProcents)"></DinamicForm>
+
                 <div class=" pl-7 p-6.5">
 
                     <button @click="create" class="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray">
-                        {{getName('create')}}
+                        {{getName('update')}}
                     </button>
                 </div>
             </div>
@@ -172,7 +191,7 @@ import Input from "./Inputs/Input.vue";
 import {useConterStore} from "../../../../store/counter.js";
 import Checkbox from "./Inputs/Checkbox.vue";
 import InputColor from "./Inputs/InputColor.vue";
-import {serviceUpdate, serviceShow, service_categorys, serviceCreate} from "../../../../Api.js";
+import {serviceUpdate, serviceShow, service_categorys, serviceCreate, collections} from "../../../../Api.js";
 import {GET} from "../../../../Config.js"
 import {Alert} from "../../../../Config.js";
 import PrimaryButton from "../../../../ui-components/Form/PrimaryButton.vue";
@@ -197,7 +216,9 @@ export default {
                 categories: [],
                 personalAllProcents:[],
                 FormErrors: [],
-                summError: false
+                summError: false,
+                Collections: [],
+                CollectionId: 0
 
             }
         },
@@ -210,8 +231,11 @@ export default {
                 const response = await service_categorys(null, 1000);
                 this.categories = response.data.items
             },
+            async getCollections(){
+                const response = await collections(1, 1000);
+                this.Collections = response.data.items;
+            },
             validate(items){
-                console.log('item',items)
                 if (items.length == 0) {
                     return true;
                 }
@@ -241,6 +265,13 @@ export default {
                         summ += Number(item.procent);
                     }
 
+                    items.forEach((model, number)=>{
+                        if (number != index && model.employee == item.employee){
+                            errors.push(index);
+                            errors.push(number);
+                        }
+                    })
+
                 });
 
                 if (this.price < summ || this.price <= 0) {
@@ -267,7 +298,8 @@ export default {
                 this.price = model.price.replace(/\s+/g, '')
                 this.status = model.status
                 this.category = model.category_id
-                this.order = model.order
+                this.order = model.order,
+                    this.CollectionId = model.collection_id,
                 this.technic_price = model.technic_price.replace(/\s+/g, '')
 
                 let arrData = [];
@@ -284,7 +316,6 @@ export default {
 
             },
             async create(){
-
                 if (this.validate(this.personalAllProcents)) {
                     let summData = [];
                     this.personalAllProcents.forEach((item, index) => {
@@ -303,7 +334,6 @@ export default {
                         });
 
                     });
-
                     var data = {
                         name: this.name,
                         order: this.order,
@@ -312,16 +342,19 @@ export default {
                         category_id: this.category,
                         material_price: this.material_price,
                         technic_price: this.technic_price,
+                        collection_id: this.CollectionId,
                         status: this.status,
                         personal_procents: summData,
                     };
+                    console.log('Data:', data)
 
                     const response = await serviceUpdate(this.$route.query.id, data);
                     if (response.status){
-                        Alert('success', 'Created successfully !')
+                        Alert('success', 'Updated successfully !')
                         this.$router.push('/services')
                     }else {
                         this.errorObj = response.data;
+                        console.log(response.data)
                         Alert('error', 'There is an error in the form');
 
                     }
@@ -337,6 +370,7 @@ export default {
         mounted() {
             this.getCategories()
             this.getModel()
+            this.getCollections()
         }
 }
 </script>

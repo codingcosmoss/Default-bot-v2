@@ -243,7 +243,7 @@ export default {
 
             },
             async testLogin(val){
-
+                this.login = val;
                 const response = await testLogin({
                     'login': val
                 });
@@ -252,13 +252,11 @@ export default {
                 }else {
                     this.isLoginError = false;
                 }
-                this.login = val;
             },
             hasKey(key) {
                 return key in this.errorObj;
             }
-
-}
+        }
     }
 </script>
 

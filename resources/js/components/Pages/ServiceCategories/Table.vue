@@ -46,7 +46,7 @@
 
                 <TableHeader></TableHeader>
 
-                <div v-for="(item, index) in items" class="grid grid-cols-5 border-b border-stroke dark:border-strokedark sm:grid-cols-5">
+                <div v-for="(item, index) in items" class="grid grid-cols-5 border-b border-stroke dark:border-strokedark sm:grid-cols-5 databes_table">
 
                     <div class="flex   justify-content-end gap-3 p-2.5 xl:p-5">
                         <p class="font-medium hidden text-black dark:text-white sm:block">{{index+1}}.  {{item.name}}</p>
@@ -79,6 +79,7 @@
 
                 </div>
 
+                <Loader v-if="items.length == 0  && search == '' " ></Loader>
 
                 <Paginate>
                     <Pagination01>
@@ -142,8 +143,10 @@ import UpdateForm from "./Update/UpdateForm.vue";
 import Input from "../Employees/Update/Inputs/Input.vue";
 import Select from "../Services/Create/Inputs/Select.vue";
 import Switch from "../../../ui-components/Element/Switch.vue";
+import Loader from "@/ui-components/Element/Loader.vue";
 export default {
     components: {
+        Loader,
         Switch,
         Select,
         Input,

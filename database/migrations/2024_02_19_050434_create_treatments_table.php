@@ -22,9 +22,9 @@ return new class extends Migration
             $table->double('price')->nullable();
             $table->integer('status')->default(Status::$status_active);
             $table->double('doctor_percent_total_amount', 20, 2)->nullable();
-            $table->double('discount_percent')->nullable()->comment('Chegrima miqdori foizda');
-            $table->double('discount_sum', 20, 2)->nullable()->comment('Chegirma miqdori sumda');
-            $table->double('discount_total_sum', 20, 2)->nullable()->comment('Chegirmani umumiy summasi');
+            $table->double('discount_percent')->default(0)->comment('Chegrima miqdori foizda');
+            $table->double('discount_sum', 20, 2)->default(0)->comment('Chegirma miqdori sumda');
+            $table->double('discount_total_sum', 20, 2)->default(0)->comment('Chegirmani umumiy summasi');
             $table->double('service_real_price', 20, 2)->nullable()->comment('Xizmat narxi');
             $table->integer('type_of_discount')->nullable()->comment('Chegirma kim tomonidan berilgani (Klinika/Doktor)');
             $table->integer('loan_type_by')->nullable()->comment('Qarzga kim ruxsat berilganligi (Klinika/Doktor)	');

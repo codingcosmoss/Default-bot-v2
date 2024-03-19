@@ -52,6 +52,32 @@
             Icon = "fa-solid fa-credit-card"
         />
 
+        <MenuList
+            :Selected = " ['/warehouses', '/groups', '/products', '/filials', '/warehouse-categories'].includes(this.$route.path)"
+            :Title = "getName('Warehouse')" Icon = "fa-solid fa-warehouse" :title = "getName('Warehouse')">
+            <Menu
+                Path = "/warehouses"
+                :Title = "getName('Warehouse')"
+                Icon = "fa-solid fa-house-circle-check"
+                style="margin-right: 20px"
+                :class="  ['/warehouses', '/groups', '/products'].includes(this.$route.path) ? 'navbar-active' : '' "
+            />
+            <Menu
+                Path = "/filials"
+                :Title = "getName('Filials')"
+                Icon = "fa-solid fa-f"
+                style="margin-right: 20px"
+
+            />
+            <Menu
+                Path = "/warehouse-categories"
+                :Title = "getName('Categories')"
+                Icon = "fa-solid fa-c"
+                style="margin-right: 20px"
+
+            />
+        </MenuList>
+
         <Menu
             Path = "/debt-treatments"
             :Title = "getName('DebtTreatments')"
@@ -81,11 +107,9 @@
             :Title = "getName('Reports')"
             Icon = "fa-solid fa-layer-group"
         />
-        <!--        <MenuList>-->
-<!--            <Menu />-->
-<!--        </MenuList>-->
 
-<!--        <Menu />-->
+
+
 
 
     </ul>
@@ -94,6 +118,8 @@
 import MenuList from './menuList.vue';
 import Menu from './menu.vue';
 import {useConterStore} from "../../../store/counter.js";
+// import {useConterStore} from "@/store/counter.js";
+
 export default {
     components: {Menu, MenuList},
     data(){
@@ -102,6 +128,7 @@ export default {
             page: '',
         }
     },
+
 
 
     methods:{

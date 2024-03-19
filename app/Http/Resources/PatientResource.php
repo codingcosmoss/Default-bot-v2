@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Traits\Status;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -23,6 +24,7 @@ class PatientResource extends JsonResource
             'job' => $this->job,
             'address' => $this->address,
             'gender' => $this->gender,
+            'gender_text' => Status::getStatusName($this->gender),
             'birthday' => $this->birthday,
 
             'price' => $this->price,

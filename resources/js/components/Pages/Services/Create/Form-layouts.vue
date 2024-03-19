@@ -75,6 +75,7 @@
                   {{ category.name }}
                 </option>
               </Select>
+
             </div>
 
             <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
@@ -96,6 +97,26 @@
                 :Value="technic_price"
               />
             </div>
+
+              <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
+
+                  <Select
+                      :Couple="false"
+                      :Label="getName('Collection')"
+                      @onSelect="this.CollectionId = $event"
+                      :isError="hasKey('collection_id')"
+                      :message="errorObj['collection_id']"
+                  >
+                      <option>---</option>
+                      <option
+                          v-for="collection in Collections"
+                          :value="collection.id"
+                          :selected="collection.id == this.CollectionId"
+                      >
+                          {{ collection.name }}
+                      </option>
+                  </Select>
+              </div>
           </div>
         </form>
       </div>
@@ -131,13 +152,15 @@
 
           </Select>
         </div>
+
+
         <div class="check02">
-          <p class=" block text-black dark:text-white" style="ma">
+          <p class=" block text-black dark:text-white" >
             {{ getName('personal_procent') }}
           </p>
         </div>
 
-        <DinamicForm :summError ="summError" :errors="FormErrors" @Data ="personalProcents = $event, validate(personalProcents)"></DinamicForm>
+        <DinamicForm :isLoader ="false" :summError ="summError" :errors="FormErrors" @Data ="personalProcents = $event, validate(personalProcents)"></DinamicForm>
 
         <div class="pl-7 p-6.5">
           <button
@@ -156,7 +179,7 @@
 import Input from "./Inputs/Input.vue";
 import { useConterStore } from "../../../../store/counter.js";
 import Checkbox from "./Inputs/Checkbox.vue";
-import { serviceCreate, Employees, service_categorys } from "../../../../Api.js";
+import {serviceCreate, service_categorys, collections} from "../../../../Api.js";
 import { GET } from "../../../../Config.js";
 import { Alert } from "../../../../Config.js";
 import PrimaryButton from "../../../../ui-components/Form/PrimaryButton.vue";
@@ -180,7 +203,9 @@ export default {
       categories: [],
       personalProcents:[],
       FormErrors: [],
-      summError: false
+      summError: false,
+    Collections: [],
+        CollectionId: 0
 
     };
   },
@@ -196,6 +221,10 @@ export default {
     getName(val) {
       return useConterStore().getName(val);
     },
+      async getCollections(){
+          const response = await collections(1, 1000);
+          this.Collections = response.data.items;
+      },
 
     async getCategories() {
       const response = await service_categorys(null, 1000);
@@ -233,6 +262,7 @@ export default {
           material_price: this.material_price,
           technic_price: this.technic_price,
           status: this.status,
+            collection_id: this.CollectionId,
           personal_procents: summData,
         };
 
@@ -244,16 +274,18 @@ export default {
         } else {
           this.errorObj = response.data;
         }
+      }else {
+        Alert('error', 'There is an error in the form');
       }
 
-      Alert('error', 'There is an error in the form');
 
     },
     validate(items){
-      console.log(items);
+
       if (items.length == 0) {
         return true;
       }
+
       let errors = [];
       let summ = 0;
       items.forEach((item, index) => {
@@ -279,6 +311,12 @@ export default {
           }else{
               summ += Number(item.procent);
           }
+          items.forEach((model, number)=>{
+              if (number != index && model.employee == item.employee){
+                  errors.push(index);
+                  errors.push(number);
+              }
+          })
 
       });
 
@@ -303,6 +341,7 @@ export default {
   },
   mounted() {
     this.getCategories();
+      this.getCollections()
   },
 };
 </script>

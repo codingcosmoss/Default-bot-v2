@@ -21,7 +21,7 @@
 
 
             <!-- ===== Content Area Start ===== -->
-            <div class="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
+            <div class="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden main_box">
                 <!-- ===== Header Start ===== -->
                 <Header @darkMode = "onDarkMode"  @sidebarToggle = "onSidebarToggle = $event" ></Header>
                 <!-- ===== Header End ===== -->
@@ -98,13 +98,27 @@ export default {
             // location.reload();
 
         },
+        removeLoader(){
+            const loaderBox = document.querySelector('.loader_box');
+            if (loaderBox != null){
+                setTimeout(() => {
+                    loaderBox.classList.add('hidden_box');
+                }, 1000)
+            }
+        }
 
 
     },
     mounted() {
         this.checkTokenInLocalStorage()
+        this.removeLoader();
     }
 
 }
+
 </script>
-<style ></style>
+<style>
+    .main_box{
+        padding-left: 80px;
+    }
+</style>

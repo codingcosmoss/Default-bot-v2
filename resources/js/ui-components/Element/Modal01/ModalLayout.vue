@@ -57,6 +57,7 @@
                 }
             },
             isOnModal(){
+                console.log('open modal')
                 const modal_box = document.querySelector('.modal_box');
                 if (!this.isModal){
                     modal_box.classList.add('close-modal');
@@ -101,18 +102,18 @@
 
 
     .open-modal{
-        animation: open-modal 0.3s linear alternate forwards;
+        animation: open-modal 0.1s linear alternate forwards;
         .modal_block{
-            animation: block-modal 0.5s linear alternate;
+            animation: block-modal 0.3s linear alternate;
         }
     }
     .hidden{
         display: none;
     }
     .close-modal{
-        animation: close-modal 0.3s linear alternate forwards;
+        animation: close-modal 0.1s linear alternate forwards;
         .modal_block{
-            animation: block-modal-close 0.5s linear alternate;
+            animation: block-modal-close 0.3s linear alternate;
         }
     }
 
@@ -120,7 +121,7 @@
         width: 500px;
         overflow-y: auto;
         margin: auto;
-
+        z-index: 999 !important;
     }
 
     .full{
