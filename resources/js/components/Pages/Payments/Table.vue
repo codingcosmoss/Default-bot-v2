@@ -391,6 +391,7 @@ export default {
 
         if (this.Payments == null){
             response = await payments(this.currentPage, this.paginateCount);
+
             this.pagination = response.data.pagination;
             this.last_page = response.data.pagination.last_page;
             this.current_page = response.data.pagination.currentPage;

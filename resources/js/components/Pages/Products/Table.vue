@@ -97,14 +97,14 @@
 
         <div
           v-for="(item, index) in items"
-          class="grid grid-cols-7 border-b border-stroke dark:border-strokedark sm:grid-cols-7 databes_table "
+          :class="item.rest_products < item.min_amount ? 'minimum': '' "
+          class="grid grid-cols-6 border-b border-stroke  dark:border-strokedark sm:grid-cols-6 databes_table "
         >
           <div class="flex items-center gap-3 p-2.5 xl:p-5">
             <p class="font-bold hidden text-black dark:text-white sm:block">
               {{ index + 1 }}. {{ item.name }}
             </p>
           </div>
-
           <div class="flex items-center justify-center p-2.5 xl:p-5">
             <p class="font-medium text-black dark:text-white">{{ item.price_format }} UZS</p>
           </div>
@@ -114,12 +114,10 @@
           </div>
 
           <div class="flex items-center justify-center p-2.5 xl:p-5">
-            <p class="font-medium text-black dark:text-white">(not fount)</p>
+            <p class="font-medium text-black dark:text-white">{{item.rest_products}}</p>
           </div>
 
-          <div class="flex items-center justify-center p-2.5 xl:p-5">
-            <p class="font-medium text-black dark:text-white">(not fount)</p>
-          </div>
+
 
           <div class="flex items-center justify-center p-2.5 xl:p-5">
             <p class="font-medium text-black dark:text-white">{{ item.min_amount }}</p>
@@ -342,6 +340,13 @@ export default {
   justify-content: center;
   align-items: center;
   border-radius: 10px;
+}
+.minimum{
+    background: rgba(218, 26, 26, 0.81);
+    color: white !important;
+}
+.textColor{
+    color: white !important;
 }
 .btn01 svg {
   background: rgba(46, 58, 71, 0.07);

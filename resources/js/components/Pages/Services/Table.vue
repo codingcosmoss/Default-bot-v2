@@ -81,7 +81,7 @@
                     -->
 
                     <div class="flex items-center justify-center p-2.5 xl:p-5">
-                        <p class="font-medium text-black dark:text-white">{{item.price}} UZS</p>
+                        <p class="font-medium text-black dark:text-white">{{item.service_total_sum}} UZS</p>
                     </div>
 
                     <div class="flex items-center justify-center p-2.5 xl:p-5">

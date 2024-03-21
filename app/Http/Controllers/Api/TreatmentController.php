@@ -25,6 +25,13 @@ class TreatmentController extends AbstractController
 
         return $this->sendResponse($item);
     }
+    public function deptorIndex()
+    {
+        $item = $this->service->deptorIndex(request()->all());
+
+        return $this->sendResponse($item);
+    }
+
 
     public function treatmentAddServiceAll($id)
     {
@@ -127,10 +134,15 @@ class TreatmentController extends AbstractController
         return $this->sendResponse($item);
     }
 
-    public function testLogin()
+    /**
+     * @return array|JsonResponse
+     */
+    public function deptorSearch()
     {
-        $item = $this->service->testLogin(request()->all());
+        $item = $this->service->deptorSearch(request()->all());
 
         return $this->sendResponse($item);
     }
+
+
 }

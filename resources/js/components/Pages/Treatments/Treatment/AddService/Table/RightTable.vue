@@ -17,7 +17,7 @@
                     <div class="item_box">
                         <h5 class="font-medium">{{item.name}}</h5>
                         <p>
-                            <span class="text-sm font-medium">{{item.price}}</span>
+                            <span class="text-sm font-medium">{{item.service_total_sum}}</span>
                             <span class="text-xs"> uzs</span>
                         </p>
                     </div>
@@ -28,6 +28,9 @@
                         Label = ""
                         @onInput = "addCount($event, item)"
                         :Value = "searchKey(item.id)"
+                        :isError = "hasKey(item.id)"
+                        :message = "errorObj[item.id]"
+                        :Class=" 'ui_input' + item.id "
                     />
 
 
@@ -52,11 +55,12 @@
     import {Alert, getName} from "../../../../../../Config.js";
     import {useConterStore} from "@/store/counter.js";
     import PrimaryButton2 from "@/ui-components/Form/PrimaryButton2.vue";
-    import Input from "@/components/Pages/Diseases/EditPassword/Inputs/Input.vue";
+    import Input from "@/ui-components/Form/Input.vue";
     import {treatmentAddService} from "@/Api.js";
     import {treatmentAddServiceAll} from "@/Api.js";
 
     export default {
+
         methods: {
             getName(val){
                 return useConterStore().getName(val)
@@ -125,8 +129,20 @@
 
 
             },
+            hasKey(key) {
+                return key in this.errorObj;
+            },
 
-            addCount(val, item){
+
+            addCount(value, item){
+                let val = value;
+                const uiInput = document.querySelector('.ui_input'+ item.id);
+                if (Number(val) > Number(item.max_count)){
+                    uiInput.value = item.max_count;
+                    val = item.max_count;
+                    Alert('error', this.getName('ProductMin'));
+                }
+
                 let index = null;
                 if(val <= 0){
                     // this.Services = this.Services.filter(service => service.id != item.id);
@@ -176,7 +192,8 @@
         data(){
             return{
                 Services: [],
-                ItemModels: []
+                ItemModels: [],
+                errorObj: []
             }
         },
         components: {Input, PrimaryButton2, Counter},

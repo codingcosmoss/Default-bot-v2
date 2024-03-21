@@ -50,10 +50,12 @@
                             Label = ""
                             @onInput = "addCount($event, item)"
                             :Value = "searchKey(item.id)"
+                            :Class=" 'ui_input' + item.id "
+
                         />
 
                     </td>
-                    <td style="font-weight: bold; ">{{ counterStore.formatNumber(item.price * searchKey(item.id) ) }} uzs</td>
+                    <td style="font-weight: bold; ">{{ counterStore.formatNumber( Number(item.service_total_sum) * searchKey(item.id) ) }} uzs</td>
                     <td style="text-align: center; width: 100px">
                         <i @click = "removeItem(item.id)" class="fa-solid  text-danger fa-trash setting-icon cursor-pointer"></i>
                     </td>
@@ -91,6 +93,7 @@ import Map01 from "../../../../ui-components/Element/map-01.vue";
 import Input from "@/ui-components/Form/Input.vue";
 import PrimaryButton from "@/ui-components/Form/PrimaryButton.vue";
 import Item from "@/components/Pages/Employees/Calendar/Item.vue";
+import {Alert} from "@/Config.js";
 export default {
     components: {Input, PrimaryButton, Map01, ContentBlock, ContentBox, Contents, TableHeader, Treatments, Payments},
     setup(){
@@ -113,7 +116,16 @@ export default {
         }
     },
     methods:{
-        addCount(val, item){
+        addCount(value, item){
+
+            let val = value;
+            const uiInput = document.querySelector('.ui_input'+ item.id);
+            if (Number(val) > Number(item.max_count)){
+                uiInput.value = item.max_count;
+                val = item.max_count;
+                Alert('error', this.getName('ProductMin'));
+            }
+
             let index = null;
             if(val <= 0){
                 // this.Services = this.Services.filter(service => service.id != item.id);
@@ -175,6 +187,7 @@ export default {
                         items: Arrs,
                         treatment_id: this.$route.query.treatment_id
                     }
+                    console.log('DAta:', data);
                     const response = await treatmentSavedService(data);
                     console.log('repomse', response)
 
@@ -197,7 +210,7 @@ export default {
                 let price = 0;
                 this.Items.forEach((item) =>{
                     if (e.id == item.id){
-                        price = Number(item.price);
+                        price = Number(item.service_total_sum);
                     }
                 })
                 summ += Number(e.count) * price;

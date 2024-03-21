@@ -31,6 +31,7 @@ class CollectionResorces extends JsonResource
             'name' => $this->name,
             'products' => $products,
             'summ' => $summ,
+            'product_total_sum' => $this->product_total_sum,
             'created_at' =>  Carbon::parse($this->created_at)->format('Y-m-d H:i'),
         ];
     }

@@ -219,6 +219,10 @@ const routes = [
     {
         path: '/check',
         component: () => import('../components/Pages/Treatments/Check.vue'),
+    },
+    {
+        path: '/debt-treatments',
+        component: () => import('../components/Pages/DebtorTreatments/index.vue'),
     }
 
 

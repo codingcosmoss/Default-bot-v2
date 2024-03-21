@@ -90,6 +90,11 @@ export const service_categorys = async (id, pages) => {
     }
 };
 
+export const treatment_service_categorys = async (id) => {
+    return  GET('/service_category/treatment/index/'+id);
+};
+
+
 export const service_categoryShow = async (data) => {
     return  GET('/service_category/show/'+data);
 };
@@ -549,6 +554,18 @@ export const owedTreatments = async (id, pages) => {
         return  GET('owed-treatment/index?pages='+pages);
     }
 };
+
+export const debtorTreatments = async (id, pages) => {
+    if (id != null){
+        return  GET('treatmetn/deptor/index?page='+id+'&pages='+pages);
+    }else {
+        return  GET('treatmetn/deptor/index?pages='+pages);
+    }
+};
+export const deptorTreatmentSearch = async (data) => {
+    return  POST('treatmetn/deptor/search', data );
+};
+
 
 export const owedTreatmentShow = async (data) => {
     return  GET('owed-treatment/show/'+data);

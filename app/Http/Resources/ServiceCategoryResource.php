@@ -21,7 +21,7 @@ class ServiceCategoryResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'status' => $this->status,
-            'services' => Service::where('status', Status::$status_active)->where('category_id', $this->id)->select('services.name', 'services.id', 'services.price')->get()
+            'services' => ServiceAddResource::collection(Service::where('status', Status::$status_active)->where('category_id', $this->id)->get())
 
         ];
     }

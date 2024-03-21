@@ -16,7 +16,7 @@ import Page from "@/components/Layout/Page.vue";
 import ServicesTable from "./ServicesTable/Table.vue";
 import Chat01 from "@/ui-components/Element/chat-01.vue";
 import RightTable from "./Table/RightTable.vue";
-import {service_categorys} from "@/Api.js";
+import {treatment_service_categorys} from "@/Api.js";
 
     export default {
         components:{RightTable, Chat01, ServicesTable, Page},
@@ -36,7 +36,8 @@ import {service_categorys} from "@/Api.js";
 
 
             async getItems(){
-                const response = await service_categorys(1, 1000);
+                const response = await treatment_service_categorys(this.$route.query.treatment_id);
+                console.log('Keldi', response)
                 this.Services = response.data.items;
 
             },

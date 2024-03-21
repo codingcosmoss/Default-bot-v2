@@ -25,6 +25,7 @@ class ServiceController extends AbstractController
         return $this->sendResponse($item);
     }
 
+
     /**
      * @param $id
      * @return array|JsonResponse

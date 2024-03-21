@@ -318,6 +318,8 @@ export default {
         this.Employee_id = 0;
         this.patient_id = 0;
         this.Time = '0';
+        this.Employees = [];
+        this.getEmployees();
         Alert("success", "Attached to Doctor !");
       } else {
         this.errorObj = response.data;

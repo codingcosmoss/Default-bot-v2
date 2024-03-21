@@ -368,7 +368,8 @@ export default {
 
             var data = {
                 'name': this.categoryName,
-                'products': this.Products
+                'products': this.Products,
+                'product_total_sum': this.Summ
             }
 
             var response = '';

@@ -35,7 +35,7 @@ class CollectionService extends AbstractService
      */
     public function index($data = null)
     {
-        $models = $this->model::orderBy('updated_at', 'asc')
+        $models = $this->model::orderBy('updated_at', 'desc')
             ->paginate($data['pages']);
 
         $data = [
@@ -66,6 +66,7 @@ class CollectionService extends AbstractService
         return [
             TextField::make('name')->setRules('required|min:3|max:255'),
             TextField::make('products')->setRules('nullable'),
+            TextField::make('product_total_sum')->setRules('nullable'),
         ];
     }
 
@@ -114,6 +115,7 @@ class CollectionService extends AbstractService
         try {
             $model = new $this->model;
             $model->name = $data['name'];
+            $model->product_total_sum = isset($data['product_total_sum']) ? $data['product_total_sum'] : 0;
 
             if ($model->save()) {
                 DB::commit();
@@ -218,6 +220,8 @@ class CollectionService extends AbstractService
         try {
 
             $model->name = $data['name'];
+            $model->product_total_sum = isset($data['product_total_sum']) ? $data['product_total_sum'] : 0;
+
             if ($model->save()) {
                 DB::commit();
                 if (isset($data['products'])){

@@ -41,6 +41,12 @@
         />
 
         <Menu
+            Path = "/debt-treatments"
+            :Title = "getName('DebtTreatments')"
+            Icon = "fa-solid fa-money-check-dollar"
+        />
+
+        <Menu
             Path = "/payments"
             :Title = "getName('Payments')"
             Icon = "fa-solid fa-money-check-dollar"
@@ -78,11 +84,7 @@
             />
         </MenuList>
 
-        <Menu
-            Path = "/debt-treatments"
-            :Title = "getName('DebtTreatments')"
-            Icon = "fa-solid fa-money-check-dollar"
-        />
+
 
         <Menu
             Path = "/employee-reports"

@@ -9,11 +9,17 @@ use App\Http\Resources\ServiceItemsResource;
 use App\Http\Resources\TreatmentResource;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\UserResources;
+use App\Models\Collection;
+use App\Models\CollectionProduct;
 use App\Models\Discount;
 use App\Models\Patient;
+use App\Models\Payment;
+use App\Models\PersonalPrice;
+use App\Models\Product;
 use App\Models\Service;
 use App\Models\TreatmentService as ModelTreatmentService;
 use App\Models\Treatment;
+use App\Models\UsedProduct;
 use App\Models\User;
 use App\Traits\Status;
 use Carbon\Carbon;
@@ -59,6 +65,37 @@ class TreatmentService extends AbstractService
             'data' => $data
         ];
     }
+
+    public function deptorIndex($data = null)
+    {
+        $models = $this->model::where('status', '!=', Status::$new)
+            ->where(function($query) {
+                $query->orWhere('payment_status', Status::$unpaid)
+                    ->orWhere('payment_status', Status::$notFullyPaid);
+            })
+            ->orderBy('updated_at', 'desc')
+            ->paginate($data['pages']);
+
+        $data = [
+            'items' => $this->resource::collection($models),
+            'pagination' => [
+                'total' => $models->total(),
+                'per_page' => $models->perPage(),
+                'current_page' => $models->currentPage(),
+                'last_page' => $models->lastPage(),
+                'from' => $models->firstItem(),
+                'to' => $models->lastItem(),
+            ],
+        ];
+
+        return [
+            'status' => true,
+            'message' => 'Success',
+            'statusCode' => 200,
+            'data' => $data
+        ];
+    }
+
 
     /**
      * @return array
@@ -136,12 +173,18 @@ class TreatmentService extends AbstractService
 
         DB::beginTransaction();
         try {
+
             $model = $this->model::find($data['treatment_id']);
             $model->type_of_discount = $data['discounter'];
             $model->discount_total_sum = $data['discount_total_sum']; // Chegirmani umumiy summasi
             $model->discount_percent = $data['discount_percent']; // Chegrima miqdori foizda
             $model->discount_sum = $data['discount_sum']; // 	Chegirma miqdori sumda
             $model->user_id = auth()->user()->id;
+
+//            $amount = $model->service_real_price - Payment::where('patient_id',$model->patient_id )->where('treatment_id', $model->id )->sum('amount');
+//            if ($amount == $data['discount_sum']){
+//                $model->payment_status =
+//            }
 
             if ($model->save()) {
                 DB::commit();
@@ -196,6 +239,8 @@ class TreatmentService extends AbstractService
 
     public function treatmentAddServiceAll($id)
     {
+
+        session(['treatment_id' => $id]);
         $treatmentServices =  ModelTreatmentService::where('treatment_id', $id )
             ->get();
 
@@ -211,18 +256,46 @@ class TreatmentService extends AbstractService
         ];
     }
 
+
+
     public function treatmentAddService(array $data)
     {
-
         try {
+
+            $usedProducts = UsedProduct::where('treatment_id', $data['treatment_id'])->delete();
+
             if (isset($data['items'])){
                 $services = ModelTreatmentService::where( 'treatment_id' , $data['treatment_id'])->delete();
                 foreach ($data['items'] as $item) {
+
+                    $service = Service::find($item['id']);
+                    if ($service){
+
+                        $collectionProducts = CollectionProduct::join('products', 'products.id', 'collection_products.product_id')
+                            ->select('products.*', 'collection_products.amount')
+                            ->where('collection_products.collection_id', $service->collection_id)
+                            ->get();
+
+
+                        if (count($collectionProducts) > 0){
+                            foreach ($collectionProducts as $product){
+                                $usedProducts = new UsedProduct();
+                                $usedProducts->product_id = $product->id;
+                                $usedProducts->treatment_id = $data['treatment_id'];
+                                $usedProducts->amount = $product->amount * $item['count'];
+                                $usedProducts->size_type = $product->size_type;
+                                $usedProducts->save();
+                            }
+
+                        }
+                    }
+
                     $model = new ModelTreatmentService();
                     $model->service_id = $item['id'];
                     $model->amount = $item['count'];
                     $model->treatment_id = $data['treatment_id'];
                     $model->save();
+
                 }
             }else{
                 return [
@@ -255,19 +328,58 @@ class TreatmentService extends AbstractService
     {
 
         try {
+
+            $usedProducts = UsedProduct::where('treatment_id', $data['treatment_id'])->delete();
+
+
             if (isset($data['items'])){
                 $services = ModelTreatmentService::where( 'treatment_id' , $data['treatment_id'])->delete();
                 $sum = 0;
+                $doctorSum = 0; // doctorga beriladigan pul miqdori
+                $materialSum = 0; // Material narxi
+                $treatment = Treatment::find($data['treatment_id']);
+
                 foreach ($data['items'] as $item) {
+
                     $model = new ModelTreatmentService();
                     $model->service_id = $item['id'];
                     $model->amount = $item['count'];
                     $model->treatment_id = $data['treatment_id'];
                     $model->save();
-                    $sum += $model->amount * Service::find($item['id'])->price;
+                    $service = Service::find($item['id']);
+                    $sum += $model->amount * $service->price;
+                    $materialSum += Collection::find($service->collection_id) != null ? Collection::find($service->collection_id)->product_total_sum : 0;
+                    $personelPrice = PersonalPrice::where('employee_id', $treatment->user_id)->where('service_id', $item['id'] )->first();
+
+                    if ($personelPrice){
+                        $doctorSum += $personelPrice->result_price;
+                    }
+
+                    if ($service) {
+
+                        $collectionProducts = CollectionProduct::join('products', 'products.id', 'collection_products.product_id')
+                            ->select('products.*', 'collection_products.amount')
+                            ->where('collection_products.collection_id', $service->collection_id)
+                            ->get();
+
+                        if (count($collectionProducts) > 0) {
+                            foreach ($collectionProducts as $product) {
+                                $usedProducts = new UsedProduct();
+                                $usedProducts->product_id = $product->id;
+                                $usedProducts->treatment_id = $data['treatment_id'];
+                                $usedProducts->amount = $product->amount * $item['count'];
+                                $usedProducts->size_type = $product->size_type;
+                                $usedProducts->save();
+                            }
+
+                        }
+                    }
+
                 }
-                $treatment = Treatment::find($data['treatment_id']);
-                $treatment->service_real_price = $sum;
+
+                $treatment->service_real_price = $sum + $materialSum;
+                $treatment->doctor_result_sum = $doctorSum; // Doctrga beriladigan pul;
+                $treatment->material_price = $materialSum; // material narxi
                 $treatment->status = Status::$doctorFinished;
                 $treatment->save();
 
@@ -664,6 +776,50 @@ class TreatmentService extends AbstractService
                 ->orWhere('patients.last_name', 'like', '%' . $key . '%')
                 ->orWhere('treatments.start', 'like', '%' . $key . '%');
         })
+            ->orderBy($column, $sort)
+            ->paginate($data['paginate']);
+
+        $data = [
+            'items' => $this->resource::collection($models),
+            'pagination' => [
+                'total' => $models->total(),
+                'per_page' => $models->perPage(),
+                'current_page' => $models->currentPage(),
+                'last_page' => $models->lastPage(),
+                'from' => $models->firstItem(),
+                'to' => $models->lastItem(),
+            ],
+        ];
+
+        return [
+            'status' => true,
+            'message' => 'Success',
+            'statusCode' => 200,
+            'data' => $data
+        ];
+    }
+
+    public function deptorSearch(array $data)
+    {
+
+        $key = $data['search'] ?? '';
+        $column = $data['column'] ?? 'updated_at';
+        $sort = $data['order'] ?? 'desc';
+
+        $models = $this->model::join('patients', 'treatments.patient_id', '=', 'patients.id')
+            ->select('patients.first_name', 'patients.last_name', 'treatments.*')
+            ->where(function ($query) use ($key) {
+                if (!empty($key)) {
+                    $query->orWhere('patients.first_name', 'like', '%' . $key . '%')
+                        ->orWhere('patients.last_name', 'like', '%' . $key . '%')
+                        ->orWhere('treatments.start', 'like', '%' . $key . '%');
+                }
+            })
+            ->where('treatments.status', '!=', Status::$new)
+            ->where(function($query) {
+                $query->orWhere('treatments.payment_status', Status::$unpaid)
+                    ->orWhere('treatments.payment_status', Status::$notFullyPaid);
+            })
             ->orderBy($column, $sort)
             ->paginate($data['paginate']);
 

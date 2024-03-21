@@ -176,6 +176,7 @@ export default {
       async getDocumentProducts(){
           const response = await getDocumentProducts(this.$route.query.id);
           this.Products = response.data.items;
+          console.log('Response;', response);
           this.Products.forEach((e) => {
               this.Summ += Number(e.price)
           })

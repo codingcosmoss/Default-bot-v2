@@ -1,7 +1,7 @@
 
 <template>
 
-    <div class="grid grid-cols-7 border-b border-stroke dark:border-strokedark sm:grid-cols-7 overflow-x-auto" >
+    <div class="grid grid-cols-6 border-b border-stroke dark:border-strokedark sm:grid-cols-6 overflow-x-auto" >
 
         <div class="flex items-center justify-center p-2.5 xl:p-5">
             <p class="font-medium text-black dark:text-white"> {{getName('name')}}</p>
@@ -19,9 +19,7 @@
             <p class="font-medium text-black dark:text-white"> {{getName('TheRest')}}</p>
         </div>
 
-        <div class="flex items-center justify-center p-2.5 xl:p-5">
-            <p class="font-medium text-black dark:text-white"> {{getName('TotalAmount')}}</p>
-        </div>
+
 
         <div class="flex items-center justify-center p-2.5 xl:p-5">
             <p class="font-medium text-black dark:text-white"> {{getName('MinSize')}}</p>

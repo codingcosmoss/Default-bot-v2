@@ -14,6 +14,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 class ServiceCategoryService extends AbstractService
@@ -51,6 +52,27 @@ class ServiceCategoryService extends AbstractService
             'data' => $data
         ];
     }
+    public function treatmentIndex($treatment_id)
+    {
+
+        session(['treatment_id' => $treatment_id]);
+
+        $items = $this->model::orderBy('updated_at', 'desc')
+            ->get();
+
+        $data = [
+            'items' => ServiceCategoryResource::collection($items),
+        ];
+
+        return [
+            'status' => true,
+            'message' => 'Success',
+            'statusCode' => 200,
+            'data' => $data
+        ];
+    }
+
+
 
 
 

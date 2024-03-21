@@ -34,7 +34,7 @@
                     <td style="padding-left: 10px !important;width: 180px !important">
                         <b>{{item.count}}</b></td>
                     <td style="padding-left: 10px !important;width: 180px !important">
-                        <b>{{ counterStore.formatNumber(Number(item.price) * Number(item.count)) }}</b></td>
+                        <b>{{ counterStore.formatNumber(Number(item.service_total_sum) * Number(item.count)) }}</b></td>
                 </tr>
 
 
@@ -42,11 +42,13 @@
         <hr>
 
         <h3 style="margin: 14px 0 !important; text-align: end !important">{{getName('TotalSum')}}: {{counterStore.formatNumber(TotalSum)}} </h3>
-        <h3 style="margin: 14px 0 !important; text-align: end !important">{{getName('Material_total_sum')}} {{counterStore.formatNumber(Material_total_sum)}}</h3>
-        <h3 style="margin: 14px 0 !important; text-align: end !important">{{getName('Doctor_total_sum')}} {{counterStore.formatNumber(Doctor_total_sum)}}</h3>
-        <h3 style="margin: 14px 0 !important; text-align: end !important">{{getName('Payment')}}: {{counterStore.formatNumber(TotalSum)}}</h3>
+        <h3 style="margin: 14px 0 !important; text-align: end !important">{{getName('Material_total_sum')}}: {{counterStore.formatNumber(Material_total_sum)}}</h3>
+        <h3 style="margin: 14px 0 !important; text-align: end !important">{{getName('Doctor_total_sum')}}: {{counterStore.formatNumber(Doctor_total_sum)}}</h3>
+        <h3 style="margin: 14px 0 !important; text-align: end !important">{{getName('PaymentSum')}}: {{counterStore.formatNumber(TotalSum - Discount)}}</h3>
+        <h3 style="margin: 14px 0 !important; text-align: end !important">{{getName('Paid')}}: {{counterStore.formatNumber( Payments )}}</h3>
+        <h3 style="margin: 14px 0 !important; text-align: end !important">{{getName('Indebtednes')}}: {{counterStore.formatNumber(Indebtedness)}}</h3>
         <br>
-        <div style="text-align: center !important; margin: 50px 0" class="check-discount"><h1 style="font-weight: bold">{{ getName('Discount')}}: {{Discount}}</h1></div>
+        <div style="text-align: center !important; margin: 50px 0" class="check-discount"><h1 style="font-weight: bold">{{ getName('Discount')}}: {{counterStore.formatNumber(Discount) }}</h1></div>
         <br>
 
         <h3>{{getName('Doctor')}} ____________________ </h3>
@@ -93,8 +95,9 @@
                 Material_total_sum: 0, // hom ahsyo narxi
                 Doctor_total_sum: 0, // shifokor summasi
                 Discount: 0, // Chegirma,
-                Payment:0 ,// Tolov,
-                Success: 0
+                Payments:0 ,// Tolov,
+                Success: 0,
+                Indebtedness: 0,
             }
         },
         methods:{
@@ -105,9 +108,13 @@
 
                   const response = await TreatmentShow(this.$route.query.id);
                   this.Treatment =  response.data;
+                this.Payments = response.data.payment_amount;
+                  this.Doctor_total_sum = response.data.doctor_result_sum;
                   this.Discount  = response.data.discount_sum;
                 this.Patient = response.data.patient;
                 this.Doctor = response.data.doctor;
+                this.Material_total_sum = response.data.material_price;
+                this.Indebtedness =  response.data.user_payment; // qarzdorlik
                 if (response.status){
                     this.Success += 1;
                 }
@@ -117,12 +124,11 @@
             },
             async getItems(){
                 this.Items = [];
+                this.TotalSum = 0;
                 const response = await treatmentAddServiceAll(this.$route.query.id);
                 this.Items =  response.data.items;
                 this.Items.forEach((item)=>{
-                    this.Material_total_sum += item.collection != null ? item.collection.summ : 0;
-                    this.TotalSum += Number(item.count) * Number(item.price);
-                    this.Doctor_total_sum += item.doctor_total_sum;
+                    this.TotalSum += Number(item.count) * Number(item.service_total_sum);
                 })
                 if (response.status){
                     this.Success += 1;

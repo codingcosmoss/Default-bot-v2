@@ -62,10 +62,13 @@ class ProductDocumentService extends AbstractService
     }
     public function getProducts($id)
     {
+
         $models = ImportedProduct::where('product_document_id', $id)
-            ->join('products', 'imported_products.id', 'products.id')
-            ->select('products.bar_code','products.name', 'products.size_type', 'imported_products.*')
+            ->join('products', 'imported_products.product_id', 'products.id')
+            ->select('products.bar_code', 'products.name', 'products.size_type', 'imported_products.*')
             ->get();
+
+
 
         $data = [
             'items' => $models,

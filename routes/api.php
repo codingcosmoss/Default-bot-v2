@@ -39,6 +39,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Services Category
     Route::group(['prefix' => 'service_category'], function () {
         Route::get('/index', [\App\Http\Controllers\Api\ServiceCategoryController::class, 'index']);
+        Route::get('treatment/index/{treatment_id}', [\App\Http\Controllers\Api\ServiceCategoryController::class, 'treatmentIndex']);
         Route::post('/create', [\App\Http\Controllers\Api\ServiceCategoryController::class, 'create']);
         Route::get('/show/{id}', [\App\Http\Controllers\Api\ServiceCategoryController::class, 'show']);
         Route::post('/update/{id}', [\App\Http\Controllers\Api\ServiceCategoryController::class, 'update']);
@@ -85,6 +86,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/show/{id}', [\App\Http\Controllers\Api\TreatmentController::class, 'show']);
         Route::post('/search', [\App\Http\Controllers\Api\TreatmentController::class, 'search']);
         Route::post('/discount', [\App\Http\Controllers\Api\TreatmentController::class, 'discount']);
+
+        // Qarzdor davolanishlar
+        Route::get('deptor/index', [\App\Http\Controllers\Api\TreatmentController::class, 'deptorIndex']);
+        Route::post('deptor/search', [\App\Http\Controllers\Api\TreatmentController::class, 'deptorSearch']);
     });
 
     Route::post('/treatment-add-service', [\App\Http\Controllers\Api\TreatmentController::class, 'treatmentAddService']);

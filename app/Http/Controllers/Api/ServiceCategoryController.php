@@ -24,6 +24,14 @@ class ServiceCategoryController extends AbstractController
         return $this->sendResponse($item);
     }
 
+    public function treatmentIndex($treatment_id)
+    {
+        $item = $this->service->treatmentIndex($treatment_id);
+
+        return $this->sendResponse($item);
+    }
+
+
     /**
      * @param $id
      * @return array|JsonResponse

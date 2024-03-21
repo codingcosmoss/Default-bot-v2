@@ -146,18 +146,14 @@
                     class="fa-regular setting-icon fa-calendar-plus cursor-pointer"
 
                 ></i>
+
                 <i
                     v-if="item.payment_status != 12 && item.status != 7"
                     @click="paymentModal(item), userPayments = item.user_payment "
                     :title="getName('Payments')"
                     class="fa-regular fas fa-donate setting-icon  cursor-pointer"
                 ></i>
-                <i
-                    title="Wordga chop etish"
-                    @click="debtModal(item)"
-                    :title="getName('Payment')"
-                    class="fa-solid fa-file-word setting-icon  cursor-pointer"
-                ></i>
+
                 <i
                     title="Tolov tarixi"
                     v-if="item.payment_status ==  11 || item.payment_status == 12"
@@ -659,7 +655,7 @@ export default {
       async sendDiscount(){
         if (this.discount_sum > this.discount_total_sum){
             this.discountError = true;
-            console.log('error fkfr0', this.discount_sum)
+            console.log('error', this.discount_sum)
             return true;
         }
           let data = {

@@ -14,14 +14,15 @@
 
                      <div class="flex flex-col">
 
-                    <div v-for="(item) in item.services" class="grid grid-cols-3 border-b border-stroke dark:border-strokedark sm:grid-cols-3 databes_table ">
+                    <div v-for="(item) in item.services" :class="item.max_count == 0 ? 'bg-danger' : '' " class="grid grid-cols-3 border-b  border-stroke dark:border-strokedark sm:grid-cols-3 databes_table ">
 
                         <div class="flex items-center gap-3 p-2.5 xl:p-5">
                             <p class="font-bold hidden text-black dark:text-white sm:block ">
                                 <Checkbox01
-                                    @click = "this.$emit('pushArray', item)"
+
+                                    @click = "sendData(item, item.max_count)"
                                     :Title = 'item.name'
-                                    :onCheck = "searchKey(item.id)"
+                                    :onCheck = "searchKey(item.id, item.max_count)"
                                 />
 
                             </p>
@@ -29,12 +30,12 @@
 
 
                         <div class="flex items-center justify-center p-2.5 xl:p-5">
-                            <p class="font-medium  text-black dark:text-white">{{counterStore.formatNumber(item.price)}} UZS</p>
+                            <p class="font-medium  text-black dark:text-white">{{counterStore.formatNumber(item.service_total_sum)}} UZS</p>
                         </div>
 
                         <div class="flex items-center justify-center p-2.5 xl:p-5">
                             <p class="font-medium text-black dark:text-white">
-
+                                {{item.max_count == 1000  ? '' : item.max_count }} {{ item.max_count == 1000 ? getName('NotLimited') : getName('Piece') }}
                             </p>
                         </div>
 
@@ -57,6 +58,8 @@ import {useConterStore} from "@/store/counter.js";
 import Checkbox from "@/components/Pages/Diseases/EditPassword/Inputs/Checkbox.vue";
 import Checkbox01 from "@/ui-components/Form/Checkbox/Checkbox01.vue";
 import Counter from "@/components/Pages/Treatments/Treatment/AddService/Counter.vue";
+import {getName} from "../../../../../../Config.js";
+import {Alert} from "../../../../../../Config.js";
 export default {
     setup(){
         const counterStore = useConterStore();
@@ -75,7 +78,19 @@ export default {
 
     },
     methods:{
-        searchKey(id){
+        sendData(item, count){
+
+            if (Number(count) == 0){
+                Alert('error', this.getName('ProductNot'));
+                return false;
+            }else {
+                this.$emit('pushArray', item)
+            }
+        },
+        searchKey(id, count){
+            if (count == 0){
+                return false;
+            }
             let isArray = false;
             this.Items.forEach((e) =>{
                 if (e.id == id){
@@ -83,7 +98,11 @@ export default {
                 }
             });
             return isArray;
-        }
+        },
+        getName(val){
+            return useConterStore().getName(val)
+        },
+
     }
 
 
