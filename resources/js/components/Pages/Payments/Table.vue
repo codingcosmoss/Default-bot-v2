@@ -165,7 +165,7 @@
         </Paginate>
       </div>
 
-        <ModalLayout  @Submit = "onSubmit()"   :UpdateId = "UpdateId"  @closeModal = "isShowModal = $event, errorObj = []" :isModal = "isShowModal">
+        <ModalLayout  @onButton = "onSubmit()"   :UpdateId = "UpdateId"  @closeModal = "isShowModal = $event, errorObj = []" :isModal = "isShowModal">
             <div >
                 <DangerButton
                     :isActive = "userPayments <= 0 ? true : false"

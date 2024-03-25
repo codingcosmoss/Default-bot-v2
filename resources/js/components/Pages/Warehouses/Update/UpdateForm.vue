@@ -1,6 +1,6 @@
 <template>
 
-    <ModalLayout @Submit = "updateCategory" :isModal = "isUpdateModal" @closeModal = "this.$emit('closeUpdatedModal', false) " :Title = "getName('update')" >
+    <ModalLayout @onButton = "updateCategory" :isModal = "isUpdateModal" @closeModal = "this.$emit('closeUpdatedModal', false) " :Title = "getName('update')" >
 
         <Input
             :Label = "getName('name_content')"

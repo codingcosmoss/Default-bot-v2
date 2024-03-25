@@ -34,7 +34,6 @@
         </Map01>
 
         <br>
-        {{Status}}
 
         <ProductsTable @Created = "getItem()" v-if="Status != 13" :Header = "false" >
 

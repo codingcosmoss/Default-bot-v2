@@ -303,7 +303,7 @@ class PersonalServicesService extends AbstractService
     public function search(array $data)
     {
         $column = $data['column'] ?? 'sort_order';
-        $sort = $data['order'] ?? 'asc';
+        $sort = $data['order'] ?? 'desc';
 
         $items = $this->model::orderBy($column, $sort)
             ->paginate($data['paginate']);

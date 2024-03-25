@@ -61,6 +61,7 @@ export const getName = (val) => {
 }
 
 export const Alert = (type, message) => {
+    console.log(type)
     // type = [ warning, info, default, success, error]
     const $toast = useToast();
     let instance = $toast.open({

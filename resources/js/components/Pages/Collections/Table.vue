@@ -102,7 +102,7 @@
     </div>
 
 
-    <ModalLayout @Submit = "crudCategory()" :isModal = "isModal" @closeModal = " closeModal() " :Title = " crud == 'created' ? getName('create') :getName('update')" >
+    <ModalLayout @onButton = "crudCategory()" :isModal = "isModal" @closeModal = " closeModal() " :Title = " crud == 'created' ? getName('create') :getName('update')" >
 
 
         <Input

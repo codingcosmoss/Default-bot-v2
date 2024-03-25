@@ -47,19 +47,34 @@ body {
 #kt_login {
   /*background-image: #262747;*/
 }
+.my-logo{
+    width: 90%;
+    height: 60px;
+    /*background: #0a91f1;*/
+    margin-top: 10px;
+    background-image: url("./logo2.png");
+    background-size: contain;
+    background-position: left;
+    background-repeat: no-repeat;
+    margin-left: 10px;
+}
 
 @media (min-width: 1024px) {
 
     .aside01:hover{
         width: 280px;
         .sidebar01{
-            padding: 0 25px;
+            /*padding: 0 25px;*/
         }
         .text01{
             display: block !important;
         }
     }
 
+}
+.aside01{
+    padding: 0 10px;
+    overflow: hidden;
 }
 @keyframes box-nav {
     from{
@@ -114,8 +129,7 @@ input{
 
 
 .nav_menu_box{
-    border-radius: 10px;
-    box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.3);
+    /*box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.3);*/
 }
 .navbar-active{
     background: rgba(37, 154, 230, 0.62);
@@ -195,6 +209,82 @@ i{
     background: rgba(60, 80, 224, 0.22) !important;
 }
 
+@media (max-width: 1023px) {
+    .main_box {
+        padding-left: 0px !important;
+    }
+}
 
 
+.fa-solid{cursor: pointer}
+
+.btn01{
+    width: 100px;
+    margin-left: 100px;
+    background: rgba(0, 0, 0, 0.12);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+
+}
+.btn01 svg{
+    background: rgba(46, 58, 71, 0.07);
+    border: 1px solid rgba(245, 245, 245, 0.33);
+    margin: 0 10px;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+}
+.btn01 svg:active{
+    transform: scale(0.9);
+}
+.active{
+    background: #10B981 !important;
+    color: #ffffff !important;
+    /* border: 2px solid  #10B981; */
+    border-radius: 50%;
+
+}
+.inactive{
+    background: #e70909bf !important;
+    color: #ffffff !important;
+    /* border: 2px solid #e70909bf; */
+
+}
+
+.photo-img{
+    width: 50px;
+    height: 50px;
+    margin-right:10px ;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.pagination-container {
+    display: flex;
+    column-gap: 10px;
+}
+.paginate-buttons {
+    height: 40px;
+    width: 40px;
+    border-radius: 20px;
+    cursor: pointer;
+    background-color: rgba(242, 242, 242, 0);
+    border: 1px solid rgb(4, 237, 109);
+    color: #17e30d;
+    margin: 0 5px;
+}
+.paginate-buttons:hover {
+    background-color: #d8d8d8;
+}
+.active-page {
+    background-color: #3498db;
+    border: 1px solid #3498db;
+    color: white;
+}
+.active-page:hover {
+    background-color: #2988c8;
+}
 

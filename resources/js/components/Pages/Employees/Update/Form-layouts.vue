@@ -132,20 +132,20 @@
 
                 </div>
                 <p class="pt-0 p-6.5" > {{getName('employee_roles')}}:</p>
-                <ul class="list01">
-                   <ul>
-                       <Checkbox></Checkbox>
-                       <Checkbox></Checkbox>
-                       <Checkbox></Checkbox>
-                       <Checkbox></Checkbox>
+<!--                <ul class="list01">-->
+<!--                   <ul>-->
+<!--                       <Checkbox></Checkbox>-->
+<!--                       <Checkbox></Checkbox>-->
+<!--                       <Checkbox></Checkbox>-->
+<!--                       <Checkbox></Checkbox>-->
 
-                   </ul>
-                    <ul>
-                        <Checkbox></Checkbox>
-                        <Checkbox></Checkbox>
-                        <Checkbox></Checkbox>
-                    </ul>
-                </ul>
+<!--                   </ul>-->
+<!--                    <ul>-->
+<!--                        <Checkbox></Checkbox>-->
+<!--                        <Checkbox></Checkbox>-->
+<!--                        <Checkbox></Checkbox>-->
+<!--                    </ul>-->
+<!--                </ul>-->
 
 
                 <div class=" pl-7 p-6.5">
@@ -155,7 +155,6 @@
                     </button>
                 </div>
             </div>
-
 
         </div>
     </div>
@@ -237,7 +236,7 @@ export default {
 
                 const response = await showEmployee(this.$route.query.id);
                 const item = response.data;
-
+                console.log(response)
                 if (response.status){
                     this.name = item.name
                     this.position = item.position
@@ -247,7 +246,7 @@ export default {
                     this.percent_salary = item.percent_salary
                     this.salary_static = item.salary_static
                     this.sort_order = item.sort_order
-                    this.photo = item.image;
+                    this.photo = item.image[0].url;
                     this.color = item.color == null ? '#ffffff' :  item.color;
                     console.log(item)
                 }else {

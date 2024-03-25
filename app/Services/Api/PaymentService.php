@@ -2,6 +2,7 @@
 
 namespace App\Services\Api;
 
+use App\Events\TelegramMessage;
 use App\Fields\Store\TextField;
 use App\Http\Resources\DiseaseResource;
 use App\Http\Resources\OneUserResource;
@@ -10,13 +11,17 @@ use App\Http\Resources\PaymentResource;
 use App\Http\Resources\PaymentTypeResource;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\UserResources;
+use App\Jobs\TelegramSendMessage;
+use App\Models\CompanySetting;
 use App\Models\Discount;
 use App\Models\Disease;
 use App\Models\Patient;
 use App\Models\Payment;
 use App\Models\PaymentType;
+use App\Models\Telegram;
 use App\Models\Treatment;
 use App\Models\User;
+use App\Traits\Action;
 use App\Traits\Status;
 use http\Exception\InvalidArgumentException;
 use Illuminate\Http\JsonResponse;
@@ -123,6 +128,8 @@ class PaymentService extends AbstractService
     }
 
 
+
+
     /**
      * @param array $data
      * @return JsonResponse|mixed
@@ -170,6 +177,11 @@ class PaymentService extends AbstractService
 
             if ($model->save()) {
                 DB::commit();
+
+                // Telegram botga xabar yuborish
+//                event(new TelegramMessage('payment', $model));
+                TelegramSendMessage::dispatch('payment', $model );
+
                 $payments = Payment::where('patient_id', $data['patient_id'])
                     ->where( "treatment_id", $data['treatment_id'] )
                     ->sum('amount');
@@ -428,7 +440,7 @@ class PaymentService extends AbstractService
     {
         $key = $data['search'] ?? '';
         $column = $data['column'] ?? 'payments.updated_at';
-        $sort = $data['order'] ?? 'asc';
+        $sort = $data['order'] ?? 'desc';
 
         $models = $this->model::join('patients', 'payments.patient_id', '=', 'patients.id')
             ->select('payments.*', 'patients.first_name', 'patients.last_name')

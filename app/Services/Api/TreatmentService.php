@@ -9,18 +9,22 @@ use App\Http\Resources\ServiceItemsResource;
 use App\Http\Resources\TreatmentResource;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\UserResources;
+use App\Jobs\TelegramSendMessage;
 use App\Models\Collection;
 use App\Models\CollectionProduct;
+use App\Models\CompanySetting;
 use App\Models\Discount;
 use App\Models\Patient;
 use App\Models\Payment;
 use App\Models\PersonalPrice;
 use App\Models\Product;
 use App\Models\Service;
+use App\Models\Telegram;
 use App\Models\TreatmentService as ModelTreatmentService;
 use App\Models\Treatment;
 use App\Models\UsedProduct;
 use App\Models\User;
+use App\Traits\Action;
 use App\Traits\Status;
 use Carbon\Carbon;
 use http\Exception\InvalidArgumentException;
@@ -215,9 +219,15 @@ class TreatmentService extends AbstractService
             'data' => $model
         ];
     }
+
     public function treatmentFinished($id)
     {
         $treatment =  Treatment::find($id);
+        $services = ModelTreatmentService::where('treatment_id', $treatment->id)->get();
+
+        // Telegram botga xabar yuborish
+        TelegramSendMessage::dispatch('treatment', $treatment , $services);
+
         if ($treatment){
             $treatment->status = Status::$finished;
             $treatment->save();
@@ -342,17 +352,21 @@ class TreatmentService extends AbstractService
                 foreach ($data['items'] as $item) {
 
                     $model = new ModelTreatmentService();
+                    $service = Service::find($item['id']);
+
                     $model->service_id = $item['id'];
                     $model->amount = $item['count'];
+                    $model->result_price = $item['count'] * $service->price;
                     $model->treatment_id = $data['treatment_id'];
+                    $model->service_name = $service->name;
                     $model->save();
-                    $service = Service::find($item['id']);
+
                     $sum += $model->amount * $service->price;
                     $materialSum += Collection::find($service->collection_id) != null ? Collection::find($service->collection_id)->product_total_sum : 0;
                     $personelPrice = PersonalPrice::where('employee_id', $treatment->user_id)->where('service_id', $item['id'] )->first();
 
                     if ($personelPrice){
-                        $doctorSum += $personelPrice->result_price;
+                        $doctorSum += $personelPrice->result_price *  $model->amount;
                     }
 
                     if ($service) {
@@ -767,7 +781,7 @@ class TreatmentService extends AbstractService
     {
         $key = $data['search'] ?? '';
         $column = $data['column'] ?? 'updated_at';
-        $sort = $data['order'] ?? 'asc';
+        $sort = $data['order'] ?? 'desc';
 
         $models = $this->model::join('patients', 'treatments.patient_id', '=', 'patients.id')
             ->select('patients.first_name', 'patients.last_name', 'treatments.*')

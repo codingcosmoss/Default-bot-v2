@@ -1,18 +1,19 @@
 <template>
-    <div class="mb-4 flex items-center gap-3" >
-        <div class="h-14 w-14 rounded-full">
-            <img :src="Photo" alt="User" />
+    <div class="image_input_box">
+        <div class="mb-4 flex items-center gap-3" >
+            <div class="h-14 w-14 rounded-full">
+                <img :src="Photo" alt="User" />
+            </div>
+            <div >
+                <span class="mb-1.5 font-medium text-black dark:text-white">{{Label}}</span>
+            </div>
         </div>
-        <div >
-            <span class="mb-1.5 font-medium text-black dark:text-white">Edit your photo</span>
-        </div>
-    </div>
 
-    <div  id="FileUpload"
-         class="relative mb-5.5 block w-full cursor-pointer appearance-none rounded border-2 border-dashed border-primary bg-gray py-4 px-4 dark:bg-meta-4 sm:py-7.5">
-        <input @change = "this.$emit('image',$event.target.files[0])" type="file" accept="image/*"
-               class="absolute inset-0 z-50 m-0 h-full w-full cursor-pointer p-0 opacity-0 outline-none" />
-        <div class="flex flex-col items-center justify-center space-y-3">
+        <div  id="FileUpload"
+              class="relative mb-5.5 block w-full cursor-pointer appearance-none rounded border-2 border-dashed border-primary bg-gray py-4 px-4 dark:bg-meta-4 sm:py-7.5">
+            <input @change = "this.$emit('image',$event.target.files[0])" type="file" accept="image/*"
+                   class="absolute inset-0 z-50 m-0 h-full w-full cursor-pointer p-0 opacity-0 outline-none" />
+            <div class="flex flex-col items-center justify-center space-y-3">
                           <span
                               class="flex h-10 w-10 items-center justify-center rounded-full border border-stroke bg-white dark:border-strokedark dark:bg-boxdark">
                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
@@ -28,12 +29,13 @@
                                     fill="#3C50E0" />
                             </svg>
                           </span>
-            <p class="font-medium text-sm">
-                <span class="text-primary">Click to upload</span>
-                or drag and drop
-            </p>
-            <p class="mt-1.5 font-medium text-sm">SVG, PNG, JPG or GIF</p>
-            <p class="font-medium text-sm">(max, 800 X 800px)</p>
+                <p class="font-medium text-sm">
+                    <span class="text-primary">Click to upload</span>
+                    or drag and drop
+                </p>
+                <p class="mt-1.5 font-medium text-sm">SVG, PNG, JPG or GIF</p>
+                <p class="font-medium text-sm">(max, 800 X 800px)</p>
+            </div>
         </div>
     </div>
 </template>
@@ -42,8 +44,20 @@
         props:{
             Photo: {
                 type: String,
-                default: 'https://avatars.mds.yandex.net/i?id=bb0af7010624796ed4de5ac0e683be96900a0327-8496941-images-thumbs&n=13'
+                default: 'https://avatars.mds.yandex.net/i?id=094af778330da89e3409830578322fe37146a733-10963969-images-thumbs&n=13'
+            },
+            Label:{
+                type: String,
+                default: "Image label"
             }
         }
     }
 </script>
+<style>
+    .image_input_box{
+        display: flex;
+        flex-direction: column;
+        //align-items: center;
+        width: 100%;
+    }
+</style>

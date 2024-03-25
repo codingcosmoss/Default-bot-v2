@@ -32,7 +32,7 @@ class ProductService extends AbstractService
      */
     public function index($data = null)
     {
-        $models = $this->model::orderBy('updated_at', 'asc')
+        $models = $this->model::orderBy('updated_at', 'desc')
             ->paginate($data['pages']);
 
         $data = [
@@ -312,7 +312,7 @@ class ProductService extends AbstractService
     {
         $key = $data['search'] ?? '';
         $column = $data['column'] ?? 'updated_at';
-        $sort = $data['order'] ?? 'asc';
+        $sort = $data['order'] ?? 'desc';
 
         $models = $this->model::where(function ($query) use ($key) {
             empty($key) ? $query : $query->orWhere('name', 'like', '%' . $key . '%')

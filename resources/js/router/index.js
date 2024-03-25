@@ -223,7 +223,47 @@ const routes = [
     {
         path: '/debt-treatments',
         component: () => import('../components/Pages/DebtorTreatments/index.vue'),
+    },
+
+    {
+        path: '/telegrams',
+        component: () => import('../components/Pages/Telegrams/index.vue'),
+    },
+
+    {
+        path: '/settings',
+        component: () => import('../components/Pages/Settings/index.vue'),
+    },
+
+    {
+        path: '/employees-payments',
+        component: () => import('../components/Pages/EmployeePayments/index.vue'),
+    },
+    {
+        path: '/employees-payments/show',
+        component: () => import('../components/Pages/EmployeePayments/ShowTable/Table.vue'),
+    },
+
+    {
+        path: '/given-moneys',
+        component: () => import('../components/Pages/GivenMoneys/index.vue'),
+    },
+
+    {
+        path: '/daily-staff-reports',
+        component: () => import('../components/Pages/DailyStaffReports/index.vue'),
+    },
+    {
+        path: '/daily-cost',
+        component: () => import('../components/Pages/DailyCosts/index.vue'),
+    },
+
+    {
+        path: '/reports',
+        component: () => import('../components/Pages/Reports/index.vue'),
     }
+
+
 
 
 

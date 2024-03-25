@@ -121,7 +121,9 @@
           </div>
 
           <div class="flex items-center justify-center p-2.5 xl:p-5">
-            <p class="font-medium text-black dark:text-white">{{ 0 }}</p>
+              <p class="font-medium dark:text-white status-text "
+                 :class="getClass(item.payment_status)"
+              >{{ getStatus(item.payment_status)  }}</p>
           </div>
 
           <div class="flex items-center justify-center p-2.5 xl:p-5">
@@ -171,7 +173,7 @@
       </div>
 
       <ModalLayout
-        @Submit="addReseption()"
+        @onButton="addReseption()"
         :isModal="isModal"
         @closeModal="isModal = false"
         :Title="getName('AddDoctor')"
@@ -286,6 +288,33 @@ export default {
   },
 
   methods: {
+      getClass(e){
+          if (e == 10){
+              return 'unmount';
+          }else if (e == 11){
+              return 'fullUnmount';
+          }else if (e == 7){
+              return 'fullUnmount';
+          }else{
+              return '';
+          }
+      },
+      getStatus(e){
+          if (e == 7){
+              return this.getName('New');
+          }else if (e == 8){
+              return this.getName('DoctorFinished');
+          }else if (e == 9){
+              return this.getName('Finished');
+          }else if (e == 10){
+              return this.getName('Unpaint');
+          }else if (e == 11){
+              return this.getName('NotFullPaint');
+          }else if (e == 12){
+              return this.getName('Closed');
+          }
+
+      },
     router() {
       return router;
     },
@@ -467,6 +496,22 @@ export default {
 }
 .btn01 svg:active {
   transform: scale(0.9);
+}
+
+.unmount{
+    background: #f71010 !important;
+}
+.status-text{
+    background: #39aa07;
+    font-size: 13px;
+    padding: 3px 8px ;
+    border-radius: 10px;
+    font-weight: bold;
+    color: white;
+    white-space: nowrap;
+}
+.fullUnmount{
+    background: #b9a505 !important;
 }
 .active {
   background: #10b981 !important;

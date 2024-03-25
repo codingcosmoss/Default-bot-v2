@@ -589,3 +589,100 @@ export const owedTreatmentDelete = async (data) => {
 export const treatmentFinished = async (data) => {
     return  GET('/treatment-finished/'+ data );
 };
+
+// ____________________________ telegram ________________________________________________________
+
+
+export const telegrams = async (id, pages) => {
+    if (id != null){
+        return  GET('telegram/index?page='+id+'&pages='+pages);
+    }else {
+        return  GET('telegram/index?pages='+pages);
+    }
+};
+
+export const telegramShow = async (data) => {
+    return  GET('telegram/show/'+data);
+};
+
+export const telegramCreate = async (data) => {
+    return  POST('telegram/create', data );
+};
+export const telegramUpdate = async (id, data) => {
+    return  POST('telegram/update/'+id, data );
+};
+
+export const telegramSearch = async (data) => {
+    return  POST('telegram/search', data );
+};
+
+export const telegramDelete = async (data) => {
+    return  GET('telegram/delete/'+ data );
+};
+
+export const companySettingStore = async (data) => {
+    return  POST('setting/company-store', data );
+};
+export const getCompany = async () => {
+    return  GET('setting/company/show' );
+};
+
+export const getEmployeePayments = async () => {
+    return  GET('/employee-payments' );
+};
+export const storeEmployeePayments = async (data) => {
+    return  POST('/employee-payments/save', data );
+};
+
+export const showEmployeePayments = async (data) => {
+    return  GET('/employee-payment/show/'+data);
+};
+
+export const givenMoneys = async () => {
+    return  GET('/given-moneys');
+};
+
+export const givenMoneysSearch = async (data) => {
+    return  POST('/given-moneys/search', data );
+};
+
+
+export const dalyTreatments = async (year, moon) => {
+    return  GET('/daly-treatments/'+year+'/'+moon);
+};
+
+// ____________________________ daily-cost ________________________________________________________
+
+
+export const dailyCosts = async (id, pages) => {
+    if (id != null){
+        return  GET('daily-cost/index?page='+id+'&pages='+pages);
+    }else {
+        return  GET('daily-cost/index?pages='+pages);
+    }
+};
+
+export const dailyCostShow = async (data) => {
+    return  GET('daily-cost/show/'+data);
+};
+
+export const dailyCostCreate = async (data) => {
+    return  POST('daily-cost/create', data );
+};
+export const dailyCostUpdate = async (id, data) => {
+    return  POST('daily-cost/update/'+id, data );
+};
+
+export const dailyCostSearch = async (data) => {
+    return  POST('daily-cost/search', data );
+};
+
+export const dailyCostDelete = async (data) => {
+    return  GET('daily-cost/delete/'+ data );
+};
+export const reports = async (start, end) => {
+    return  GET('/reports/'+ start + '/' + end );
+};
+
+
+

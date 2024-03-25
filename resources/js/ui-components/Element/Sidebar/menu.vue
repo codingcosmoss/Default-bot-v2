@@ -42,9 +42,12 @@ export default {
 <style scoped>
     @media (min-width: 1024px) {
         .icon01{
-            font-size: 30px !important;
+            font-size: 25px !important;
         }
 
+    }
+    .text01{
+        white-space: nowrap;
     }
 
 

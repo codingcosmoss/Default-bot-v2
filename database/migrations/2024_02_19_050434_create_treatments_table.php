@@ -37,7 +37,7 @@ return new class extends Migration
             $table->double('discount_by_clinic_total_sum', 20,2)->nullable()->comment("Chegirma (Kasalxona yoki umumiy) tomonidan berilsa o'shani natijaviy summasi");
             $table->double('doctor_result_sum', 20, 2)->nullable()->comment("Doktor ulushining natijaviy summasi");
             $table->double('clinic_result_sum', 20, 2)->nullable()->comment("Klinika ulushining natijaviy summasi");
-            $table->integer('is_give_money_doctor')->nullable()->comment("Doktor davolash uchun pulni qabul qildimi?");
+            $table->integer('is_give_money_doctor')->default(Status::$unpaid)->comment("Doktor davolash uchun pulni qabul qildimi?");
             $table->dateTime('doctor_givey_money_at')->nullable()->comment("Doktor davolash uchun pulni olgan sana");
             $table->integer('is_give_money_technic')->nullable()->comment("Texnik davolash uchun pul oldimi?  ");
             $table->dateTime('give_money_technic_at')->nullable()->comment("Texnik davolash uchun pulni olgan sanasi  ");

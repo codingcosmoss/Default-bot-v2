@@ -132,7 +132,7 @@
 
 
         </div>
-        <ModalLayout @Submit = "editPassword" :isModal = "isModal" @closeModal = "isModal = $event" :Title = "getName('edit_password')" >
+        <ModalLayout @onButton = "editPassword" :isModal = "isModal" @closeModal = "isModal = $event" :Title = "getName('edit_password')" >
             <Input
                 :Label = "getName('password')"
                 @onInput = "password = $event"

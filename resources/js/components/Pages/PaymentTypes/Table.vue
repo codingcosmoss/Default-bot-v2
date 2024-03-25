@@ -125,7 +125,7 @@
     </div>
 
 
-    <ModalLayout @Submit = "crudPatient()" :isModal = "isModal" @closeModal = "isModal = false" :Title = " crud == 'created' ? getName('create') :getName('update')" >
+    <ModalLayout @onButton = "crudPatient()" :isModal = "isModal" @closeModal = "isModal = false" :Title = " crud == 'created' ? getName('create') :getName('update')" >
 
 
         <Input

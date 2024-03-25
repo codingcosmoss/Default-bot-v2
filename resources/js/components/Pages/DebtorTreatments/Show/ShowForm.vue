@@ -1,6 +1,6 @@
 <template>
 
-    <ModalLayout @Submit = "this.$emit('onSubmit', true)"   :isModal = "isShowModal" @closeModal = "this.$emit('closeModal', $event) " :Title = "Patient.last_name != undefined ? Patient.last_name+' '+Patient.first_name : '' " >
+    <ModalLayout @onButton = "this.$emit('onSubmit', true)"   :isModal = "isShowModal" @closeModal = "this.$emit('closeModal', $event) " :Title = "Patient.last_name != undefined ? Patient.last_name+' '+Patient.first_name : '' " >
 
         <slot></slot>
 

@@ -72,7 +72,6 @@
                             &nbsp;
                             <i @click = "this.$router.push({ path: '/service-category/show', query: { id: item.id } })" class="fa-solid setting-icon fa-eye"></i>
                             &nbsp;
-                            &nbsp;
                             <i @click = "onDelete(item.id)" class="fa-solid text-danger fa-trash setting-icon"></i>
                         </p>
                     </div>
@@ -99,7 +98,7 @@
         </div>
     </div>
 
-    <ModalLayout @Submit = "crudCategory()" :isModal = "isModal" @closeModal = "isModal = false" :Title = " crud == 'created' ? getName('create') :getName('update')" >
+    <ModalLayout @onButton = "crudCategory()" :isModal = "isModal" @closeModal = "isModal = false" :Title = " crud == 'created' ? getName('create') :getName('update')" >
 
 
         <Input

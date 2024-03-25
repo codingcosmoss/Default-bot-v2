@@ -3,7 +3,7 @@
 
         <div style="width: 100%;text-align: center"><h2>{{getName('Welcome')}}</h2></div>
 
-        <img src="https://dental.brim.uz/storage/images/vX7pjIQiwQrgGMtNGh3hKakI2fYYENvlkVdBiNDi.jpg" width="95%">
+        <img :src="Image" width="95%">
 
         <br>
         <div style="width: 100%; text-align: center"><span style="margin: 5px auto"> {{getName('TitleCheck')}}</span>
@@ -71,6 +71,7 @@
 
     import {useConterStore} from "@/store/counter.js";
     import {getName} from "../../../Config.js";
+    import {getCompany} from "@/Api.js";
     import {treatmentAddServiceAll, TreatmentShow} from "@/Api.js";
 
     export default {
@@ -79,9 +80,8 @@
             const counterStore = useConterStore();
             return {counterStore}
         },
-        getName(val){
-            return useConterStore().getName(val)
-        },
+
+
         data(){
             return{
                 Daily_number: 0,
@@ -98,11 +98,18 @@
                 Payments:0 ,// Tolov,
                 Success: 0,
                 Indebtedness: 0,
+                Image: ''
             }
         },
         methods:{
-            getName(val) {
-                return useConterStore().getName(val);
+
+            getName(val){
+                return useConterStore().getName(val)
+            },
+            async getModel(){
+                const response  = await getCompany();
+                this.Image = response.data.items.logo[0].url;
+                console.log('Response', response)
             },
             async getTreatment(){
 
@@ -157,13 +164,14 @@
                     setTimeout(function () {
                         w.print();
                         w.close();
-                    }, 100);
-                },100)
+                    }, 500);
+                },500)
             }
         },
         mounted() {
             this.getTreatment(),
             this.getItems()
+            this.getModel()
         }
 
     }

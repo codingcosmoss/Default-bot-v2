@@ -445,7 +445,7 @@ class PatientService extends AbstractService
     {
         $key = $data['search'] ?? '';
         $column = $data['column'] ?? 'sort_order';
-        $sort = $data['order'] ?? 'asc';
+        $sort = $data['order'] ?? 'desc';
 
         $models = $this->model::where(function ($query) use ($key) {
             empty($key) ? $query : $query->orWhere('first_name', 'like', '%' . $key . '%')

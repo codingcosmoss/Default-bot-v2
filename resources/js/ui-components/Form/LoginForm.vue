@@ -43,9 +43,11 @@
 <script>
 
 import {Login} from '../../Api.js';
+import Input from "@/components/Pages/Diseases/EditPassword/Inputs/Input.vue";
 
     export default {
         name: 'LoginForm',
+        components: {Input},
         props:{
             Title:{
                 type: String,

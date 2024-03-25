@@ -14,7 +14,11 @@ class OneUserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $defaultImage = 'https://www.pinclipart.com/picdir/big/164-1647836_album-collection-list-music-playlist-songs-icon-gallery.png';
+        $defaultImage = [
+            [
+                'url' => 'https://www.pinclipart.com/picdir/big/164-1647836_album-collection-list-music-playlist-songs-icon-gallery.png'
+            ]
+        ];
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -26,7 +30,7 @@ class OneUserResource extends JsonResource
             'salary_static' => $this->salary_static,
             'sort_order' => $this->sort_order,
             'email' => $this->email,
-            'image' => $this->url != null ?  asset("").'storage/'.$this->url : $defaultImage
+            'image' => count($this->image) != 0 ? ImageResource::collection($this->image) : $defaultImage ,
         ];
     }
 }

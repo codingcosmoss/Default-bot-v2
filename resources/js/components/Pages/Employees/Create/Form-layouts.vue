@@ -141,20 +141,20 @@
                 </div>
 
                 <p class="pt-0 p-6.5" > {{getName('employee_roles')}}:</p>
-                <ul class="list01" style="display: flex" >
-                   <li>
-                       <Checkbox></Checkbox>
-                       <Checkbox></Checkbox>
-                       <Checkbox></Checkbox>
-                       <Checkbox></Checkbox>
+<!--                <ul class="list01" style="display: flex" >-->
+<!--                   <li>-->
+<!--                       <Checkbox></Checkbox>-->
+<!--                       <Checkbox></Checkbox>-->
+<!--                       <Checkbox></Checkbox>-->
+<!--                       <Checkbox></Checkbox>-->
 
-                   </li>
-                    <li>
-                        <Checkbox></Checkbox>
-                        <Checkbox></Checkbox>
-                        <Checkbox></Checkbox>
-                    </li>
-                </ul>
+<!--                   </li>-->
+<!--                    <li>-->
+<!--                        <Checkbox></Checkbox>-->
+<!--                        <Checkbox></Checkbox>-->
+<!--                        <Checkbox></Checkbox>-->
+<!--                    </li>-->
+<!--                </ul>-->
 
 
                 <div class=" pl-7 p-6.5">

@@ -167,14 +167,12 @@
                     title="Chegirma berish"
                     v-if="item.payment_status != 12 && item.status != 9 && item.status != 7"
                     @click="discountModal(item)"
-                    :title="getName('Payment')"
                     class="fa-regular fas fa-percent setting-icon  cursor-pointer"
                 ></i>
                 <i
                     title="Qarzga bajarish"
                     v-if="item.payment_status != 12 && item.status != 9 && item.status != 7"
                     @click="debtModal(item)"
-                    :title="getName('Payment')"
                     class="fa-regular fas fa-coins setting-icon  cursor-pointer"
                 ></i>
 
@@ -183,7 +181,6 @@
                     <i
                         title="Tolov cheki"
                         v-if="item.payment_status != 10"
-                        :title="getName('Payment')"
                         class="fa-regular fas fa-print setting-icon  cursor-pointer"
                     ></i>
                 </a>
@@ -192,7 +189,6 @@
                     title="Tugatish"
                     v-if="item.status != 9 && item.status != 7"
                     @click="treatementFinished(item.id)"
-                    :title="getName('Payment')"
                     class="fa-regular fas fa-square-check setting-icon  cursor-pointer"
                 ></i>
 <!--                <div class="button-box01" v-if="item.payment_status != 12 && item.status != 7">-->
@@ -220,7 +216,7 @@
       </div>
 
 
-            <ShowForm @onSubmit = "Modal == '0' ? isShowModal = false : onPayment() "   :UpdateId = "UpdateId"  @closeModal = "isShowModal = $event, errorObj = []" :isShowModal = "isShowModal"  >
+            <ShowForm :isButton = "isPayment" @onSubmit = "Modal == '0' ? isShowModal = false : onPayment() "   :UpdateId = "UpdateId"  @closeModal = "isShowModal = $event, errorObj = []" :isShowModal = "isShowModal"  >
 
                 <table v-if="Modal == 0 && Model != []  " class="table01" >
 
@@ -405,7 +401,7 @@
                    <DangerButton
                         style="font-size: 20px"
                         :isActive = "userPayments <= 0 ? true : false"
-                        :Title = "useConterStore().formatNumber(Number(userPayments)) + ' uzs' "
+                        :Title = "useConterStore().formatNumber(Number(Math.abs(userPayments))) + ' uzs' "
                    />
 
                    <Input
@@ -561,6 +557,7 @@ export default {
         discount_total_sum: 0,
         RealPrice: 0,
         discountError: false,
+        isPayment: false,
 
     };
   },
@@ -777,8 +774,9 @@ export default {
       this.items = response.data.items;
     },
     async onPayment(){
+        this.isPayment = true;
 
-        if(this.Modal == 'debt'){
+        if(this.Modal == 'debt' ){
             this.saveOwed();
             return true;
         }else if(this.Modal == 'discount'){
@@ -787,6 +785,7 @@ export default {
         }
 
         if (this.userPayments < this.Amount){
+            this.isPayment = false;
             Alert( 'error', this.getName('PaymentError'));
             return false;
         }
@@ -807,12 +806,14 @@ export default {
             this.paymentTypes = [];
             this.getPaymentTypes()
             this.getItems();
+            this.isPayment = false;
             Alert('success', 'The payment was made successfully')
         }else {
-
+            this.isPayment = false;
             this.errorObj = response.data
             Alert('error', 'There is an error in the form')
         }
+
     },
     async getModel() {
       const response = await patientShow(this.$route.query.id);
@@ -980,6 +981,7 @@ export default {
     border-radius: 10px;
     font-weight: bold;
     color: white;
+    white-space: nowrap;
 }
 .unmount{
     background: #f71010 !important;

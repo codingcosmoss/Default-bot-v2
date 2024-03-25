@@ -3,9 +3,9 @@
     class="absolute  aside01 left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-black duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0"
     >
     <!-- SIDEBAR HEADER -->
-    <div class="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
+    <div class="flex items-center justify-between gap-2 px-6 my-logo " >
       <a href="#">
-          <img :src="MyLogo"  alt="Logo" />
+
       </a>
 
       <button class="block lg:hidden" @click.outside="sidebarToggle = false">
@@ -24,7 +24,7 @@
 
     <div class="no-scrollbar  flex flex-col overflow-y-auto duration-300 ease-linear" >
       <!-- Sidebar Menu -->
-      <nav class=" sidebar01 mt-5 py-4 px-4 lg:mt-9 lg:px-6" x-data="{selected: $persist('Dashboard')}" >
+      <nav class=" sidebar01 mt-5 py-4  lg:mt-9 " x-data="{selected: $persist('Dashboard')}" >
 
         <!-- Menu Group -->
         <div>
@@ -116,45 +116,44 @@ export default {
 }
 </script>
 <style >
+.navbar01{
+    position: fixed;
+}
+.navbar02{
+    position: fixed;
+}
+
+@media (min-width: 1024px) {
     .navbar01{
-        position: fixed;
+        width: 80px;
+        animation: box-nav 0.5s linear alternate;
     }
     .navbar02{
-        position: fixed;
+        width: 80px ;
     }
-
-    @media (min-width: 1024px) {
-        .navbar01{
-            width: 80px;
-            animation: box-nav 0.5s linear alternate;
-        }
-        .navbar02{
-            width: 80px ;
-        }
+    .sidebar01{
+        //padding:0 10px;
+    }
+    .navbar01:hover{
+        width: 280px;
         .sidebar01{
-            padding:0 10px;
-        }
-        .navbar01:hover{
-            width: 280px;
-            .sidebar01{
-                padding: 0 25px;
-            }
-            .text01{
-                display: block !important;
-            }
+            //padding: 0 25px;
         }
         .text01{
-            display: none;
+            display: block !important;
         }
-
     }
-    @keyframes box-nav {
-        from{
-            width: 280px;
-        }to{
-                     width: 80px;
-                 }
-
+    .text01{
+        display: none;
     }
 
+}
+@keyframes box-nav {
+    from{
+        width: 280px;
+    }to{
+         width: 80px;
+     }
+
+}
 </style>

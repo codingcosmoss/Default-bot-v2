@@ -100,7 +100,7 @@
     </div>
 
 
-    <ModalLayout @Submit = "CRUD()" :isModal = "isModal" @closeModal = " closeModal() " :Title = " crud == 'created' ? getName('create') :getName('update')" >
+    <ModalLayout @onButton = "CRUD()" :isModal = "isModal" @closeModal = " closeModal() " :Title = " crud == 'created' ? getName('create') :getName('update')" >
 
 
         <Input

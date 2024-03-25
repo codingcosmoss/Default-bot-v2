@@ -125,7 +125,7 @@
     </div>
 
 
-    <ModalLayout @Submit = "crudPatient()" :isModal = "isModal" @closeModal = "isModal = false" :Title = " crud == 'created' ? getName('create') :getName('update')" >
+    <ModalLayout @onButton = "crudPatient()" :isModal = "isModal" @closeModal = "isModal = false" :Title = " crud == 'created' ? getName('create') :getName('update')" >
 
 
         <Input
@@ -240,6 +240,7 @@ export default {
         },
 
         async crudPatient(){
+
             if (this.status == 1){
                 this.status = true;
             }else if(this.status = 0){

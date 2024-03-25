@@ -10,7 +10,7 @@
             </div>
             <div class="btn-box">
                 <button class="dark:text-white" @click = "onModal" >Close</button>
-                <button v-if="isSubmit" class="dark:text-white" @click = "this.$emit('Submit', true)">Submit</button>
+                <button v-if="isSubmit" class="dark:text-white " :class="isButton == true ? 'disabledBtn' : '' " @click = "this.$emit('onButton', true)">Submit</button>
             </div>
         </div>
     </div>
@@ -23,6 +23,10 @@
 
     export default {
         props:{
+            isButton:{
+                type: Boolean,
+                default: false
+            },
           isModal:{
               type: Boolean,
               default: false
@@ -98,6 +102,11 @@
         z-index: 9999;
         overflow-y: auto;
         padding: 25px 0;
+    }
+    .disabledBtn{
+        opacity: .5 !important;
+        pointer-events: none;
+        cursor: not-allowed;
     }
 
 

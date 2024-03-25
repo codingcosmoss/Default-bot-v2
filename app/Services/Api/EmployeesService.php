@@ -605,7 +605,7 @@ class EmployeesService extends AbstractService
     {
         $key = $data['search'] ?? '';
         $column = $data['column'] ?? 'sort_order';
-        $sort = $data['order'] ?? 'asc';
+        $sort = $data['order'] ?? 'desc';
 
         $items = $this->model::where(function ($query) use ($key) {
             empty($key) ? $query : $query->orWhere('name', 'like', '%' . $key . '%')

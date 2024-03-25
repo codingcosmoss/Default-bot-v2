@@ -22,6 +22,12 @@ class AuthController extends Controller
         try {
 
             $user = User::where('login', $loginRequest->input('login'))->first();
+
+            if (!$user){
+                return $this->error($this->unAuthorized, "User not fount");
+
+            }
+
             if (empty($user) || !Hash::check($loginRequest->input('password'), $user->password)) {
 
                 return $this->error($this->unAuthorized, "User not fount");

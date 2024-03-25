@@ -1,11 +1,11 @@
 <template>
     <ul class="mb-6 flex flex-col gap-1.5">
 
-        <Menu
-            Path = "/"
-            Title = "Components"
-            Icon = "fa-solid fa-window-restore"
-        />
+<!--        <Menu-->
+<!--            Path = "/"-->
+<!--            Title = "Components"-->
+<!--            Icon = "fa-solid fa-window-restore"-->
+<!--        />-->
 
         <Menu
             Path = "/employees"
@@ -43,7 +43,7 @@
         <Menu
             Path = "/debt-treatments"
             :Title = "getName('DebtTreatments')"
-            Icon = "fa-solid fa-money-check-dollar"
+            Icon = "fa-solid fa-book-medical"
         />
 
         <Menu
@@ -82,24 +82,35 @@
                 style="margin-right: 20px"
 
             />
+
         </MenuList>
 
 
 
-        <Menu
-            Path = "/employee-reports"
-            :Title = "getName('EmployeeReports')"
-            Icon = "fa-solid fa-money-check"
-        />
+<!--        <Menu-->
+<!--            Path = "/daily-staff-reports"-->
+<!--            :Title = "getName('EmployeeReports')"-->
+<!--            Icon = "fa-solid fa-money-check"-->
+<!--        />-->
+
 
         <Menu
-            Path = "/paying-employees"
+            Path = "/employees-payments"
             :Title = "getName('PayingEmployees')"
             Icon = "fa-solid fa-money-bills"
         />
 
         <Menu
-            Path = "/daily-expenses"
+            Path = "/given-moneys"
+            :Title = "getName('GivenMoney')"
+            Icon = "nav-icon fs-5  fas fa-coins"
+            style="margin-right: 20px"
+
+        />
+
+
+        <Menu
+            Path = "/daily-cost"
             :Title = "getName('DailyExpenses')"
             Icon = "fa-solid fa-file-contract"
         />
@@ -108,6 +119,18 @@
             Path = "/reports"
             :Title = "getName('Reports')"
             Icon = "fa-solid fa-layer-group"
+        />
+
+        <Menu
+            Path = "/telegrams"
+            :Title = "getName('Telegram')"
+            Icon = "fa-brands fa-telegram"
+        />
+
+        <Menu
+            Path = "/settings"
+            :Title = "getName('Settings')"
+            Icon = "fa-solid fa-gear"
         />
 
 

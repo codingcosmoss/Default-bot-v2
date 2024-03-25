@@ -95,6 +95,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/treatment-add-service', [\App\Http\Controllers\Api\TreatmentController::class, 'treatmentAddService']);
     Route::get('/treatment-add-all/{id}', [\App\Http\Controllers\Api\TreatmentController::class, 'treatmentAddServiceAll']);
     Route::post('/treatment-saved-service', [\App\Http\Controllers\Api\TreatmentController::class, 'treatmentSavedService']);
+
     // Davolanishni yakunlash
     Route::get('/treatment-finished/{id}', [\App\Http\Controllers\Api\TreatmentController::class, 'treatmentFinished']);
 
@@ -227,8 +228,41 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/search', [\App\Http\Controllers\Api\OwedTreatmentController::class, 'search']);
     });
 
+    // Telegrams
+    Route::group(['prefix' => 'telegram'], function () {
+        Route::get('/index', [\App\Http\Controllers\Api\TelegramController::class, 'index']);
+        Route::post('/create', [\App\Http\Controllers\Api\TelegramController::class, 'create']);
+        Route::get('/show/{id}', [\App\Http\Controllers\Api\TelegramController::class, 'show']);
+        Route::post('/update/{id}', [\App\Http\Controllers\Api\TelegramController::class, 'update']);
+        Route::get('/delete/{id}', [\App\Http\Controllers\Api\TelegramController::class, 'delete']);
+        Route::post('/search', [\App\Http\Controllers\Api\TelegramController::class, 'search']);
+    });
 
+         // Telegrams
+    Route::group(['prefix' => 'daily-cost'], function () {
+        Route::get('/index', [\App\Http\Controllers\Api\DailyCostController::class, 'index']);
+        Route::post('/create', [\App\Http\Controllers\Api\DailyCostController::class, 'create']);
+        Route::get('/show/{id}', [\App\Http\Controllers\Api\DailyCostController::class, 'show']);
+        Route::post('/update/{id}', [\App\Http\Controllers\Api\DailyCostController::class, 'update']);
+        Route::get('/delete/{id}', [\App\Http\Controllers\Api\DailyCostController::class, 'delete']);
+        Route::post('/search', [\App\Http\Controllers\Api\DailyCostController::class, 'search']);
+    });
 
+    // Telegrams
+    Route::group(['prefix' => 'setting'], function () {
+        Route::get('/company/show', [\App\Http\Controllers\Api\SettingsController::class, 'companyShow']);
+        Route::post('/company-store', [\App\Http\Controllers\Api\SettingsController::class, 'companyStore']);
+    });
+
+    // Xodimlarga pul berish
+    Route::get('/employee-payments', [\App\Http\Controllers\Api\ReportController::class, 'employeesPaymentIndex']);
+    Route::get('/daly-treatments/{year}/{moon}', [\App\Http\Controllers\Api\ReportController::class, 'dalyTreatments']);
+    Route::post('/employee-payments/save', [\App\Http\Controllers\Api\ReportController::class, 'employeesPaymentStore']);
+    Route::get('/employee-payment/show/{id}', [\App\Http\Controllers\Api\ReportController::class, 'employeesPaymentShow']);
+    Route::get('/given-moneys', [\App\Http\Controllers\Api\ReportController::class, 'givenMoneys']);
+    Route::post('/given-moneys/search', [\App\Http\Controllers\Api\ReportController::class, 'search']);
+
+    Route::get('/reports/{start}/{end}', [\App\Http\Controllers\Api\ReportController::class, 'reports']);
 
 
 });
