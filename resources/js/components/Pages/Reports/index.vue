@@ -1,32 +1,75 @@
 <template>
     <Page :Classes = "false" >
 
+        <div class="grid grid-cols-1 gap-9 sm:grid-cols-2">
+            <div class="flex flex-col gap-9">
+                <!-- Contact Form -->
+
+                <div
+                    class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark"
+                >
+
+                    <form action="#">
+
+                        <div class="p-6.5">
+                            <h3 class="font-semibold text-black dark:text-white">
+                                {{ getName("DateStatistic") }}
+                            </h3>
+                            <div class="mb-4.5 flex flex-col gap-6 xl:flex-row " style="align-items: center">
+                                <Input
+                                    @input = "getIndex"
+                                    :Couple="false"
+                                    Label=""
+                                    @onInput="end = $event"
+                                    :Value="end"
+                                    Type = "date"
+                                    style="width: 200px;"
+                                />
+                                <b>-</b>
+                                <Input
+                                    @input = "getIndex"
+                                    :Couple="false"
+                                    Label=""
+                                    @onInput="start = $event"
+                                    :Value="start"
+                                    style="width: 200px"
+                                    Type = "date"
+                                />
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <br>
         <ContentBox style="margin-bottom: 25px" >
 
             <ContentBlock
                 :Title = "getName('TotalServicePrices')"
-                Text = " item.finished_count "
+                :Text = "useConterStore().formatNumber(totalServiceSum) + ' uzs' "
                 Icon = "fa fa-fas fa-coins"
                 Item = ""
             />
 
             <ContentBlock
                 :Title = "getName('GivenMoney')"
-                Text = " item.finished_count "
-                Icon = "fa fa-fas fa-coins"
-                Item = ""
-            />
-
-            <ContentBlock
-                :Title = "getName('TexnicMoney')"
-                Text = " item.finished_count "
+                :Text = "useConterStore().formatNumber(totalClientPaymentCashSum) + ' uzs' "
                 Icon = "fa fa-fas fa-coins"
                 Item = ""
             />
 
             <ContentBlock
                 :Title = "getName('DailyExpenses')"
-                Text = " item.finished_count "
+                :Text = "useConterStore().formatNumber(dailyExpensesTotalSum) + ' uzs' "
+                Icon = "fa fa-fas fa-coins"
+                Item = ""
+            />
+
+            <ContentBlock
+                :Title = "getName('ClientPayments')"
+                :Text = "useConterStore().formatNumber(totalClientPaymentSum) + ' uzs' "
                 Icon = "fa fa-fas fa-coins"
                 Item = ""
             />
@@ -48,26 +91,78 @@ import ContentBlock from "./Contents/ContentBlock.vue";
 import ContentBox from "./Contents/ContentBox.vue";
 import {employeeCreate, getEmployeePayments, reports, treatmentDiscount} from "@/Api.js";
 import Expenses  from './Expenses/Table.vue';
+import Select from "@/components/Pages/Services/Create/Inputs/Select.vue";
+import DinamicForm from "@/ui-components/Form/DinamicForm.vue";
     export default {
-        components:{ContentBox, ContentBlock, Page, Expenses},
+        components:{DinamicForm, Select, Input, ContentBox, ContentBlock, Page, Expenses},
+        setup(){
+            return {useConterStore}
+        },
         data(){
             return{
                 Employees: [],
-                Reports: []
+                Reports: [],
+                totalServiceSum: 0,
+                totalClientPaymentCashSum: 0,
+                dailyExpensesTotalSum: 0,
+                stuffGivenTotalSum: 0,
+                totalClientPaymentSum: 0,
+                start: 0,
+                end:0,
             }
         },
         methods:{
             employeeCreate() {
                 return employeeCreate
             },
+            getDate(){
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0'); // +1 qo'shib o'tkazish sababi: JavaScript oy nomerlari 0 dan boshlanadi.
+                const day = String(today.getDate()).padStart(2, '0');
+
+                const result = `${year}-${month}-${day}`;
+                console.log('R:', result)
+                this.start = result; // Bugungi sanani konsolga chiqaring
+
+                // ertangi kunni olish
+                today.setDate(today.getDate() - 1); // 1 kun qo'shib, keyingi kunni olish
+                const year2 = today.getFullYear(); // Yil
+                const month2 = today.getMonth() + 1; // Oy (0 dan 11 gacha hisoblanadi, shuning uchun +1 qo'shamiz)
+                const day2 = today.getDate(); // Kun
+
+                let result2 = `${year2}-${month2}-${day2}`
+                this.end = result2
+                this.getEndDate()
+            },
+            getEndDate(){
+                const today = new Date();
+                today.setDate(today.getDate() - 1);
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0'); // +1 qo'shib o'tkazish sababi: JavaScript oy nomerlari 0 dan boshlanadi.
+                const day = String(today.getDate()).padStart(2, '0');
+
+                let result = `${year}-${month}-${day}`
+                this.end = result
+
+            },
+
 
             getName(val){
                 return useConterStore().getName(val)
             },
             async getIndex(){
-                const response = await reports('2024-03-20', '2024-03-25');
-                console.log(response)
-                this.Reports = response.data;
+                // const response = await reports(this.yesterday, this.currentDate);
+                setTimeout(async ()=>{
+                    const response = await reports(this.start, this.end);
+                    this.totalServiceSum = response.data.totalServiceSum;
+                    this.totalClientPaymentCashSum = response.data.totalClientPaymentCashSum;
+                    this.dailyExpensesTotalSum = response.data.dailyExpensesTotalSum;
+                    this.stuffGivenTotalSum = response.data.stuffGivenTotalSum;
+                    this.totalClientPaymentSum = response.data.totalClientPaymentSum;
+
+                    this.Reports = response.data;
+                }, 500)
             },
             Sum(treatments){
                 let sum = 0;
@@ -85,6 +180,7 @@ import Expenses  from './Expenses/Table.vue';
         },
         mounted() {
             this.getIndex()
+            this.getDate()
         }
 
     }

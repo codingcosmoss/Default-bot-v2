@@ -10,6 +10,7 @@ use App\Http\Resources\TreatmentResource;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\UserResources;
 use App\Jobs\TelegramSendMessage;
+use App\Listeners\SendTelegramMessage;
 use App\Models\Collection;
 use App\Models\CollectionProduct;
 use App\Models\CompanySetting;
@@ -225,8 +226,11 @@ class TreatmentService extends AbstractService
         $treatment =  Treatment::find($id);
         $services = ModelTreatmentService::where('treatment_id', $treatment->id)->get();
 
+
+
         // Telegram botga xabar yuborish
         TelegramSendMessage::dispatch('treatment', $treatment , $services);
+//        event(new SendTelegramMessage('treatment', $treatment , $services));
 
         if ($treatment){
             $treatment->status = Status::$finished;

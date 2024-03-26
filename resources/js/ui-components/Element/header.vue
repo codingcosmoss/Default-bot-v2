@@ -199,7 +199,7 @@
                                     <a class="flex gap-4.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
                                        href="messages.html">
                                         <div class="h-12.5 w-12.5 rounded-full">
-                                            <img src="http://127.0.0.1:8000/images/user/user-01.png" alt="User" />
+                                            <img src="https://cdn0.iconfinder.com/data/icons/team-work-and-organization-2/128/78-1024.png" alt="User" />
                                         </div>
 
                                         <div>

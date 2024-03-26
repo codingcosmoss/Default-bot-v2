@@ -27,12 +27,11 @@ class SendTelegramMessage
     {
         $data = $event->data;
         $type = $event->type;
-        $services = $this->services;
+        $services = $event->services;
 
         $setting = CompanySetting::first();
         $telegrams = Telegram::all();
         $botToken = "";
-
         if ($setting){
             $botToken = $setting->bot_token;
         }
@@ -40,7 +39,7 @@ class SendTelegramMessage
             $patient = Patient::find($data->patient_id);
             foreach ($telegrams as $telegram){
 
-                $message = "To'lov No ".$data->id."\n"."\n".
+                $message = "To'lov No".$data->id."\n"."\n".
                     "👤 Bemor: ".$patient->first_name.' '.$patient->last_name. "\n".
                     "💰 Miqdori: ".Action::decimal($data->amount).' uzs'."\n".
                     "📅 Sana: ".$data->created_at;
@@ -53,17 +52,23 @@ class SendTelegramMessage
             foreach ($telegrams as $telegram){
                 $sum = 0;
                 $servicesString = '';
-                foreach($services as $key => $service){
-                    $sum += $service->result_price;
-                    $servicesString .=  '         '.($key+1) .'. '. $service->name .' - '. Action::decimal($service->result_price) .' uzs'. "\n";
+
+                if (count($services) > 0){
+                    foreach($services as $key => $service){
+                        $sum += $service->result_price;
+                        $servicesString .=  '         '.($key+1) .'. '. $service->service_name .' - '. Action::decimal($service->result_price) .' uzs'. "\n";
+                    }
+                }else{
+                    $servicesString = "Xizmatlar mavjud emas";
                 }
+
 
                 $message = "Muolaja No".$data->id."\n".
                     "👤 Bemor: ".$data->patient->first_name.' '.$data->patient->last_name. "\n".
                     "👨‍⚕️ Shifokor: ".$data->user->name."\n".
                     "📑 Xizmatlar: "."\n"."\n".$servicesString."\n".
-                    "💰 Umumiy summa: ".Action::decimal($sum).' uzs'."\n" ;
-                "📅 Sana: ".$data->start.' - '.$data->end ."\n" ;
+                    "💰 Umumiy summa: ".Action::decimal($sum).' uzs'."\n".
+                    "📅 Sana: ".$data->start.' - '.$data->end ."\n" ;
 
                 $url = "https://api.telegram.org/bot{$botToken}/sendMessage?chat_id={$telegram->telegram_id}&text=" . urlencode($message);
 

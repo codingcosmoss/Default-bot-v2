@@ -170,9 +170,13 @@ export const Languages =  {
         CostName: 'Xarajat nomi',
         TotalServicePrices: 'Jami xizmat summasi',
         TexnicMoney: "Texniklarga berilgan pullar",
+        ClientPayments: "Mijozlar to'lagan summa",
+        DateStatistic: "Sana oralig'i bo'yicha saralash"
 
     },
     ru:{
+        DateStatistic: 'Сортировать по диапазону дат',
+        ClientPayments: "Сумма, оплаченная клиентами",
         TexnicMoney: "Деньги отданы техническим специалистам",
         TotalServicePrices: 'Общая сумма услуги',
         CostName: 'Название стоимости',

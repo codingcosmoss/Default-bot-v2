@@ -81,7 +81,6 @@ class ReportService extends AbstractService
             'totalServiceSum' => $totalServiceSum,
             'serviceAmountToBePaid' => $serviceAmountToBePaid,
             'totalClientPaymentCashSum' => $totalClientPaymentCashSum,
-            'totalCashDailyExpense' => $totalCashDailyExpense
         ];
 
 

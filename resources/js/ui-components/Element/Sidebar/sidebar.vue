@@ -1,4 +1,5 @@
 <template >
+
   <aside  :class="sidebarToggle ? 'translate-x-0' : '-translate-x-full'"
     class="absolute  aside01 left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-black duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0"
     >
@@ -97,6 +98,7 @@ export default {
             if (this.navbarAnime){
                 if(aside.classList.contains("navbar02")){
                     aside.classList.remove('navbar02')
+
                 }
                 aside.classList.add('navbar01')
             }else {
@@ -122,6 +124,10 @@ export default {
 .navbar02{
     position: fixed;
 }
+.navbar02:hover{
+    position: fixed;
+
+}
 
 @media (min-width: 1024px) {
     .navbar01{
@@ -136,9 +142,7 @@ export default {
     }
     .navbar01:hover{
         width: 280px;
-        .sidebar01{
-            //padding: 0 25px;
-        }
+
         .text01{
             display: block !important;
         }

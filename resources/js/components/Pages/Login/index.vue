@@ -18,6 +18,7 @@
               Label = "Password"
               :Value = "password"
               Plholder = "Enter your password"
+              Type = 'password'
           />
 
 
@@ -63,7 +64,6 @@
                         password : this.password
                     }
                     const response = await axios.post('/login', data);
-
                     localStorage.setItem('lang', 'uz');
                     localStorage.setItem('0008a78764c2',  response.data.data);
                     console.log('Response',response)

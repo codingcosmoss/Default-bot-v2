@@ -12,6 +12,7 @@ use App\Http\Resources\PaymentTypeResource;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\UserResources;
 use App\Jobs\TelegramSendMessage;
+use App\Listeners\SendTelegramMessage;
 use App\Models\CompanySetting;
 use App\Models\Discount;
 use App\Models\Disease;
@@ -136,7 +137,6 @@ class PaymentService extends AbstractService
      */
     public function store(array $data)
     {
-
         $fields = $this->getFields();
 
         $rules = [];
@@ -180,6 +180,7 @@ class PaymentService extends AbstractService
 
                 // Telegram botga xabar yuborish
 //                event(new TelegramMessage('payment', $model));
+
                 TelegramSendMessage::dispatch('payment', $model );
 
                 $payments = Payment::where('patient_id', $data['patient_id'])
