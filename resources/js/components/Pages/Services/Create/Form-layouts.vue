@@ -87,6 +87,7 @@
                 :isError="hasKey('material_price')"
                 :message="errorObj['material_price']"
                 Type="number"
+                :Value = "0"
               />
               <Input
                 :Couple="false"
@@ -95,7 +96,7 @@
                 :isError="hasKey('technic_price')"
                 :message="errorObj['technic_price']"
                 Type="number"
-                :Value="technic_price"
+                :Value = "0"
               />
             </div>
 
@@ -163,14 +164,18 @@
 
         <DinamicForm :isLoader ="false" :summError ="summError" :errors="FormErrors" @Data ="personalProcents = $event, validate(personalProcents)"></DinamicForm>
 
-        <div class="pl-7 p-6.5">
-          <button
-            @click="create"
-            class="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray"
-          >
-            {{ getName("create") }}
-          </button>
-        </div>
+
+
+          <div class=" pl-7 p-6.5" style="display: flex; justify-content: center">
+
+              <loader-spinning v-if="Loader" style="margin: 0 auto; " />
+              <button v-if="!Loader" @click="create" class="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray">
+                  {{getName('create')}}
+              </button>
+
+          </div>
+
+
       </div>
     </div>
   </div>
@@ -187,6 +192,7 @@ import PrimaryButton from "../../../../ui-components/Form/PrimaryButton.vue";
 import PrimaryButton2 from "../../../../ui-components/Form/PrimaryButton2.vue";
 import Select from "./Inputs/Select.vue";
 import DinamicForm from "../../../../ui-components/Form/DinamicForm.vue";
+import Loader from "@/ui-components/Element/Loader.vue";
 export default {
   data() {
     return {
@@ -206,7 +212,8 @@ export default {
       FormErrors: [],
       summError: false,
     Collections: [],
-        CollectionId: 0
+        CollectionId: 0,
+        Loader: false,
 
     };
   },
@@ -234,7 +241,7 @@ export default {
 
 
     async create() {
-
+        this.Loader = true;
       if (this.validate(this.personalProcents)) {
         let summData = [];
         this.personalProcents.forEach((item, index) => {
@@ -277,6 +284,7 @@ export default {
         }
       }else {
         Alert('error', 'There is an error in the form');
+        this.Loader = false;
       }
 
 

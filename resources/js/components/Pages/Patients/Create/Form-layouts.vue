@@ -184,13 +184,13 @@
                 </div>
 
 
+                <div class=" pl-7 p-6.5" style="display: flex; justify-content: center">
 
-
-                <div class=" pl-7 p-6.5">
-
-                    <button @click="create" class="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray">
+                    <loader-spinning v-if="Loader" style="margin: 0 auto; " />
+                    <button v-if="!Loader" @click="create" class="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray">
                         {{getName('create')}}
                     </button>
+
                 </div>
 
             </div>
@@ -249,6 +249,7 @@ export default {
                 diseasesIds : [],
                 allDiseases : [],
                 Image: '',
+                Loader: false,
 
 
             }
@@ -268,6 +269,7 @@ export default {
             },
 
             async create(){
+                this.Loader = true;
 
                 var ids = [];
                 if (this.diseasesIds.length > 0){
@@ -300,6 +302,7 @@ export default {
                     this.$router.push('/patients')
                 }else {
                     this.errorObj = response.data;
+                    this.Loader = false;
                 }
 
 

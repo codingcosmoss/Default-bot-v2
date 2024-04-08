@@ -172,12 +172,16 @@
 
                 <DinamicForm  :personalProcents = "personalAllProcents" :summError ="summError" :errors="FormErrors" @Data =" personalAllProcents = $event , validate(personalAllProcents)"></DinamicForm>
 
-                <div class=" pl-7 p-6.5">
 
-                    <button @click="create" class="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray">
+                <div class=" pl-7 p-6.5" style="display: flex; justify-content: center">
+
+                    <loader-spinning v-if="Loader" style="margin: 0 auto; " />
+                    <button v-if="!Loader" @click="create" class="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray">
                         {{getName('update')}}
                     </button>
+
                 </div>
+
             </div>
 
 
@@ -218,7 +222,8 @@ export default {
                 FormErrors: [],
                 summError: false,
                 Collections: [],
-                CollectionId: 0
+                CollectionId: 0,
+                Loader: false
 
             }
         },
@@ -316,6 +321,7 @@ export default {
 
             },
             async create(){
+                this.Loader = true;
                 if (this.validate(this.personalAllProcents)) {
                     let summData = [];
                     this.personalAllProcents.forEach((item, index) => {
@@ -356,7 +362,7 @@ export default {
                         this.errorObj = response.data;
                         console.log(response.data)
                         Alert('error', 'There is an error in the form');
-
+                        this.Loader = false;
                     }
                 }
 

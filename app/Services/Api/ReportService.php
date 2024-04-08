@@ -49,12 +49,42 @@ class ReportService extends AbstractService
         $services = Service::where('status', Status::$status_active)->get();
         $debtorPatients = Patient::all();
 
+        $hozir = Carbon::now();
+        $hozirgiOy = $hozir->format('Y-m'); // Hozirgi oy formati: "YYYY-MM"
+        $birOyAvval = $hozir->subMonths(1)->format('Y-m'); // Ikki oy avval formati: "YYYY-MM"
+        $ikkiOyAvval = $hozir->subMonths(2)->format('Y-m'); // Ikki oy avval formati: "YYYY-MM"
+
+        $payments = Payment::where('created_at', 'like', $hozirgiOy . '%')->sum('amount');
+        $avvalgiOy = Payment::where('created_at', 'like', $birOyAvval . '%')->sum('amount');
+        $paymentsTwoMonthsAgo = Payment::where('created_at', 'like', $ikkiOyAvval . '%')->sum('amount');
+
+        $payments = [
+            [
+                'moon' => $ikkiOyAvval,
+                'amount' => $paymentsTwoMonthsAgo
+            ],
+            [
+                'moon' => $birOyAvval,
+                'amount' => $avvalgiOy
+            ],
+            [
+                'moon' => $hozirgiOy,
+                'amount' => $payments
+            ]
+
+
+        ];
+
+
+
         $data = [
             'users' => $users,
             'patients' => $patients,
             'services' => count($services),
             'allServices' => TopServiceResources::collection($services),
             'debtorPatients' => PatientResource::collection($debtorPatients),
+            'payments' => $payments,
+
         ];
 
         return [

@@ -200,11 +200,13 @@
 
 
 
-                <div class=" pl-7 p-6.5">
+                <div class=" pl-7 p-6.5" style="display: flex; justify-content: center">
 
-                    <button @click="update()" class="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray">
+                    <loader-spinning v-if="Loader" style="margin: 0 auto; " />
+                    <button v-if="!Loader" @click="update" class="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray">
                         {{getName('update')}}
                     </button>
+
                 </div>
 
             </div>
@@ -261,7 +263,8 @@ export default {
                 diseasesIds : [],
                 allDiseases : [],
                 Image: '',
-                Photo: ''
+                Photo: '',
+                Loader: false
 
 
 
@@ -278,7 +281,7 @@ export default {
 
 
             async update(){
-
+                this.Loader = true;
 
                 var ids = [];
                 if (this.diseasesIds.length > 0){
@@ -313,6 +316,7 @@ export default {
                     this.$router.push('/patients')
                 }else {
                     this.errorObj = response.data;
+                    this.Loader = false;
                 }
 
 

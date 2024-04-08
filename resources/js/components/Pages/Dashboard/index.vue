@@ -42,7 +42,7 @@
 
             <GroupedBarChart :plot-data="topServices"
                              x-key="date"
-                             :width="450"
+                             :width="600"
                              :height="300"
                              :margin="{ top: 20, bottom: 35, left: 55, right: 20 }"
                              :colors="['#ac58e5','#E0488B']"
@@ -51,17 +51,17 @@
                              :y-tick-format="d => `${d}`" />
             </Map01>
 
-            <Map01  :Title="getName('Payments')" class="chart_item">
+            <Map01  :Title="getName('Payments')" class="chart_item" >
 
                 <AreaChart :plot-data="plotData2"
-                           :width="500"
+                           :width="600"
                            :height="300"
-                           x-key="date"
+                           x-key="Moon"
                            :margin="{ top: 20, bottom: 30, left: 55, right: 20 }"
                            :colors="['#ac58e5','#E0488B']"
                            :x-axis-label="getName('Payments')"
-                           :y-axis-label="getName('Amount')"
-                           :y-tick-format="d => `$${d}`" />
+                           y-axis-label=" "
+                           :y-tick-format="d => `${d} sum`" />
             </Map01>
         </span>
 
@@ -99,6 +99,18 @@ export default {
                        "Amount": e.amount,
                    })
                 })
+                this.plotData2 = [];
+                response.data.payments.forEach((e) =>{
+                    this.plotData2.push({
+                            "Moon": e.moon.split('-')[1] ,
+                            "Amount": e.amount,
+                        }
+                    )
+                })
+                console.log(this.plotData2)
+
+
+
             }else {
                 this.ReportData = {
                     users: 0,
@@ -125,21 +137,7 @@ export default {
                 },
 
             ],
-            plotData2:[
-                {
-                    "date": "2019",
-                    "Utilities": 5921,
-                    "Rent": 1026,
-                    "Insurance": 2324
-                },
-                {
-                    "date": "2020",
-                    "Utilities": 5921,
-                    "Rent": 1026,
-                    "Insurance": 2324
-                },
-
-            ],
+            plotData2:[{} ],
         }
     },
     mounted() {

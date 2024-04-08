@@ -152,9 +152,9 @@
 
 
 
-                <div class=" pl-7 p-6.5">
-
-                    <button @click="update" class="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray">
+                <div class=" pl-7 p-6.5"  style="display: flex; justify-content: center">
+                    <loader-spinning v-if="Loader" style="margin: 0 auto; " />
+                    <button v-if="!Loader" @click="update" class="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray">
                         {{getName('create')}}
                     </button>
                 </div>
@@ -195,7 +195,8 @@ export default {
                 image: '',
                 photo: '',
                 Roles: [],
-                Permissions: []
+                Permissions: [],
+                Loader: false,
 
             }
         },
@@ -230,6 +231,7 @@ export default {
             },
 
             async update(){
+                this.Loader = true;
                 var data = {
                     'name': this.name,
                     'position': this.position,
@@ -252,6 +254,7 @@ export default {
                 }else {
                     console.log('data',response.data)
                     this.errorObj = response.data;
+                    this.Loader = false;
                 }
 
             },

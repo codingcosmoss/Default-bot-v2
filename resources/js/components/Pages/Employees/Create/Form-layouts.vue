@@ -14,7 +14,7 @@
     <!-- Breadcrumb End -->
 
     <!-- ====== Form Layout Section Start -->
-    <div class="grid grid-cols-1 gap-9 sm:grid-cols-2">
+    <div  class="grid grid-cols-1 gap-9 sm:grid-cols-2">
         <div class="flex flex-col gap-9">
             <!-- Contact Form -->
 
@@ -161,17 +161,23 @@
                 </ul>
 
 
-                <div class=" pl-7 p-6.5">
-
-                    <button @click="create" class="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray">
+                <div class=" pl-7 p-6.5" style="display: flex; justify-content: center">
+                    <loader-spinning v-if="Loader" style="margin: 0 auto; " />
+                    <button v-if="!Loader" @click="create" class="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray">
                         {{getName('create')}}
                     </button>
                 </div>
             </div>
 
 
+
+
         </div>
+
+
     </div>
+
+
     <!-- ====== Form Layout Section End -->
 
 </template>
@@ -205,7 +211,8 @@ export default {
                 errorObj: {},
                 image: '',
                 Roles: [],
-                Permissions: []
+                Permissions: [],
+                Loader: false
 
             }
         },
@@ -238,6 +245,7 @@ export default {
             },
 
             async create(){
+                this.Loader = true;
                 if (this.testPassword(this.reset_password) != true){
                     var data = {
                         'name': this.name,
@@ -259,6 +267,7 @@ export default {
                     }else {
                         console.log(response.data)
                         this.errorObj = response.data;
+                        this.Loader = false;
                     }
                 }
 
