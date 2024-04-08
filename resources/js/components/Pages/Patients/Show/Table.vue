@@ -54,13 +54,17 @@
             <table class="table01 mt-5"  >
 
                 <tr>
-                    <th>{{getName('name')}}: &nbsp;&nbsp;</th>
-                    <td>{{Patient.last_name}}</td>
+                    <th>{{getName('image')}}: &nbsp;&nbsp;</th>
+                    <td>
+                        <div class="photo-img" style="width: 100px; height: 100px" :style="'background-image: url(' + Image + ')'" >
+
+                        </div>
+                    </td>
                 </tr>
 
                 <tr>
-                    <th>{{getName('last_name')}}: &nbsp;&nbsp;</th>
-                    <td>{{ Patient.first_name }}</td>
+                    <th>{{getName('fio')}}: &nbsp;&nbsp;</th>
+                    <td>{{ Patient.first_name }} {{Patient.last_name}}</td>
                 </tr>
 
                 <tr>
@@ -92,7 +96,38 @@
                     <td>
                         <p class="btn" v-for=" (item, index) in Patient.diseases" >{{index+1}}. {{item.name}}</p>
                     </td>
-                </tr>
+
+                 </tr >
+
+
+                <tr>
+                    <th>{{getName('services')}}: &nbsp;&nbsp;</th>
+                    <td>
+                        <table class="table01 mt-5"  >
+
+                            <tr>
+                                <th>{{getName('Service_name')}}</th>
+                                <th>{{getName('TotalSum')}}</th>
+                                <th>{{getName('Amount')}}</th>
+                                <th>{{getName('ReceptionTime')}}</th>
+                            </tr>
+                            <tr v-for=" (service, index) in Services" >
+                                <td>{{service.service_name}}</td>
+                                <td>{{useConterStore().formatNumber(service.result_price)}} uzs</td>
+                                <td>{{service.amount}}</td>
+                                <td>{{useConterStore().formatDate(service.created_at)}}</td>
+
+                            </tr >
+
+                        </table>
+
+                    </td>
+
+                </tr >
+
+
+
+
                 <tr>
                     <th>{{getName('Created_at')}}: &nbsp;&nbsp;</th>
                     <td>{{Patient.created_at}}</td>
@@ -132,7 +167,9 @@ export default {
             current_page: 1,
             Treatmets: [],
             Payments: [],
-            PaymentItems: []
+            PaymentItems: [],
+            Services: [],
+            Image: ''
         }
     },
     methods:{
@@ -145,9 +182,11 @@ export default {
         async getItem(){
             const response = await patientShow(this.$route.query.id);
             this.Patient = response.data;
+            this.Image = response.data.image[0].url;
             this.Treatmets = response.data.treatmets;
             this.Payments = response.data.payments;
             this.PaymentItems = response.data.items;
+            this.Services = response.data.services;
         },
 
     },

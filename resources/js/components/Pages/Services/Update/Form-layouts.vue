@@ -113,7 +113,7 @@
                                 :isError="hasKey('collection_id')"
                                 :message="errorObj['collection_id']"
                             >
-                                <option>---</option>
+                                <option :value="null" >---</option>
                                 <option
                                     v-for="collection in Collections"
                                     :value="collection.id"

@@ -2,7 +2,7 @@
 
 
     <!-- Breadcrumb Start -->
-    <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between" style="display: flex; justify-content: flex-end">
 
         <nav>
             <ol class="flex items-center gap-2">
@@ -29,7 +29,12 @@
                 <form action="#">
                     <div class="p-6.5">
 
+                        <ImageInput
+                            @image = "Image = $event"
+                            Label = "Photo"
+                            :Photo = "Photo"
 
+                        />
                         <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
 
 
@@ -54,27 +59,7 @@
                         </div>
 
 
-                        <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
 
-                            <Input
-                                :Couple = "false"
-                                :Label = "getName('phone')"
-                                @onInput = "phone = $event"
-                                :isError = "hasKey('phone')"
-                                :message = "errorObj['phone']"
-                                :Value = "phone"
-                            />
-
-                            <Input
-                                :Couple = "false"
-                                :Label = "getName('Job')"
-                                @onInput = "job = $event"
-                                :isError = "hasKey('job')"
-                                :message = "errorObj['job']"
-                                :Value = "job"
-                            />
-
-                        </div>
 
                         <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
 
@@ -130,6 +115,28 @@
 
                     </h3>
                 </div>
+<!--                class="mb-4.5 flex flex-col gap-6 xl:flex-row"-->
+                <div class=" flex flex-col gap-6 xl:flex-row px-6.5  " >
+
+                    <Input
+                        :Couple = "false"
+                        :Label = "getName('phone')"
+                        @onInput = "phone = $event"
+                        :isError = "hasKey('phone')"
+                        :message = "errorObj['phone']"
+                        :Value = "phone"
+                    />
+
+                    <Input
+                        :Couple = "false"
+                        :Label = "getName('Job')"
+                        @onInput = "job = $event"
+                        :isError = "hasKey('job')"
+                        :message = "errorObj['job']"
+                        :Value = "job"
+                    />
+
+                </div>
 
                 <div class=" flex flex-col gap-6 xl:flex-row p-6.5" >
                     <Input
@@ -148,7 +155,7 @@
                         @onInput = "sort_order = $event"
                         :isError = "hasKey('sort_order')"
                         :message = "errorObj['sort_order']"
-                        :Value = "sort_order"   
+                        :Value = "sort_order"
                         Type = "number"
                     />
 
@@ -156,7 +163,7 @@
 
                 </div>
 
-                <div class="flex flex-col gap-6 xl:flex-row  px-6.5"    >
+                <div class="flex flex-col gap-6 xl:flex-row  px-6.5" >
 
 
                     <MultiSelect
@@ -202,11 +209,9 @@
 
             </div>
 
-
         </div>
     </div>
     <!-- ====== Form Layout Section End -->
-
 </template>
 <script >
 import Input from "./Inputs/Input.vue";
@@ -222,6 +227,7 @@ import Select from "./Inputs/Select.vue";
 import MultiSelect from '../../../../ui-components/Form/MultiSelect.vue'
 import Checkbox01 from "../../../../ui-components/Form/Checkbox/Checkbox01.vue";
 import checkbox01 from "../../../../ui-components/Form/Checkbox/Checkbox01.vue";
+import ImageInput from "@/components/Pages/Employees/Update/Inputs/ImageInput.vue";
 
 export default {
     computed: {
@@ -254,20 +260,25 @@ export default {
                 sort_order: '',
                 diseasesIds : [],
                 allDiseases : [],
+                Image: '',
+                Photo: ''
+
 
 
             }
         },
-        components:{Checkbox01, Select, PrimaryButton2,MultiSelect, PrimaryButton, InputColor, Checkbox, Input},
+        components:{
+            ImageInput,
+            Checkbox01, Select, PrimaryButton2,MultiSelect, PrimaryButton, InputColor, Checkbox, Input},
         methods:{
 
             getName(val){
                 return useConterStore().getName(val)
             },
 
-         
+
             async update(){
-              
+
 
                 var ids = [];
                 if (this.diseasesIds.length > 0){
@@ -278,7 +289,7 @@ export default {
                     ids = 0;
                 }
 
-               
+
 
 
                 var data = {
@@ -291,7 +302,8 @@ export default {
                     'birthday': this.birthday,
                     'sort_order': this.sort_order,
                     'diseasesIds': ids,
-                    'price' : 0
+                    'price' : 0,
+                    'image': this.Image
                 }
 
                 const response = await patientUpdate(this.$route.query.id ,data);
@@ -319,6 +331,7 @@ export default {
                     this.birthday = response.data.birthday;
                     this.sort_order = response.data.sort_order;
                     this.diseasesIds = response.data.diseases;
+                    this.Photo =  response.data.image[0].url;
                     this.getDisiases();
 
                 }
@@ -335,7 +348,7 @@ export default {
                             id: item.id
                         })
                     }
-                    
+
                 });
                 this.allDiseases = arr;
             },

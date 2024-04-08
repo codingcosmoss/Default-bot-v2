@@ -30,6 +30,7 @@
                         <ImageInput
                             @image = "image = $event"
                             :Photo = "photo"
+                            Label = "Photo"
                         />
 
                         <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
@@ -108,44 +109,47 @@
                     </h3>
                 </div>
 
-                <div class="mb-4.5 flex flex-col gap-6 xl:flex-row p-6.5">
-                    <Input
-                        :Couple = "false"
-                        Type = "number"
-                        :Label = "getName('Fixed_salary')"
-                        @onInput = "salary_static = $event"
-                        :isError = "hasKey('salary_static')"
-                        :message = "errorObj['salary_static']"
-                        :Value = "salary_static"
 
-                    />
-                    <Input
-                        Type = "number"
-                        :Couple = "false"
-                        :Label = "getName('Determination__salary')"
-                        @onInput = "percent_salary = $event"
-                        :isError = "hasKey('percent_salary')"
-                        :message = "errorObj['percent_salary']"
-                        :Value = "percent_salary"
-
-                    />
-
-                </div>
                 <p class="pt-0 p-6.5" > {{getName('employee_roles')}}:</p>
-<!--                <ul class="list01">-->
-<!--                   <ul>-->
-<!--                       <Checkbox></Checkbox>-->
-<!--                       <Checkbox></Checkbox>-->
-<!--                       <Checkbox></Checkbox>-->
-<!--                       <Checkbox></Checkbox>-->
 
-<!--                   </ul>-->
-<!--                    <ul>-->
-<!--                        <Checkbox></Checkbox>-->
-<!--                        <Checkbox></Checkbox>-->
-<!--                        <Checkbox></Checkbox>-->
-<!--                    </ul>-->
-<!--                </ul>-->
+
+                <ul  style="display: flex; padding: 5px 27px" >
+
+                    <li>
+                        <!--                        Xodimloar menyusini ko'rish-->
+                        <span  v-for="permission in Permissions.slice(0, 10)" >
+                           <Checkbox01
+
+                               @click = "addRoles(permission['id'])"
+                               :onCheck = "Roles.includes(permission['id'])"
+                               :Title = "getName(permission['lang_name'])"
+                               Class = "genderCheckbox"
+                           />
+                       &nbsp;
+                       </span>
+
+                    </li>
+                    &nbsp;&nbsp;
+                    &nbsp;&nbsp;
+                    &nbsp;&nbsp;
+                    &nbsp;&nbsp;
+                    &nbsp;&nbsp;
+                    <li>
+                        <!--                        Xodimloar menyusini ko'rish-->
+                        <span  v-for="permission in Permissions.slice(10, Permissions.length )">
+                           <Checkbox01
+                               @click = "addRoles(permission['id'])"
+                               :onCheck = "Roles.includes(permission['id'])"
+                               :Title = "getName(permission['lang_name'])"
+                               Class = "genderCheckbox"
+                           />
+                       &nbsp;
+                       </span>
+
+                    </li>
+
+                </ul>
+
 
 
                 <div class=" pl-7 p-6.5">
@@ -162,7 +166,7 @@
 
 </template>
 <script >
-import {testLogin} from "../../../../Api.js";
+import {permissions, testLogin} from "../../../../Api.js";
 import Input from "./Inputs/Input.vue";
 import {useConterStore} from "../../../../store/counter.js";
 import Checkbox from "./Inputs/Checkbox.vue";
@@ -172,6 +176,7 @@ import {showEmployee} from "../../../../Api.js";
 import {updateEmployee} from "../../../../Api.js";
 import ImageInput from "./Inputs/ImageInput.vue";
 import {Alert} from "../../../../Config.js";
+import Checkbox01 from "@/ui-components/Form/Checkbox/Checkbox01.vue";
 export default {
         data(){
             return{
@@ -188,12 +193,28 @@ export default {
                 color: '#FFFFFF',
                 errorObj: {},
                 image: '',
-                photo: ''
+                photo: '',
+                Roles: [],
+                Permissions: []
 
             }
         },
-        components:{ImageInput, InputColor, Checkbox, Input},
+        components:{Checkbox01, ImageInput, InputColor, Checkbox, Input},
         methods:{
+            addRoles(role){
+                if(this.Roles.includes(role)){
+                    this.Roles = this.Roles.filter((item) => item != role);
+                }else{
+                    this.Roles.push(role);
+                }
+            },
+
+            async getPermissions(){
+                const response = await permissions();
+                this.Permissions = response.data
+            },
+
+
             getName(val){
                 return useConterStore().getName(val)
             },
@@ -207,6 +228,7 @@ export default {
                 return this.isPasswordError;
 
             },
+
             async update(){
                 var data = {
                     'name': this.name,
@@ -217,7 +239,8 @@ export default {
                     'salary_static': this.salary_static,
                     'sort_order': this.sort_order,
                     'color': this.color,
-                    'image': this.image
+                    'image': this.image,
+                    'roles': this.Roles,
                 }
                 console.log(data)
 
@@ -236,7 +259,7 @@ export default {
 
                 const response = await showEmployee(this.$route.query.id);
                 const item = response.data;
-                console.log(response)
+                console.log(item)
                 if (response.status){
                     this.name = item.name
                     this.position = item.position
@@ -247,8 +270,11 @@ export default {
                     this.salary_static = item.salary_static
                     this.sort_order = item.sort_order
                     this.photo = item.image[0].url;
+                    item.permissions.forEach((e) => {
+                        this.Roles.push(e.id);
+                    })
                     this.color = item.color == null ? '#ffffff' :  item.color;
-                    console.log(item)
+
                 }else {
                     console.log('data:', response.data)
                     this.errorObj = response.data;
@@ -275,6 +301,8 @@ export default {
         },
         mounted() {
             this.get()
+            this.getPermissions()
+
         }
 
 }

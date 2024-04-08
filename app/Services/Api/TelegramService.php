@@ -110,6 +110,18 @@ class TelegramService extends AbstractService
 
         DB::beginTransaction();
         try {
+            $hasId = $this->model::where('telegram_id', $data['telegram_id'] )->first();
+            if ($hasId){
+                return [
+                    'status' => false,
+                    'message' => 'save user error',
+                    'statusCode' => 200,
+                    'data' => [
+                        'telegram_id' => 'The id number must not be the same'
+                    ]
+                ];
+            }
+
             $model = new $this->model;
             $model->name = $data['name'];
             $model->telegram_id = $data['telegram_id'];

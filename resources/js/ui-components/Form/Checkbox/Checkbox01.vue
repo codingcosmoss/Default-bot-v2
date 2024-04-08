@@ -2,10 +2,10 @@
     <div  :class="Class">
         <label for="checkboxLabelFour" class="flex cursor-pointer select-none items-center">
             <div class="relative">
-                <input type="checkbox" class="sr-only"
+                <input type="checkbox" class="sr-only "
                        />
-                <div :class="onCheck && 'border-primary'"
-                     class="mr-4 flex h-5 w-5 items-center justify-center rounded-full border">
+                <div :class="{ 'border-primary': onCheck, 'error': isError }"
+                     class="mr-4  flex h-5 w-5 items-center justify-center rounded-full border">
                           <span :class="onCheck && '!bg-primary'"
                                 class="h-2.5 w-2.5 rounded-full bg-transparent">
                           </span>
@@ -43,3 +43,10 @@
         }
     }
 </script>
+
+<style scoped>
+    .error{
+        border: 1px solid #e60707;
+        box-shadow: 1px 1px 15px crimson;
+    }
+</style>

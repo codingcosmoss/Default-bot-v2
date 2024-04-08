@@ -19,9 +19,14 @@ class PatientResource extends JsonResource
     {
         $treatmetns = Treatment::where('patient_id', $this->id)
             ->where('status','!=', Status::$new)
+            ->where('status','!=', Status::$canceled)
             ->where('payment_status','!=', Status::$Closed)
                 ->get();
-
+        $defaultImage = [
+            [
+                'url' => asset('').'Photos/patient.webp'
+            ]
+        ];
         return [
             'id' => $this->id,
             'first_name' => $this->first_name,
@@ -40,8 +45,8 @@ class PatientResource extends JsonResource
             })->toArray(),
             'sort_order' => $this->sort_order,
             'created_at' =>  Carbon::parse($this->created_at)->format('Y-m-d H:i'),
-            'updated_at' => $this->updated_at
-
+            'updated_at' => $this->updated_at,
+            'image' => count($this->image) != 0 ? ImageResource::collection($this->image) : $defaultImage ,
 
         ];
     }

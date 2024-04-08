@@ -96,6 +96,11 @@ class ServiceService extends AbstractService
 
         DB::beginTransaction();
         try {
+            $collectionId = null;
+            if (isset($data['collection_id']) && $data['collection_id'] > 0 ){
+                $collectionId = $data['collection_id'];
+            }
+
             $item = new $this->model;
             $item->name = $data['name'];
             $item->code = isset( $data['code']) ?  $data['code'] : '';
@@ -105,7 +110,7 @@ class ServiceService extends AbstractService
             $item->material_price = $data['material_price'];
             $item->technic_price = $data['technic_price'];
             $item->order = $data['order'];
-            $item->collection_id = isset($data['collection_id']) ? $data['collection_id'] : null;
+            $item->collection_id = $collectionId;
             $item->status = $data['status'];
 
 
@@ -164,7 +169,7 @@ class ServiceService extends AbstractService
             TextField::make('order')->setRules('required|integer'),
             TextField::make('status')->setRules('required|integer'),
             TextField::make('personal_procents')->setRules('nullable'),
-            TextField::make('collection_id')->setRules('nullable|integer'),
+            TextField::make('collection_id')->setRules('nullable'),
         ];
     }
 
@@ -229,6 +234,10 @@ class ServiceService extends AbstractService
 
         DB::beginTransaction();
         try {
+            $collectionId = null;
+            if (isset($data['collection_id']) && $data['collection_id'] > 0 ){
+                $collectionId = $data['collection_id'];
+            }
 
             $item->name = $data['name'];
             $item->code = isset( $data['code']) ?  $data['code'] : '';
@@ -237,7 +246,7 @@ class ServiceService extends AbstractService
             $item->material_price = $data['material_price'];
             $item->technic_price = $data['technic_price'];
             $item->order = $data['order'];
-            $item->collection_id = isset($data['collection_id']) ? $data['collection_id'] : null;
+            $item->collection_id = $collectionId;
             $item->status = $data['status'];
 
             $deleteModels =  PersonalPrice::where('service_id', $id )->delete();

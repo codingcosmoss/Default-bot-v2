@@ -16,6 +16,18 @@ class ReportController extends AbstractController
         return $this->sendResponse($items);
     }
 
+    public function dashboard()
+    {
+        $items = $this->service->dashboard(request()->all());
+        return $this->sendResponse($items);
+    }
+    public function permissions()
+    {
+        $items = $this->service->permissions(request()->all());
+        return $this->sendResponse($items);
+    }
+
+
     public function reports($start, $end)
     {
         $items = $this->service->reports($start, $end);

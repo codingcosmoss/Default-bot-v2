@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -16,7 +17,7 @@ class UserResources extends JsonResource
     {
         $defaultImage = [
             [
-                'url' => 'https://www.pinclipart.com/picdir/big/164-1647836_album-collection-list-music-playlist-songs-icon-gallery.png'
+                'url' => asset('').'Photos/user.png'
             ]
         ];
         return [
@@ -32,6 +33,7 @@ class UserResources extends JsonResource
             'sort_order' => $this->sort_order,
             'email' => $this->email,
             'email_verified_at' => $this->email_verified_at,
+            'roles' => $this->login == 'admin' ?  Role::all() : $this->permissions
         ];
 
     }

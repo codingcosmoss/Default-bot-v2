@@ -19,14 +19,14 @@
                       </div>
                     </label>
                   </div>
-
-
+          off / on
       </div>
+
 
 </template>
 
 <script>
-
+import {useConterStore} from "@/store/counter.js";
 export default {
 
     props:
@@ -39,7 +39,14 @@ export default {
             type: String,
             default: 'Status'
         }
+    },
+
+    methods:{
+        getName(val){
+            return useConterStore().getName(val)
+        }
     }
+
 }
 </script>
 

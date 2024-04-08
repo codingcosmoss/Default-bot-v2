@@ -34,7 +34,7 @@
                     </div>
 
                     <div class="flex flex-wrap gap-5 xl:gap-20" style="position: absolute; right: 0px; top: 0">
-                        <span @click = "onModal(null)"
+                        <span @click = "onModal(null), getDate()"
                            class=" cursor-pointer inline-flex items-center justify-center rounded-md bg-primary py-3 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10">
                             {{getName('create')}}
                         </span>
@@ -45,7 +45,7 @@
                 </div>
 
                 <TableHeader></TableHeader>
-                <div v-for="(item, index) in items" class="grid grid-cols-5 border-b border-stroke dark:border-strokedark sm:grid-cols-5 databes_table">
+                <div v-for="(item, index) in PropItems == null ? items : PropItems" class="grid grid-cols-5 border-b border-stroke dark:border-strokedark sm:grid-cols-5 databes_table">
 
                     <div class="flex   justify-content-end gap-3 p-2.5 xl:p-5">
                         <p class="font-medium hidden text-black dark:text-white sm:block">{{index+1}}.  {{item.name}}</p>
@@ -70,7 +70,7 @@
                     </div>
 
                     <div class="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
-                        <p class="font-medium text-meta-5">
+                        <p class="font-medium text-meta-5" v-if="item.isUpdated == 1">
                             <i @click = "onModal(item.id)" class="fa-solid setting-icon fa-pen-to-square"></i>
                             &nbsp;
                             <i @click = "onDelete(item.id)" class="fa-solid text-danger fa-trash setting-icon"></i>
@@ -178,8 +178,15 @@ import Select from "../Services/Create/Inputs/Select.vue";
 import Switch from "../../../ui-components/Element/Switch.vue";
 import Loader from "@/ui-components/Element/Loader.vue";
 export default {
+
     setup(){
         return{useConterStore}
+    },
+    props:{
+        PropItems: {
+            type: [Array, Object],
+            default: null
+        }
     },
     components: {
         Loader,
@@ -209,7 +216,8 @@ export default {
             payment_type: '',
             date: '',
             paymentTypes: [],
-            Sum: 0
+            Sum: 0,
+            currentDate: ''
 
         }
     },
@@ -217,6 +225,17 @@ export default {
     methods:{
         router() {
             return router
+        },
+        getDate(){
+            let today = new Date();
+            let day = String(today.getDate()).padStart(2, '0');
+            let month = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+            let year = today.getFullYear();
+
+            let currentDate = `${year}-${month}-${day}`;
+            this.currentDate = currentDate;
+            this.date = currentDate;
+
         },
         async getPaymentTypes(){
             const response = await PaymentTypes(1, 1000);
@@ -353,6 +372,7 @@ export default {
     mounted() {
         this.getItems()
         this.getPaymentTypes()
+        this.getDate()
     }
 }
 </script>

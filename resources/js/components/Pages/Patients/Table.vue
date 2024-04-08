@@ -100,17 +100,16 @@
 
         <div
           v-for="(item, index) in items"
-          class=" databes_table grid grid-cols-7 border-b border-stroke dark:border-strokedark sm:grid-cols-7"
+          class=" databes_table grid grid-cols-6 border-b border-stroke dark:border-strokedark sm:grid-cols-6"
         >
-          <div class="flex items-center gap-3 p-2.5 xl:p-5">
-            <p class="font-medium hidden text-black dark:text-white sm:block">
-              {{ index + 1 }}. {{ item.first_name }}
-            </p>
-          </div>
 
-          <div class="flex items-center justify-center p-2.5 xl:p-5">
-            <p class="font-medium text-black dark:text-white">{{ item.last_name }}</p>
-          </div>
+            <div class="flex items-center  gap-3 p-2.5 xl:p-5 data_table">
+                <div class="photo-img" :style="'background-image: url(' + item['image'][0]['url'] + ')'" >
+
+                </div>
+                <p style ="white-space: nowrap" class="font-medium hidden text-black dark:text-white sm:block">{{ index + 1 }}.  {{ item.first_name }} {{item.last_name}}</p>
+            </div>
+
 
           <div class="flex items-center justify-center p-2.5 xl:p-5">
             <p class="font-medium text-black dark:text-white">{{ item.phone }}</p>
@@ -473,6 +472,16 @@ export default {
 };
 </script>
 <style>
+
+.photo-img{
+    width: 50px;
+    height: 50px;
+    margin-right:10px ;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    padding: 25px;
+}
 .fa-solid {
   cursor: pointer;
 }

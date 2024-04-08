@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Patient;
 use App\Models\User;
 use App\Services\Api\EmployeesService;
 use App\Services\Api\PatientService;
@@ -48,6 +49,10 @@ class PatientController extends AbstractController
     {
         $item = $this->service->store(request()->all());
 
+        if ($item['status'] == true ){
+            $this->uploadImagesOne(Patient::find($item['data']['id']), request());
+        }
+
         return $this->sendResponse($item);
     }
 
@@ -59,7 +64,7 @@ class PatientController extends AbstractController
 
         $item = $this->service->update(request()->all(), $id);
         if ($item['status'] == true ){
-            $this->uploadImagesOne(User::find($item['data']['id']), request());
+            $this->uploadImagesOne(Patient::find($item['data']['id']), request());
         }
         return $this->sendResponse($item);
     }
@@ -68,7 +73,7 @@ class PatientController extends AbstractController
         $item = $this->service->joinDr(request()->all());
         return $this->sendResponse($item);
     }
-    
+
 
     /**
      * @return array|JsonResponse

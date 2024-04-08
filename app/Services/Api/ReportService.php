@@ -4,12 +4,19 @@ namespace App\Services\Api;
 
 use App\Fields\Store\TextField;
 use App\Http\Resources\CompanySettingResource;
+use App\Http\Resources\DailyCostResource;
 use App\Http\Resources\EmployeesPaymentResources;
+use App\Http\Resources\PatientResource;
+use App\Http\Resources\TopServiceResources;
 use App\Http\Resources\TreatmentResource;
 use App\Models\CompanySetting;
 use App\Models\DailyCost;
+use App\Models\Patient;
 use App\Models\Payment;
 use App\Models\PaymentType;
+use App\Models\Permission;
+use App\Models\Role;
+use App\Models\Service;
 use App\Models\Treatment;
 use App\Models\User;
 use App\Traits\Status;
@@ -33,9 +40,47 @@ class ReportService extends AbstractService
         ];
 
     }
+    public function dashboard()
+    {
+
+        $users = User::where('login', '!=', 'admin')->count();
+        $patients = Patient::count();
+        $services = Service::where('status', Status::$status_active)->get();
+        $debtorPatients = Patient::all();
+
+        $data = [
+            'users' => $users,
+            'patients' => $patients,
+            'services' => count($services),
+            'allServices' => TopServiceResources::collection($services),
+            'debtorPatients' => PatientResource::collection($debtorPatients),
+        ];
+
+        return [
+            'status' => true,
+            'message' => 'Success',
+            'statusCode' => 200,
+            'data' => $data
+        ];
+
+    }
+
+    public function permissions()
+    {
+        $models = Role::all();
+
+        return [
+            'status' => true,
+            'message' => 'Success',
+            'statusCode' => 200,
+            'data' => $models
+        ];
+
+    }
 
     public function reports($start, $end)
     {
+
         // to'lov turlari
         $paymentTypes = PaymentType::orderBy('updated_at', 'asc')
             ->get();
@@ -59,6 +104,7 @@ class ReportService extends AbstractService
             ->whereDate('treatments.start', '<=', $end)
             ->sum('service_real_price');
 
+
         $serviceAmountToBePaid = Treatment::whereDate('treatments.start', '>=', $start)
             ->whereDate('treatments.start', '<=', $end)
             ->sum('service_real_price');
@@ -68,19 +114,22 @@ class ReportService extends AbstractService
             ->where('payment_type_id', 2)
             ->sum('amount');
 
-        $totalCashDailyExpense = DailyCost::whereDate('daily_costs.date', '>=', $start)
+
+
+        $dalyCosts = DailyCost::whereDate('daily_costs.date', '>=', $start)
             ->whereDate('daily_costs.date', '<=', $end)
-            ->sum('amount');
+            ->get();
 
 
         $data = [
             'paymentTypes' => $paymentTypes,
             'totalClientPaymentSum' => $totalClientPaymentSum,
-            'stuffGivenTotalSum' => $stuffGivenTotalSum,
+            'stuffGivenTotalSum' => $stuffGivenTotalSum, // xodimlarga berilgan pullar
             'dailyExpensesTotalSum' => $dailyExpensesTotalSum,
-            'totalServiceSum' => $totalServiceSum,
+            'totalServiceSum' => $totalServiceSum,      // jami xizmat narxlari
             'serviceAmountToBePaid' => $serviceAmountToBePaid,
             'totalClientPaymentCashSum' => $totalClientPaymentCashSum,
+            'DalyCosts' => DailyCostResource::collection($dalyCosts), // kunlik harajatlar
         ];
 
 

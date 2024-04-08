@@ -77,6 +77,7 @@ import Input from "@/components/Pages/Diseases/EditPassword/Inputs/Input.vue";
                     localStorage.setItem('0008a78764c2',  response.data.data);
                     if (response.data.success == 200){
                         this.isError = false;
+                        this.getUser();
                         this.$router.push('/'); //  sizning hedef rout'ingiz nomi
                     }
 
@@ -84,6 +85,10 @@ import Input from "@/components/Pages/Diseases/EditPassword/Inputs/Input.vue";
                 } catch (error) {
                     this.isError = true;
                 }
+            },
+            async getUser(){
+                const response = await GetUser();
+                localStorage.setItem('user', JSON.stringify(response.data));
             },
 
         },

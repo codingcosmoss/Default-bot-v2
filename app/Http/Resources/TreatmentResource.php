@@ -53,6 +53,7 @@ class TreatmentResource extends JsonResource
             'material_price' => $this->material_price,
             'type_of_discount' => $this->type_of_discount,
             'indebtedness' => $this->discount_sum, // qarzdorlik
+            'cancleted_description' => $this->cancleted_description,
             'latest_payment' => count($payments) > 0 ?  new  PaymentResource(Payment::where('patient_id',$this->patient_id )->where('treatment_id', $this->id )->latest()->first()) : null ,
         ];
     }

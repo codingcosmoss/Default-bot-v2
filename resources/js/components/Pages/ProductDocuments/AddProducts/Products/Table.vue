@@ -134,7 +134,7 @@
 
 
             <div class="flex items-center justify-center p-2.5 xl:p-5">
-              <p class="font-medium text-black dark:text-white">{{ Products[index]['price'] * Products[index]['amount']  }} uzs</p>
+              <p class="font-medium text-black dark:text-white">{{ useConterStore().formatNumber(Products[index]['price'] * Products[index]['amount'])   }} uzs</p>
           </div>
 
 
@@ -150,7 +150,7 @@
         </div>
 
           <div style="display: flex; justify-content: flex-end">
-              <p  style="color: #0b7fef; margin-top: 10px;font-size: 25px">Sum: {{Summ}} uzs</p>
+              <p  style="color: #0b7fef; margin-top: 10px;font-size: 25px">Sum: {{ useConterStore().formatNumber(Summ) }} uzs</p>
 
           </div>
 
@@ -204,8 +204,7 @@
   </div>
 </template>
 <script>
-
-import {useConterStore} from "../../../../../store/counter.js";
+import {useConterStore} from "@/store/counter.js";
 import TableHeader from "./Table-header.vue";
 import PaginateBtn from "@/components/Pages/Groups/Paginate/paginate-btn.vue";
 import { VueAwesomePaginate } from "vue-awesome-paginate";
@@ -229,6 +228,9 @@ export default {
     PaginateBtn,
     TableHeader,
   },
+    setup(){
+      return {useConterStore}
+    },
   props:{
       Treatments:{
           type: [Array, Object],

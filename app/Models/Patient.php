@@ -25,4 +25,10 @@ class Patient extends Model
         return $this->hasMany(Payment::class);
     }
 
+    public function image()
+    {
+        return $this->morphMany(Image::class, 'imageable');
+    }
+
+
 }

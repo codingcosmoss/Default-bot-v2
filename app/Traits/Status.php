@@ -37,6 +37,7 @@ trait Status
 
     // Treatments
     public static int $new = 7;
+    public static int $canceled = 17; // bekor qilindi
     public static int $doctorFinished = 8;
     public static int $finished = 9;
     public static int $unpaid = 10;

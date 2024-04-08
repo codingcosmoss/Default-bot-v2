@@ -147,14 +147,15 @@
                 <div class=" flex flex-col gap-6 xl:flex-row p-6.5" >
                     <Input
                         :Couple = "false"
-                        style="width: 100%"
-                        :Label = "getName('PrinterSize')"
+                        style="width: 200px"
+                        :Label = "getName('PrinterSize') + ' (px)'"
                         @onInput = "printer_size = $event"
                         :isError = "hasKey('printer_size')"
                         :message = "errorObj['printer_size']"
                         :Value = "printer_size"
                         Type = "number"
                     />
+
 
                 </div>
 

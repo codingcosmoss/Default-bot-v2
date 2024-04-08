@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\JsonResponse;
 use App\Http\Requests\LoginRequest;
+use App\Http\Resources\UserResources;
 use App\Models\Settings\Configuration;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -58,7 +59,7 @@ class AuthController extends Controller
     public function user()
     {
         try {
-            return $this->success($this->ok, 'Get user successful', auth()->user());
+            return $this->success($this->ok, 'Get user successful', new UserResources(auth()->user()));
         }catch (\Exception $e){
             return $this->error($this->badRequest, $e->getMessage());
         }

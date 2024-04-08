@@ -86,9 +86,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/show/{id}', [\App\Http\Controllers\Api\TreatmentController::class, 'show']);
         Route::post('/search', [\App\Http\Controllers\Api\TreatmentController::class, 'search']);
         Route::post('/discount', [\App\Http\Controllers\Api\TreatmentController::class, 'discount']);
+        Route::POST('/closed', [\App\Http\Controllers\Api\TreatmentController::class, 'closed']);
 
         // Qarzdor davolanishlar
         Route::get('deptor/index', [\App\Http\Controllers\Api\TreatmentController::class, 'deptorIndex']);
+        Route::get('employee/treatments/{id}', [\App\Http\Controllers\Api\TreatmentController::class, 'employeeTreatments']);
         Route::post('deptor/search', [\App\Http\Controllers\Api\TreatmentController::class, 'deptorSearch']);
     });
 
@@ -205,7 +207,6 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     Route::post('/imported-products', [\App\Http\Controllers\Api\ProductDocumentController::class, 'importedProducts']);
 
-
     // product_documents
     Route::group([ 'prefix' => 'supplier' ], function () {
         Route::get('/index', [\App\Http\Controllers\Api\SupplierController::class, 'index']);
@@ -263,6 +264,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/given-moneys/search', [\App\Http\Controllers\Api\ReportController::class, 'search']);
 
     Route::get('/reports/{start}/{end}', [\App\Http\Controllers\Api\ReportController::class, 'reports']);
+    Route::get('/getDashboard', [\App\Http\Controllers\Api\ReportController::class, 'dashboard']);
+    Route::get('/permissions', [\App\Http\Controllers\Api\ReportController::class, 'permissions']);
 
 
 });

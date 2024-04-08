@@ -53,7 +53,7 @@
             },
             Text:{
                 type: [String, Number],
-                default: 'Text'
+                default: '...'
             },
             Item:{
                 type: [String, Number],

@@ -109,13 +109,13 @@
           </div>
 
           <div class="flex items-center justify-center p-2.5 xl:p-5">
-              <p class="font-medium text-black dark:text-white">{{ item.start }} {{ item.id }}</p>
+              <p class="font-medium text-black dark:text-white">{{ item.start }} </p>
           </div>
 
           <div class="flex items-center justify-center p-2.5 xl:p-5">
             <p class="font-medium text-black dark:text-white status-text "
                :class="getClass(item.status)"
-            >{{ getStatus(item.status) }}  </p>
+            >{{ getStatus(item.status) }}</p>
           </div>
 
 
@@ -135,12 +135,12 @@
                 ></i>
                 <i
                     titile = 'Tahrirlash'
-                    v-if="item.status == 8 && item.payment_status != 12 "
+                    v-if="item.status == 8 && item.payment_status != 12  && item.status != 17"
                     @click="this.$router.push({ path: '/treatmetns/treatmetn', query:{ id: item.patient_id, treatment_id: item.id } })"
                     class="fa-solid setting-icon fa-pen-to-square "
                 ></i>
                 <i
-                    v-if="item.status == 7"
+                    v-if="item.status == 7  && item.status != 17"
                     @click="this.$router.push({ path: '/treatmetns/treatmetn', query:{ id: item.patient_id, treatment_id: item.id } })"
                     :title="getName('Treatment')"
                     class="fa-regular setting-icon fa-calendar-plus cursor-pointer"
@@ -148,7 +148,7 @@
                 ></i>
 
                 <i
-                    v-if="item.payment_status != 12 && item.status != 7"
+                    v-if="item.payment_status != 12 && item.status != 7  && item.status != 17"
                     @click="paymentModal(item), userPayments = item.user_payment "
                     :title="getName('Payments')"
                     class="fa-regular fas fa-donate setting-icon  cursor-pointer"
@@ -156,7 +156,7 @@
 
                 <i
                     title="Tolov tarixi"
-                    v-if="item.payment_status ==  11 || item.payment_status == 12"
+                    v-if="item.payment_status ==  11 || item.payment_status == 12  && item.status != 17"
                     @click="istoryPaymentModal(item)"
                     :title="getName('Payment')"
                     class="fa-solid fa-clock-rotate-left setting-icon  cursor-pointer"
@@ -165,13 +165,13 @@
 
                 <i
                     title="Chegirma berish"
-                    v-if="item.payment_status != 12 && item.status != 9 && item.status != 7"
+                    v-if="item.payment_status != 12 && item.status != 9 && item.status != 7  && item.status != 17"
                     @click="discountModal(item)"
                     class="fa-regular fas fa-percent setting-icon  cursor-pointer"
                 ></i>
                 <i
                     title="Qarzga bajarish"
-                    v-if="item.payment_status != 12 && item.status != 9 && item.status != 7"
+                    v-if="item.payment_status != 12 && item.status != 9 && item.status != 7  && item.status != 17"
                     @click="debtModal(item)"
                     class="fa-regular fas fa-coins setting-icon  cursor-pointer"
                 ></i>
@@ -180,16 +180,30 @@
                 <a target="_blank" :href="onCheck(item.id)"  >
                     <i
                         title="Tolov cheki"
-                        v-if="item.payment_status != 10"
+                        v-if="item.payment_status != 10 && item.status != 17"
                         class="fa-regular fas fa-print setting-icon  cursor-pointer"
                     ></i>
                 </a>
 
                 <i
                     title="Tugatish"
-                    v-if="item.status != 9 && item.status != 7"
+                    v-if="item.status != 9 && item.status != 7 && item.status != 17"
                     @click="treatementFinished(item.id)"
                     class="fa-regular fas fa-square-check setting-icon  cursor-pointer"
+                ></i>
+
+                <i
+                    title="Bekor qilish"
+                    v-if="item.status == 7"
+                    @click="cancletedModal(item)"
+                    class="fa-solid fa-x setting-icon  cursor-pointer text-danger "
+                ></i>
+
+                <i
+                    title="Bekor qilish tasnifi"
+                    v-if="item.status == 17"
+                    @click="onInfoModal(item)"
+                    class="fa-solid fa-circle-info setting-icon  cursor-pointer  "
                 ></i>
 <!--                <div class="button-box01" v-if="item.payment_status != 12 && item.status != 7">-->
 <!--                  -->
@@ -348,6 +362,17 @@
 
 
                 </div>
+                <div v-else-if = "Modal == 'cancleted' " >
+
+                    <Textarea
+                        :Label="getName('CancletedText')"
+                        @onInput="cancletedText = $event"
+                        :isError="hasKey('description')"
+                        :message="errorObj['description']"
+                        :Value = "cancletedText"
+                    />
+
+                </div>
                 <div v-else-if = "Modal == 'discount' " >
 
                     <h1>{{getName('Summa')}}: {{counterStore.formatNumber(RealPrice)}} uzs</h1>
@@ -428,6 +453,19 @@
                    </Select>
 
                </div>
+                <div  v-else-if = "Modal == 'info'" >
+                    <!--         Tolov tarixi       -->
+                    <table class="table01" >
+
+                        <tr>
+                            <th>{{getName('Description')}}:</th>
+                            <td>{{Item.cancleted_description}}</td>
+
+                        </tr>
+
+                    </table>
+
+                </div>
 
 
             </ShowForm>
@@ -454,7 +492,8 @@ import {
   Employees,
     PaymentTypes,
     paymentCreate,
-    treatmentFinished
+    treatmentFinished,
+    cancletedTreatment,
 } from "../../../Api.js";
 import CreateForm from "../ServiceCategories/Create/CreateForm.vue";
 import Pagination01 from "../../../ui-components/Element/pagination-01.vue";
@@ -558,6 +597,7 @@ export default {
         RealPrice: 0,
         discountError: false,
         isPayment: false,
+        cancletedText: ''
 
     };
   },
@@ -566,11 +606,48 @@ export default {
     router() {
       return router;
     },
+
     async getEmployee() {
       const response = await Employees(null, 1000);
       this.Employees = response.data.employees;
     },
-  sumInput(val){
+
+      async treatementCancleted(id) {
+          let data = {
+              treatment_id: this.Item.id,
+              description: this.cancletedText
+          }
+
+          const response = await cancletedTreatment(data);
+
+          if (response.status) {
+              Alert('success', 'Canceled !');
+              this.isShowModal = false;
+              this.getItems();
+          }else {
+              this.errorObj = response.data;
+              Alert('error', 'Error!');
+          }
+          this.isPayment = false;
+
+      },
+  cancletedModal(item){
+      this.Item = item;
+      this.Modal = 'cancleted';
+      this.cancletedText = '';
+      this.UpdateId = item.id;
+      this.isShowModal = true;
+  },
+
+
+      onInfoModal(item){
+          this.Item = item;
+          this.Modal = 'info';
+          this.UpdateId = item.id;
+          this.isShowModal = true;
+      },
+
+      sumInput(val){
         this.discount_sum = val;
       if (this.RealPrice > 0){
           this.discount_percent = (100 * val)/this.RealPrice;
@@ -782,6 +859,13 @@ export default {
         }else if(this.Modal == 'discount'){
             this.sendDiscount();
             return true;
+        }else if(this.Modal == 'cancleted'){
+            this.treatementCancleted();
+            return true;
+        }else if(this.Modal == 'info'){
+            this.isPayment = false;
+            this.isShowModal = false;
+            return true;
         }
 
         if (this.userPayments < this.Amount){
@@ -869,6 +953,8 @@ export default {
             return this.getName('NotFullPaint');
         }else if (e == 12){
             return this.getName('Closed');
+        }else if (e == 17){
+            return this.getName('Concleted');
         }
 
     },
@@ -879,6 +965,8 @@ export default {
             return 'fullUnmount';
         }else if (e == 7){
             return 'fullUnmount';
+        }else if (e == 17){
+            return 'concleted';
         }else{
             return '';
         }
@@ -910,6 +998,7 @@ export default {
 .fa-solid {
   cursor: pointer;
 }
+
 
 .btn01 {
   width: 100px;

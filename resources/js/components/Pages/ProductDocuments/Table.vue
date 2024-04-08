@@ -60,7 +60,7 @@
 
                     <div class="flex items-center justify-center p-2.5 xl:p-5">
                         <p   class="font-medium text-black dark:text-white">
-                            {{item.summ}} uzs
+                            {{useConterStore().formatNumber(item.summ) }} uzs
                         </p>
                     </div>
 
@@ -190,6 +190,9 @@ import Table from "@/components/Pages/Diseases/Table.vue";
 import Input01 from "@/ui-components/Form/Input01.vue";
 import Textarea from "@/ui-components/Form/Textarea.vue";
 export default {
+    setup(){
+        return {useConterStore}
+    },
     components: {
         Textarea,
         Input01,

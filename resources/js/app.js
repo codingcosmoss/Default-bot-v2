@@ -10,6 +10,9 @@ import ToastPlugin from 'vue-toast-notification';
 //import 'vue-toast-notification/dist/theme-default.css';
 import 'vue-toast-notification/dist/theme-bootstrap.css';
 
+import 'vuesalize/dist/vuesalize.css'
+import Vuesalize from 'vuesalize'
+
 
 const app = createApp(App);
 const pinia = createPinia();
@@ -23,6 +26,7 @@ import VueAwesomePaginate from "vue-awesome-paginate";
 
 app.use(router)
     .use(pinia)
+    .use(Vuesalize)
     .use(VueAwesomePaginate)
     .use(ToastPlugin)
     .mount('#app');

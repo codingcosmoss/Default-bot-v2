@@ -120,41 +120,45 @@
                     </h3>
                 </div>
 
-                <div class="mb-4.5 flex flex-col gap-6 xl:flex-row p-6.5">
-                    <Input
-                        :Couple = "false"
-                        Type = "number"
-                        :Label = "getName('Fixed_salary')"
-                        @onInput = "salary_static = $event"
-                        :isError = "hasKey('salary_static')"
-                        :message = "errorObj['salary_static']"
-                    />
-                    <Input
-                        Type = "number"
-                        :Couple = "false"
-                        :Label = "getName('Determination__salary')"
-                        @onInput = "percent_salary = $event"
-                        :isError = "hasKey('percent_salary')"
-                        :message = "errorObj['percent_salary']"
-                    />
-
-                </div>
+                &nbsp;
 
                 <p class="pt-0 p-6.5" > {{getName('employee_roles')}}:</p>
-<!--                <ul class="list01" style="display: flex" >-->
-<!--                   <li>-->
-<!--                       <Checkbox></Checkbox>-->
-<!--                       <Checkbox></Checkbox>-->
-<!--                       <Checkbox></Checkbox>-->
-<!--                       <Checkbox></Checkbox>-->
+                <ul  style="display: flex; padding: 5px 27px" >
 
-<!--                   </li>-->
-<!--                    <li>-->
-<!--                        <Checkbox></Checkbox>-->
-<!--                        <Checkbox></Checkbox>-->
-<!--                        <Checkbox></Checkbox>-->
-<!--                    </li>-->
-<!--                </ul>-->
+                   <li>
+<!--                        Xodimloar menyusini ko'rish-->
+                       <span  v-for="permission in Permissions.slice(0, 10)">
+                           <Checkbox01
+                               @click = "addRoles(permission['id'])"
+                               :onCheck = "Roles.includes(permission['id'])"
+                               :Title = "getName(permission['lang_name'])"
+                               Class = "genderCheckbox"
+                           />
+                       &nbsp;
+                       </span>
+
+                   </li>
+                    &nbsp;&nbsp;
+                    &nbsp;&nbsp;
+                    &nbsp;&nbsp;
+                    &nbsp;&nbsp;
+                    &nbsp;&nbsp;
+                    <li>
+                        <!--                        Xodimloar menyusini ko'rish-->
+                        <span  v-for="permission in Permissions.slice(10, Permissions.length )">
+                           <Checkbox01
+
+                               @click = "addRoles(permission['id'])"
+                               :onCheck = "Roles.includes(permission['id'])"
+                               :Title = "getName(permission['lang_name'])"
+                               Class = "genderCheckbox"
+                           />
+                       &nbsp;
+                       </span>
+
+                    </li>
+
+                </ul>
 
 
                 <div class=" pl-7 p-6.5">
@@ -180,7 +184,9 @@ import InputColor from "./Inputs/InputColor.vue";
 import {employeeCreate} from "../../../../Api.js";
 import ImageInput from "../Update/Inputs/ImageInput.vue";
 import {Alert} from "../../../../Config.js";
-
+import Table from "@/components/Pages/Diseases/Table.vue";
+import Checkbox01 from "@/ui-components/Form/Checkbox/Checkbox01.vue";
+import {permissions} from "../../../../Api.js";
 export default {
         data(){
             return{
@@ -197,14 +203,20 @@ export default {
                 isLoginError: false,
                 color: '#FFFFFF',
                 errorObj: {},
-                image: ''
+                image: '',
+                Roles: [],
+                Permissions: []
 
             }
         },
-        components:{ImageInput, InputColor, Checkbox, Input},
+        components:{Checkbox01, Table, ImageInput, InputColor, Checkbox, Input},
         methods:{
             getName(val){
                 return useConterStore().getName(val)
+            },
+            async getPermissions(){
+                const response = await permissions();
+                this.Permissions = response.data
             },
             testPassword(val){
                 if (this.password != val){
@@ -216,6 +228,15 @@ export default {
                 return this.isPasswordError;
 
             },
+
+            addRoles(role){
+                if(this.Roles.includes(role)){
+                    this.Roles = this.Roles.filter((item) => item != role);
+                }else{
+                    this.Roles.push(role);
+                }
+            },
+
             async create(){
                 if (this.testPassword(this.reset_password) != true){
                     var data = {
@@ -228,7 +249,8 @@ export default {
                         'salary_static': this.salary_static,
                         'sort_order': this.sort_order,
                         'color': this.color,
-                        'image': this.image
+                        'image': this.image,
+                        'roles': this.Roles
                     }
                     const response = await employeeCreate(data);
                     if (response.status){
@@ -256,17 +278,16 @@ export default {
             hasKey(key) {
                 return key in this.errorObj;
             }
-        }
+        },
+    mounted() {
+        this.getPermissions()
     }
+}
 </script>
 
 
 <style>
 
-    .list01{
-        padding: 5px 27px;
-        display: flex;
-        justify-content: space-between;
-    }
+
 
 </style>

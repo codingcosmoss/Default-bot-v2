@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Spatie\Permission\Models\Role;
+
 
 class EmployeesService extends AbstractService
 {
@@ -61,9 +63,11 @@ class EmployeesService extends AbstractService
 
 
     /**
-     * @param array $data
-     * @return JsonResponse|mixed
-     */
+        * @param array $data
+        * @return JsonResponse|mixed
+     **/
+
+
     public function store(array $data)
     {
 
@@ -98,7 +102,9 @@ class EmployeesService extends AbstractService
         $data = $validator->validated();
 
         DB::beginTransaction();
+
         try {
+
             $user = new $this->model;
             $user->name = $data['name'];
             $user->position = $data['position'];
@@ -106,13 +112,19 @@ class EmployeesService extends AbstractService
             $user->color = $data['color'];
             $user->password = Hash::make($data['password']);
             $user->profil_photo_path = $data['profil_photo_path'];
-            $user->percent_salary = $data['percent_salary'];
-            $user->salary_static = $data['salary_static'];
+            $user->percent_salary = 0;
+            $user->salary_static = 0;
             $user->sort_order = $data['sort_order'];
             $user->status = Status::$status_active;
 
+
+
+
             if ($user->save()) {
                 DB::commit();
+               if (isset($data['roles'])){
+                   $user->permissions()->attach($data['roles']);
+               }
 
             } else {
                 DB::rollback();
@@ -187,8 +199,8 @@ class EmployeesService extends AbstractService
             $user->color = $data['color'];
             $user->password = Hash::make($data['password']);
             $user->profil_photo_path = $data['profil_photo_path'];
-            $user->percent_salary = $data['percent_salary'];
-            $user->salary_static = $data['salary_static'];
+            $user->percent_salary = 0;
+            $user->salary_static = 0;
             $user->sort_order = $data['sort_order'];
             $user->status = Status::$status_active;
 
@@ -238,9 +250,8 @@ class EmployeesService extends AbstractService
             TextField::make('color')->setRules('nullable'),
             TextField::make('password')->setRules('required|min:5|max:1024'),
             TextField::make('profil_photo_path')->setRules('nullable'),
-            TextField::make('percent_salary')->setRules('required|integer'),
-            TextField::make('salary_static')->setRules('required|integer'),
             TextField::make('sort_order')->setRules('required|integer'),
+            TextField::make('roles')->setRules('nullable'),
         ];
     }
 
@@ -348,13 +359,18 @@ class EmployeesService extends AbstractService
             $item->login = $data['login'];
             $item->color = $data['color'];
 //            $item->profil_photo_path = $data['profil_photo_path'] ;
-            $item->percent_salary = $data['percent_salary'];
-            $item->salary_static = $data['salary_static'];
+            $item->percent_salary = 0;
+            $item->salary_static = 0;
             $item->sort_order = $data['sort_order'];
             $item->status = Status::$status_active;
 
             if ($item->save()) {
                 DB::commit();
+                $item->permissions()->detach();
+                if (isset($data['roles'])){
+                    $item->permissions()->attach($data['roles']);
+                }
+
             } else {
                 DB::rollback();
                 return [
@@ -486,8 +502,7 @@ class EmployeesService extends AbstractService
             TextField::make('login')->setRules('required|min:5|max:1024'),
             TextField::make('profil_photo_path')->setRules('nullable'),
             TextField::make('color')->setRules('nullable'),
-            TextField::make('percent_salary')->setRules('required|integer'),
-            TextField::make('salary_static')->setRules('required|integer'),
+            TextField::make('roles')->setRules('nullable'),
             TextField::make('sort_order')->setRules('required|integer'),
         ];
     }

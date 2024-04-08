@@ -136,7 +136,7 @@
                     @click="this.$router.push('/payments')"
                     class="fa-solid setting-icon  fa-right-to-bracket "
                 ></i>
-                &nbsp;
+
                 &nbsp;
                 <i @click = "onDelete(item.id)" class="fa-solid text-danger fa-trash setting-icon"></i>
 

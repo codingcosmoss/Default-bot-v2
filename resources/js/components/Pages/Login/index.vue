@@ -5,23 +5,21 @@
 
       <Form >
 
-        <!--     Label, Value, Icon | @Result     -->
           <Input
               Label = "Login"
-              Plholder = "Enter your login"
+              Pholder = "Enter your login"
               @onInput = "login = $event"
               :Value = "login"
+
           />
 
           <Input
               @onInput = "password = $event"
               Label = "Password"
               :Value = "password"
-              Plholder = "Enter your password"
+              Pholder = "Enter your password"
               Type = 'password'
           />
-
-
 
           <PrimaryButton @click = "addForm" Title = "Sign in" ></PrimaryButton>
       </Form>
@@ -36,8 +34,9 @@
     import InputText from "../../../ui-components/Form/InputText.vue";
     import PrimaryButton from "../../../ui-components/Form/PrimaryButton.vue";
     import {GetUser} from "../../../Api.js";
+    import {Alert} from "@/Config.js";
     import axios from "axios";
-    import Input from "@/components/Pages/Diseases/EditPassword/Inputs/Input.vue";
+    import Input from "../../../ui-components/Form/Input.vue";
 
     export default {
         components: {Input, PrimaryButton, InputText, Layout, Image, Form},
@@ -70,9 +69,9 @@
 
                     if (response.data.success != undefined){
                         if (response.data.success == 200){
-
                             this.isError = false;
-                            this.$router.push('/'); //  sizning hedef rout'ingiz nomi
+                            Alert('success', 'Login successfully !')
+                            this.getUserLocal()
                         }
 
                     }else {
@@ -83,6 +82,11 @@
                 } catch (error) {
                     this.isError = true;
                 }
+            },
+            async getUserLocal(){
+                const response = await GetUser();
+                localStorage.setItem('user', JSON.stringify(response.data));
+                this.$router.push('/'); //  sizning hedef rout'ingiz nomi
             },
 
         },

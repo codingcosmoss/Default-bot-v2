@@ -75,7 +75,7 @@
         <TableHeader></TableHeader>
 
         <div
-          v-for="(item, index) in Items"
+          v-for="(item, index) in  PropItems == null ? Items : PropItems "
           class=" databes_table grid grid-cols-6 border-b border-stroke dark:border-strokedark sm:grid-cols-6"
         >
           <div class="flex items-center gap-3 p-2.5 xl:p-5">
@@ -152,6 +152,13 @@
         setup(){
             const counterStore = useConterStore();
             return {counterStore}
+        },
+
+        props:{
+            PropItems:{
+                type: [Array, Object],
+                default: null
+            }
         },
 
         data(){

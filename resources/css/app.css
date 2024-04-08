@@ -11,7 +11,9 @@ body {
   overflow: hidden;
 }
 
-
+.concleted{
+    background: #5b5c62 !important;
+}
 
 .AdminBox {
   width: 100%;
@@ -50,15 +52,18 @@ body {
   /*background-image: #262747;*/
 }
 .my-logo{
-    width: 90%;
+    width: 70%;
     height: 60px;
     /*background: #0a91f1;*/
     margin-top: 10px;
-    background-image: url("./logo2.png");
+    background-image: url('https://demo.tailadmin.com/src/images/logo/logo.svg');
     background-size: contain;
     background-position: left;
     background-repeat: no-repeat;
     margin-left: 10px;
+}
+.photo-img{
+    border-radius: 50%;
 }
 
 @media (min-width: 1024px) {

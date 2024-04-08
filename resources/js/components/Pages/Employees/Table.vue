@@ -72,7 +72,7 @@
                         <div class="photo-img" :style="'background-image: url(' + item['image'][0]['url'] + ')'" >
 
                         </div>
-                        <p class="font-medium hidden text-black dark:text-white sm:block">{{index+1}}.  {{item.name}}</p>
+                        <p style ="white-space: nowrap" class="font-medium hidden text-black dark:text-white sm:block">{{index+1}}.  {{item.name}}</p>
                     </div>
 
                     <div class="flex items-center justify-center p-2.5 xl:p-5 data_table">
@@ -98,13 +98,14 @@
 
 
 
+
                     <div class="hidden items-center justify-center p-2.5 sm:flex xl:p-5 data_table">
                         <p class="font-medium text-meta-5">
                             <i @click = "this.$router.push({ path: '/employees/update', query: { id: item.id } })" class="fa-solid setting-icon fa-pen-to-square"></i>
                             &nbsp;
-                            <i @click = "this.$router.push({ path: '/employees/show', query: { id: item.id } })" class="fa-solid setting-icon fa-eye"></i>
+                            <i @click = "onModal(item), ModelType = 'show' "  class="fa-solid setting-icon fa-eye"></i>
                             &nbsp;
-                            <i  @click = "onModal(item.id)"  class="fa-solid setting-icon fa-key"></i>
+                            <i  @click = "onModal(item), ModelType = 'password'"  class="fa-solid setting-icon fa-key"></i>
                             &nbsp;
                             <i @click = "this.$router.push({ path: '/employees/calendar', query: { id: item.id } })" class="fa-solid fa-calendar-days setting-icon"></i>
                             &nbsp;
@@ -132,13 +133,18 @@
 
 
         </div>
-        <ModalLayout @onButton = "editPassword" :isModal = "isModal" @closeModal = "isModal = $event" :Title = "getName('edit_password')" >
+
+        <ModalLayout @onButton = "editPassword"  :isModal = "isModal" @closeModal = "isModal = $event" :Title = "ModelType == 'password' ? getName('edit_password') : Item.name" :isSubmit = "ModelType == 'show' ? false : true " >
+
+
+         <span v-if="ModelType == 'password' ">
             <Input
                 :Label = "getName('password')"
                 @onInput = "password = $event"
                 Type = "password"
                 :isError = "hasKey('password')"
                 :message = "errorObj['password']"
+                Pholder = "password"
             />
             <Input
                 :Label = "getName('reset_password')"
@@ -147,8 +153,47 @@
                 Type = "password"
                 :Value = "reset_password"
                 message = "The password is not the same"
+                Pholder = "reset password"
             />
+         </span>
+
+        <span v-else >
+        <table class="table01" >
+
+            <tr>
+                <th>ID: &nbsp;&nbsp;</th>
+                <td>{{Item['id']}}</td>
+            </tr>
+            <tr>
+                <th>{{getName('name')}}: &nbsp;&nbsp;</th>
+                <td>{{Item['name']}}</td>
+            </tr>
+            <tr>
+                <th>{{getName('login')}}: &nbsp;&nbsp;</th>
+                <td>{{Item['login']}}</td>
+            </tr>
+             <tr>
+                <th>{{getName('position')}}: &nbsp;&nbsp;</th>
+                <td>{{Item['position']}}</td>
+            </tr>
+             <tr>
+                <th>{{getName('image')}}: &nbsp;&nbsp;</th>
+                <td>
+                    <img :src="Image" width="100px">
+                </td>
+            </tr>
+
+
+
+        </table>
+
+
+
+        </span>
+
+
         </ModalLayout>
+
     </div>
 
 
@@ -169,8 +214,12 @@ import InputDefault from '../../../ui-components/Form/InputDefault.vue';
 import Pagination01 from "../../../ui-components/Element/pagination-01.vue";
 import ModalLayout from "../../../ui-components/Element/Modal01/ModalLayout.vue";
 import Loader from "@/ui-components/Element/Loader.vue";
+import Table from "@/components/Pages/Diseases/Table.vue";
+import Table01 from "@/ui-components/Element/table-01.vue";
 export default {
     components: {
+        Table01,
+        Table,
         Loader,
         ModalLayout, Pagination01, Input, VueAwesomePaginate,InputDefault, PaginateBtn, Paginate, TableHeader},
     data(){
@@ -193,7 +242,10 @@ export default {
             isLoginError: false,
             color: '#FFFFFF',
             errorObj: {},
-            user_id: 0
+            user_id: 0,
+            ModelType: '',
+            Item: '',
+            Image: ''
         }
     },
 
@@ -208,10 +260,12 @@ export default {
             this.currentPage = id;
             this.getItems();
         },
-        onModal(id){
+        onModal(item){
+            this.Item = item;
+            this.Image = item['image'][0].url;
             this.password = ''
             this.reset_password = ''
-            this.user_id = id;
+            this.user_id = item.id;
             this.isModal = true;
         },
 

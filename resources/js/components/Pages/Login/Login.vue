@@ -20,6 +20,8 @@ export default {
         async getUser(){
 
             const response = await GetUser();
+            localStorage.setItem('user', response.data );
+
             if (response.success == 200){
                 this.$router.push('/');
             }

@@ -28,9 +28,13 @@
                 </div>
                 <form action="#">
                     <div class="p-6.5">
-
+                        <ImageInput
+                            @image = "Image = $event"
+                            Label = "Photo"
+                        />
 
                         <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
+
 
 
                             <Input
@@ -54,29 +58,7 @@
                         </div>
 
 
-                        <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
-
-                            <Input
-                                :Couple = "false"
-                                :Label = "getName('phone')"
-                                @onInput = "phone = $event"
-                                :isError = "hasKey('phone')"
-                                :message = "errorObj['phone']"
-                                :Value = "phone"
-                            />
-
-                            <Input
-                                :Couple = "false"
-                                :Label = "getName('Job')"
-                                @onInput = "job = $event"
-                                :isError = "hasKey('job')"
-                                :message = "errorObj['job']"
-                                :Value = "job"
-                            />
-
-                        </div>
-
-                        <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                        <div class=" mb-4.5 flex flex-col gap-6 xl:flex-row">
 
                             <Input
                                 :Couple = "false"
@@ -97,6 +79,8 @@
                                 :onCheck = "Checkbox == 5 ? true : false"
                                 :Title = "getName('Male')"
                                 Class = "genderCheckbox"
+                                :isError = "hasKey('gender')"
+
                             />
 
                             <checkbox01
@@ -104,12 +88,14 @@
                                 :onCheck = "Checkbox == 4 ? true : false"
                                 :Title = "getName('Woman')"
                                 Class = "genderCheckbox"
+                                :isError = "hasKey('gender')"
                             />
 
 
 
                         </div>
-                        <p v-if="hasKey('gender')" style="float: right" class="text-danger">{{errorObj['gender']}}</p>
+
+
 
 
 
@@ -131,6 +117,27 @@
                     </h3>
                 </div>
 
+                <div class="flex flex-col gap-6 xl:flex-row px-6.5  mt-6.5">
+
+                    <Input
+                        :Couple = "false"
+                        :Label = "getName('phone')"
+                        @onInput = "phone = $event"
+                        :isError = "hasKey('phone')"
+                        :message = "errorObj['phone']"
+                        :Value = "phone"
+                    />
+
+                    <Input
+                        :Couple = "false"
+                        :Label = "getName('Job')"
+                        @onInput = "job = $event"
+                        :isError = "hasKey('job')"
+                        :message = "errorObj['job']"
+                        :Value = "job"
+                    />
+
+                </div>
                 <div class=" flex flex-col gap-6 xl:flex-row p-6.5" >
                     <Input
                         :Couple = "false"
@@ -156,8 +163,10 @@
 
                 </div>
 
-                <div class="flex flex-col gap-6 xl:flex-row  px-6.5"    >
 
+
+
+                <div class="flex flex-col gap-6 xl:flex-row  px-6.5"    >
 
                     <MultiSelect
                         :Couple = "false"
@@ -170,22 +179,6 @@
                         <option v-for="item in allDiseases" :value="item['id']" >{{item['name']}}</option>
 
                     </MultiSelect>
-
-
-                    <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
-
-
-                        <!--                            <Input-->
-                        <!--                                :Couple = "false"-->
-
-                        <!--                                :Label = "getName('Gender')"-->
-                        <!--                                @onInput = "gender = $event"-->
-                        <!--                                :isError = "hasKey('gender')"-->
-                        <!--                                :message = "errorObj['gender']"-->
-                        <!--                                :Value = "gender"-->
-                        <!--                            />-->
-
-                    </div>
 
 
                 </div>
@@ -222,6 +215,7 @@ import Select from "./Inputs/Select.vue";
 import MultiSelect from '../../../../ui-components/Form/MultiSelect.vue'
 import Checkbox01 from "../../../../ui-components/Form/Checkbox/Checkbox01.vue";
 import checkbox01 from "../../../../ui-components/Form/Checkbox/Checkbox01.vue";
+import ImageInput from "@/components/Pages/Employees/Update/Inputs/ImageInput.vue";
 
 export default {
     computed: {
@@ -254,11 +248,14 @@ export default {
                 sort_order: '',
                 diseasesIds : [],
                 allDiseases : [],
+                Image: '',
 
 
             }
         },
-        components:{Checkbox01, Select, PrimaryButton2,MultiSelect, PrimaryButton, InputColor, Checkbox, Input},
+        components:{
+            ImageInput,
+            Checkbox01, Select, PrimaryButton2,MultiSelect, PrimaryButton, InputColor, Checkbox, Input},
         methods:{
 
             getName(val){
@@ -292,7 +289,8 @@ export default {
                     'birthday': this.birthday,
                     'sort_order': this.sort_order,
                     'diseasesIds': ids,
-                    'price' : 0
+                    'price' : 0,
+                    'image': this.Image
                 }
 
                 const response = await patientCreate(data);

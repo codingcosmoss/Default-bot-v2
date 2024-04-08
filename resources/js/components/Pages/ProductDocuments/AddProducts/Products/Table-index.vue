@@ -30,14 +30,14 @@
         </div>
 
         <div class="flex items-center justify-center p-2.5 xl:p-5">
-            <p class="font-medium text-black dark:text-white">{{ item.amount  }}</p>
+            <p class="font-medium text-black dark:text-white">{{ useConterStore().formatNumber(item.amount)   }}</p>
         </div>
         <div class="flex items-center justify-center p-2.5 xl:p-5">
-            <p class="font-medium text-black dark:text-white">{{ item.price  }} uzs</p>
+            <p class="font-medium text-black dark:text-white">{{ useConterStore().formatNumber(item.price)  }} uzs </p>
         </div>
 
             <div class="flex items-center justify-center p-2.5 xl:p-5">
-              <p class="font-medium text-black dark:text-white">{{Number(item.price) * Number(item.amount)   }} uzs</p>
+              <p class="font-medium text-black dark:text-white">{{useConterStore().formatNumber( Number(item.price) * Number(item.amount))   }} uzs</p>
           </div>
 
 
@@ -48,7 +48,7 @@
         </div>
 
           <div style="display: flex; justify-content: flex-end">
-              <p  style="color: #0b7fef; margin-top: 10px;font-size: 25px">Sum: {{Summ}} uzs</p>
+              <p  style="color: #0b7fef; margin-top: 10px;font-size: 25px">Sum:  {{useConterStore().formatNumber(Summ) }} uzs</p>
 
           </div>
 
@@ -71,8 +71,7 @@
   </div>
 </template>
 <script>
-
-import {useConterStore} from "../../../../../store/counter.js";
+import {useConterStore} from "@/store/counter.js";
 import TableHeader from "./Table-header2.vue";
 import PaginateBtn from "@/components/Pages/Groups/Paginate/paginate-btn.vue";
 import { VueAwesomePaginate } from "vue-awesome-paginate";
@@ -87,6 +86,9 @@ import Table from "@/components/Pages/Diseases/Table.vue";
 import Input01 from "@/ui-components/Form/Input01.vue";
 import {holdNextTicks} from "alpinejs/src/nextTick.js";
 export default {
+    setup(){
+        return{useConterStore}
+    },
   components: {
       Input01,
       Paginate,
@@ -107,6 +109,7 @@ export default {
           default: true
       }
   }  ,
+
   data() {
     return {
       items: [],
@@ -178,7 +181,7 @@ export default {
           this.Products = response.data.items;
           console.log('Response;', response);
           this.Products.forEach((e) => {
-              this.Summ += Number(e.price)
+              this.Summ += Number(e.price) * Number(e.amount);
           })
       },
 

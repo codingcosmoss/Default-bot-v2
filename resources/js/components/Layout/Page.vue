@@ -90,6 +90,7 @@ export default {
             if (!token) {
                 this.$router.push('/login')
             }
+
         },
         onDarkMode(){
             localStorage.setItem('darkMode', !this.darkMode );
@@ -105,13 +106,16 @@ export default {
                     loaderBox.classList.add('hidden_box');
                 }, 1000)
             }
-        }
+        },
+
+
 
 
     },
     mounted() {
         this.checkTokenInLocalStorage()
         this.removeLoader();
+
     }
 
 }

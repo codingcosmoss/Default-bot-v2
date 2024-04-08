@@ -5,7 +5,7 @@
             {{Label}}
         </label>
         <div
-            class="relative z-20 w-full rounded   p-1.5 pr-8 font-medium  transition">
+            class="relative z-20 w-full rounded   pr-8 font-medium  transition">
             <div class="flex flex-wrap items-center">
 
                 <span v-for="(item,index) in Items"
@@ -25,7 +25,7 @@
             </div>
 
         </div>
-        <select  @change = "this.$emit('onSelect', $event.target.value)" class=" w-full rounded border-[1.5px] border-stroke bg-transparent px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary">
+        <select  @change = "this.$emit('onSelect', $event.target.value)" class=" w-full  rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary">
             <slot></slot>
         </select >
         <p v-if="isError" class="text-danger" >{{message}}</p>

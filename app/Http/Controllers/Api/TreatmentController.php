@@ -25,9 +25,22 @@ class TreatmentController extends AbstractController
 
         return $this->sendResponse($item);
     }
+    public function employeeTreatments($id)
+    {
+        $item = $this->service->employeeTreatments($id);
+
+        return $this->sendResponse($item);
+    }
+
     public function deptorIndex()
     {
         $item = $this->service->deptorIndex(request()->all());
+
+        return $this->sendResponse($item);
+    }
+    public function closed()
+    {
+        $item = $this->service->closed(request()->all());
 
         return $this->sendResponse($item);
     }
@@ -39,6 +52,14 @@ class TreatmentController extends AbstractController
 
         return $this->sendResponse($item);
     }
+
+    public function treatmentServices($id)
+    {
+        $item = $this->service->treatmentServices($id);
+
+        return $this->sendResponse($item);
+    }
+
     public function treatmentFinished($id)
     {
         $item = $this->service->treatmentFinished($id);

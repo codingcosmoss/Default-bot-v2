@@ -71,9 +71,27 @@ class TreatmentService extends AbstractService
         ];
     }
 
+    public function employeeTreatments($id )
+    {
+        $treatments = $this->model::where('user_id', $id)
+                ->where('status', '!=', Status::$canceled)
+                ->get();
+
+        return [
+            'status' => true,
+            'message' => 'Success',
+            'statusCode' => 200,
+            'data' => TreatmentResource::collection($treatments)
+        ];
+    }
+
+
+
+
     public function deptorIndex($data = null)
     {
         $models = $this->model::where('status', '!=', Status::$new)
+            ->where('status', '!=', Status::$canceled)
             ->where(function($query) {
                 $query->orWhere('payment_status', Status::$unpaid)
                     ->orWhere('payment_status', Status::$notFullyPaid);
@@ -98,6 +116,56 @@ class TreatmentService extends AbstractService
             'message' => 'Success',
             'statusCode' => 200,
             'data' => $data
+        ];
+    }
+
+
+    public function closed($data)
+    {
+
+        $fields = $this->getClosedFields();
+
+        $rules = [];
+
+        foreach ($fields as $field) {
+
+            $rules[$field->getName()] = $field->getRules();
+        }
+
+        $validator = Validator::make($data, $rules);
+
+        if ($validator->fails()) {
+
+            $errors = [];
+
+            foreach ($validator->errors()->getMessages() as $key => $value) {
+
+                $errors[$key] = $value[0];
+            }
+
+            return [
+                'status' => false,
+                'message' => 'Validation error',
+                'statusCode' => 200,
+                'data' => $errors
+            ];
+        }
+
+        $data = $validator->validated();
+
+        $treatment = $this->model::find($data['treatment_id']);
+
+        if ($treatment){
+            $treatment->status = Status::$canceled;
+            $treatment->cancleted_description = $data['description'];
+            $treatment->save();
+        }
+
+        return [
+            'status' => true,
+            'message' => 'Success',
+            'statusCode' => 200,
+            'data' => null
         ];
     }
 
@@ -130,6 +198,14 @@ class TreatmentService extends AbstractService
             TextField::make('patient_id')->setRules('required|numeric'),
             TextField::make('reception_description')->setRules('nullable'),
 
+        ];
+    }
+
+    public function getClosedFields()
+    {
+        return [
+            TextField::make('treatment_id')->setRules('required|numeric'),
+            TextField::make('description')->setRules('required'),
         ];
     }
 
@@ -834,6 +910,7 @@ class TreatmentService extends AbstractService
                 }
             })
             ->where('treatments.status', '!=', Status::$new)
+            ->where('status', '!=', Status::$canceled)
             ->where(function($query) {
                 $query->orWhere('treatments.payment_status', Status::$unpaid)
                     ->orWhere('treatments.payment_status', Status::$notFullyPaid);

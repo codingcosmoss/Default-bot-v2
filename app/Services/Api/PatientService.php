@@ -63,14 +63,14 @@ class PatientService extends AbstractService
     {
         return [
             TextField::make('first_name')->setRules('required|min:3|max:255'),
-            TextField::make('last_name')->setRules('nullable|min:3|max:255'),
+            TextField::make('last_name')->setRules('required|min:3|max:255'),
             TextField::make('phone')->setRules('nullable|numeric'),
             TextField::make('job')->setRules('nullable|min:3|max:255'),
             TextField::make('address')->setRules('nullable|min:3|max:255'),
             TextField::make('gender')->setRules('required|integer'),
-            TextField::make('birthday')->setRules('nullable'),
+            TextField::make('birthday')->setRules('required|date'),
             TextField::make('price')->setRules('nullable|integer'),
-            TextField::make('sort_order')->setRules('nullable:integer'),
+            TextField::make('sort_order')->setRules('nullable|integer'),
             TextField::make('diseasesIds')->setRules('nullable'),
         ];
     }
@@ -129,13 +129,13 @@ class PatientService extends AbstractService
             $model = new $this->model;
             $model->first_name = $data['first_name'];
             $model->last_name = $data['last_name'];
-            $model->phone = $data['phone'];
-            $model->job = $data['job'];
-            $model->address = $data['address'];
+            $model->phone = isset($data['phone']) ? $data['phone'] : '---';
+            $model->job =  isset($data['address']) ? $data['address'] : '---';
+            $model->address = isset($data['address']) ? $data['address'] : '---';
             $model->gender = $data['gender'];
-            $model->sort_order = $data['sort_order'];
-            $model->birthday = $data['birthday'];
-            $model->price = $data['price'];
+            $model->sort_order = isset($data['sort_order']) ? $data['sort_order'] : 1;
+            $model->birthday = isset($data['birthday']) ? $data['birthday'] : null;
+            $model->price = isset($data['price']) ? $data['price'] : '';
             $model->status = Status::$status_active;
 
             if ($model->save()) {
@@ -329,13 +329,13 @@ class PatientService extends AbstractService
         try {
 
             $model->first_name = $data['first_name'];
-            $model->last_name = isset($data['last_name']) ? $data['last_name'] : '';
-            $model->phone = isset($data['phone']) ? $data['phone'] : '';
-            $model->job =  isset($data['job']) ? $data['job'] : '';
-            $model->address = isset($data['address']) ? $data['address'] : '';
+            $model->last_name = $data['last_name'];
+            $model->phone = isset($data['phone']) ? $data['phone'] : '---';
+            $model->job =  isset($data['job']) ? $data['job'] : '---';
+            $model->address = isset($data['address']) ? $data['address'] : '---';
             $model->gender = $data['gender'];
-            $model->birthday = isset($data['birthday']) ? $data['birthday'] : '';
-            $model->sort_order = isset($data['sort_order']) ? $data['sort_order'] : '';
+            $model->birthday = isset($data['birthday']) ? $data['birthday'] : null;
+            $model->sort_order = isset($data['sort_order']) ? $data['sort_order'] : 1;
             $model->price = isset($data['price']) ? $data['price'] : '';
             $model->status = Status::$status_active;
 

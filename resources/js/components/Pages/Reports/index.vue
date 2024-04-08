@@ -17,7 +17,7 @@
                             </h3>
                             <div class="mb-4.5 flex flex-col gap-6 xl:flex-row " style="align-items: center">
                                 <Input
-                                    @input = "getIndex"
+                                    @input = "getIndex()"
                                     :Couple="false"
                                     Label=""
                                     @onInput="end = $event"
@@ -27,7 +27,7 @@
                                 />
                                 <b>-</b>
                                 <Input
-                                    @input = "getIndex"
+                                    @input = "getIndex()"
                                     :Couple="false"
                                     Label=""
                                     @onInput="start = $event"
@@ -55,7 +55,7 @@
 
             <ContentBlock
                 :Title = "getName('GivenMoney')"
-                :Text = "useConterStore().formatNumber(totalClientPaymentCashSum) + ' uzs' "
+                :Text = "useConterStore().formatNumber(stuffGivenTotalSum) + ' uzs' "
                 Icon = "fa fa-fas fa-coins"
                 Item = ""
             />
@@ -77,8 +77,8 @@
 
         </ContentBox>
 
-        <!--   Xarajatlar     -->
-        <Expenses></Expenses>
+        <!--  Kunlik  Xarajatlar     -->
+        <DalyCosts :PropItems = "dalyCosts" ></DalyCosts>
 
 
     </Page>
@@ -90,11 +90,12 @@ import Input from "@/components/Pages/Diseases/EditPassword/Inputs/Input.vue";
 import ContentBlock from "./Contents/ContentBlock.vue";
 import ContentBox from "./Contents/ContentBox.vue";
 import {employeeCreate, getEmployeePayments, reports, treatmentDiscount} from "@/Api.js";
-import Expenses  from './Expenses/Table.vue';
+import DalyCosts  from '../DailyCosts/Table.vue';
+import Payments  from '../DailyCosts/Table.vue';
 import Select from "@/components/Pages/Services/Create/Inputs/Select.vue";
 import DinamicForm from "@/ui-components/Form/DinamicForm.vue";
     export default {
-        components:{DinamicForm, Select, Input, ContentBox, ContentBlock, Page, Expenses},
+        components:{DinamicForm, Select, Input, ContentBox, ContentBlock, Page, DalyCosts},
         setup(){
             return {useConterStore}
         },
@@ -109,6 +110,7 @@ import DinamicForm from "@/ui-components/Form/DinamicForm.vue";
                 totalClientPaymentSum: 0,
                 start: 0,
                 end:0,
+                dalyCosts: []
             }
         },
         methods:{
@@ -152,17 +154,22 @@ import DinamicForm from "@/ui-components/Form/DinamicForm.vue";
                 return useConterStore().getName(val)
             },
             async getIndex(){
-                // const response = await reports(this.yesterday, this.currentDate);
-                setTimeout(async ()=>{
-                    const response = await reports(this.start, this.end);
-                    this.totalServiceSum = response.data.totalServiceSum;
-                    this.totalClientPaymentCashSum = response.data.totalClientPaymentCashSum;
-                    this.dailyExpensesTotalSum = response.data.dailyExpensesTotalSum;
-                    this.stuffGivenTotalSum = response.data.stuffGivenTotalSum;
-                    this.totalClientPaymentSum = response.data.totalClientPaymentSum;
 
-                    this.Reports = response.data;
-                }, 500)
+                // const response = await reports(this.yesterday, this.currentDate);
+                const response = await reports(this.end, this.start);
+                console.log(response)
+                this.totalServiceSum = response.data.totalServiceSum;
+                this.totalClientPaymentCashSum = response.data.totalClientPaymentCashSum;
+                this.stuffGivenTotalSum = response.data.stuffGivenTotalSum;
+                this.totalClientPaymentSum = response.data.totalClientPaymentSum;
+                this.dalyCosts = response.data.DalyCosts;
+                this.dailyExpensesTotalSum = 0;
+                response.data.DalyCosts.forEach((e) => {
+                    this.dailyExpensesTotalSum += Number(e.amount);
+                })
+
+
+                this.Reports = response.data;
             },
             Sum(treatments){
                 let sum = 0;
@@ -179,8 +186,8 @@ import DinamicForm from "@/ui-components/Form/DinamicForm.vue";
 
         },
         mounted() {
-            this.getIndex()
             this.getDate()
+            this.getIndex()
         }
 
     }

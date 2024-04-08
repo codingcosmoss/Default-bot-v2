@@ -72,7 +72,7 @@
                             &nbsp;
                             <i @click = "this.$router.push({ path: '/service-category/show', query: { id: item.id } })" class="fa-solid setting-icon fa-eye"></i>
                             &nbsp;
-                            <i @click = "onDelete(item.id)" class="fa-solid text-danger fa-trash setting-icon"></i>
+                            <i v-if="item.services.length == 0" @click = "onDelete(item.id)" class="fa-solid text-danger fa-trash setting-icon"></i>
                         </p>
                     </div>
 

@@ -16,7 +16,7 @@ class OneUserResource extends JsonResource
     {
         $defaultImage = [
             [
-                'url' => 'https://www.pinclipart.com/picdir/big/164-1647836_album-collection-list-music-playlist-songs-icon-gallery.png'
+                'url' => asset('').'Photos/user.png'
             ]
         ];
         return [
@@ -30,6 +30,8 @@ class OneUserResource extends JsonResource
             'salary_static' => $this->salary_static,
             'sort_order' => $this->sort_order,
             'email' => $this->email,
+            'permissions' => $this->permissions,
+
             'image' => count($this->image) != 0 ? ImageResource::collection($this->image) : $defaultImage ,
         ];
     }

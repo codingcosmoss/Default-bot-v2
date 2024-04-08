@@ -10,6 +10,7 @@ export const useConterStore = defineStore({
         sidebarToggle: '',
         Localization: Languages,
         Lang: '',
+        roles: []
     }),
 
     getters: {
@@ -20,6 +21,9 @@ export const useConterStore = defineStore({
 
         updatePage(val){
             this.activePage = val;
+        },
+        updateRoles(val){
+            this.roles = val;
         },
         updateSidebarToggle(val){
             this.sidebarToggle = val;
@@ -35,7 +39,21 @@ export const useConterStore = defineStore({
         },
         formatNumber(number) {
             return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+        },
+        formatDate(datetime) {
+            const date = new Date(datetime);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+
+            const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}`;
+            return formattedDate;
         }
+
+
 
 
 }

@@ -10,6 +10,9 @@ export const Test = async () => {
 export const GetUser = async () => {
     return  GET('/user');
 };
+export const getDashboardData = async () => {
+    return  GET('/getDashboard');
+};
 
 export const Login = async (data) => {
     return  POST('/login', data);
@@ -36,6 +39,11 @@ export const Employees = async (id, pages) => {
 export const showEmployee = async (data) => {
     return  GET('/employee/show/'+data);
 };
+
+export const cancletedTreatment = async (data) => {
+    return  POST('/treatmetn/closed', data);
+};
+
 export const updateEmployee = async (id, data) => {
     return  POST('/employee/update/'+id, data );
 };
@@ -52,6 +60,9 @@ export const updatePassword = async (data) => {
     return  POST('/employee/update-password', data );
 };
 
+export const permissions = async () => {
+    return  GET('/permissions' );
+};
 
 // Services
 
@@ -61,6 +72,9 @@ export const services = async (id, pages) => {
 
 export const serviceShow = async (data) => {
     return  GET('/service/show/'+data);
+};
+export const getEmployeeTreatments = async (id) => {
+    return  GET('/treatmetn/employee/treatments/'+id);
 };
 
 export const serviceCreate = async (data) => {
