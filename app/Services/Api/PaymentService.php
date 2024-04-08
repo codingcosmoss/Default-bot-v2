@@ -181,7 +181,7 @@ class PaymentService extends AbstractService
                 // Telegram botga xabar yuborish
 //                event(new TelegramMessage('payment', $model));
 
-                TelegramSendMessage::dispatch('payment', $model );
+//                TelegramSendMessage::dispatch('payment', $model );
 
                 $payments = Payment::where('patient_id', $data['patient_id'])
                     ->where( "treatment_id", $data['treatment_id'] )

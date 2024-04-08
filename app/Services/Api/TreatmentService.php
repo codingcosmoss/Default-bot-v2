@@ -305,7 +305,7 @@ class TreatmentService extends AbstractService
 
 
         // Telegram botga xabar yuborish
-        TelegramSendMessage::dispatch('treatment', $treatment , $services);
+//        TelegramSendMessage::dispatch('treatment', $treatment , $services);
 //        event(new SendTelegramMessage('treatment', $treatment , $services));
 
         if ($treatment){
