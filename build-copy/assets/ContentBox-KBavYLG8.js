@@ -1,0 +1,1 @@
+import{_ as e,o as s,c,e as r}from"./app-8i59_tig.js";const t={},n={class:"grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5"};function a(o,d){return s(),c("div",n,[r(o.$slots,"default")])}const _=e(t,[["render",a]]);export{_ as C};

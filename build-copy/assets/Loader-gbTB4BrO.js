@@ -1,0 +1,1 @@
+import{_ as e,o,c as s,a as c}from"./app-8i59_tig.js";const t={},_={class:"loader_box"},a=c("div",{class:"loader_item"},null,-1),r=[a];function n(d,i){return o(),s("div",_,r)}const f=e(t,[["render",n]]);export{f as L};

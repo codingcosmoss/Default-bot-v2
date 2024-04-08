@@ -1,0 +1,1 @@
+import{_ as t,o as a,c as n,t as r,n as s}from"./app-8i59_tig.js";const o={props:{number:{type:Number,default:0},active:{type:Boolean,default:!1},link:{type:String,default:0}}};function c(i,l,e,p,u,f){return a(),n("a",{class:s([e.active?"active":"","cursor-pointer"])},r(e.number),3)}const m=t(o,[["render",c]]);export{m as P};
