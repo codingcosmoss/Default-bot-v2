@@ -30,7 +30,8 @@ class ReportService extends AbstractService
     public function employeesPaymentIndex()
     {
 
-        $models = User::where('login', '!=','admin')->get();
+        $models = User::where('status', Status::$status_active)
+            ->where('login', '!=','admin')->get();
 
         return [
             'status' => true,
@@ -43,7 +44,7 @@ class ReportService extends AbstractService
     public function dashboard()
     {
 
-        $users = User::where('login', '!=', 'admin')->count();
+        $users = User::where('status', Status::$status_active)->where('login', '!=', 'admin')->count();
         $patients = Patient::count();
         $services = Service::where('status', Status::$status_active)->get();
         $debtorPatients = Patient::all();
