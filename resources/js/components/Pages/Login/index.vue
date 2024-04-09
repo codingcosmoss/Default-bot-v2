@@ -65,6 +65,9 @@
                     const response = await axios.post('/login', data);
                     localStorage.setItem('lang', 'uz');
                     localStorage.setItem('0008a78764c2',  response.data.data);
+                    if ( localStorage.getItem('darkMode' ) == null){
+                        localStorage.setItem('darkMode', true );
+                    }
                     console.log('Response',response)
 
                     if (response.data.success != undefined){

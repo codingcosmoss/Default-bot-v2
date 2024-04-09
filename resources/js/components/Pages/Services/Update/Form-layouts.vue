@@ -364,6 +364,9 @@ export default {
                         Alert('error', 'There is an error in the form');
                         this.Loader = false;
                     }
+                }else {
+                    this.Loader = false;
+
                 }
 
             },

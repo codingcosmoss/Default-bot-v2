@@ -275,12 +275,14 @@ export default {
         };
 
         const response = await serviceCreate(data);
-          console.log('Response:', response);
+
+        console.log('Response:', response);
         if (response.status) {
           Alert("success", "Created successfully !");
           this.$router.push("/services");
         } else {
           this.errorObj = response.data;
+          this.Loader = false;
         }
       }else {
         Alert('error', 'There is an error in the form');
