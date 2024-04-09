@@ -184,7 +184,6 @@ export default {
         },
 
         async getUser(){
-
             let localRoles = localStorage.getItem('roles');
             if (localRoles == null || localRoles == ''){
                 const response = await GetUser();
@@ -196,6 +195,8 @@ export default {
                     });
 
                     localStorage.setItem('roles',  this.caesarCipher( this.Roles.join(',') , 7) );
+                }else{
+                    this.$router.push('/login');
                 }
             }else{
                 this.Roles =  this.caesarDecipher( localRoles, 7).split(',') ;

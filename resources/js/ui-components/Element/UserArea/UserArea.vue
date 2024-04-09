@@ -84,6 +84,7 @@
                 localStorage.removeItem('0008a78764c2');
                 localStorage.removeItem('roles');
                 localStorage.removeItem('user');
+                localStorage.removeItem('reload');
                 this.$router.push('/login');
                 const response = await Logout();
             },

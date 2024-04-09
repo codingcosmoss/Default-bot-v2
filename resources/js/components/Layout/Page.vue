@@ -107,6 +107,14 @@ export default {
                 }, 1000)
             }
         },
+        reloadSite(){
+             let reload = localStorage.getItem('reload');
+             if (reload == null){
+                 localStorage.setItem('reload', true);
+                 location.reload();
+             }
+
+        }
 
 
 
@@ -115,6 +123,7 @@ export default {
     mounted() {
         this.checkTokenInLocalStorage()
         this.removeLoader();
+        this.reloadSite()
 
     }
 
