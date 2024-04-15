@@ -279,7 +279,8 @@ export default {
             async testLogin(val){
                 this.login = val;
                 const response = await testLogin({
-                    'login': val
+                    'login': val,
+                    'id': 0
                 });
                 console.log('R:',response)
                 if (response.status){
@@ -292,7 +293,8 @@ export default {
                 this.Loader = true;
                 const val = this.login;
                 const response = await testLogin({
-                    'login': val
+                    'login': val,
+                    'id': 0
                 });
                 if (response.status){
                     this.isLoginError = true;

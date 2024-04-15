@@ -264,6 +264,7 @@ export default {
                 const val = this.login;
                 const response = await testLogin({
                     'login': val,
+                    'id': this.$route.query.id
                 });
                 if (response.status){
                     this.isLoginError = true;
@@ -302,7 +303,8 @@ export default {
             async testLogin(val){
                 this.login = val;
                 const response = await testLogin({
-                    'login': val
+                    'login': val,
+                    'id': this.$route.query.id
                 });
 
                 if (response.status){

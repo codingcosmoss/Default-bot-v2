@@ -575,6 +575,7 @@ class EmployeesService extends AbstractService
 
     public function testLogin($data)
     {
+        $user =  User::find($data['id']);
         $item = $this->model::where('login', $data['login'])
             ->first();
 
@@ -584,6 +585,16 @@ class EmployeesService extends AbstractService
                 'message' => 'Success',
                 'statusCode' => 404,
             ];
+        }
+
+        if (isset($user)){
+            if ($item->login == $user->login){
+                return [
+                    'status' => false,
+                    'message' => 'Success',
+                    'statusCode' => 404,
+                ];
+            }
         }
 
         return [
