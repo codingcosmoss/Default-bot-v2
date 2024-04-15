@@ -107,8 +107,8 @@ class ServiceService extends AbstractService
             $item->price = $data['price'];
             $item->name = $data['name'];
             $item->category_id = $data['category_id'];
-            $item->material_price = $data['material_price'];
-            $item->technic_price = $data['technic_price'];
+            $item->technic_price = isset($data['technic_price']) ? $data['technic_price'] : null ;
+            $item->material_price = isset($data['material_price']) ? $data['material_price'] : null ;
             $item->order = $data['order'];
             $item->collection_id = $collectionId;
             $item->status = $data['status'];
@@ -164,8 +164,8 @@ class ServiceService extends AbstractService
             TextField::make('code')->setRules('nullable|min:3|max:255'),
             TextField::make('price')->setRules('required|integer'),
             TextField::make('category_id')->setRules('required|integer'),
-            TextField::make('material_price')->setRules('required|integer'),
-            TextField::make('technic_price')->setRules('required|integer'),
+            TextField::make('material_price')->setRules('nullable|integer'),
+            TextField::make('technic_price')->setRules('nullable|integer'),
             TextField::make('order')->setRules('required|integer'),
             TextField::make('status')->setRules('required|integer'),
             TextField::make('personal_procents')->setRules('nullable'),
@@ -234,6 +234,7 @@ class ServiceService extends AbstractService
 
         DB::beginTransaction();
         try {
+
             $collectionId = null;
             if (isset($data['collection_id']) && $data['collection_id'] > 0 ){
                 $collectionId = $data['collection_id'];
@@ -243,8 +244,8 @@ class ServiceService extends AbstractService
             $item->code = isset( $data['code']) ?  $data['code'] : '';
             $item->price = $data['price'];
             $item->category_id = $data['category_id'];
-            $item->material_price = $data['material_price'];
-            $item->technic_price = $data['technic_price'];
+            $item->technic_price = isset($data['technic_price']) ? $data['technic_price'] : null ;
+            $item->material_price = isset($data['material_price']) ? $data['material_price'] : null ;
             $item->order = $data['order'];
             $item->collection_id = $collectionId;
             $item->status = $data['status'];

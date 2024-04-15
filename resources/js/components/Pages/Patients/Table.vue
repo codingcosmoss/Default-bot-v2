@@ -125,6 +125,7 @@
               >{{ getStatus(item.payment_status)  }}</p>
           </div>
 
+
           <div class="flex items-center justify-center p-2.5 xl:p-5">
             <p class="font-medium text-black dark:text-white">{{ item.created_at }}</p>
           </div>
@@ -512,7 +513,6 @@ export default {
 }
 .status-text{
     background: #39aa07;
-    font-size: 13px;
     padding: 3px 8px ;
     border-radius: 10px;
     font-weight: bold;
@@ -524,7 +524,7 @@ export default {
 }
 .active {
   background: #10b981 !important;
-  color: #2e3a47 !important;
+  //color: #2E3A47 !important;
 }
 .photo-img {
   width: 50px;

@@ -155,6 +155,7 @@ export default {
 
 
         async saveTreatment(){
+
             let Arrs = [];
             if (this.Items.length > 0){
                 this.Items.forEach((item)=>{
@@ -314,7 +315,7 @@ export default {
     }
     .active{
         background: #10B981 !important;
-        color: #2E3A47 !important;
+        //color: #2E3A47 !important;
 
     }
 

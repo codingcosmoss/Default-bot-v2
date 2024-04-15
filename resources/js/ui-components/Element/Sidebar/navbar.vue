@@ -70,7 +70,7 @@
         <MenuList
             v-if = "Roles.includes('Warehouse')"
 
-            :Selected = " ['/warehouses', '/groups', '/products', '/filials', '/warehouse-categories'].includes(this.$route.path)"
+            :Selected = " ['/warehouses', '/groups', '/products', '/warehouse-categories'].includes(this.$route.path)"
             :Title = "getName('Warehouse')" Icon = "fa-solid fa-warehouse" :title = "getName('Warehouse')">
             <Menu
                 Path = "/warehouses"
@@ -79,13 +79,13 @@
                 style="margin-right: 20px"
                 :class="  ['/warehouses', '/groups', '/products'].includes(this.$route.path) ? 'navbar-active' : '' "
             />
-            <Menu
-                Path = "/filials"
-                :Title = "getName('Filials')"
-                Icon = "fa-solid fa-f"
-                style="margin-right: 20px"
+<!--            <Menu-->
+<!--                Path = "/filials"-->
+<!--                :Title = "getName('Filials')"-->
+<!--                Icon = "fa-solid fa-f"-->
+<!--                style="margin-right: 20px"-->
 
-            />
+<!--            />-->
             <Menu
                 Path = "/warehouse-categories"
                 :Title = "getName('Categories')"

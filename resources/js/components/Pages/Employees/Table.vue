@@ -401,8 +401,8 @@ export default {
         transform: scale(0.9);
     }
     .active{
-        background: #10B981 !important;
-        color: #2E3A47 !important;
+        background: #10b91e !important;
+        ////color: #2E3A47 !important;
     }
     .photo-img{
         width: 50px;

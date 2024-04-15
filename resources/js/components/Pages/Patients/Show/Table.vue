@@ -43,7 +43,7 @@
         </ContentBox>
 
 
-        <Treatments :Header = "false" :Treatments = "Treatmets" v-if="Treatmets.length > 0" ></Treatments>
+        <Treatments :isPaginate = "false" @onPayment = "updateTreatment()" :Header = "false" :Treatments = "Treatmets" v-if="Treatmets.length > 0" ></Treatments>
 
         <br>
         <Payments :isIcons = "false" :Header = "false" :Payments = "Payments"  ></Payments>
@@ -188,6 +188,10 @@ export default {
             this.PaymentItems = response.data.items;
             this.Services = response.data.services;
         },
+        async updateTreatment(){
+            const response = await patientShow(this.$route.query.id);
+            this.Treatmets = response.data.treatmets;
+        }
 
     },
     mounted() {
@@ -237,7 +241,7 @@ export default {
     }
     .active{
         background: #10B981 !important;
-        color: #2E3A47 !important;
+        //color: #2E3A47 !important;
 
     }
 

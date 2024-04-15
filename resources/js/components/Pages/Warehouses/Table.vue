@@ -121,17 +121,17 @@
             :Value = "Address"
         />
 
-        <Select
-            :Label="getName('Filial')"
-            :isError="hasKey('filial_id')"
-            :message="errorObj['filial_id']"
-            @onSelect="filial_id = $event"
-        >
-            <option>---</option>
-            <option v-for="filial in Filials" :value="filial.id" :selected = "filial.id == filial_id">
-                {{ filial["name"] }}
-            </option>
-        </Select>
+<!--        <Select-->
+<!--            :Label="getName('Filial')"-->
+<!--            :isError="hasKey('filial_id')"-->
+<!--            :message="errorObj['filial_id']"-->
+<!--            @onSelect="filial_id = $event"-->
+<!--        >-->
+<!--            <option>-&#45;&#45;</option>-->
+<!--            <option v-for="filial in Filials" :value="filial.id" :selected = "filial.id == filial_id">-->
+<!--                {{ filial["name"] }}-->
+<!--            </option>-->
+<!--        </Select>-->
 
         <Select
             :Label="getName('Categories')"

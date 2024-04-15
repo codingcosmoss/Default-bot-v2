@@ -178,8 +178,6 @@ class PaymentService extends AbstractService
             if ($model->save()) {
                 DB::commit();
 
-                // Telegram botga xabar yuborish
-//                event(new TelegramMessage('payment', $model));
 
 //                TelegramSendMessage::dispatch('payment', $model );
 
@@ -214,13 +212,25 @@ class PaymentService extends AbstractService
             ];
         }
 
+        try {
+            // Telegram botga xabar yuborish
+            event(new TelegramMessage('payment', $model));
+            return [
+                'status' => true,
+                'message' => 'success',
+                'statusCode' => 200,
+                'data' => $model
+            ];
 
-        return [
-            'status' => true,
-            'message' => 'success',
-            'statusCode' => 200,
-            'data' => $model
-        ];
+        }catch (\Exception $ex) {
+            return [
+                'status' => true,
+                'message' => 'success',
+                'statusCode' => 200,
+                'data' => $model
+            ];
+        }
+
     }
 
     public function getUserTreatmentPayments($data)

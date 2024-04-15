@@ -2,6 +2,7 @@
 
 namespace App\Services\Api;
 
+use App\Events\TelegramMessage;
 use App\Fields\Store\TextField;
 use App\Http\Resources\OneUserResource;
 use App\Http\Resources\PatientResource;
@@ -306,7 +307,7 @@ class TreatmentService extends AbstractService
 
         // Telegram botga xabar yuborish
 //        TelegramSendMessage::dispatch('treatment', $treatment , $services);
-//        event(new SendTelegramMessage('treatment', $treatment , $services));
+
 
         if ($treatment){
             $treatment->status = Status::$finished;
@@ -319,12 +320,27 @@ class TreatmentService extends AbstractService
                 'data' => null
             ];
         }
-        return [
-            'status' => false,
-            'message' => 'Treatment not fount',
-            'statusCode' => 200,
-            'data' => null
-        ];
+
+        try {
+            // Telegram botga xabar yuborish
+            event(new SendTelegramMessage('treatment', $treatment , $services));
+            return [
+                'status' => false,
+                'message' => 'Treatment not fount',
+                'statusCode' => 200,
+                'data' => null
+            ];
+
+        }catch (\Exception $ex) {
+            return [
+                'status' => false,
+                'message' => 'Treatment not fount',
+                'statusCode' => 200,
+                'data' => null
+            ];
+        }
+
+
     }
 
     public function treatmentAddServiceAll($id)

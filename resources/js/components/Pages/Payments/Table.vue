@@ -111,7 +111,7 @@
           </div>
 
         <div class="flex items-center justify-center p-2.5 xl:p-5">
-            <p class="font-medium dark:text-white status-text "
+            <p style="font-size: 11.5px" class="font-medium dark:text-white status-text "
                :style=" 'background: ' + item.color "
             >{{ item.payment_type }}</p>
         </div>
@@ -514,7 +514,7 @@ export default {
 }
 .active {
   background: #10b981 !important;
-  color: #2e3a47 !important;
+  //color: #2E3A47 !important;
 }
 
 .photo-img {
@@ -557,7 +557,6 @@ export default {
 }
 .status-text{
     background: #39aa07;
-    font-size: 13px;
     padding: 5px 20px ;
     border-radius: 10px;
     font-weight: bold;

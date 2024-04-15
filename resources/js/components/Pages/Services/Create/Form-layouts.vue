@@ -318,9 +318,9 @@ export default {
           }
           // Summ
           if (item.type == '%') {
-              summ += (this.price*Number(item.procent))/100;
+              summ = (this.price*Number(item.procent))/100;
           }else{
-              summ += Number(item.procent);
+              summ = Number(item.procent);
           }
           items.forEach((model, number)=>{
               if (number != index && model.employee == item.employee){
@@ -329,14 +329,16 @@ export default {
               }
           })
 
+          if (this.price < summ ) {
+              this.summError = true;
+              return false;
+          }else{
+              this.summError = false;
+          }
+
       });
 
-      if (this.price < summ || this.price <= 0) {
-          this.summError = true;
-          return false;
-      }else{
-        this.summError = false;
-      }
+
 
       this.FormErrors =  errors;
 

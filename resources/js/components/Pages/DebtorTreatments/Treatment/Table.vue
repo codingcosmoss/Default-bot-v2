@@ -302,7 +302,7 @@ export default {
     }
     .active{
         background: #10B981 !important;
-        color: #2E3A47 !important;
+        ////color: #2E3A47 !important;
 
     }
 

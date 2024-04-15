@@ -14,9 +14,9 @@
 
                      <div class="flex flex-col">
 
-                    <div v-for="(item) in item.services" :class="item.max_count == 0 ? 'bg-danger' : '' " class="grid grid-cols-3 border-b  border-stroke dark:border-strokedark sm:grid-cols-3 databes_table ">
+                    <div v-for="(item) in item.services" :class="item.max_count == 0 ? 'bg-danger' : '' " class="grid grid-cols-3 border-b  border-stroke dark:border-strokedark sm:grid-cols-3  ">
 
-                        <div class="flex items-center gap-3 p-2.5 xl:p-5">
+                        <div class="flex items-center gap-3 p-2.5 xl:p-5" >
                             <p class="font-bold hidden text-black dark:text-white sm:block ">
                                 <Checkbox01
 

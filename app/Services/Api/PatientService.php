@@ -64,7 +64,7 @@ class PatientService extends AbstractService
         return [
             TextField::make('first_name')->setRules('required|min:3|max:255'),
             TextField::make('last_name')->setRules('required|min:3|max:255'),
-            TextField::make('phone')->setRules('nullable|numeric'),
+            TextField::make('phone')->setRules('nullable|max:21'),
             TextField::make('job')->setRules('nullable|min:3|max:255'),
             TextField::make('address')->setRules('nullable|min:3|max:255'),
             TextField::make('gender')->setRules('required|integer'),

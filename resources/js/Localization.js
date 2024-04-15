@@ -197,9 +197,11 @@ export const Languages =  {
         DeptorPatient: 'Qarzdor bemorlar',
         TopServices: 'Top xizmatlar',
         ActivedCount: 'Foydalanishlar soni',
+        LoginError: 'Bunday login mavjud',
     },
 
     ru:{
+        LoginError: 'Такой логин существует',
         ActivedCount: 'Количество использований',
         TopServices: 'Лучшие услуги',
         DeptorPatient: 'Пациенты в долгах',

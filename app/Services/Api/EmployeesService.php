@@ -6,6 +6,7 @@ use App\Fields\Store\TextField;
 use App\Http\Resources\OneUserResource;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\UserResources;
+use App\Models\PersonalPrice;
 use App\Models\User;
 use App\Traits\Status;
 use Illuminate\Http\JsonResponse;
@@ -499,7 +500,7 @@ class EmployeesService extends AbstractService
         return [
             TextField::make('name')->setRules('required|min:3|max:255'),
             TextField::make('position')->setRules('required|min:3|max:255'),
-            TextField::make('login')->setRules('required|min:5|max:1024'),
+            TextField::make('login')->setRules('required|min:3|max:1024'),
             TextField::make('profil_photo_path')->setRules('nullable'),
             TextField::make('color')->setRules('nullable'),
             TextField::make('roles')->setRules('nullable'),
@@ -552,7 +553,7 @@ class EmployeesService extends AbstractService
                     'data' => null
                 ];
             }
-
+            $personalPrices = PersonalPrice::where('employee_id', $item->id)->delete();
             $item->status = Status::$status_deleted;
 
             if ($item->save()) {

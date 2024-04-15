@@ -97,12 +97,12 @@
         >
           <div class="flex items-center gap-3 p-2.5 xl:p-5">
             <p class="font-medium hidden text-black dark:text-white sm:block">
-              {{ index + 1 }}. {{ item.patient.first_name }}
+              {{ index + 1 }}. {{ item.patient.first_name + ' ' + item.patient.last_name  }}
             </p>
           </div>
 
           <div class="flex items-center justify-center p-2.5 xl:p-5">
-            <p class="font-medium text-black dark:text-white">{{ item.patient.last_name }}</p>
+            <p class="font-medium text-black dark:text-white">{{ item.patient.phone }}</p>
           </div>
 
           <div class="flex items-center justify-center p-2.5 xl:p-5">
@@ -110,7 +110,7 @@
           </div>
 
           <div class="flex items-center justify-center p-2.5 xl:p-5">
-              <p class="font-medium text-black dark:text-white">{{ item.start }} {{ item.id }}</p>
+              <p class="font-medium text-black dark:text-white">{{ item.start }} </p>
           </div>
 
           <div class="flex items-center justify-center p-2.5 xl:p-5">
@@ -158,7 +158,7 @@
                 <i
                     title="Tolov tarixi"
                     v-if="item.payment_status ==  11 || item.payment_status == 12"
-                    @click="istoryPaymentModal(item)"
+                    @click="istoryPaymentModal(item), Loader = true"
                     :title="getName('Payment')"
                     class="fa-solid fa-clock-rotate-left setting-icon  cursor-pointer"
                 ></i>
@@ -221,7 +221,7 @@
       </div>
 
 
-            <ShowForm @onSubmit = "Modal == '0' ? isShowModal = false : onPayment() "   :UpdateId = "UpdateId"  @closeModal = "isShowModal = $event, errorObj = []" :isShowModal = "isShowModal"  >
+            <ShowForm :isSubmit = " this.Modal == 'istory-payment' ? false : true  " @onSubmit = "Modal == '0' ? isShowModal = false : onPayment() "   :UpdateId = "UpdateId"  @closeModal = "isShowModal = $event, errorObj = []" :isShowModal = "isShowModal"  >
 
                 <table v-if="Modal == 0 && Model != []  " class="table01" >
 
@@ -305,6 +305,13 @@
                             >{{ patientPayment.payment_type }}</p>
                         </td>
 
+                    </tr>
+                    <tr>
+                        <td colspan="3"  style="border: none">
+                            <div style="width: 100%; display: flex; justify-content: center">
+                                <loader-spinning v-if="Loader" style="margin: 0 auto; " />
+                            </div>
+                        </td>
                     </tr>
 
                 </table>
@@ -518,6 +525,7 @@ export default {
     return {
       items: [],
       search: "",
+        Loader: false,
       column: "updated_at",
         userPayments: 0,
       order: "asc",
@@ -710,6 +718,7 @@ export default {
           const response = await patientShow(id);
           this.patientPayments = response.data.payments.items;
           console.log('Payment:', response.data.payments.items);
+          this.Loader = false;
       },
     async getPayments(id){
         const response =  await getUserPayments(id);
@@ -935,7 +944,7 @@ export default {
 
 .active {
   background: #10b981 !important;
-  color: #2e3a47 !important;
+  ////color: #2E3A47 !important;
 }
 .photo-img {
   width: 50px;
@@ -977,7 +986,6 @@ export default {
 }
 .status-text{
     background: #39aa07;
-    font-size: 13px;
     padding: 3px 8px ;
     border-radius: 10px;
     font-weight: bold;

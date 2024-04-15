@@ -55,8 +55,8 @@
                             :Label = "getName('login')"
                             @onInput = "testLogin($event)"
                             :Value = "login"
-                            :isError = "isLoginError"
-                            message = "Login is available !"
+                            :isError = "isLoginError || errorObj['login']"
+                            :message = " errorObj['login'] ?  errorObj['login'] : 'Login is available !' "
 
                         />
 
@@ -163,7 +163,7 @@
 
                 <div class=" pl-7 p-6.5" style="display: flex; justify-content: center">
                     <loader-spinning v-if="Loader" style="margin: 0 auto; " />
-                    <button v-if="!Loader" @click="create" class="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray">
+                    <button v-if="!Loader" @click="sendData" class="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray">
                         {{getName('create')}}
                     </button>
                 </div>
@@ -193,6 +193,7 @@ import {Alert} from "../../../../Config.js";
 import Table from "@/components/Pages/Diseases/Table.vue";
 import Checkbox01 from "@/ui-components/Form/Checkbox/Checkbox01.vue";
 import {permissions} from "../../../../Api.js";
+import {releaseNextTicks} from "alpinejs/src/nextTick.js";
 export default {
         data(){
             return{
@@ -218,6 +219,7 @@ export default {
         },
         components:{Checkbox01, Table, ImageInput, InputColor, Checkbox, Input},
         methods:{
+            releaseNextTicks,
             getName(val){
                 return useConterStore().getName(val)
             },
@@ -246,7 +248,7 @@ export default {
 
             async create(){
                 this.Loader = true;
-                if (this.testPassword(this.reset_password) != true){
+                if (this.testPassword(this.reset_password) != true ){
                     var data = {
                         'name': this.name,
                         'position': this.position,
@@ -269,6 +271,7 @@ export default {
                         this.errorObj = response.data;
                         this.Loader = false;
                     }
+                    this.Loader = false;
                 }
 
 
@@ -278,12 +281,28 @@ export default {
                 const response = await testLogin({
                     'login': val
                 });
+                console.log('R:',response)
                 if (response.status){
                     this.isLoginError = true;
                 }else {
                     this.isLoginError = false;
                 }
             },
+            async sendData(){
+                this.Loader = true;
+                const val = this.login;
+                const response = await testLogin({
+                    'login': val
+                });
+                if (response.status){
+                    this.isLoginError = true;
+                    this.Loader = false;
+                }else {
+                    this.isLoginError = false;
+                    this.create();
+                }
+            },
+
             hasKey(key) {
                 return key in this.errorObj;
             }

@@ -132,10 +132,10 @@
                 class="fa-solid setting-icon fa-pen-to-square"
               ></i>
               &nbsp;
-              <i
-                @click="isModal = true , UpdateId = item.id"
-                class="fa-solid setting-icon fa-eye disabled"
-              ></i>
+<!--              <i-->
+<!--                @click="isModal = true , UpdateId = item.id"-->
+<!--                class="fa-solid setting-icon fa-eye disabled"-->
+<!--              ></i>-->
               &nbsp;
                 <i @click = "onDelete(item.id)" class="fa-solid text-danger fa-trash setting-icon"></i>
 
@@ -361,7 +361,7 @@ export default {
 }
 .active {
   background: #10b981 !important;
-  color: #2e3a47 !important;
+  //color: #2E3A47 !important;
 }
 .photo-img {
   width: 50px;

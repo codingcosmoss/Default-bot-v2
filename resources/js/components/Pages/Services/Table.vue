@@ -99,8 +99,10 @@
 
 
                     <div class="flex items-center justify-center p-2.5 xl:p-5">
-                        <div  class="status_box" :class="item.status == 1 ? 'active' : 'inactive' ">
-                            {{item.status ? 'active' : 'inactive' }}
+                        <div >
+                            <p  class=" dark:text-white status-text " :class="item.status == 1 ? 'active' : 'inactive' "
+                            >{{item.status ? 'active' : 'inactive' }}</p>
+
                         </div>
                     </div>
 
@@ -295,8 +297,8 @@ export default {
         transform: scale(0.9);
     }
     .active{
-        background: #10B981 !important;
-        color: #2E3A47 !important;
+        background: #1bb910 !important;
+        //color: #2E3A47 !important;
     }
     .photo-img{
         width: 50px;

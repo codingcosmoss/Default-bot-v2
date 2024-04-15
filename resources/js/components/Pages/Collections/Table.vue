@@ -502,7 +502,7 @@ export default {
         transform: scale(0.9);
     }
     .active{
-        background: #10B981 !important;
+        background: #16b910 !important;
         color: white;
 
     }

@@ -457,7 +457,7 @@ export default {
 }
 .active {
   background: #10b981 !important;
-  color: #2e3a47 !important;
+  //color: #2E3A47 !important;
 }
 .table01 tr:hover{
     background: rgba(60, 80, 224, 0.22);
@@ -508,7 +508,6 @@ export default {
 }
 .status-text{
     background: #39aa07;
-    font-size: 13px;
     padding: 3px 8px ;
     border-radius: 10px;
     font-weight: bold;

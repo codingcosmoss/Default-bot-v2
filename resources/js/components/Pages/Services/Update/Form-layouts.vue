@@ -279,12 +279,13 @@ export default {
 
                 });
 
-                if (this.price < summ || this.price <= 0) {
-                    this.summError = true;
-                    return false;
-                }else{
-                    this.summError = false;
-                }
+                //
+                // if (this.price < summ || this.price <= 0) {
+                //     this.summError = true;
+                //     return false;
+                // }else{
+                //     this.summError = false;
+                // }
 
                 this.FormErrors =  errors;
 

@@ -62,7 +62,7 @@ export default {
     props:{
         Text:{
             type: String,
-            default: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit suspendisse.'
+            default: ''
         },
         Logo:{
             type: String,

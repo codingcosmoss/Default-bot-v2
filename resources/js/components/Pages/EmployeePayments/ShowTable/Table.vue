@@ -146,7 +146,7 @@ export default {
         },
         async getIndex(){
             const response = await showEmployeePayments(this.$route.query.id);
-            console.log(response)
+            console.log('R:',response)
             this.Employee = response.data;
             response.data.deptor_treatments.forEach((e) => {
                 this.DebtorSum +=e.doctor_sum;

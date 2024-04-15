@@ -33,68 +33,6 @@
                             Label = "Photo"
                         />
 
-                        <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
-
-
-
-                            <Input
-                                :Couple = "false"
-                                :Label = "getName('last_name')"
-                                @onInput = "last_name = $event"
-                                :isError = "hasKey('last_name')"
-                                :message = "errorObj['last_name']"
-                                :Value = "last_name"
-                            />
-
-                            <Input
-                                :Couple = "false"
-                                :Label = "getName('name')"
-                                @onInput = "first_name = $event"
-                                :isError = "hasKey('first_name')"
-                                :message = "errorObj['first_name']"
-                                :Value = "first_name"
-                            />
-
-                        </div>
-
-
-                        <div class=" mb-4.5 flex flex-col gap-6 xl:flex-row">
-
-                            <Input
-                                :Couple = "false"
-
-                                :Label = "getName('Address')"
-                                @onInput = "address = $event"
-                                :isError = "hasKey('address')"
-                                :message = "errorObj['address']"
-                                :Value = "address"
-                            />
-
-                            <label class="mb-2.5 block text-black dark:text-white">
-                                {{getName('Gender')}}
-                            </label>
-
-                            <checkbox01
-                                @click = "Checkbox = 5, console.log(Checkbox) "
-                                :onCheck = "Checkbox == 5 ? true : false"
-                                :Title = "getName('Male')"
-                                Class = "genderCheckbox"
-                                :isError = "hasKey('gender')"
-
-                            />
-
-                            <checkbox01
-                                @click = "Checkbox = 4, console.log(Checkbox)"
-                                :onCheck = "Checkbox == 4 ? true : false"
-                                :Title = "getName('Woman')"
-                                Class = "genderCheckbox"
-                                :isError = "hasKey('gender')"
-                            />
-
-
-
-                        </div>
-
 
 
 
@@ -119,13 +57,78 @@
 
                 <div class="flex flex-col gap-6 xl:flex-row px-6.5  mt-6.5">
 
+
+
+                    <Input
+                        :Couple = "false"
+                        :Label = "getName('last_name')"
+                        @onInput = "last_name = $event"
+                        :isError = "hasKey('last_name')"
+                        :message = "errorObj['last_name']"
+                        :Value = "last_name"
+                    />
+
+                    <Input
+                        :Couple = "false"
+                        :Label = "getName('name')"
+                        @onInput = "first_name = $event"
+                        :isError = "hasKey('first_name')"
+                        :message = "errorObj['first_name']"
+                        :Value = "first_name"
+                    />
+
+                </div>
+
+
+                <div class=" flex flex-col gap-6 xl:flex-row px-6.5  mt-6.5">
+
+                    <Input
+                        :Couple = "false"
+
+                        :Label = "getName('Address')"
+                        @onInput = "address = $event"
+                        :isError = "hasKey('address')"
+                        :message = "errorObj['address']"
+                        :Value = "address"
+                    />
+
+                    <label class="mb-2.5 block text-black dark:text-white">
+                        {{getName('Gender')}}
+                    </label>
+
+                    <checkbox01
+                        @click = "Checkbox = 5, console.log(Checkbox) "
+                        :onCheck = "Checkbox == 5 ? true : false"
+                        :Title = "getName('Male')"
+                        Class = "genderCheckbox"
+                        :isError = "hasKey('gender')"
+
+                    />
+
+                    <checkbox01
+                        @click = "Checkbox = 4, console.log(Checkbox)"
+                        :onCheck = "Checkbox == 4 ? true : false"
+                        :Title = "getName('Woman')"
+                        Class = "genderCheckbox"
+                        :isError = "hasKey('gender')"
+                    />
+
+
+
+                </div>
+
+
+
+                <div class="flex flex-col gap-6 xl:flex-row px-6.5  mt-6.5">
+
                     <Input
                         :Couple = "false"
                         :Label = "getName('phone')"
-                        @onInput = "phone = $event"
+                        @onInput = "formatPhone($event)"
                         :isError = "hasKey('phone')"
                         :message = "errorObj['phone']"
                         :Value = "phone"
+                        Class = "phone_input"
                     />
 
                     <Input
@@ -203,7 +206,7 @@
 </template>
 <script >
 import Input from "./Inputs/Input.vue";
-import {useConterStore} from "../../../../store/counter.js";
+import {useConterStore} from "@/store/counter.js";
 import Checkbox from "./Inputs/Checkbox.vue";
 import InputColor from "./Inputs/InputColor.vue";
 import {serviceCreate, getDiseases, Employees, service_categorys, patientCreate, deleteEmployee} from "../../../../Api.js";
@@ -218,6 +221,9 @@ import checkbox01 from "../../../../ui-components/Form/Checkbox/Checkbox01.vue";
 import ImageInput from "@/components/Pages/Employees/Update/Inputs/ImageInput.vue";
 
 export default {
+    setup(){
+        return useConterStore();
+    },
     computed: {
         checkbox01() {
             return checkbox01
@@ -240,7 +246,7 @@ export default {
                 // input varables
                 last_name: '',
                 first_name: '',
-                phone: '',
+                phone: '(+998) ',
                 job: '',
                 address: '',
                 gender: '',
@@ -262,6 +268,43 @@ export default {
             getName(val){
                 return useConterStore().getName(val)
             },
+
+            formatPhone(phoneNumberString) {
+                const arr = ['0','1','2','3','4','5','6','7','8','9','', ' '];
+                const input = document.querySelector('.phone_input');
+                let phone = 0;
+                let next = this.phone.length < phoneNumberString.length ? true : false;
+                console.log(phoneNumberString, phoneNumberString.length)
+                if (next){
+                    if (!arr.includes(phoneNumberString.slice(phoneNumberString.length-1,phoneNumberString.length ))){
+                        input.value = this.phone;
+                        return false;
+                    }else if(phoneNumberString.length > 19){
+                        input.value = this.phone;
+                        return false;
+                    }
+                }else {
+                    if(phoneNumberString.length > 20){
+                        input.value = this.phone;
+                        return false;
+                    }
+                }
+
+                if (phoneNumberString.length == 4 && next){
+                    this.phone = '(+' + phoneNumberString + ') ';
+                }else if (phoneNumberString.length == 9 && next){
+                    this.phone = phoneNumberString + ' ';
+                }else if (phoneNumberString.length == 13 && next){
+                    this.phone = phoneNumberString + ' ';
+                }else if ((phoneNumberString.length == 16 || phoneNumberString.length == 17) && next){
+                    this.phone = phoneNumberString + ' ';
+                }else {
+                    this.phone = phoneNumberString;
+                }
+                // this.phone = phoneNumberString;
+                // return true;
+            },
+
 
             async getCategories(){
                 const response = await service_categorys(null, 1000);

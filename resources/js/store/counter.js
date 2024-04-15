@@ -40,6 +40,21 @@ export const useConterStore = defineStore({
         formatNumber(number) {
             return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
         },
+        formatPhoneNumber(input) {
+            // Telefon raqamini faqat raqamlarini qabul qilish uchun formatlab
+            let cleaned = ('' + input).replace(/\D/g, '');
+
+            // Formatni bo'lish uchun belgilash
+            let match = cleaned.match(/^(\d{3})(\d{2})(\d{3})(\d{2})(\d{2})$/);
+
+            if (match) {
+                // Formatli raqamni qaytarish
+                return '(' + match[1] + ') ' + match[2] + ' ' + match[3] + ' ' + match[4] + ' ' + match[5];
+            }
+
+            // Agar raqamni formatlab bo'lmagan bo'lsa, asl raqamni qaytarish
+            return input;
+        },
         formatDate(datetime) {
             const date = new Date(datetime);
             const year = date.getFullYear();

@@ -59,8 +59,8 @@
                             :Label = "getName('login')"
                             @onInput = "testLogin($event)"
                             :Value = "login"
-                            :isError = "isLoginError"
-                            message = "Login is available !"
+                            :isError = "isLoginError || errorObj['login']"
+                            :message = " errorObj['login'] ?  errorObj['login'] : 'Login is available !' "
 
 
                         />
@@ -154,7 +154,7 @@
 
                 <div class=" pl-7 p-6.5"  style="display: flex; justify-content: center">
                     <loader-spinning v-if="Loader" style="margin: 0 auto; " />
-                    <button v-if="!Loader" @click="update" class="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray">
+                    <button v-if="!Loader" @click="sendData" class="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray">
                         {{getName('create')}}
                     </button>
                 </div>
@@ -256,7 +256,22 @@ export default {
                     this.errorObj = response.data;
                     this.Loader = false;
                 }
+                this.Loader = false;
 
+            },
+            async sendData(){
+                this.Loader = true;
+                const val = this.login;
+                const response = await testLogin({
+                    'login': val,
+                });
+                if (response.status){
+                    this.isLoginError = true;
+                    this.Loader = false;
+                }else {
+                    this.isLoginError = false;
+                    this.update();
+                }
             },
             async get(){
 
@@ -285,7 +300,7 @@ export default {
 
             },
             async testLogin(val){
-
+                this.login = val;
                 const response = await testLogin({
                     'login': val
                 });
@@ -295,7 +310,6 @@ export default {
                 }else {
                     this.isLoginError = false;
                 }
-                this.login = val;
             },
             hasKey(key) {
                 return key in this.errorObj;

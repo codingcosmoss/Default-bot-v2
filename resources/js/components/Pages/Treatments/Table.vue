@@ -92,17 +92,18 @@
 
         <div
           v-for="(item, index) in Treatments.length > 0 ? Treatments : items"
-          class="grid tableBox grid-cols-7 border-b border-stroke dark:border-strokedark sm:grid-cols-7 databes_table "
+          class="grid tableBox grid-cols-8 border-b border-stroke dark:border-strokedark sm:grid-cols-8 databes_table "
         >
           <div class="flex items-center gap-3 p-2.5 xl:p-5">
             <p class="font-medium hidden text-black dark:text-white sm:block">
-              {{ index + 1 }}. {{ item.patient.first_name }}
+              {{ index + 1 }}. {{ item.patient.first_name + ' ' +  item.patient.last_name }}
             </p>
           </div>
 
-          <div class="flex items-center justify-center p-2.5 xl:p-5">
-            <p class="font-medium text-black dark:text-white">{{ item.patient.last_name }}</p>
-          </div>
+
+            <div class="flex items-center justify-center p-2.5 xl:p-5">
+                <p class="font-medium text-black dark:text-white">{{ item.patient.phone }}</p>
+            </div>
 
           <div class="flex items-center justify-center p-2.5 xl:p-5">
             <p class="font-medium text-black dark:text-white">{{ item.doctor.name }}</p>
@@ -111,6 +112,16 @@
           <div class="flex items-center justify-center p-2.5 xl:p-5">
               <p class="font-medium text-black dark:text-white">{{ item.start }} </p>
           </div>
+
+        <div class=" flex items-center justify-center p-2.5 xl:p-5">
+            <p style="width: 95%;" class="font-medium text-black dark:text-white">
+                <ul class="report_box" >
+                    <li>{{getName('TreatmentPrice')}}: {{useConterStore().formatNumber(Number(item.service_real_price))}}</li>
+                    <li>{{getName('PaymentsUser')}}: {{useConterStore().formatNumber(Number(item.payment_amount))}}</li>
+                    <li>{{getName('AmountOwed')}}: {{useConterStore().formatNumber(Number(item.user_payment))}}</li>
+                </ul>
+            </p>
+        </div>
 
           <div class="flex items-center justify-center p-2.5 xl:p-5">
             <p class="font-medium text-black dark:text-white status-text "
@@ -157,7 +168,7 @@
                 <i
                     title="Tolov tarixi"
                     v-if="item.payment_status ==  11 || item.payment_status == 12  && item.status != 17"
-                    @click="istoryPaymentModal(item)"
+                    @click="istoryPaymentModal(item), Loader = true"
                     :title="getName('Payment')"
                     class="fa-solid fa-clock-rotate-left setting-icon  cursor-pointer"
                 ></i>
@@ -216,9 +227,11 @@
         </div>
 
 
-        <Paginate>
+        <Paginate v-if="isPaginate">
           <Pagination01>
+
             <vue-awesome-paginate
+
               :total-items="last_page"
               :items-per-page="1"
               :max-pages-shown="1"
@@ -230,7 +243,7 @@
       </div>
 
 
-            <ShowForm :isButton = "isPayment" @onSubmit = "Modal == '0' ? isShowModal = false : onPayment() "   :UpdateId = "UpdateId"  @closeModal = "isShowModal = $event, errorObj = []" :isShowModal = "isShowModal"  >
+            <ShowForm :isSubmit = " this.Modal == 'istory-payment' ? false : true  " :isButton = "isPayment" @onSubmit = "Modal == '0' ? isShowModal = false : onPayment() "   :UpdateId = "UpdateId"  @closeModal = "isShowModal = $event, errorObj = []" :isShowModal = "isShowModal"  >
 
                 <table v-if="Modal == 0 && Model != []  " class="table01" >
 
@@ -305,15 +318,23 @@
                         <th>{{getName('Created_at')}}</th>
                         <th>{{getName('Type')}}</th>
                     </tr>
+
                     <tr v-for="patientPayment in patientPayments ">
                         <td>{{patientPayment.amount}}</td>
                         <td>{{patientPayment.created_at}}</td>
-                        <td>
-                            <p class="font-medium dark:text-white status-text "
+                        <td >
+                            <p  class=" dark:text-white status-text "
                                :style=" 'background: ' + patientPayment.color "
                             >{{ patientPayment.payment_type }}</p>
                         </td>
 
+                    </tr>
+                    <tr>
+                        <td colspan="3"  style="border: none">
+                            <div style="width: 100%; display: flex; justify-content: center">
+                                <loader-spinning v-if="Loader" style="margin: 0 auto; " />
+                            </div>
+                        </td>
                     </tr>
 
                 </table>
@@ -543,6 +564,10 @@ export default {
           type: [Array, Object],
           default: []
       },
+      isPaginate:{
+          type: Boolean,
+          default: true
+      },
       Header:{
           type: Boolean,
           default: true
@@ -552,6 +577,7 @@ export default {
     return {
       items: [],
       search: "",
+        Loader: false,
       column: "updated_at",
         userPayments: 0,
       order: "asc",
@@ -673,6 +699,7 @@ export default {
       const response = await treatmentFinished(id);
       console.log(response);
       if (response.status) {
+          this.$emit('onPayment', true);
           Alert('success', 'Treatment is complete');
           this.getItems();
       }else {
@@ -750,6 +777,9 @@ export default {
               this.errorObj = [];
               this.isShowModal = false;
               this.getItems();
+              this.$emit('onPayment', true);
+              this.isPayment = false;
+
               Alert('success', 'Saved successfully !');
           }else {
               this.errorObj = response.data
@@ -773,6 +803,8 @@ export default {
             this.debtData = "";
             this.debtText = "";
             this.isShowModal = false;
+            this.$emit('onPayment', true);
+            this.isPayment = false;
             Alert('success', 'Saved successfully !');
         }else {
             this.errorObj = response.data
@@ -783,6 +815,7 @@ export default {
           const response = await patientShow(id);
           this.patientPayments = response.data.payments.items;
           console.log('Payment:', response.data.payments.items);
+          this.Loader = false;
       },
     async getPayments(id){
         const response =  await getUserPayments(id);
@@ -849,6 +882,7 @@ export default {
       this.last_page = response.data.pagination.last_page;
       this.current_page = response.data.pagination.currentPage;
       this.items = response.data.items;
+
     },
     async onPayment(){
         this.isPayment = true;
@@ -891,6 +925,7 @@ export default {
             this.getPaymentTypes()
             this.getItems();
             this.isPayment = false;
+            this.$emit('onPayment', true);
             Alert('success', 'The payment was made successfully')
         }else {
             this.isPayment = false;
@@ -977,6 +1012,7 @@ export default {
     },
     onPaginate(e) {
       this.paginateCount = e;
+
       this.getItems();
     },
   },
@@ -1023,7 +1059,7 @@ export default {
 
 .active {
   background: #10b981 !important;
-  color: #2e3a47 !important;
+  //color: #2E3A47 !important;
 }
 .photo-img {
   width: 50px;
@@ -1065,7 +1101,8 @@ export default {
 }
 .status-text{
     background: #39aa07;
-    font-size: 13px;
+    font-size: 11.5px !important;
+
     padding: 3px 8px ;
     border-radius: 10px;
     font-weight: bold;
@@ -1115,6 +1152,23 @@ export default {
     .btns{
         i{
             margin: 5px 8px ;
+        }
+    }
+    .report_box{
+        width: 100%;
+        background: rgba(60, 80, 224, 0.34);
+        font-size: 10px;
+        li{
+            padding: 0 2px;
+        }
+        li:nth-child(1){
+            background: rgba(23, 227, 13, 0.37);
+        }
+        li:nth-child(2){
+            background: rgba(227, 184, 13, 0.37);
+        }
+        li:nth-child(3){
+            background: rgba(227, 13, 45, 0.37);
         }
     }
 </style>
