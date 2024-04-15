@@ -4,9 +4,8 @@
     class="absolute  aside01 left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-black duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0"
     >
     <!-- SIDEBAR HEADER -->
-    <div class="flex items-center justify-between gap-2 px-6 my-logo " >
+    <div class="flex items-center justify-between gap-2 px-6 my-logo " :style="'background-image: url(' + Image + ')'" >
       <a href="#">
-
       </a>
 
       <button class="block lg:hidden" @click.outside="sidebarToggle = false">
@@ -54,7 +53,8 @@ export default {
             selected: '',
             page: '',
             sidebarToggle: true,
-            baseURL: window.location.origin
+            baseURL: window.location.origin,
+            Image: ''
         }
     },
 
@@ -107,11 +107,17 @@ export default {
                 }
                 aside.classList.add('navbar02')
             }
+        },
+        getUserImage(){
+            this.user =JSON.parse(localStorage.getItem('user'));
+            this.Image =  this.user.image[0] != null ? this.user.image[0].url : 'https://demo.tailadmin.com/src/images/logo/logo.svg';
+            console.log(this.Image);
         }
       },
 
     mounted() {
         this.animation()
+        this.getUserImage()
     }
 
 

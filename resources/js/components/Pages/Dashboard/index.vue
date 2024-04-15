@@ -93,17 +93,23 @@ export default {
                         this.deptorPatients += 1;
                     }
                 })
+
                 response.data.allServices.forEach((e) =>{
-                   this.topServices.push({
-                       "date": e.name,
-                       "Amount": e.amount,
-                   })
+
+                    this.topServices.push({
+                        "date": e.name,
+                        "Amount": Number(e.amount),
+                    })
+
                 })
+
+
+
                 this.plotData2 = [];
                 response.data.payments.forEach((e) =>{
                     this.plotData2.push({
                             "Moon": e.moon.split('-')[1] ,
-                            "Amount": e.amount,
+                            "Amount": Number(e.amount),
                         }
                     )
                 })
