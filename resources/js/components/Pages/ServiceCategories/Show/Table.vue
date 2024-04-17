@@ -10,33 +10,17 @@
                 </ol>
             </nav>
         </div>
-        <div
 
-            class="rounded-sm border mb-5 border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-            <h4 class="mb-6 text-xl font-bold text-black dark:text-white">
-                {{item.name}}
-            </h4>
+        <h4 class="mb-6 text-xl font-bold text-black dark:text-white">
+            {{item.name}}
+        </h4>
 
-            <table border="1" >
-
-                <tr>
-                    <th>{{getName('name_content')}}:</th>
-                    <td>{{item.name}}</td>
-                </tr>
-                <tr>
-                    <th>{{getName('status')}}:</th>
-                    <td>{{item.status == 1 ? 'Active' : 'Inactive'}}</td>
-                </tr>
-
-            </table>
-
-        </div>
         <ContentBox v-if="item.services != []">
             <ContentBlock v-for="(service, index) in item.services"
                 :Title = "service.name"
                 Text = " "
-                          :Icon = "index+ 1"
-                          Item = ""
+                          :Icon = "(index+ 1)"
+                          :Item = "service.service_total_sum + ' uzs'"
                           @click = "this.$router.push( '/services')"
             />
         </ContentBox>
@@ -50,7 +34,7 @@ import {service_categoryShow} from "../../../../Api.js";
 import Table from "../Table.vue";
 import Contents from "../../../../ui-components/Element/Contents.vue";
 import ContentBox from "../../../../ui-components/Element/Contents/ContentBox.vue";
-import ContentBlock from "../../../../ui-components/Element/Contents/ContentBlock.vue";
+import ContentBlock from "../Show/ServiceCategoryContentBlock.vue";
 
 export default {
     components: {ContentBlock, ContentBox, Contents, Table, TableHeader},

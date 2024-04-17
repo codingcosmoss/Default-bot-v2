@@ -48,7 +48,7 @@
 
                 <div v-for="(item, index) in items" class="grid grid-cols-5 border-b border-stroke dark:border-strokedark sm:grid-cols-5 databes_table">
 
-                    <div class="flex   justify-content-end gap-3 p-2.5 xl:p-5">
+                    <div class="flex items-center  justify-content-end gap-3 p-2.5 xl:p-5">
                         <p class="font-medium hidden text-black dark:text-white sm:block">{{index+1}}.  {{item.name}}</p>
                     </div>
 

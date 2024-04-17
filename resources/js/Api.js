@@ -22,6 +22,10 @@ export const Login = async (data) => {
 export const Logout = async () => {
     return  GET('/logout');
 };
+export const getMoonTreatments = async () => {
+    return  GET('/get-moon-treatments');
+};
+
 export const testLogin = async ($data) => {
     return  POST('employee/test-login', $data);
 };

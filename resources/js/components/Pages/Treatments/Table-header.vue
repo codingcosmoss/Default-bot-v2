@@ -26,6 +26,8 @@
             <p class="font-medium text-black dark:text-white"> {{getName('status')}}</p>
         </div>
 
+
+
         <div class="flex items-center justify-center p-2.5 xl:p-5">
             <p class="font-medium text-black dark:text-white"> {{getName('Payment_status')}}</p>
         </div>

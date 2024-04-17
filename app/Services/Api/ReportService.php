@@ -27,6 +27,30 @@ use Illuminate\Support\Facades\DB;
 class ReportService extends AbstractService
 {
 
+    public function getMoonTreatments()
+    {
+
+        // Hozirgi oy va yilni olish
+        $currentMonth = Carbon::now()->month;
+        $currentYear = Carbon::now()->year;
+
+        // Hozirgi oygi behandlarni olish
+        $treatments = Treatment::where('status', Status::$finished)
+            ->whereMonth('created_at', $currentMonth)
+            ->whereYear('created_at', $currentYear)
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+
+        return [
+            'status' => true,
+            'message' => 'Success',
+            'statusCode' => 200,
+            'data' => $treatments
+        ];
+
+    }
+
     public function employeesPaymentIndex()
     {
 

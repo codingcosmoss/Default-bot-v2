@@ -264,6 +264,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/given-moneys/search', [\App\Http\Controllers\Api\ReportController::class, 'search']);
 
     Route::get('/reports/{start}/{end}', [\App\Http\Controllers\Api\ReportController::class, 'reports']);
+    Route::get('/get-moon-treatments', [\App\Http\Controllers\Api\ReportController::class, 'getMoonTreatments']);
+
     Route::get('/getDashboard', [\App\Http\Controllers\Api\ReportController::class, 'dashboard']);
     Route::get('/permissions', [\App\Http\Controllers\Api\ReportController::class, 'permissions']);
 

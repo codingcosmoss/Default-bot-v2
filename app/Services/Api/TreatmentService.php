@@ -313,6 +313,25 @@ class TreatmentService extends AbstractService
             $treatment->status = Status::$finished;
             $treatment->save();
 
+            try {
+                // Telegram botga xabar yuborish
+                event(new TelegramMessage('treatment', $treatment , $services));
+                return [
+                    'status' => true,
+                    'message' => 'Success',
+                    'statusCode' => 200,
+                    'data' => null
+                ];
+
+            }catch (\Exception $ex) {
+                return [
+                    'status' => true,
+                    'message' => 'Success',
+                    'statusCode' => 200,
+                    'data' => null
+                ];
+            }
+
             return [
                 'status' => true,
                 'message' => 'Success',
@@ -321,24 +340,13 @@ class TreatmentService extends AbstractService
             ];
         }
 
-        try {
-            // Telegram botga xabar yuborish
-            event(new SendTelegramMessage('treatment', $treatment , $services));
-            return [
-                'status' => false,
-                'message' => 'Treatment not fount',
-                'statusCode' => 200,
-                'data' => null
-            ];
+        return [
+            'status' => false,
+            'message' => 'Treatment not fount',
+            'statusCode' => 200,
+            'data' => null
+        ];
 
-        }catch (\Exception $ex) {
-            return [
-                'status' => false,
-                'message' => 'Treatment not fount',
-                'statusCode' => 200,
-                'data' => null
-            ];
-        }
 
 
     }

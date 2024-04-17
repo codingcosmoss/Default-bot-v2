@@ -110,8 +110,10 @@ export default {
         },
         getUserImage(){
             this.user =JSON.parse(localStorage.getItem('user'));
-            this.Image =  this.user.image[0] != null ? this.user.image[0].url : 'https://demo.tailadmin.com/src/images/logo/logo.svg';
-            console.log(this.Image);
+            if (this.user != null){
+                this.Image = this.user.image && this.user.image.length > 0 && this.user.image[0].url != null ? this.user.image[0].url : 'https://demo.tailadmin.com/src/images/logo/logo.svg';
+            }
+
         }
       },
 

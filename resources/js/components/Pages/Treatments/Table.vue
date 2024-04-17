@@ -139,7 +139,7 @@
 
 
           <div class="hidden button-box0 items-center justify-center p-2.5 sm:flex xl:p-5">
-            <p class="font-medium text-meta-5 btns " >
+            <p class="font-medium text-meta-5 btns "  style="position: relative">
                 <i
                     @click="Show(item) "
                     class="fa-solid setting-icon fa-eye"
@@ -198,10 +198,15 @@
 
                 <i
                     title="Tugatish"
-                    v-if="item.status != 9 && item.status != 7 && item.status != 17"
+                    v-if="(item.status != 9 && item.status != 7 && item.status != 17) && !finishLoader"
                     @click="treatementFinished(item.id)"
                     class="fa-regular fas fa-square-check setting-icon  cursor-pointer"
                 ></i>
+
+                <div class="finish_loader_box"  v-if="finishLoader && (item.status != 9 && item.status != 7 && item.status != 17)">
+                    <loader-spinning class="finishLoader" style="margin: 0 auto; " />
+                </div>
+
 
                 <i
                     title="Bekor qilish"
@@ -577,6 +582,7 @@ export default {
     return {
       items: [],
       search: "",
+        finishLoader: false,
         Loader: false,
       column: "updated_at",
         userPayments: 0,
@@ -696,15 +702,20 @@ export default {
 
       },
   async treatementFinished(id){
+        this.finishLoader = true;
       const response = await treatmentFinished(id);
       console.log(response);
       if (response.status) {
           this.$emit('onPayment', true);
+          this.finishLoader = false;
+
           Alert('success', 'Treatment is complete');
           this.getItems();
       }else {
           Alert('error', 'Error!');
       }
+      this.finishLoader = false;
+
   },
 
     debtModal(item){
@@ -1170,5 +1181,18 @@ export default {
         li:nth-child(3){
             background: rgba(227, 13, 45, 0.37);
         }
+    }
+    .finish_loader_box{
+        background: rgba(60, 80, 224, 0.44);
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .finishLoader{
+        transform: scale(.4);
     }
 </style>

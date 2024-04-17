@@ -10,12 +10,17 @@
         methods:{
             async getUser(){
                 let user = localStorage.getItem('user');
-                if (user == null){
-                    const response = await GetUser();
-                    localStorage.setItem('user', JSON.stringify(response.data));
+                try {
+                    if (user == null){
+                        const response = await GetUser();
+                        localStorage.setItem('user', JSON.stringify(response.data));
+                    }
+                }catch (error){
+                    this.$router.push('/login');
                 }
 
-            },
+
+            }
         },
         mounted() {
             this.getUser()

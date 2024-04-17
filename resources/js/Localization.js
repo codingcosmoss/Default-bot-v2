@@ -198,9 +198,15 @@ export const Languages =  {
         TopServices: 'Top xizmatlar',
         ActivedCount: 'Foydalanishlar soni',
         LoginError: 'Bunday login mavjud',
+        FinishedTreatmentCount: 'Joriy oy davomida tugatilgan davolanishlar',
+        Count: 'Soni',
+        WarehouseProducts: 'Hozirda omborda mavjud maxsulotlar',
     },
 
     ru:{
+        WarehouseProducts: 'Товары в наличии на данный момент',
+        Count: 'Количество',
+        FinishedTreatmentCount: 'Процедуры, завершенные в течение текущего месяца',
         LoginError: 'Такой логин существует',
         ActivedCount: 'Количество использований',
         TopServices: 'Лучшие услуги',

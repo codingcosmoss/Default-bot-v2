@@ -15,6 +15,12 @@ class ReportController extends AbstractController
         $items = $this->service->employeesPaymentIndex(request()->all());
         return $this->sendResponse($items);
     }
+    public function getMoonTreatments()
+    {
+        $items = $this->service->getMoonTreatments(request()->all());
+        return $this->sendResponse($items);
+    }
+
 
     public function dashboard()
     {

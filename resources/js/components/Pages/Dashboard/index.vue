@@ -35,27 +35,25 @@
             />
         </ContentBox>
 
-
         <span style="display: flex; justify-content: space-between; gap: 30px" class="chart_box">
 
-            <Map01  :Title="getName('TopServices')" class="chart_item">
+            <Map01  :Title="getName('FinishedTreatmentCount')" class="chart_item">
+                <div class="dashboard_loader_box"  v-if="treatmentLoader" >
+                    <loader-spinning style="margin: 0 auto; " />
+                </div>
 
-            <GroupedBarChart :plot-data="topServices"
-                             x-key="date"
-                             :width="600"
-                             :height="300"
-                             :margin="{ top: 20, bottom: 35, left: 55, right: 20 }"
-                             :colors="['#ac58e5','#E0488B']"
-                             :x-axis-label="getName('services')"
-                             :y-axis-label="getName('ActivedCount')"
-                             :y-tick-format="d => `${d}`" />
+                <div id="chart">
+                </div>
+
             </Map01>
 
-            <Map01  :Title="getName('Payments')" class="chart_item" >
-
+              <Map01  :Title="getName('Payments')" class="chart_item" >
+                <div class="dashboard_loader_box"  v-if="paymentloader" >
+                    <loader-spinning style="margin: 0 auto; " />
+                </div>
                 <AreaChart :plot-data="plotData2"
                            :width="600"
-                           :height="300"
+                           :height="410"
                            x-key="Moon"
                            :margin="{ top: 20, bottom: 30, left: 55, right: 20 }"
                            :colors="['#ac58e5','#E0488B']"
@@ -63,7 +61,34 @@
                            y-axis-label=" "
                            :y-tick-format="d => `${d} sum`" />
             </Map01>
+
+
+
+
         </span>
+        <br>
+        <span style="display: flex; justify-content: space-between; gap: 30px" class="chart_box">
+
+            <Map01  :Title="getName('TopServices')" class="chart_item">
+                 <div class="dashboard_loader_box"  v-if="topServiceLoader" >
+                    <loader-spinning style="margin: 0 auto; " />
+                </div>
+            <div id="top_services">
+                </div>
+
+            </Map01>
+
+            <Map01  :Title="getName('WarehouseProducts')" class="chart_item">
+                  <div class="dashboard_loader_box"  v-if="warehouseProductLoaderBox" >
+                    <loader-spinning style="margin: 0 auto; " />
+                </div>
+                <div id="chart2">
+                </div>
+
+            </Map01>
+
+        </span>
+
 
 
 
@@ -77,12 +102,58 @@ import ContentBlock from "@/ui-components/Element/Contents/ContentBlock.vue";
 import {useConterStore} from "@/store/counter.js";
 import Charts from "@/components/Pages/Dashboard/Charts.vue";
 import Map01 from "@/ui-components/Element/map-01.vue";
-import {getDashboardData} from "@/Api.js";
+import {getDashboardData, products} from "@/Api.js";
+import ApexCharts from 'apexcharts'
+import {getMoonTreatments} from "@/Api.js";
+
 export default {
     components: {Charts, Page,Map01, ContentBlock, ContentBox},
     methods:{
         getName(val){
             return useConterStore().getName(val)
+        },
+        renderChart(){
+            var chart = new ApexCharts(document.querySelector("#chart"), this.options);
+            var chart2 = new ApexCharts(document.querySelector("#chart2"), this.options2);
+            var topServices = new ApexCharts(document.querySelector("#top_services"), this.topServiceOptions);
+            chart.render();
+            chart2.render();
+            topServices.render();
+        },
+
+        async getProducts(){
+            const response = await products(1, 1000000000);
+            let arr = [];
+            let labels = [];
+            response.data.items.forEach((e) => {
+                arr.push(e.rest_products)
+                labels.push(e.name)
+            })
+            this.warehouseProductLoaderBox = false;
+            this.options2.series = arr;
+            this.options2.labels = labels;
+
+            this.renderChart();
+
+        },
+        async gettreatments(){
+            const response = await getMoonTreatments();
+            let moons = [];
+            let counts = [];
+            response.data.forEach((e) => {
+                let index = moons.indexOf(e.updated_at.split('T')[0]);
+                if (index != -1) {
+                    counts[index] = Number(counts[index]) + 1;
+                } else {
+                    moons.push(e.updated_at.split('T')[0]);
+                    counts.push(1); // Agar yangi sanagich bo'lsa, yangi elementni qo'shamiz
+                }
+            });
+
+            this.treatmentLoader = false;
+            this.options.series[0].data = counts;
+            this.options.xaxis.categories = moons;
+            this.getProducts()
         },
         async getData(){
             const response = await getDashboardData();
@@ -94,18 +165,19 @@ export default {
                     }
                 })
 
+                let servicesNames = [];
+                let servicesCount = [];
+
                 response.data.allServices.forEach((e) =>{
-
-                    this.topServices.push({
-                        "date": e.name,
-                        "Amount": Number(e.amount),
-                    })
-
+                    servicesNames.push(e.name);
+                    servicesCount.push( Number(e.amount));
                 })
-
-
+                this.topServiceLoader = false;
+                this.topServiceOptions.series[0].data = servicesCount;
+                this.topServiceOptions.xaxis.categories = servicesNames;
 
                 this.plotData2 = [];
+                this.paymentloader = false;
                 response.data.payments.forEach((e) =>{
                     this.plotData2.push({
                             "Moon": e.moon.split('-')[1] ,
@@ -129,6 +201,42 @@ export default {
     },
     data(){
         return{
+            treatmentLoader: true,
+            paymentloader: true,
+            topServiceLoader: true,
+            warehouseProductLoaderBox: true,
+            topServiceOptions: {
+                chart: {
+                    type: 'bar'
+                },
+                series: [{
+                    name: 'Soni:',
+                    data: [91,125]
+                }],
+                xaxis: {
+                    categories: [1998,1999]
+                }
+            },
+            options2: {
+                chart: {
+                    type: 'donut'
+                },
+                series: [44, 55, 13, 33],
+                labels: ['Apple', 'Mango', 'Orange', 'Watermelon']
+            },
+            options:{
+                chart: {
+                    type: 'bar'
+                },
+                series: [{
+                    name: 'Soni:',
+                    data: [91,125]
+                }],
+                xaxis: {
+                    categories: [1998,1999]
+                }
+            },
+
             ReportData: {
                 users: 0,
                 patients: 0,
@@ -148,6 +256,9 @@ export default {
     },
     mounted() {
         this.getData()
+        // this.renderChart()
+        this.gettreatments()
+
     }
 
 
@@ -165,5 +276,12 @@ export default {
                 width: 100%;
             }
         }
+    }
+    .dashboard_loader_box{
+        width: 100%;
+        height: 300px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 </style>

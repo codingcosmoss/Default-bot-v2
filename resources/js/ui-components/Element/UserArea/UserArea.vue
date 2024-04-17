@@ -74,7 +74,10 @@
         data(){
             return{
                 dropdownOpen: false,
-                user: [],
+                user: {
+                    name: '---',
+                    position: '---',
+                },
                 Image: ''
             }
         },
@@ -92,8 +95,11 @@
                 return useConterStore().getName(val)
             },
             getUserLocal(){
-                this.user =JSON.parse(localStorage.getItem('user'));
-                this.Image =  this.user.image[0].url;
+                let user = JSON.parse(localStorage.getItem('user'));
+                if (user != null){
+                    this.user = user;
+                    this.Image =  this.user.image[0].url;
+                }
             }
 
         },

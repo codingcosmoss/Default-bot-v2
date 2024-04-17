@@ -15,6 +15,19 @@ class PermishshenSeeder extends Seeder
     public function run(): void
     {
 
+        //            [
+//                'name' => 'deleteContents',
+//                'lang_name' => 'deleteContents'
+//
+//            ],
+//            [
+//                'name' => 'addContents',
+//                'lang_name' => 'addContents'
+//            ],
+//            [
+//                'name' => 'editContents',
+//                'lang_name' => 'editContents'
+//            ],
         $permissions = [
             [
                 'name' => 'showEmployees',
@@ -56,19 +69,7 @@ class PermishshenSeeder extends Seeder
                 'name' => 'showWarehouse',
                 'lang_name' => 'Warehouse'
             ],
-//            [
-//                'name' => 'deleteContents',
-//                'lang_name' => 'deleteContents'
-//
-//            ],
-//            [
-//                'name' => 'addContents',
-//                'lang_name' => 'addContents'
-//            ],
-//            [
-//                'name' => 'editContents',
-//                'lang_name' => 'editContents'
-//            ],
+
             [
                 'name' => 'showSettings',
                 'lang_name' => 'Settings'

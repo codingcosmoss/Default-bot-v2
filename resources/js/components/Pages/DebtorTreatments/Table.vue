@@ -93,7 +93,7 @@
 
         <div
           v-for="(item, index) in Treatments.length > 0 ? Treatments : items"
-          class="grid tableBox grid-cols-7 border-b border-stroke dark:border-strokedark sm:grid-cols-7 databes_table "
+          class="grid tableBox grid-cols-8 border-b border-stroke dark:border-strokedark sm:grid-cols-8 databes_table "
         >
           <div class="flex items-center gap-3 p-2.5 xl:p-5">
             <p class="font-medium hidden text-black dark:text-white sm:block">
@@ -112,7 +112,15 @@
           <div class="flex items-center justify-center p-2.5 xl:p-5">
               <p class="font-medium text-black dark:text-white">{{ item.start }} </p>
           </div>
-
+            <div class=" flex items-center justify-center p-2.5 xl:p-5">
+                <p style="width: 95%;" class="font-medium text-black dark:text-white">
+                    <ul class="report_box" >
+                        <li>{{getName('TreatmentPrice')}}: {{useConterStore().formatNumber(Number(item.service_real_price))}}</li>
+                        <li>{{getName('PaymentsUser')}}: {{useConterStore().formatNumber(Number(item.payment_amount))}}</li>
+                        <li>{{getName('AmountOwed')}}: {{useConterStore().formatNumber(Number(item.user_payment))}}</li>
+                    </ul>
+                </p>
+            </div>
           <div class="flex items-center justify-center p-2.5 xl:p-5">
             <p class="font-medium text-black dark:text-white status-text "
                :class="getClass(item.status)"
@@ -1036,4 +1044,21 @@ export default {
             margin: 5px 8px ;
         }
     }
+.report_box{
+    width: 100%;
+    background: rgba(60, 80, 224, 0.34);
+    font-size: 10px;
+    li{
+        padding: 0 2px;
+    }
+    li:nth-child(1){
+        background: rgba(23, 227, 13, 0.37);
+    }
+    li:nth-child(2){
+        background: rgba(227, 184, 13, 0.37);
+    }
+    li:nth-child(3){
+        background: rgba(227, 13, 45, 0.37);
+    }
+}
 </style>
