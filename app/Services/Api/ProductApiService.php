@@ -56,19 +56,12 @@ class ProductApiService extends AbstractService
     }
     public function indexAll($data = null)
     {
+
         $models = $this->model::orderBy('updated_at', 'desc')
             ->get();
 
         $data = [
             'items' => $this->resource::collection($models),
-            'pagination' => [
-                'total' => $models->total(),
-                'per_page' => $models->perPage(),
-                'current_page' => $models->currentPage(),
-                'last_page' => $models->lastPage(),
-                'from' => $models->firstItem(),
-                'to' => $models->lastItem(),
-            ],
         ];
 
         return [

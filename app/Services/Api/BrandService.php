@@ -111,6 +111,7 @@ class BrandService extends AbstractService
             $model = new $this->model;
             $model->name_uz = $data['name_uz'];
             $model->name_ru = $data['name_ru'];
+            $model->category_id = $data['category_id'];
 
             if ($model->save()) {
                 DB::commit();
@@ -196,6 +197,7 @@ class BrandService extends AbstractService
 
             $model->name_uz = $data['name_uz'];
             $model->name_ru = $data['name_ru'];
+            $model->category_id = $data['category_id'];
 
 
 
@@ -294,13 +296,8 @@ class BrandService extends AbstractService
         $sort = $data['order'] ?? 'desc';
 
         $models = $this->model::where(function ($query) use ($key) {
-            empty($key) ? $query : $query->orWhere('name', 'like', '%' . $key . '%')
-                ->orWhere('name', 'like', '%' . $key . '%')
-                ->orWhere('bar_code', 'like', '%' . $key . '%')
-                ->orWhere('price', 'like', '%' . $key . '%')
-                ->orWhere('vendor_code', 'like', '%' . $key . '%')
-                ->orWhere('group_id', 'like', '%' . $key . '%')
-                ->orWhere('size_type', 'like', '%' . $key . '%');
+            empty($key) ? $query : $query->orWhere('name_uz', 'like', '%' . $key . '%')
+                ->orWhere('name_ru', 'like', '%' . $key . '%');
         })
             ->orderBy($column, $sort)
             ->paginate(5);

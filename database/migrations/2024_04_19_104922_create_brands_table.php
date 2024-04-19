@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('brands', function (Blueprint $table) {
             $table->id();
-            $table->string('nameL_uz');
-            $table->string('nameL_ru');
+            $table->string('name_uz');
+            $table->string('name_ru');
+            $table->integer('category_id');
             $table->softDeletes();
             $table->timestamps();
         });
