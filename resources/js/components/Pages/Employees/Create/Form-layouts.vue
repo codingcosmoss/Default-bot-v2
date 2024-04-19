@@ -124,37 +124,50 @@
 
                 <p class="pt-0 p-6.5" > {{getName('employee_roles')}}:</p>
                 <ul  style="display: flex; padding: 5px 27px" >
+                    &nbsp;&nbsp;
+                    <li style="width: 100%">
+                        <table class="table01" style="width: 100%">
+                            <tr   v-for="permission in Permissions" >
 
-                   <li>
-<!--                        Xodimloar menyusini ko'rish-->
-                       <span  v-for="permission in Permissions.slice(0, 10)">
-                           <Checkbox01
-                               @click = "addRoles(permission['id'])"
-                               :onCheck = "Roles.includes(permission['id'])"
-                               :Title = "getName(permission['lang_name'])"
-                               Class = "genderCheckbox"
-                           />
-                       &nbsp;
-                       </span>
+                                <td style="font-weight: bold">
+                                    <Checkbox01
 
-                   </li>
-                    &nbsp;&nbsp;
-                    &nbsp;&nbsp;
-                    &nbsp;&nbsp;
-                    &nbsp;&nbsp;
-                    &nbsp;&nbsp;
-                    <li>
-                        <!--                        Xodimloar menyusini ko'rish-->
-                        <span  v-for="permission in Permissions.slice(10, Permissions.length )">
-                           <Checkbox01
+                                        @click = "addRoles(permission['id'])"
+                                        :onCheck = "Roles.includes(permission['id'])"
+                                        :Title = "getName(permission['lang_name'])"
+                                        Class = "genderCheckbox"
+                                    />
 
-                               @click = "addRoles(permission['id'])"
-                               :onCheck = "Roles.includes(permission['id'])"
-                               :Title = "getName(permission['lang_name'])"
-                               Class = "genderCheckbox"
-                           />
-                       &nbsp;
-                       </span>
+                                </td>
+
+                                <td>
+                                    <Checkbox01
+                                        style="margin: 5px 0"
+                                        @click = "addRoles(permission['id'])"
+                                        :onCheck = "Roles.includes(permission['id'])"
+                                        :Title = "getName('addContents')"
+                                        Class = "genderCheckbox"
+                                    />
+
+                                    <Checkbox01
+                                        style="margin: 5px 0"
+                                        @click = "addRoles(permission['id'])"
+                                        :onCheck = "Roles.includes(permission['id'])"
+                                        :Title = "getName('editContents')"
+                                        Class = "genderCheckbox"
+                                    />
+
+                                    <Checkbox01
+                                        style="margin: 5px 0"
+                                        @click = "addRoles(permission['id'])"
+                                        :onCheck = "Roles.includes(permission['id'])"
+                                        :Title = "getName('deleteContents')"
+                                        Class = "genderCheckbox"
+                                    />
+
+                                </td>
+                            </tr>
+                        </table>
 
                     </li>
 

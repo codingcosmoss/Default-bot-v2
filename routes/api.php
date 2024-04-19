@@ -271,3 +271,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 });
+
+// Products
+Route::group([ 'prefix' => 'api-product' ], function () {
+    Route::get('/index', [\App\Http\Controllers\Api\ProductApiController::class, 'index']);
+    Route::get('/is-actives', [\App\Http\Controllers\Api\ProductApiController::class, 'isActives']);
+    Route::get('/show/{id}', [\App\Http\Controllers\Api\ProductApiController::class, 'show']);
+    Route::put('/update/{id}', [\App\Http\Controllers\Api\ProductApiController::class, 'update']);
+    Route::post('/search', [\App\Http\Controllers\Api\ProductApiController::class, 'search']);
+});

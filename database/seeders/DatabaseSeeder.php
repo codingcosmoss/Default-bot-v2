@@ -16,15 +16,15 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
 
-         \App\Models\User::factory()->create([
-             'name' => 'Super admin',
-             'login' => 'admin',
-             'password' =>  Hash::make('121212') ,
-             'position' => 'Admin'
-         ]);
+//         \App\Models\User::factory()->create([
+//             'name' => 'Super admin',
+//             'login' => 'admin',
+//             'password' =>  Hash::make('121212') ,
+//             'position' => 'Admin'
+//         ]);
         $this->call([
-            PaymentTypeSeeder::class,
-            ServiceCategorySeeder::class,
+//            PaymentTypeSeeder::class,
+//            ServiceCategorySeeder::class,
             PermishshenSeeder::class
         ]);
     }

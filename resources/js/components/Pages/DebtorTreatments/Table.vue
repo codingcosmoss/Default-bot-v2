@@ -229,7 +229,7 @@
       </div>
 
 
-            <ShowForm :isSubmit = " this.Modal == 'istory-payment' ? false : true  " @onSubmit = "Modal == '0' ? isShowModal = false : onPayment() "   :UpdateId = "UpdateId"  @closeModal = "isShowModal = $event, errorObj = []" :isShowModal = "isShowModal"  >
+            <ShowForm :isSubmit = " this.Modal == 'istory-payment' ? false : true " :isButton = "isPayment"  @onSubmit = "Modal == '0' ? isShowModal = false : onPayment() "   :UpdateId = "UpdateId"  @closeModal = "isShowModal = $event, errorObj = []" :isShowModal = "isShowModal"  >
 
                 <table v-if="Modal == 0 && Model != []  " class="table01" >
 
@@ -485,7 +485,8 @@ import Textarea from "../../../ui-components/Form/Textarea.vue";
 import InputDateTime from "../../../ui-components/Form/InputDateTime.vue";
 import InputTime from "../../../ui-components/Form/InputTime.vue";
 import Table from "../Employees/Table.vue";
-import ShowForm from "./Show/ShowForm.vue";
+import ShowForm from "../Treatments/Show/ShowForm.vue";
+
 import PrimaryButton2 from "@/ui-components/Form/PrimaryButton2.vue";
 import {holdNextTicks} from "alpinejs/src/nextTick.js";
 import DangerButton from "@/ui-components/Form/DangerButton.vue";
@@ -518,6 +519,7 @@ export default {
     TableHeader,
     InputText,
       Select,
+      isPayment: false,
   },
   props:{
       Treatments:{
@@ -578,6 +580,7 @@ export default {
         discount_total_sum: 0,
         RealPrice: 0,
         discountError: false,
+        isPayment: false
 
     };
   },
@@ -795,6 +798,7 @@ export default {
       this.items = response.data.items;
     },
     async onPayment(){
+        this.isPayment = true;
 
         if(this.Modal == 'debt'){
             this.saveOwed();
@@ -805,6 +809,7 @@ export default {
         }
 
         if (this.userPayments < this.Amount){
+            this.isPayment = false;
             Alert( 'error', this.getName('PaymentError'));
             return false;
         }
@@ -823,10 +828,14 @@ export default {
             this.Amount = '';
             this.isShowModal = false;
             this.paymentTypes = [];
+            this.isPayment = false;
             this.getPaymentTypes()
             this.getItems();
+            this.isPayment = false;
+            this.errorObj = [];
             Alert('success', 'The payment was made successfully')
         }else {
+            this.isPayment = false;
 
             this.errorObj = response.data
             Alert('error', 'There is an error in the form')

@@ -531,6 +531,7 @@ import InputDateTime from "../../../ui-components/Form/InputDateTime.vue";
 import InputTime from "../../../ui-components/Form/InputTime.vue";
 import Table from "../Employees/Table.vue";
 import ShowForm from "./Show/ShowForm.vue";
+
 import PrimaryButton2 from "@/ui-components/Form/PrimaryButton2.vue";
 import {holdNextTicks} from "alpinejs/src/nextTick.js";
 import DangerButton from "@/ui-components/Form/DangerButton.vue";
@@ -937,6 +938,7 @@ export default {
             this.getItems();
             this.isPayment = false;
             this.$emit('onPayment', true);
+            this.errorObj = [];
             Alert('success', 'The payment was made successfully')
         }else {
             this.isPayment = false;

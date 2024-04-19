@@ -46,7 +46,7 @@
         <Treatments :isPaginate = "false" @onPayment = "updateTreatment()" :Header = "false" :Treatments = "Treatmets" v-if="Treatmets.length > 0" ></Treatments>
 
         <br>
-        <Payments :isIcons = "false" :Header = "false" :Payments = "Payments"  ></Payments>
+        <Payments :isPaginate = "false" :isIcons = "false" :Header = "false" :Payments = "Payments"  ></Payments>
 
         <br>
 

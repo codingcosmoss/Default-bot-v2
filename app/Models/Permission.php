@@ -9,8 +9,8 @@ class Permission extends Model
 {
     use HasFactory;
 
-
-
-
-
+    public function permissionable()
+    {
+        return $this->morphTo();
+    }
 }

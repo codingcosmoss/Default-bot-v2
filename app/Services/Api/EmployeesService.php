@@ -101,7 +101,6 @@ class EmployeesService extends AbstractService
         }
 
         $data = $validator->validated();
-
         DB::beginTransaction();
 
         try {
@@ -117,8 +116,6 @@ class EmployeesService extends AbstractService
             $user->salary_static = 0;
             $user->sort_order = $data['sort_order'];
             $user->status = Status::$status_active;
-
-
 
 
             if ($user->save()) {

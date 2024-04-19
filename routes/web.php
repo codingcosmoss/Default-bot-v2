@@ -17,6 +17,11 @@ Route::get('/', function () {
     return view('index');
 });
 
+//Route::get('/services', function () {
+//    return view('welcome');
+//});
+
+
 Route::get('login', [\App\Http\Controllers\Api\AuthController::class, 'unauthorized'])->name('login');
 
 Route::get('/{pathMatch}', function () {

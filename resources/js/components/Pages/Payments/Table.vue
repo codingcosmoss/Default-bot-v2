@@ -152,7 +152,7 @@
           <h1 v-if="items.length == 0" style="margin: 15px auto" > {{getName('Payments')}} {{getName('NotFound')}}</h1>
 
 
-        <Paginate>
+        <Paginate v-if="isPaginate">
           <Pagination01>
             <vue-awesome-paginate
               :total-items="last_page"
@@ -252,6 +252,10 @@ export default {
             default: null
         },
         Header:{
+            type: Boolean,
+            default: true
+        },
+        isPaginate:{
             type: Boolean,
             default: true
         },

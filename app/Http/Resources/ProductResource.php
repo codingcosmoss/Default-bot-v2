@@ -23,6 +23,13 @@ class ProductResource extends JsonResource
 
         $usedProducts = UsedProduct::where('product_id', $this->id)->sum('amount');
         $importedProducts = ImportedProduct::where('product_id', $this->id)->sum('amount');
+
+        $defaultImage = [
+            [
+                'url' => asset('').'Photos/product-img.png'
+            ]
+        ];
+
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -35,6 +42,7 @@ class ProductResource extends JsonResource
             'size_type' => $this->size_type,
             'min_amount' => $this->min_amount,
             'rest_products' => $importedProducts - $usedProducts,
+            'image' => count($this->image) != 0 ? ImageResource::collection($this->image) : $defaultImage,
         ];
     }
 }
