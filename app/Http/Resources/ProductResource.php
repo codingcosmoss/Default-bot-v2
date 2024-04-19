@@ -43,6 +43,9 @@ class ProductResource extends JsonResource
             'min_amount' => $this->min_amount,
             'rest_products' => $importedProducts - $usedProducts,
             'image' => count($this->image) != 0 ? ImageResource::collection($this->image) : $defaultImage,
+            'tegs' => $this->tegs,
+            'description_uz' => $this->description_uz,
+            'description_ru' => $this->description_ru,
         ];
     }
 }

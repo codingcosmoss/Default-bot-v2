@@ -284,10 +284,11 @@ Route::group([ 'prefix' => 'api-product' ], function () {
 
 // Products
 Route::group([ 'prefix' => 'brand' ], function () {
-    Route::get('/index', [\App\Http\Controllers\Api\ProductApiController::class, 'index']);
-    Route::get('/is-actives', [\App\Http\Controllers\Api\ProductApiController::class, 'isActives']);
-    Route::get('/show/{id}', [\App\Http\Controllers\Api\ProductApiController::class, 'show']);
-    Route::put('/update/{id}', [\App\Http\Controllers\Api\ProductApiController::class, 'update']);
-    Route::post('/search', [\App\Http\Controllers\Api\ProductApiController::class, 'search']);
+    Route::get('/index', [\App\Http\Controllers\Api\BrandController::class, 'index']);
+    Route::get('/show/{id}', [\App\Http\Controllers\Api\BrandController::class, 'show']);
+    Route::post('/create', [\App\Http\Controllers\Api\BrandController::class, 'create']);
+    Route::put('/update/{id}', [\App\Http\Controllers\Api\BrandController::class, 'update']);
+    Route::post('/search', [\App\Http\Controllers\Api\BrandController::class, 'search']);
+    Route::get('/delete/{id}', [\App\Http\Controllers\Api\DailyCostController::class, 'delete']);
 });
 

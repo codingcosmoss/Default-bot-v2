@@ -65,6 +65,7 @@ class BrandService extends AbstractService
         return [
             TextField::make('name_uz')->setRules('required|string'),
             TextField::make('name_ru')->setRules('required|string'),
+            TextField::make('category_id')->setRules('required|integer'),
         ];
     }
 
