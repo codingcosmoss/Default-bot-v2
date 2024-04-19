@@ -4,11 +4,13 @@ namespace App\Services\Api;
 
 use App\Fields\Store\TextField;
 use App\Http\Controllers\Api\WarehouseController;
+use App\Http\Resources\BrandResource;
 use App\Http\Resources\FilialResource;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\TreatmentResource;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\WarehouseResource;
+use App\Models\Brand;
 use App\Models\Filial;
 use App\Models\Product;
 use App\Models\Treatment;
@@ -19,13 +21,13 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
-class ProductApiService extends AbstractService
+class BrandService extends AbstractService
 {
     /**
      * @var string
      */
-    protected $model = Product::class;
-    protected $resource = ProductResource::class;
+    protected $model = Brand::class;
+    protected $resource = BrandResource::class;
 
     /**
      * @return mixed
@@ -54,30 +56,6 @@ class ProductApiService extends AbstractService
             'data' => $data
         ];
     }
-    public function indexAll($data = null)
-    {
-        $models = $this->model::orderBy('updated_at', 'desc')
-            ->get();
-
-        $data = [
-            'items' => $this->resource::collection($models),
-            'pagination' => [
-                'total' => $models->total(),
-                'per_page' => $models->perPage(),
-                'current_page' => $models->currentPage(),
-                'last_page' => $models->lastPage(),
-                'from' => $models->firstItem(),
-                'to' => $models->lastItem(),
-            ],
-        ];
-
-        return [
-            'status' => true,
-            'message' => 'Success',
-            'statusCode' => 200,
-            'data' => $data
-        ];
-    }
 
     /**
      * @return array
@@ -85,11 +63,8 @@ class ProductApiService extends AbstractService
     public function getFields()
     {
         return [
-            TextField::make('brand_id')->setRules('required|integer'),
-            TextField::make('image')->setRules('required|image|mimes:jpeg,png,jpg,gif,svg|max:5048'),
-            TextField::make('tegs')->setRules('required|string'),
-            TextField::make('description_uz')->setRules('required|string'),
-            TextField::make('description_ru')->setRules('required|string'),
+            TextField::make('name_uz')->setRules('required|string'),
+            TextField::make('name_ru')->setRules('required|string'),
         ];
     }
 
@@ -134,10 +109,8 @@ class ProductApiService extends AbstractService
         DB::beginTransaction();
         try {
             $model = new $this->model;
-            $model->brand_id = $data['brand_id'];
-            $model->tegs = $data['tegs'];
-            $model->description_uz = $data['description_uz'];
-            $model->description_ru = $data['description_ru'];
+            $model->name_uz = $data['name_uz'];
+            $model->name_ru = $data['name_ru'];
 
             if ($model->save()) {
                 DB::commit();
@@ -221,10 +194,9 @@ class ProductApiService extends AbstractService
         DB::beginTransaction();
         try {
 
-            $model->brand_id = $data['brand_id'];
-            $model->tegs = $data['tegs'];
-            $model->description_uz = $data['description_uz'];
-            $model->description_ru = $data['description_ru'];
+            $model->name_uz = $data['name_uz'];
+            $model->name_ru = $data['name_ru'];
+
 
 
             if ($model->save()) {

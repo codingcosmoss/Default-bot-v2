@@ -4,17 +4,18 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Product;
 use App\Models\User;
+use App\Services\Api\BrandService;
 use App\Services\Api\FilialService;
 use App\Services\Api\ProductApiService;
 use App\Services\Api\ProductService;
 use App\Services\Api\WarehouseCategoryService;
 
-class ProductApiController extends AbstractController
+class BrandController extends AbstractController
 {
     /**
      * @var string
      */
-    protected $service = ProductApiService::class;
+    protected $service = BrandService::class;
 
     /**
      * @return array|JsonResponse
@@ -25,13 +26,6 @@ class ProductApiController extends AbstractController
 
         return $this->sendResponse($item);
     }
-    public function indexAll()
-    {
-        $item = $this->service->indexAll(request()->all());
-
-        return $this->sendResponse($item);
-    }
-
 
     /**
      * @param $id
