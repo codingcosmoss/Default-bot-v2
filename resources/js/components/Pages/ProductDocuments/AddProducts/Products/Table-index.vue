@@ -7,16 +7,16 @@
         {{ getName("Products") }}
       </h4>
 
-      <div class="flex flex-col">
+      <div class="flex flex-col table_media_box">
 
         <TableHeader></TableHeader>
 
         <div
           v-for="(item, index) in Products"
-          class="grid tableBox grid-cols-6 border-b border-stroke dark:border-strokedark sm:grid-cols-6"
+          class="grid tableBox2 grid-cols-6 border-b border-stroke dark:border-strokedark sm:grid-cols-6"
         >
           <div class="flex items-center gap-3 p-2.5 xl:p-5">
-            <p class="font-medium hidden text-black dark:text-white sm:block">
+            <p class="font-medium  text-black dark:text-white sm:block">
               {{ index + 1 }}. {{ item.name }}
             </p>
           </div>

@@ -1,7 +1,7 @@
 
 <template>
 
-    <div class="grid grid-cols-8 border-b border-stroke dark:border-strokedark sm:grid-cols-8 overflow-x-auto" >
+    <div class="grid grid-cols-8 border-b border-stroke dark:border-strokedark sm:grid-cols-8 overflow-x-auto media_header media_header2" >
 
         <div class="flex items-center justify-center p-2.5 xl:p-5">
             <p class="font-medium text-black dark:text-white"> {{getName('fio')}}</p>

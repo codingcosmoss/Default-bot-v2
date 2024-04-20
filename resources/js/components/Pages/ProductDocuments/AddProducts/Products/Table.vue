@@ -7,9 +7,9 @@
         {{ getName("Products") }}
       </h4>
 
-      <div class="flex flex-col">
+      <div class="flex flex-col table_media_box">
 
-        <div v-if="Header" class="grid grid-cols-3 rounded-sm mb-2 sm:grid-cols-5 relative">
+        <div v-if="Header" class="grid grid-cols-3 rounded-sm mb-2 sm:grid-cols-5 relative media_top_bar">
           <div>
             <input
               type="text"
@@ -92,10 +92,10 @@
 
         <div
           v-for="(item, index) in Products"
-          class="grid tableBox grid-cols-7 border-b border-stroke dark:border-strokedark sm:grid-cols-7"
+          class="grid tableBox2 grid-cols-7 border-b border-stroke dark:border-strokedark sm:grid-cols-7"
         >
           <div class="flex items-center gap-3 p-2.5 xl:p-5">
-            <p class="font-medium hidden text-black dark:text-white sm:block">
+            <p class="font-medium  text-black dark:text-white sm:block">
               {{ index + 1 }}. {{ item.name }}
             </p>
           </div>
@@ -138,7 +138,7 @@
           </div>
 
 
-          <div class="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
+          <div class="flex items-center justify-center p-2.5 sm:flex xl:p-5">
             <p class="font-medium text-meta-5" >
                 <i @click = "removeItem(item), validate()"  class="fa-solid text-danger fa-trash setting-icon"></i>
 

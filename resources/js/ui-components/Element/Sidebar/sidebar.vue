@@ -114,12 +114,21 @@ export default {
                 this.Image = this.user.image && this.user.image.length > 0 && this.user.image[0].url != null ? this.user.image[0].url : 'https://demo.tailadmin.com/src/images/logo/logo.svg';
             }
 
-        }
+        },
+          hiddenMenu() {
+              if (window.innerWidth <= 1365) {
+                  setTimeout(() => {
+                      this.sidebarToggle = false;
+                  }, 100);
+              }
+          }
+
       },
 
     mounted() {
         this.animation()
         this.getUserImage()
+        this.hiddenMenu()
     }
 
 
@@ -136,6 +145,8 @@ export default {
     position: fixed;
 
 }
+
+
 
 @media (min-width: 1024px) {
     .navbar01{

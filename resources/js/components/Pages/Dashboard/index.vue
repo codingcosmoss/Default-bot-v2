@@ -47,7 +47,7 @@
 
             </Map01>
 
-              <Map01  :Title="getName('Payments')" class="chart_item" >
+              <Map01  :Title="getName('Payments')" class="chart_item payment_chart" >
                 <div class="dashboard_loader_box"  v-if="paymentloader" >
                     <loader-spinning style="margin: 0 auto; " />
                 </div>

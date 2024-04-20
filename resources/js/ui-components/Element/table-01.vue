@@ -6,7 +6,7 @@
                 Top Channels
             </h4>
 
-            <div class="flex flex-col">
+            <div class="flex flex-col table_media_box">
                 <div class="grid grid-cols-3 rounded-sm bg-gray-2 dark:bg-meta-4 sm:grid-cols-5">
                     <div class="p-2.5 xl:p-5">
                         <h5 class="text-sm font-medium uppercase xsm:text-base">Source</h5>
@@ -43,11 +43,11 @@
                         <p class="font-medium text-meta-3">$5,768</p>
                     </div>
 
-                    <div class="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
+                    <div class="flex items-center justify-center p-2.5 sm:flex xl:p-5">
                         <p class="font-medium text-black dark:text-white">590</p>
                     </div>
 
-                    <div class="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
+                    <div class="flex items-center justify-center p-2.5 sm:flex xl:p-5">
                         <p class="font-medium text-meta-5">4.8%</p>
                     </div>
                 </div>
@@ -57,7 +57,7 @@
                         <div class="flex-shrink-0">
                             <img src="http://127.0.0.1:8000/images/brand/brand-02.svg" alt="Brand" />
                         </div>
-                        <p class="font-medium hidden text-black dark:text-white sm:block">Twitter</p>
+                        <p class="font-medium  text-black dark:text-white sm:block">Twitter</p>
                     </div>
 
                     <div class="flex items-center justify-center p-2.5 xl:p-5">
@@ -68,11 +68,11 @@
                         <p class="font-medium text-meta-3">$4,635</p>
                     </div>
 
-                    <div class="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
+                    <div class="flex items-center justify-center p-2.5 sm:flex xl:p-5">
                         <p class="font-medium text-black dark:text-white">467</p>
                     </div>
 
-                    <div class="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
+                    <div class="flex items-center justify-center p-2.5 sm:flex xl:p-5">
                         <p class="font-medium text-meta-5">4.3%</p>
                     </div>
                 </div>
@@ -93,11 +93,11 @@
                         <p class="font-medium text-meta-3">$4,290</p>
                     </div>
 
-                    <div class="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
+                    <div class="flex items-center justify-center p-2.5 sm:flex xl:p-5">
                         <p class="font-medium text-black dark:text-white">420</p>
                     </div>
 
-                    <div class="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
+                    <div class="flex items-center justify-center p-2.5 sm:flex xl:p-5">
                         <p class="font-medium text-meta-5">3.7%</p>
                     </div>
                 </div>
@@ -118,11 +118,11 @@
                         <p class="font-medium text-meta-3">$3,580</p>
                     </div>
 
-                    <div class="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
+                    <div class="flex items-center justify-center p-2.5 sm:flex xl:p-5">
                         <p class="font-medium text-black dark:text-white">389</p>
                     </div>
 
-                    <div class="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
+                    <div class="flex items-center justify-center p-2.5 sm:flex xl:p-5">
                         <p class="font-medium text-meta-5">2.5%</p>
                     </div>
                 </div>
@@ -143,11 +143,11 @@
                         <p class="font-medium text-meta-3">$2,740</p>
                     </div>
 
-                    <div class="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
+                    <div class="flex items-center justify-center p-2.5 sm:flex xl:p-5">
                         <p class="font-medium text-black dark:text-white">230</p>
                     </div>
 
-                    <div class="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
+                    <div class="flex items-center justify-center p-2.5 sm:flex xl:p-5">
                         <p class="font-medium text-meta-5">1.9%</p>
                     </div>
                 </div>

@@ -8,9 +8,9 @@
         {{ getName("DebtTreatments") }}
       </h4>
 
-      <div class="flex flex-col">
+      <div class="flex flex-col table_media_box">
 
-        <div v-if="Header" class="grid grid-cols-3 rounded-sm mb-2 sm:grid-cols-5 relative">
+        <div v-if="Header" class="grid grid-cols-3 rounded-sm mb-2 sm:grid-cols-5 relative media_top_bar">
           <div>
             <input
               type="text"
@@ -96,7 +96,7 @@
           class="grid tableBox grid-cols-8 border-b border-stroke dark:border-strokedark sm:grid-cols-8 databes_table "
         >
           <div class="flex items-center gap-3 p-2.5 xl:p-5">
-            <p class="font-medium hidden text-black dark:text-white sm:block">
+            <p class="font-medium  text-black dark:text-white sm:block">
               {{ index + 1 }}. {{ item.patient.first_name + ' ' + item.patient.last_name  }}
             </p>
           </div>
@@ -136,7 +136,7 @@
         </div>
 
 
-          <div class="hidden button-box0 items-center justify-center p-2.5 sm:flex xl:p-5">
+          <div class=" button-box0 items-center justify-center p-2.5 sm:flex xl:p-5">
             <p class="font-medium text-meta-5 btns " >
                 <i
                     @click="Show(item) "

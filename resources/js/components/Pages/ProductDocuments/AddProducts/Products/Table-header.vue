@@ -1,7 +1,7 @@
 
 <template>
 
-    <div class="grid grid-cols-7 border-b border-stroke dark:border-strokedark sm:grid-cols-7 overflow-x-auto" >
+    <div class="grid grid-cols-7 border-b border-stroke dark:border-strokedark sm:grid-cols-7 overflow-x-auto media_header" >
 
         <div class="flex items-center  justify-content-end p-2.5 xl:p-5" >
             <p class="font-medium text-black dark:text-white  "  > {{getName('name_content')}}</p>

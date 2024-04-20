@@ -456,11 +456,11 @@ class PaymentService extends AbstractService
         $models = $this->model::join('patients', 'payments.patient_id', '=', 'patients.id')
             ->select('payments.*', 'patients.first_name', 'patients.last_name')
             ->where(function ($query) use ($key) {
-                empty($key) ? $query : $query->where('patients.first_name', 'like', '%' . $key . '%');
-                empty($key) ? $query : $query->where('patients.last_name', 'like', '%' . $key . '%');
-                empty($key) ? $query : $query->where('payments.amount', 'like', '%' . $key . '%');
-                empty($key) ? $query : $query->where('payments.updated_at', 'like', '%' . $key . '%');
-                empty($key) ? $query : $query->where('payments.created_at', 'like', '%' . $key . '%');
+                empty($key) ? $query : $query->orWhere('patients.first_name', 'like', '%' . $key . '%');
+                empty($key) ? $query : $query->orWhere('patients.last_name', 'like', '%' . $key . '%');
+                empty($key) ? $query : $query->orWhere('payments.amount', 'like', '%' . $key . '%');
+                empty($key) ? $query : $query->orWhere('payments.updated_at', 'like', '%' . $key . '%');
+                empty($key) ? $query : $query->orWhere('payments.created_at', 'like', '%' . $key . '%');
         })
             ->orderBy($column, $sort)
             ->paginate($data['paginate']);

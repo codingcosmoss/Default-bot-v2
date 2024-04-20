@@ -13,12 +13,12 @@
                     {{getName('PaymentTreatments')}}
                 </h4>
 
-                <div class="flex flex-col">
+                <div class="flex flex-col table_media_box">
 
                     <div v-for=" item in Employee.finished_treatments"  class="grid grid-cols-3 border-b  border-stroke dark:border-strokedark sm:grid-cols-3 databes_table ">
 
                         <div class="flex items-center gap-3 p-2.5 xl:p-5">
-                            <p class="font-bold hidden text-black dark:text-white sm:block ">
+                            <p class="font-bold  text-black dark:text-white sm:block ">
                                 <Checkbox01
                                     :onCheck = "searchKey(item.id)"
                                     @click = "sendData(item)"

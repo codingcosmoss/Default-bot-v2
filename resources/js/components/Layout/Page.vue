@@ -15,7 +15,7 @@
 
 
             <!-- ===== Sidebar Start ===== -->
-            <Sidebar :onSidebarToggle = "onSidebarToggle" :navbarAnime = "Animation"  ></Sidebar>
+            <Sidebar :onSidebarToggle = "onSidebarToggle" :navbarAnime = "Animation"   ></Sidebar>
             <!-- ===== Sidebar End ===== -->
 
 
@@ -108,7 +108,8 @@ export default {
             }
         },
         reloadSite(){
-             let reload = localStorage.getItem('reload');
+            let reload = localStorage.getItem('reload');
+
              if (reload == null){
                  localStorage.setItem('reload', true);
                  location.reload();

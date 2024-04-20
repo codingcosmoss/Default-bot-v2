@@ -94,7 +94,7 @@ th{
   /*background-image: #262747;*/
 }
 .my-logo{
-    width: 70%;
+    width: 100%;
     height: 60px;
     /*background: #0a91f1;*/
     margin-top: 10px;
@@ -349,4 +349,40 @@ i{
 
 .mx-auto{
     padding: 15px;
+}
+
+
+/* Media  */
+
+
+
+@media (max-width: 1365px) {
+    .table_media_box{
+        overflow: scroll;
+    }
+    .tableBox{
+        width: 1165px;
+        grid-template-columns: repeat(8, minmax(0, 1fr));
+    }
+    .tableBox2{
+        width: 1165px;
+    }
+    .databes_table{
+        width: 1165px;
+    }
+    .media_header{
+        width: 1165px;
+    }
+    .media_header2{
+        width: 1165px;
+        grid-template-columns: repeat(8, minmax(0, 1fr));
+    }
+    .media_top_bar{
+        width: 1165px;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+
+    }
+    .payment_chart{
+        display: none;
+    }
 }

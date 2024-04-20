@@ -107,7 +107,6 @@ export default {
         onClickMenu(){
             this.defaultValue = !this.defaultValue;
             this.$emit('sidebarToggle', this.defaultValue );
-            // console.log('ok click')
         },
 
         setLang(lang){
@@ -127,6 +126,7 @@ export default {
 
     mounted() {
         // this.updateData()
+        this.onClickMenu()
     },
 
 

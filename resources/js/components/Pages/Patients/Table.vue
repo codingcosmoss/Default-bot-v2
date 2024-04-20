@@ -7,8 +7,8 @@
         {{ getName("Patients") }}
       </h4>
 
-      <div class="flex flex-col">
-        <div class="grid grid-cols-3 rounded-sm mb-2 sm:grid-cols-5 relative">
+      <div class="flex flex-col table_media_box">
+        <div class="grid grid-cols-3 rounded-sm mb-2 sm:grid-cols-5 relative media_top_bar">
           <div>
             <input
               type="text"
@@ -107,7 +107,7 @@
                 <div class="photo-img" :style="'background-image: url(' + item['image'][0]['url'] + ')'" >
 
                 </div>
-                <p style ="white-space: nowrap" class="font-medium hidden text-black dark:text-white sm:block">{{ index + 1 }}.  {{ item.first_name }} {{item.last_name}}</p>
+                <p style ="white-space: nowrap" class="font-medium  text-black dark:text-white sm:block">{{ index + 1 }}.  {{ item.first_name }} {{item.last_name}}</p>
             </div>
 
 
@@ -130,7 +130,7 @@
             <p class="font-medium text-black dark:text-white">{{ item.created_at }}</p>
           </div>
 
-          <div class="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
+          <div class="flex items-center justify-center p-2.5 sm:flex xl:p-5">
             <p class="font-medium text-meta-5">
               <i
                 @click="

@@ -3,10 +3,10 @@
         <div
             class="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
             <WarehouseTopbar></WarehouseTopbar>
-            <div class="flex flex-col">
+            <div class="flex flex-col table_media_box">
 
 
-                <div class="grid grid-cols-3 rounded-sm mb-2 sm:grid-cols-5 relative">
+                <div class="grid grid-cols-3 rounded-sm mb-2 sm:grid-cols-5 relative media_top_bar">
 
                     <div >
 
@@ -46,7 +46,7 @@
 
                     <div class="flex   justify-content-end gap-3 p-2.5 xl:p-5">
                         {{index+1}}.
-                        <p class="font-bold hidden text-black dark:text-white sm:block cursor-pointer"  style="color: #0a91f1" >  {{item.name}}</p>
+                        <p class="font-bold  text-black dark:text-white sm:block cursor-pointer"  style="color: #0a91f1" >  {{item.name}}</p>
                     </div>
 
 <!--                    <div class="flex items-center justify-center p-2.5 xl:p-5">-->
@@ -69,7 +69,7 @@
 
 
 
-                    <div class="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
+                    <div class="flex items-center justify-center p-2.5 sm:flex xl:p-5">
                         <p class="font-medium text-meta-5">
                             <i @click = "onModal(item.id)" class="fa-solid setting-icon fa-pen-to-square"></i>
                             &nbsp;

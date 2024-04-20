@@ -7,8 +7,8 @@
         {{ getName("GivenMoney") }}
       </h4>
 
-      <div class="flex flex-col">
-        <div class="grid grid-cols-3 rounded-sm mb-2 sm:grid-cols-5 relative">
+      <div class="flex flex-col table_media_box">
+        <div class="grid grid-cols-3 rounded-sm mb-2 sm:grid-cols-5 relative media_top_bar">
           <div>
             <input
               type="text"
@@ -79,7 +79,7 @@
           class=" databes_table grid grid-cols-6 border-b border-stroke dark:border-strokedark sm:grid-cols-6"
         >
           <div class="flex items-center gap-3 p-2.5 xl:p-5">
-            <p class="font-medium hidden text-black dark:text-white sm:block">
+            <p class="font-medium  text-black dark:text-white sm:block">
               {{ index + 1 }}. {{ item.doctor.name }}
             </p>
           </div>
@@ -104,7 +104,7 @@
             <p class="font-medium text-black dark:text-white">{{ item.patient.first_name  }} {{item.patient.last_name}}</p>
           </div>
 
-          <div class="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
+          <div class="flex items-center justify-center p-2.5 sm:flex xl:p-5">
             <p class="font-medium text-meta-5">
               &nbsp;
                 <i
