@@ -292,3 +292,15 @@ Route::group([ 'prefix' => 'brand' ], function () {
     Route::get('/delete/{id}', [\App\Http\Controllers\Api\DailyCostController::class, 'delete']);
 });
 
+// Product categories
+
+// Groups
+Route::group([ 'prefix' => 'product-category' ], function () {
+    Route::get('/index', [\App\Http\Controllers\Api\GroupController::class, 'index']);
+//    Route::post('/create', [\App\Http\Controllers\Api\GroupController::class, 'create']);
+    Route::get('/show/{id}', [\App\Http\Controllers\Api\GroupController::class, 'show']);
+//    Route::post('/update/{id}', [\App\Http\Controllers\Api\GroupController::class, 'update']);
+//    Route::get('/delete/{id}', [\App\Http\Controllers\Api\GroupController::class, 'delete']);
+    Route::post('/search', [\App\Http\Controllers\Api\GroupController::class, 'search']);
+});
+

@@ -32,8 +32,9 @@ class GroupService extends AbstractService
      */
     public function index($data = null)
     {
+        $pages = isset($data['pages']) ? $data['pages'] : 5;
         $models = $this->model::orderBy('updated_at', 'desc')
-            ->paginate($data['pages']);
+            ->paginate($pages);
 
         $data = [
             'items' => $this->resource::collection($models),
