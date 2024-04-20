@@ -66,7 +66,7 @@
 
                 <TableHeader></TableHeader>
 
-                <div v-for="(item, index) in items" class=" databes_table grid grid-cols-6 border-b border-stroke dark:border-strokedark sm:grid-cols-6">
+                <div style="grid-template-columns: 70px repeat(6, 1fr);" v-for="(item, index) in items" class=" databes_table grid grid-cols-7 border-b border-stroke dark:border-strokedark sm:grid-cols-7">
 
 <!--                    <div class="flex items-center gap-3 p-2.5 xl:p-5 data_table">-->
 <!--                        <div class="photo-img" :style="'background-image: url(' + item['image'][0]['url'] + ')'" >-->
@@ -75,10 +75,13 @@
 <!--                        <p style ="white-space: nowrap" class="font-medium  text-black dark:text-white sm:block">{{index+1}}.  {{item.name}}</p>-->
 <!--                    </div>-->
 
-                    <div class="flex items-center  gap-3 p-2.5 xl:p-5 data_table">
+                    <div class="flex items-center  gap-3 p-2.5 xl:p-5 data_table" style="width: 100px">
                         <div class="photo-img" :style="'background-image: url(' + item['image'][0]['url'] + ')'" >
 
                         </div>
+                    </div>
+
+                    <div class="flex items-center  gap-3 p-2.5 xl:p-5 data_table">
                         <p style ="white-space: nowrap" class="font-medium  text-black dark:text-white sm:block">{{ index + 1 }}.  {{ item.name }} </p>
                     </div>
 
