@@ -57,6 +57,23 @@ class BrandService extends AbstractService
         ];
     }
 
+    public function indexAll($data = null)
+    {
+        $models = $this->model::orderBy('updated_at', 'desc')
+            ->get();
+
+        $data = [
+            'items' => $this->resource::collection($models),
+        ];
+
+        return [
+            'status' => true,
+            'message' => 'Success',
+            'statusCode' => 200,
+            'data' => $data
+        ];
+    }
+
     /**
      * @return array
      */

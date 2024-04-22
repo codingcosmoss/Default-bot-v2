@@ -25,6 +25,13 @@ class GroupController extends AbstractController
         return $this->sendResponse($item);
     }
 
+    public function indexAll()
+    {
+        $item = $this->service->indexAll(request()->all());
+
+        return $this->sendResponse($item);
+    }
+
     /**
      * @param $id
      * @return array|JsonResponse

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -18,6 +19,7 @@ class GroupResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'products' => Product::where('group_id' , $this->id)->get(),
             'created_at' =>  Carbon::parse($this->created_at)->format('Y-m-d H:i'),
             'updated_at' =>  Carbon::parse($this->updated_at)->format('Y-m-d H:i'),
         ];

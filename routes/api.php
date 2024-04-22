@@ -285,6 +285,7 @@ Route::group([ 'prefix' => 'api-product' ], function () {
 // Products
 Route::group([ 'prefix' => 'brand' ], function () {
     Route::get('/index', [\App\Http\Controllers\Api\BrandController::class, 'index']);
+    Route::get('/index-all', [\App\Http\Controllers\Api\BrandController::class, 'indexAll']);
     Route::get('/show/{id}', [\App\Http\Controllers\Api\BrandController::class, 'show']);
     Route::post('/create', [\App\Http\Controllers\Api\BrandController::class, 'create']);
     Route::put('/update/{id}', [\App\Http\Controllers\Api\BrandController::class, 'update']);
@@ -297,6 +298,7 @@ Route::group([ 'prefix' => 'brand' ], function () {
 // Groups
 Route::group([ 'prefix' => 'product-category' ], function () {
     Route::get('/index', [\App\Http\Controllers\Api\GroupController::class, 'index']);
+    Route::get('/index-all', [\App\Http\Controllers\Api\GroupController::class, 'indexAll']);
 //    Route::post('/create', [\App\Http\Controllers\Api\GroupController::class, 'create']);
     Route::get('/show/{id}', [\App\Http\Controllers\Api\GroupController::class, 'show']);
 //    Route::post('/update/{id}', [\App\Http\Controllers\Api\GroupController::class, 'update']);
