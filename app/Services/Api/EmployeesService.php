@@ -4,10 +4,13 @@ namespace App\Services\Api;
 
 use App\Fields\Store\TextField;
 use App\Http\Resources\OneUserResource;
+use App\Http\Resources\PermissionResource;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\UserResources;
+use App\Models\Permission;
 use App\Models\PersonalPrice;
 use App\Models\User;
+use App\Models\UserPermission;
 use App\Traits\Status;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -60,6 +63,30 @@ class EmployeesService extends AbstractService
             'data' => $data
         ];
     }
+
+
+
+    public function getPermissions($data = null)
+    {
+        $items = Permission::all();
+        return [
+            'status' => true,
+            'message' => 'Success',
+            'statusCode' => 200,
+            'data' => $items
+        ];
+    }
+    public function getUserPermissions($id)
+    {
+        $items = UserPermission::where('user_id', $id)->get();
+        return [
+            'status' => true,
+            'message' => 'Success',
+            'statusCode' => 200,
+            'data' => PermissionResource::collection($items)
+        ];
+    }
+
 
 
 
@@ -123,6 +150,19 @@ class EmployeesService extends AbstractService
                if (isset($data['roles'])){
                    $user->permissions()->attach($data['roles']);
                }
+
+                if (isset($data['permissions'])){
+                    if (count($data['permissions']) > 0){
+//                        $arxivModal = UserPermission::where('user_id', $user->id)->delete();
+                        foreach ($data['permissions'] as $permission){
+                            $model = new UserPermission();
+                            $model->permission_id = $permission['permission_id'];
+                            $model->role_id = $permission['role_id'];
+                            $model->user_id = $user->id;
+                            $model->save();
+                        }
+                    }
+                }
 
             } else {
                 DB::rollback();
@@ -250,6 +290,7 @@ class EmployeesService extends AbstractService
             TextField::make('profil_photo_path')->setRules('nullable'),
             TextField::make('sort_order')->setRules('required|integer'),
             TextField::make('roles')->setRules('nullable'),
+            TextField::make('permissions')->setRules('nullable'),
         ];
     }
 
@@ -369,6 +410,19 @@ class EmployeesService extends AbstractService
                     $item->permissions()->attach($data['roles']);
                 }
 
+                $arxivModal = UserPermission::where('user_id', $item->id)->delete();
+                if (isset($data['permissions'])){
+                    if (count($data['permissions']) > 0){
+                        foreach ($data['permissions'] as $permission){
+                            $model = new UserPermission();
+                            $model->permission_id = $permission['permission_id'];
+                            $model->role_id = $permission['role_id'];
+                            $model->user_id = $item->id;
+                            $model->save();
+                        }
+                    }
+                }
+
             } else {
                 DB::rollback();
                 return [
@@ -394,7 +448,7 @@ class EmployeesService extends AbstractService
             'status' => true,
             'message' => 'success',
             'statusCode' => 200,
-            'data' => $item
+            'data' => new OneUserResource($item)
         ];
     }
 
@@ -501,6 +555,7 @@ class EmployeesService extends AbstractService
             TextField::make('profil_photo_path')->setRules('nullable'),
             TextField::make('color')->setRules('nullable'),
             TextField::make('roles')->setRules('nullable'),
+            TextField::make('permissions')->setRules('nullable'),
             TextField::make('sort_order')->setRules('required|integer'),
         ];
     }

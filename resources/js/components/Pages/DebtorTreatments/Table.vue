@@ -137,78 +137,95 @@
 
 
           <div class=" button-box0 items-center justify-center p-2.5 sm:flex xl:p-5">
-            <p class="font-medium text-meta-5 btns " >
-                <i
-                    @click="Show(item) "
-                    class="fa-solid setting-icon fa-eye"
-                ></i>
-                <i
-                    titile = 'Tahrirlash'
-                    v-if="item.status == 8 && item.payment_status != 12 "
-                    @click="this.$router.push({ path: '/treatmetns/treatmetn', query:{ id: item.patient_id, treatment_id: item.id } })"
-                    class="fa-solid setting-icon fa-pen-to-square "
-                ></i>
-                <i
-                    v-if="item.status == 7"
-                    @click="this.$router.push({ path: '/treatmetns/treatmetn', query:{ id: item.patient_id, treatment_id: item.id } })"
-                    :title="getName('Treatment')"
-                    class="fa-regular setting-icon fa-calendar-plus cursor-pointer"
+              <p class="font-medium text-meta-5 btns "  style="position: relative">
+                  <i
+                      @click="Show(item) "
+                      class="fa-solid setting-icon fa-eye"
+                  ></i>
+                  <i
+                      titile = 'Tahrirlash'
+                      v-if="item.status == 8 && item.payment_status != 12  && item.status != 17 && hasPermission('Treatments-update')"
+                      @click="this.$router.push({ path: '/treatmetns/treatmetn', query:{ id: item.patient_id, treatment_id: item.id } })"
+                      class="fa-solid setting-icon fa-pen-to-square "
+                  ></i>
+                  <i
+                      v-if="item.status == 7  && item.status != 17 && hasPermission('Treatments-treatment')"
+                      @click="this.$router.push({ path: '/treatmetns/treatmetn', query:{ id: item.patient_id, treatment_id: item.id } })"
+                      :title="getName('Treatment')"
+                      class="fa-regular setting-icon fa-calendar-plus cursor-pointer"
 
-                ></i>
+                  ></i>
 
-                <i
-                    v-if="item.payment_status != 12 && item.status != 7"
-                    @click="paymentModal(item), userPayments = item.user_payment "
-                    :title="getName('Payments')"
-                    class="fa-regular fas fa-donate setting-icon  cursor-pointer"
-                ></i>
+                  <i
+                      v-if="item.payment_status != 12 && item.status != 7  && item.status != 17 && hasPermission('Treatments-payOff')"
+                      @click="paymentModal(item), userPayments = item.user_payment "
+                      :title="getName('Payments')"
+                      class="fa-regular fas fa-donate setting-icon  cursor-pointer"
+                  ></i>
 
-                <i
-                    title="Tolov tarixi"
-                    v-if="item.payment_status ==  11 || item.payment_status == 12"
-                    @click="istoryPaymentModal(item), Loader = true"
-                    :title="getName('Payment')"
-                    class="fa-solid fa-clock-rotate-left setting-icon  cursor-pointer"
-                ></i>
-
-
-                <i
-                    title="Chegirma berish"
-                    v-if="item.payment_status != 12 && item.status != 9 && item.status != 7"
-                    @click="discountModal(item)"
-                    :title="getName('Payment')"
-                    class="fa-regular fas fa-percent setting-icon  cursor-pointer"
-                ></i>
-                <i
-                    title="Qarzga bajarish"
-                    v-if="item.payment_status != 12 && item.status != 9 && item.status != 7"
-                    @click="debtModal(item)"
-                    :title="getName('Payment')"
-                    class="fa-regular fas fa-coins setting-icon  cursor-pointer"
-                ></i>
+                  <i
+                      title="Tolov tarixi"
+                      v-if="item.payment_status ==  11 || item.payment_status == 12  && item.status != 17"
+                      @click="istoryPaymentModal(item), Loader = true"
+                      :title="getName('Payment')"
+                      class="fa-solid fa-clock-rotate-left setting-icon  cursor-pointer"
+                  ></i>
 
 
-                <a target="_blank" :href="onCheck(item.id)"  >
-                    <i
-                        title="Tolov cheki"
-                        v-if="item.payment_status != 10"
-                        :title="getName('Payment')"
-                        class="fa-regular fas fa-print setting-icon  cursor-pointer"
-                    ></i>
-                </a>
+                  <i
+                      title="Chegirma berish"
+                      v-if="item.payment_status != 12 && item.status != 9 && item.status != 7  && item.status != 17  && hasPermission('Treatments-giveDiscount')"
+                      @click="discountModal(item)"
+                      class="fa-regular fas fa-percent setting-icon  cursor-pointer"
+                  ></i>
+                  <i
+                      title="Qarzga bajarish"
+                      v-if="item.payment_status != 12 && item.status != 9 && item.status != 7  && item.status != 17 && hasPermission('Treatments-debtEnforcement')"
+                      @click="debtModal(item)"
+                      class="fa-regular fas fa-coins setting-icon  cursor-pointer"
+                  ></i>
 
-                <i
-                    title="Tugatish"
-                    v-if="item.status != 9 && item.status != 7"
-                    @click="treatementFinished(item.id)"
-                    :title="getName('Payment')"
-                    class="fa-regular fas fa-square-check setting-icon  cursor-pointer"
-                ></i>
-<!--                <div class="button-box01" v-if="item.payment_status != 12 && item.status != 7">-->
-<!--                  -->
-<!--                </div>-->
 
-            </p>
+                  <a target="_blank" :href="onCheck(item.id)"  >
+
+                      <i
+                          title="Tolov cheki"
+                          v-if="item.payment_status != 10 && item.status != 17 "
+                          class="fa-regular fas fa-print setting-icon  cursor-pointer"
+                      ></i>
+                  </a>
+
+                  <i
+
+                      title="Tugatish"
+                      v-if="(item.status != 9 && item.status != 7 && item.status != 17) && !finishLoader && hasPermission('Treatments-treatment')"
+                      @click="treatementFinished(item.id)"
+                      class="fa-regular fas fa-square-check setting-icon  cursor-pointer"
+                  ></i>
+
+                  <div class="finish_loader_box"  v-if="finishLoader && (item.status != 9 && item.status != 7 && item.status != 17)">
+                      <loader-spinning class="finishLoader" style="margin: 0 auto; " />
+                  </div>
+
+
+                  <i
+                      title="Bekor qilish"
+                      v-if="item.status == 7 && hasPermission('Treatments-treatment')"
+                      @click="cancletedModal(item)"
+                      class="fa-solid fa-x setting-icon  cursor-pointer text-danger "
+                  ></i>
+
+                  <i
+                      title="Bekor qilish tasnifi"
+                      v-if="item.status == 17 "
+                      @click="onInfoModal(item)"
+                      class="fa-solid fa-circle-info setting-icon  cursor-pointer  "
+                  ></i>
+                  <!--                <div class="button-box01" v-if="item.payment_status != 12 && item.status != 7">-->
+                  <!--                  -->
+                  <!--                </div>-->
+
+              </p>
           </div>
 
 
@@ -918,6 +935,14 @@ export default {
       this.paginateCount = e;
       this.getItems();
     },
+      hasPermission(value){
+          let permissions = localStorage.getItem('permissions').split(',');
+          if (permissions.includes(value)){
+              return true;
+          }else {
+              return false;
+          }
+      },
   },
 
     watch:{

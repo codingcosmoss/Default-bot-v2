@@ -45,6 +45,14 @@ class ProductController extends AbstractController
         return $this->sendResponse($item);
     }
 
+    public function soldProduct()
+    {
+        $item = $this->service->soldProduct(request()->all());
+
+        return $this->sendResponse($item);
+    }
+
+
     /**
      * @return array|JsonResponse
      */

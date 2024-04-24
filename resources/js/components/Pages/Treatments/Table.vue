@@ -146,12 +146,12 @@
                 ></i>
                 <i
                     titile = 'Tahrirlash'
-                    v-if="item.status == 8 && item.payment_status != 12  && item.status != 17"
+                    v-if="item.status == 8 && item.payment_status != 12  && item.status != 17 && hasPermission('Treatments-update')"
                     @click="this.$router.push({ path: '/treatmetns/treatmetn', query:{ id: item.patient_id, treatment_id: item.id } })"
                     class="fa-solid setting-icon fa-pen-to-square "
                 ></i>
                 <i
-                    v-if="item.status == 7  && item.status != 17"
+                    v-if="item.status == 7  && item.status != 17 && hasPermission('Treatments-treatment')"
                     @click="this.$router.push({ path: '/treatmetns/treatmetn', query:{ id: item.patient_id, treatment_id: item.id } })"
                     :title="getName('Treatment')"
                     class="fa-regular setting-icon fa-calendar-plus cursor-pointer"
@@ -159,7 +159,7 @@
                 ></i>
 
                 <i
-                    v-if="item.payment_status != 12 && item.status != 7  && item.status != 17"
+                    v-if="item.payment_status != 12 && item.status != 7  && item.status != 17 && hasPermission('Treatments-payOff')"
                     @click="paymentModal(item), userPayments = item.user_payment "
                     :title="getName('Payments')"
                     class="fa-regular fas fa-donate setting-icon  cursor-pointer"
@@ -176,29 +176,31 @@
 
                 <i
                     title="Chegirma berish"
-                    v-if="item.payment_status != 12 && item.status != 9 && item.status != 7  && item.status != 17"
+                    v-if="item.payment_status != 12 && item.status != 9 && item.status != 7  && item.status != 17  && hasPermission('Treatments-giveDiscount')"
                     @click="discountModal(item)"
                     class="fa-regular fas fa-percent setting-icon  cursor-pointer"
                 ></i>
                 <i
                     title="Qarzga bajarish"
-                    v-if="item.payment_status != 12 && item.status != 9 && item.status != 7  && item.status != 17"
+                    v-if="item.payment_status != 12 && item.status != 9 && item.status != 7  && item.status != 17 && hasPermission('Treatments-debtEnforcement')"
                     @click="debtModal(item)"
                     class="fa-regular fas fa-coins setting-icon  cursor-pointer"
                 ></i>
 
 
                 <a target="_blank" :href="onCheck(item.id)"  >
+
                     <i
                         title="Tolov cheki"
-                        v-if="item.payment_status != 10 && item.status != 17"
+                        v-if="item.payment_status != 10 && item.status != 17 "
                         class="fa-regular fas fa-print setting-icon  cursor-pointer"
                     ></i>
                 </a>
 
                 <i
+
                     title="Tugatish"
-                    v-if="(item.status != 9 && item.status != 7 && item.status != 17) && !finishLoader"
+                    v-if="(item.status != 9 && item.status != 7 && item.status != 17) && !finishLoader && hasPermission('Treatments-treatment')"
                     @click="treatementFinished(item.id)"
                     class="fa-regular fas fa-square-check setting-icon  cursor-pointer"
                 ></i>
@@ -210,14 +212,14 @@
 
                 <i
                     title="Bekor qilish"
-                    v-if="item.status == 7"
+                    v-if="item.status == 7 && hasPermission('Treatments-treatment')"
                     @click="cancletedModal(item)"
                     class="fa-solid fa-x setting-icon  cursor-pointer text-danger "
                 ></i>
 
                 <i
                     title="Bekor qilish tasnifi"
-                    v-if="item.status == 17"
+                    v-if="item.status == 17 "
                     @click="onInfoModal(item)"
                     class="fa-solid fa-circle-info setting-icon  cursor-pointer  "
                 ></i>
@@ -1028,6 +1030,15 @@ export default {
 
       this.getItems();
     },
+      hasPermission(value){
+          let permissions = localStorage.getItem('permissions').split(',');
+          if (permissions.includes(value)){
+              return true;
+          }else {
+              return false;
+          }
+      },
+
   },
 
     watch:{

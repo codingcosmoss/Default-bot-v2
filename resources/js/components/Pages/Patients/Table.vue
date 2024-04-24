@@ -84,6 +84,8 @@
           </div>
 
           <div
+              v-if="hasPermission('Patients-create')"
+
             class="flex flex-wrap gap-5 xl:gap-20"
             style="position: absolute; right: 0px; top: 0"
           >
@@ -141,6 +143,7 @@
                 @click="
                   this.$router.push({ path: '/patient/update', query: { id: item.id } })
                 "
+                v-if="hasPermission('Patients-update')"
                 class="fa-solid setting-icon fa-pen-to-square"
               ></i>
               &nbsp;
@@ -156,6 +159,7 @@
                 @click="(isModal = true), (patient_id = item.id), getDate(), TextData = ' ', getEmployee() "
                 title="Bemorga biriktrish"
                 class="fa-solid fa-calendar-plus setting-icon"
+                v-if="hasPermission('Patients-attachEmployee')"
               ></i>
             </p>
           </div>
@@ -293,6 +297,15 @@ export default {
   },
 
   methods: {
+      hasPermission(value){
+          let permissions = localStorage.getItem('permissions').split(',');
+          if (permissions.includes(value)){
+              return true;
+          }else {
+              return false;
+          }
+      },
+
       getClass(e){
           if (e == 10){
               return 'unmount';

@@ -5,7 +5,6 @@
             <h4 class="mb-6 text-xl font-bold text-black dark:text-white">
                 {{getName('employees')}}
             </h4>
-
             <div class="flex flex-col table_media_box">
 
 
@@ -54,7 +53,7 @@
 
                     </div>
 
-                    <div class="flex flex-wrap gap-5 xl:gap-20" style="position: absolute; right: 0px; top: 0">
+                    <div class="flex flex-wrap gap-5 xl:gap-20" style="position: absolute; right: 0px; top: 0" v-if="hasPermission('Employees-create')">
                         <a @click = "this.$router.push('/employees/create')"
                            class=" cursor-pointer inline-flex items-center justify-center rounded-md bg-primary py-3 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10">
                             {{getName('create')}}
@@ -112,15 +111,22 @@
 
                     <div class=" items-center justify-center p-2.5 sm:flex xl:p-5 data_table">
                         <p class="font-medium text-meta-5">
-                            <i @click = "this.$router.push({ path: '/employees/update', query: { id: item.id } })" class="fa-solid setting-icon fa-pen-to-square"></i>
+
+                            <i @click = "this.$router.push({ path: '/employees/update', query: { id: item.id } })" class="fa-solid setting-icon fa-pen-to-square"
+                               v-if="hasPermission('Employees-update')"
+                            ></i>
                             &nbsp;
                             <i @click = "onModal(item), ModelType = 'show' "  class="fa-solid setting-icon fa-eye"></i>
                             &nbsp;
-                            <i  @click = "onModal(item), ModelType = 'password'"  class="fa-solid setting-icon fa-key"></i>
+                            <i  @click = "onModal(item), ModelType = 'password'"  class="fa-solid setting-icon fa-key"
+                                v-if="hasPermission('Employees-editPassword')"
+                            ></i>
                             &nbsp;
                             <i @click = "this.$router.push({ path: '/employees/calendar', query: { id: item.id } })" class="fa-solid fa-calendar-days setting-icon"></i>
                             &nbsp;
-                            <i @click = "onDelete(item.id)" class="fa-solid text-danger fa-trash setting-icon"></i>
+                            <i @click = "onDelete(item.id)" class="fa-solid text-danger fa-trash setting-icon"
+                               v-if="hasPermission('Employees-delete')"
+                            ></i>
                         </p>
                     </div>
 
@@ -210,10 +216,11 @@
 
 </template>
 <script >
-import {useConterStore} from "../../../store/counter.js";
+import {useConterStore} from "@/store/counter.js";
+// import {useConterStore} from "../../../store/counter.js";
 import TableHeader from "./Table-header.vue";
 import router from "../../../router/index.js";
-import {deleteEmployee, Employees, updatePassword} from "../../../Api.js";
+import {deleteEmployee, Employees, updatePassword, getUserPermissions} from "../../../Api.js";
 import {searchEmployee} from "../../../Api.js";
 import Paginate from "./Paginate/paginate.vue";
 import PaginateBtn from "./Paginate/paginate-btn.vue";
@@ -228,6 +235,7 @@ import Loader from "@/ui-components/Element/Loader.vue";
 import Table from "@/components/Pages/Diseases/Table.vue";
 import Table01 from "@/ui-components/Element/table-01.vue";
 export default {
+
     components: {
         Table01,
         Table,
@@ -235,6 +243,7 @@ export default {
         ModalLayout, Pagination01, Input, VueAwesomePaginate,InputDefault, PaginateBtn, Paginate, TableHeader},
     data(){
         return{
+            // Permissions: JSON.parse(localStorage.getItem('user'))['permissions'][0],
             items: [],
             search: '',
             column: 'sort_order',
@@ -256,7 +265,7 @@ export default {
             user_id: 0,
             ModelType: '',
             Item: '',
-            Image: ''
+            Image: '',
         }
     },
 
@@ -270,6 +279,14 @@ export default {
             this.paginate = id;
             this.currentPage = id;
             this.getItems();
+        },
+        hasPermission(value){
+            let permissions = localStorage.getItem('permissions').split(',');
+            if (permissions.includes(value)){
+                return true;
+            }else {
+                return false;
+            }
         },
         onModal(item){
             this.Item = item;
@@ -327,6 +344,7 @@ export default {
 
         },
         async getItems(){
+
             const response = await Employees(this.currentPage, this.paginateCount);
             this.pagination =  response.data.pagination;
             this.last_page = response.data.pagination.last_page;

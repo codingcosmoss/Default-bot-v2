@@ -33,7 +33,9 @@
 
                     </div>
 
-                    <div class="flex flex-wrap gap-5 xl:gap-20" style="position: absolute; right: 0px; top: 0">
+                    <div class="flex flex-wrap gap-5 xl:gap-20" style="position: absolute; right: 0px; top: 0"
+                         v-if="hasPermission('ServiceCategories-create')"
+                    >
                         <span @click = "onModal(null)"
                            class=" cursor-pointer inline-flex items-center justify-center rounded-md bg-primary py-3 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10">
                             {{getName('create')}}
@@ -71,11 +73,14 @@
 
                     <div class="flex items-center justify-center p-2.5 sm:flex xl:p-5">
                         <p class="font-medium text-meta-5">
-                            <i @click = "onModal(item.id)" class="fa-solid setting-icon fa-pen-to-square"></i>
+
+                            <i @click = "onModal(item.id)" class="fa-solid setting-icon fa-pen-to-square"
+                                v-if="hasPermission('ServiceCategories-update')"
+                            ></i>
                             &nbsp;
                             <i @click = "this.$router.push({ path: '/service-category/show', query: { id: item.id } })" class="fa-solid setting-icon fa-eye"></i>
                             &nbsp;
-                            <i v-if="item.services.length == 0" @click = "onDelete(item.id)" class="fa-solid text-danger fa-trash setting-icon"></i>
+                            <i v-if="item.services.length == 0 && hasPermission('ServiceCategories-delete') " @click = "onDelete(item.id)" class="fa-solid text-danger fa-trash setting-icon"></i>
                         </p>
                     </div>
 
@@ -177,6 +182,15 @@ export default {
     methods:{
         router() {
             return router
+        },
+
+        hasPermission(value){
+            let permissions = localStorage.getItem('permissions').split(',');
+            if (permissions.includes(value)){
+                return true;
+            }else {
+                return false;
+            }
         },
 
         onClickHandler(id){

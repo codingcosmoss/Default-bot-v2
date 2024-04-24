@@ -233,8 +233,21 @@ export default {
                 return useConterStore().getName(val)
             },
             async getGroups(){
-                const response = await groups(1, 1000);
-                this.Groups = response.data.items;
+                if (this.hasPermission('Warehouse-create')){
+                    const response = await groups(1, 1000);
+                    this.Groups = response.data.items;
+                }else {
+                    this.$router.go(-1);
+                }
+
+            },
+            hasPermission(value){
+                let permissions = localStorage.getItem('permissions').split(',');
+                if (permissions.includes(value)){
+                    return true;
+                }else {
+                    return false;
+                }
             },
 
 

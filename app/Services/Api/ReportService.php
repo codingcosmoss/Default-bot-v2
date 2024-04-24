@@ -7,6 +7,7 @@ use App\Http\Resources\CompanySettingResource;
 use App\Http\Resources\DailyCostResource;
 use App\Http\Resources\EmployeesPaymentResources;
 use App\Http\Resources\PatientResource;
+use App\Http\Resources\RoleResource;
 use App\Http\Resources\TopServiceResources;
 use App\Http\Resources\TreatmentResource;
 use App\Models\CompanySetting;
@@ -128,7 +129,7 @@ class ReportService extends AbstractService
             'status' => true,
             'message' => 'Success',
             'statusCode' => 200,
-            'data' => $models
+            'data' => RoleResource::collection($models)
         ];
 
     }

@@ -34,6 +34,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/test-login', [\App\Http\Controllers\Api\EmployeesController::class, 'testLogin']);
         Route::post('/search', [\App\Http\Controllers\Api\EmployeesController::class, 'search']);
         Route::post('/update-password', [\App\Http\Controllers\Api\EmployeesController::class, 'updatePassword']);
+
+
+        Route::get('/get-permissions', [\App\Http\Controllers\Api\EmployeesController::class, 'getPermissions']);
+        Route::get('/get-user-permissions/{id}', [\App\Http\Controllers\Api\EmployeesController::class, 'getUserPermissions']);
     });
 
     // Services Category
@@ -269,6 +273,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/getDashboard', [\App\Http\Controllers\Api\ReportController::class, 'dashboard']);
     Route::get('/permissions', [\App\Http\Controllers\Api\ReportController::class, 'permissions']);
 
+
+    // Api uchun mahsulotda kamomat qoldirish
+    Route::post('/sold-product', [\App\Http\Controllers\Api\ProductController::class, 'soldProduct']);
 
 });
 

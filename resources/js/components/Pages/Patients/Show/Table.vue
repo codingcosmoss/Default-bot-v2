@@ -50,8 +50,8 @@
 
         <br>
 
-        <Map01 :Title = "getName('PatientAbout')" >
-            <table class="table01 mt-5"  >
+        <Map01 :Title = "getName('PatientAbout')" class="patient_table" >
+            <table class="table01 mt-5" style="min-width: 818px;"  >
 
                 <tr>
                     <th>{{getName('image')}}: &nbsp;&nbsp;</th>

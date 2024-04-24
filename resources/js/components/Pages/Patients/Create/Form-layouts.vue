@@ -382,12 +382,21 @@ export default {
                 this.allDiseases.push(val);
                 this.diseasesIds = this.diseasesIds.filter(item => item['id'] != val.id);
             },
-
+            hasPermission(){
+                let permissions = localStorage.getItem('permissions').split(',');
+                if (permissions.includes('Patients-create')){
+                    return true;
+                }else {
+                    this.$router.go(-1);
+                }
+            }
 
         },
+
         mounted() {
             this.getCategories()
             this.getDisiases()
+            this.hasPermission()
         }
 }
 </script>

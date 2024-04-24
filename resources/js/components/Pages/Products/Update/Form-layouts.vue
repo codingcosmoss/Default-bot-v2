@@ -212,6 +212,7 @@ export default {
                 errorObj: {},
                 Groups: [],
                 Checkbox: '',
+
                 // input varables
                 ProductName: '',
                 WendorCode: '',
@@ -232,9 +233,24 @@ export default {
         },
 
         async getGroups(){
+            if (this.hasPermission('Warehouse-create')){
+                const response = await groups(1, 1000);
+                this.Groups = response.data.items;
+            }else {
+                this.$router.go(-1);
+            }
+
             const response = await groups(1, 1000);
             this.Groups = response.data.items;
         },
+            hasPermission(value){
+                let permissions = localStorage.getItem('permissions').split(',');
+                if (permissions.includes(value)){
+                    return true;
+                }else {
+                    return false;
+                }
+            },
         async getModel(){
             const response = await productShow(this.$route.query.id);
             let product = response.data;

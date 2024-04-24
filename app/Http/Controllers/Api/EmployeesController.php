@@ -22,6 +22,28 @@ class EmployeesController extends AbstractController
 
         return $this->sendResponse($item);
     }
+
+    public function getPermissions()
+    {
+        $item = $this->service->getPermissions(request()->all());
+
+        return $this->sendResponse($item);
+    }
+    public function getUserPermissions($id)
+    {
+        $item = $this->service->getUserPermissions($id);
+
+        return $this->sendResponse($item);
+    }
+
+    public function addPermissions()
+    {
+        $item = $this->service->addPermissions(request()->all());
+
+        return $this->sendResponse($item);
+    }
+
+
     public function updatePassword()
     {
         $item = $this->service->updatePassword(request()->all());

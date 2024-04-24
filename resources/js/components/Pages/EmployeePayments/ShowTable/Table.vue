@@ -15,7 +15,7 @@
 
                 <div class="flex flex-col table_media_box">
 
-                    <div v-for=" item in Employee.finished_treatments"  class="grid grid-cols-3 border-b  border-stroke dark:border-strokedark sm:grid-cols-3 databes_table ">
+                    <div v-for=" item in Employee.finished_treatments"  class="grid grid-cols-3 border-b  border-stroke dark:border-strokedark sm:grid-cols-3  ">
 
                         <div class="flex items-center gap-3 p-2.5 xl:p-5">
                             <p class="font-bold  text-black dark:text-white sm:block ">
@@ -146,7 +146,7 @@ export default {
         },
         async getIndex(){
             const response = await showEmployeePayments(this.$route.query.id);
-            console.log('R:',response)
+            console.log('DEPTOR::',response.data.deptor_treatments);
             this.Employee = response.data;
             response.data.deptor_treatments.forEach((e) => {
                 this.DebtorSum +=e.doctor_sum;

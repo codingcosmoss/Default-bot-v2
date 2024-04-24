@@ -11,6 +11,7 @@ use App\Http\Resources\UserResource;
 use App\Http\Resources\WarehouseResource;
 use App\Models\Filial;
 use App\Models\Product;
+use App\Models\SoldProduct;
 use App\Models\Treatment;
 use App\Models\Warehouse;
 use App\Traits\Status;
@@ -68,6 +69,15 @@ class ProductService extends AbstractService
             TextField::make('group_id')->setRules('required|integer'),
             TextField::make('size_type')->setRules('required'),
             TextField::make('min_amount')->setRules('required|integer'),
+        ];
+    }
+
+    public function getSoldProductFields()
+    {
+        return [
+            TextField::make('product_id')->setRules('required|integer'),
+            TextField::make('amount')->setRules('required|integer'),
+            TextField::make('size_type')->setRules('required|string'),
         ];
     }
 
@@ -136,6 +146,76 @@ class ProductService extends AbstractService
             return [
                 'status' => false,
                 'message' => 'Server error',
+                'statusCode' => 200,
+                'data' => $ex->getMessage()
+            ];
+        }
+
+
+        return [
+            'status' => true,
+            'message' => 'success',
+            'statusCode' => 200,
+            'data' => $model
+        ];
+    }
+
+    public function soldProduct(array $data)
+    {
+        $fields = $this->getSoldProductFields();
+
+        $rules = [];
+
+        foreach ($fields as $field) {
+
+            $rules[$field->getName()] = $field->getRules();
+        }
+
+        $validator = Validator::make($data, $rules);
+
+        if ($validator->fails()) {
+
+            $errors = [];
+
+            foreach ($validator->errors()->getMessages() as $key => $value) {
+
+                $errors[$key] = $value[0];
+            }
+
+            return [
+                'status' => false,
+                'message' => 'Validation error',
+                'statusCode' => 200,
+                'data' => $errors
+            ];
+        }
+
+        $data = $validator->validated();
+
+        DB::beginTransaction();
+        try {
+
+            $model = new SoldProduct();
+            $model->product_id = $data['product_id'];
+            $model->amount = $data['amount'];
+            $model->size_type = $data['size_type'];
+
+            if ($model->save()) {
+                DB::commit();
+            } else {
+                DB::rollback();
+                return [
+                    'status' => false,
+                    'message' => 'save product error',
+                    'statusCode' => 200,
+                    'data' => null
+                ];
+            }
+        } catch (\Exception $ex) {
+            DB::rollback();
+            return [
+                'status' => false,
+                'message' => 'Server product error',
                 'statusCode' => 200,
                 'data' => $ex->getMessage()
             ];

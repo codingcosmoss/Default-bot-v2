@@ -66,7 +66,23 @@ export const useConterStore = defineStore({
 
             const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}`;
             return formattedDate;
+        },
+        caesarDecipher(input, shift) {
+            let result = '';
+            for (let i = 0; i < input.length; i++) {
+                let charCode = input.charCodeAt(i);
+                if (charCode >= 65 && charCode <= 90) {
+                    result += String.fromCharCode(((charCode - 65 - shift + 26) % 26) + 65);
+                } else if (charCode >= 97 && charCode <= 122) {
+                    result += String.fromCharCode(((charCode - 97 - shift + 26) % 26) + 97);
+                } else {
+                    result += input[i];
+                }
+            }
+            return result;
         }
+
+
 
 
 

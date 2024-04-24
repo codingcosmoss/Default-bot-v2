@@ -385,4 +385,7 @@ i{
     .payment_chart{
         display: none;
     }
+    .patient_table{
+        overflow: scroll;
+    }
 }

@@ -29,7 +29,9 @@
 
                     </div>
 
-                    <div class="flex flex-wrap gap-5 xl:gap-20" style="position: absolute; right: 0px; top: 0">
+                    <div class="flex flex-wrap gap-5 xl:gap-20" style="position: absolute; right: 0px; top: 0"
+                         v-if="hasPermission('Warehouse-create')"
+                    >
                         <span @click = "onModal(null)"
                            class=" cursor-pointer inline-flex items-center justify-center rounded-md bg-primary py-3 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10">
                             {{getName('create')}}
@@ -57,7 +59,7 @@
 
                     <div class="flex items-center justify-center p-2.5 xl:p-5">
                         <p   class="font-medium text-black dark:text-white">
-                            {{ item.created_at }}
+                            {{ item.products.length }}
                         </p>
                     </div>
 
@@ -71,9 +73,13 @@
 
                     <div class="flex items-center justify-center p-2.5 sm:flex xl:p-5">
                         <p class="font-medium text-meta-5">
-                            <i @click = "onModal(item.id)" class="fa-solid setting-icon fa-pen-to-square"></i>
+                            <i @click = "onModal(item.id)" class="fa-solid setting-icon fa-pen-to-square"
+                               v-if="hasPermission('Warehouse-update')"
+                            ></i>
                             &nbsp;
-                            <i @click = "onDelete(item.id)" class="fa-solid text-danger fa-trash setting-icon"></i>
+                            <i @click = "onDelete(item.id)" class="fa-solid text-danger fa-trash setting-icon"
+                               v-if="hasPermission('Warehouse-delete') && item.products.length == 0"
+                            ></i>
                         </p>
                     </div>
 
@@ -281,7 +287,15 @@ export default {
         onPaginate(e){
           this.paginateCount = e;
           this.getItems();
-        }
+        },
+        hasPermission(value){
+            let permissions = localStorage.getItem('permissions').split(',');
+            if (permissions.includes(value)){
+                return true;
+            }else {
+                return false;
+            }
+        },
 
     },
     mounted() {

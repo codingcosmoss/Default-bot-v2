@@ -120,8 +120,7 @@
           <div class="flex items-center justify-center p-2.5 sm:flex xl:p-5">
             <p class="font-medium text-meta-5" >
               <i
-                  v
-                  v-if="isIcons"
+                  v-if="isIcons && hasPermission('Payments-update')"
                 @click="paymentModal(item)"
                 class="fa-solid setting-icon fa-pen-to-square  "
               ></i>
@@ -132,13 +131,16 @@
                 class="fa-solid setting-icon fa-eye "
               ></i>
                 <i
-                    v-if="!isIcons"
+                    v-if="!isIcons  && hasPermission('Payments-delete')"
                     @click="this.$router.push('/payments')"
                     class="fa-solid setting-icon  fa-right-to-bracket "
                 ></i>
 
                 &nbsp;
-                <i @click = "onDelete(item.id)" class="fa-solid text-danger fa-trash setting-icon"></i>
+                <i @click = "onDelete(item.id)" class="fa-solid text-danger fa-trash setting-icon"
+                   v-if="isIcons && hasPermission('Payments-delete')"
+
+                ></i>
 
 
 
@@ -480,6 +482,14 @@ export default {
       this.paginateCount = e;
       this.getItems();
     },
+      hasPermission(value){
+          let permissions = localStorage.getItem('permissions').split(',');
+          if (permissions.includes(value)){
+              return true;
+          }else {
+              return false;
+          }
+      },
   },
   mounted() {
     this.getItems();

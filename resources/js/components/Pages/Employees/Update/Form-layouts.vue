@@ -113,39 +113,44 @@
                 <p class="pt-0 p-6.5" > {{getName('employee_roles')}}:</p>
 
 
-                <ul  style="display: flex; padding: 5px 27px" >
-
+                <ul  style=" padding: 5px 27px" >
                     <li>
-                        <!--                        Xodimloar menyusini ko'rish-->
-                        <span  v-for="permission in Permissions.slice(0, 10)" >
-                           <Checkbox01
 
-                               @click = "addRoles(permission['id'])"
-                               :onCheck = "Roles.includes(permission['id'])"
-                               :Title = "getName(permission['lang_name'])"
-                               Class = "genderCheckbox"
-                           />
-                       &nbsp;
-                       </span>
+                    <Checkbox01
+                        @click = "addAllRoles()"
+                        :onCheck = "Roles.length == 16 ? true : false"
+                        :Title = "getName('allPermissions')"
+                    />
 
                     </li>
-                    &nbsp;&nbsp;
-                    &nbsp;&nbsp;
-                    &nbsp;&nbsp;
-                    &nbsp;&nbsp;
-                    &nbsp;&nbsp;
-                    <li>
-                        <!--                        Xodimloar menyusini ko'rish-->
-                        <span  v-for="permission in Permissions.slice(10, Permissions.length )">
-                           <Checkbox01
-                               @click = "addRoles(permission['id'])"
-                               :onCheck = "Roles.includes(permission['id'])"
-                               :Title = "getName(permission['lang_name'])"
-                               Class = "genderCheckbox"
-                           />
-                       &nbsp;
-                       </span>
+                    <br>
+                    <li style="width: 100%">
+                        <table class="table01" style="width: 100%">
+                            <tr   v-for="role in Permissions" >
 
+                                <td style="font-weight: bold; max-width: 120px">
+                                    <Checkbox01
+                                        @click = "addRoles(role['id'])"
+                                        :onCheck = "Roles.includes(role['id'])"
+                                        :Title = "getName(role['lang_name'])"
+                                        Class = "genderCheckbox"
+                                    />
+
+                                </td>
+
+                                <td  :class=" !Roles.includes(role['id']) ? 'td_hidden' : '' " >
+                                    <Checkbox01
+                                        v-for=" permission in role['permissions'] "
+                                        style="margin: 5px 0"
+                                        @click = "addPermission(role['id'],permission['id'] )"
+                                        :onCheck = "hasPermission(role['id'],permission['id'])"
+                                        :Title = "getName(permission['lang_name'])"
+                                        Class = "genderCheckbox"
+                                    />
+
+                                </td>
+                            </tr>
+                        </table>
                     </li>
 
                 </ul>
@@ -177,6 +182,7 @@ import {updateEmployee} from "../../../../Api.js";
 import ImageInput from "./Inputs/ImageInput.vue";
 import {Alert} from "../../../../Config.js";
 import Checkbox01 from "@/ui-components/Form/Checkbox/Checkbox01.vue";
+import Table from "@/components/Pages/Patients/Table.vue";
 export default {
         data(){
             return{
@@ -196,25 +202,58 @@ export default {
                 photo: '',
                 Roles: [],
                 Permissions: [],
+                PermissionsArr: [],
                 Loader: false,
 
             }
         },
-        components:{Checkbox01, ImageInput, InputColor, Checkbox, Input},
+        components:{Table, Checkbox01, ImageInput, InputColor, Checkbox, Input},
         methods:{
             addRoles(role){
                 if(this.Roles.includes(role)){
                     this.Roles = this.Roles.filter((item) => item != role);
+                    this.PermissionsArr = this.PermissionsArr.filter((e) => e.role_id != role);
                 }else{
                     this.Roles.push(role);
                 }
+            },
+            addAllRoles(){
+                if (this.Roles.length != 16){
+                    this.Roles = [];
+                    this.Permissions.forEach((e) => {
+                        this.Roles.push(e.id);
+                        console.log('Permission>',e.permissions)
+                        e.permissions.forEach((permission) => {
+                            this.PermissionsArr.push({
+                                role_id: permission.role_id,
+                                permission_id: permission.id,
+                            });
+
+                        })
+                    })
+                }else {
+                    this.Roles = [];
+                    this.PermissionsArr = [];
+                }
+
             },
 
             async getPermissions(){
                 const response = await permissions();
                 this.Permissions = response.data
             },
-
+            hasPermission(role_id, permission_id){
+                let isRole = false;
+                this.PermissionsArr.forEach((e)=>{
+                    if (e.role_id == role_id && e.permission_id == permission_id){
+                        isRole = true;
+                    }
+                })
+                if (isRole){
+                    return true;
+                }
+                return false;
+            },
 
             getName(val){
                 return useConterStore().getName(val)
@@ -243,6 +282,7 @@ export default {
                     'color': this.color,
                     'image': this.image,
                     'roles': this.Roles,
+                    'permissions': this.PermissionsArr
                 }
                 console.log(data)
 
@@ -289,9 +329,19 @@ export default {
                     this.salary_static = item.salary_static
                     this.sort_order = item.sort_order
                     this.photo = item.image[0].url;
-                    item.permissions.forEach((e) => {
+
+                    item.roles.forEach((e) => {
                         this.Roles.push(e.id);
                     })
+
+                    if (item.permissions.length > 0){
+                        item.permissions.forEach((e)=>{
+                            this.PermissionsArr.push({
+                                role_id: e.role_id,
+                                permission_id: e.permission_id,
+                            });
+                        })
+                    }
                     this.color = item.color == null ? '#ffffff' :  item.color;
 
                 }else {
@@ -315,7 +365,28 @@ export default {
             },
             hasKey(key) {
                 return key in this.errorObj;
-            }
+            },
+
+            addPermission(role_id, permission_id){
+
+                if (!this.hasPermission(role_id, permission_id)){
+                    this.PermissionsArr.push({
+                        role_id: role_id,
+                        permission_id: permission_id,
+                    });
+                }else {
+                    let arrs = [];
+                    this.PermissionsArr = this.PermissionsArr.filter((e) => {
+                        if (e.role_id == role_id && e.permission_id == permission_id){
+                            return false;
+                        }else {
+                            return true;
+                        }
+                    })
+                }
+
+
+            },
 
         },
         mounted() {
@@ -334,6 +405,10 @@ export default {
         padding: 5px 27px;
         display: flex;
         justify-content: space-between;
+    }
+    .td_hidden{
+        opacity: 0.5;
+        pointer-events: none;
     }
 
 </style>

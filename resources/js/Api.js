@@ -10,6 +10,13 @@ export const Test = async () => {
 export const GetUser = async () => {
     return  GET('/user');
 };
+
+export const getPermissions = async () => {
+    return  GET('/employee/get-permissions');
+};
+export const getUserPermissions = async (id) => {
+    return  GET('/employee/get-user-permissions/'+id);
+};
 export const getDashboardData = async () => {
     return  GET('/getDashboard');
 };

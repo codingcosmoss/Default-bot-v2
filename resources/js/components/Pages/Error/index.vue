@@ -12,12 +12,13 @@
 
                         <div class="contant_box_404">
                             <h3 class="h2">
-                                Bu sahifaga kirish uchun sizga ruxsat berilmagan !
+                                Texnik xato yuz berdi yoki
+                                bu sahifaga kirish uchun sizga ruxsat berilmagan !
                             </h3>
 
-                            <p>Вам не разрешен доступ к этой странице!</p>
+                            <p>Произошла техническая ошибка или у вас нет доступа к этой странице!</p>
 
-                            <a href="" class="link_404">Go to Home</a>
+                            <a @click = "this.$router.go(-1)" class="link_404">Ortga qaytish</a>
                         </div>
                     </div>
                 </div>

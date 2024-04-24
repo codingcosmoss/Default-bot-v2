@@ -411,11 +411,19 @@ export default {
                 this.allDiseases.push(val);
                 this.diseasesIds = this.diseasesIds.filter(item => item['id'] != val.id);
             },
-
+            hasPermission(){
+                let permissions = localStorage.getItem('permissions').split(',');
+                if (permissions.includes('Patients-update')){
+                    return true;
+                }else {
+                    this.$router.go(-1);
+                }
+            }
 
         },
         mounted() {
             this.getModel()
+            this.hasPermission()
         }
 }
 </script>

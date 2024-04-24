@@ -83,6 +83,8 @@
           <div
             class="flex flex-wrap gap-5 xl:gap-20"
             style="position: absolute; right: 0px; top: 0"
+            v-if="hasPermission('Warehouse-create')"
+
           >
             <a
               @click="this.$router.push('/product/create')"
@@ -129,6 +131,8 @@
                 @click="
                   this.$router.push({ path: '/product/update', query: { id: item.id } })
                 "
+                v-if="hasPermission('Warehouse-update')"
+
                 class="fa-solid setting-icon fa-pen-to-square"
               ></i>
               &nbsp;
@@ -137,7 +141,9 @@
 <!--                class="fa-solid setting-icon fa-eye disabled"-->
 <!--              ></i>-->
               &nbsp;
-                <i @click = "onDelete(item.id)" class="fa-solid text-danger fa-trash setting-icon"></i>
+                <i @click = "onDelete(item.id)" class="fa-solid text-danger fa-trash setting-icon"
+                   v-if="hasPermission('Warehouse-delete')"
+                ></i>
 
 
             </p>
@@ -320,6 +326,14 @@ export default {
       this.paginateCount = e;
       this.getItems();
     },
+      hasPermission(value){
+          let permissions = localStorage.getItem('permissions').split(',');
+          if (permissions.includes(value)){
+              return true;
+          }else {
+              return false;
+          }
+      },
   },
   mounted() {
     this.getItems();

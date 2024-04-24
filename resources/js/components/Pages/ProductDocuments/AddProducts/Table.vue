@@ -85,6 +85,7 @@ export default {
             return useConterStore().getName(val)
         },
         async getItem(){
+
             const response = await productDocumentShow(this.$route.query.id);
             this.Name = response.data.name;
             this.Warehouse = response.data.warehouse;
@@ -93,6 +94,8 @@ export default {
             this.Supplier = response.data.supplier;
             this.Status = response.data.status;
         },
+
+
 
     },
     mounted() {

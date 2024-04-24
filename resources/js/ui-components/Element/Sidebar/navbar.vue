@@ -91,7 +91,7 @@
                 :Title = "getName('Categories')"
                 Icon = "fa-solid fa-c"
                 style="margin-right: 20px"
-
+                v-if = "hasPermission('Warehouse-categories')"
             />
 
         </MenuList>
@@ -161,6 +161,7 @@ import MenuList from './menuList.vue';
 import Menu from './menu.vue';
 import {useConterStore} from "../../../store/counter.js";
 import {GetUser, showEmployee} from "@/Api.js";
+import {getUserPermissions} from "@/Api.js";
 // import {useConterStore} from "@/store/counter.js";
 
 export default {
@@ -193,7 +194,6 @@ export default {
                     response.data.roles.forEach((e) => {
                         this.Roles.push(e.lang_name);
                     });
-
                     localStorage.setItem('roles',  this.caesarCipher( this.Roles.join(',') , 7) );
                 }else{
                     this.$router.push('/login');
@@ -202,10 +202,21 @@ export default {
                 this.Roles =  this.caesarDecipher( localRoles, 7).split(',') ;
             }
 
+            this.savePermissions();
             console.log(this.Roles)
 
 
         },
+        async savePermissions(id){
+            let user = JSON.parse(localStorage.getItem('user'));
+            const response = await getUserPermissions(user['id']);
+            let permissionsArr = [];
+            response.data.forEach((e)=>{
+                permissionsArr.push(e.name);
+            })
+            localStorage.setItem('permissions', permissionsArr );
+        },
+
 
          caesarCipher(input, shift) {
             let result = '';
@@ -235,7 +246,15 @@ export default {
                 }
             }
             return result;
-        }
+        },
+        hasPermission(value){
+            let permissions = localStorage.getItem('permissions').split(',');
+            if (permissions.includes(value)){
+                return true;
+            }else {
+                return false;
+            }
+        },
 
 
 

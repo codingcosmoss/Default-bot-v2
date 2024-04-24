@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('permissions', function (Blueprint $table) {
+        Schema::create('sold_products', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->comment('Model nomi');
-            $table->foreignId('role_id');
-            $table->string('lang_name')->nullable();
-            $table->string('description')->nullable();
+            $table->foreignId('product_id')->constrained();
+            $table->integer('amount');
+            $table->string('size_type');
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('permissions');
+        Schema::dropIfExists('sold_products');
     }
 };

@@ -420,12 +420,20 @@ export default {
       this.order = val;
       this.clickSearch();
     },
+
     onPaginate(e) {
       this.paginateCount = e;
       this.getItems();
     },
+      hasPermission(){
+          let permissions = localStorage.getItem('permissions').split(',');
+          if (!permissions.includes('Warehouse-update') ){
+              this.$router.go(-1);
+      }
+  },
   },
   mounted() {
+      this.hasPermission()
     // this.getItems();
   },
 };

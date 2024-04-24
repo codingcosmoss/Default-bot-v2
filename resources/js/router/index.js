@@ -5,13 +5,10 @@ let RolesArr = [];
 async function getUser(){
 
     const response = await GetUser();
-
     if (response.success == 200){
-
         response.data.roles.forEach((e) => {
             RolesArr.push(e.lang_name);
         });
-
         localStorage.setItem('roles',  this.caesarCipher( RolesArr.join(',') , 7) );
     }
 
@@ -371,13 +368,6 @@ function caesarDecipher(input, shift) {
 }
 
 routesArr.forEach((route) => {
-    // console.log('Role:', roles);
-
-
-    // routes.push({
-    //     path: route.path,
-    //     component: route.component
-    // });
 
     if (roles.includes(route.name) || route.name == 'public' ){
         routes.push({
@@ -385,17 +375,6 @@ routesArr.forEach((route) => {
             component: route.component
         });
     }
-
-
-
-
-
-
-
-
-
-    // console.log(route.path);
-    // routes.push(route);
 
 })
 

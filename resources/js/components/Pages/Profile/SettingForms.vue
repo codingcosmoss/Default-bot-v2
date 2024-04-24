@@ -1,6 +1,18 @@
 <template>
 
 
+    <!-- Breadcrumb Start -->
+    <div class=" breadcrumb-nav mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between" >
+
+        <nav>
+            <ol class="flex items-center gap-2">
+                <li><a class="font-medium cursor-pointer" @click = "this.$router.push('/')"> {{getName('Home')}} /</a></li>
+                <li  class=" font-medium text-primary">{{getName('update')}}</li>
+            </ol>
+        </nav>
+    </div>
+    <!-- Breadcrumb End -->
+
     <!-- ====== Form Layout Section Start -->
     <div class="grid grid-cols-1 gap-9 sm:grid-cols-2">
         <div class="flex flex-col gap-9">
@@ -9,311 +21,369 @@
                 class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
                 <div class="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
                     <h3 class="font-semibold text-black dark:text-white">
-                        {{getName('Profile')}}
+                        {{getName('add_employee')}}
                     </h3>
                 </div>
                 <form action="#">
                     <div class="p-6.5">
 
+                        <ImageInput
+                            @image = "image = $event"
+                            :Photo = "photo"
+                            Label = "Photo"
+                        />
+
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-9">
+            <!-- Sign In Form -->
+            <div
+                class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+                <div class="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
+                    <h3 class="font-semibold text-black dark:text-white">
+
+                    </h3>
+                </div>
+
+
+                <form action="#">
+                    <div class="p-6.5">
+
+
                         <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
-
-
-                            <ImageInput
-                                Label = " "
-                                @image = "logo = $event"
-                                :Photo = "logo"
-                            />
-
-
-                        </div>
-
-
-                        <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
-
-
                             <Input
                                 :Couple = "false"
-                                :Label = "getName('name_content')"
+                                :Label = "getName('employee_name')"
                                 @onInput = "name = $event"
                                 :isError = "hasKey('name')"
                                 :message = "errorObj['name']"
                                 :Value = "name"
                             />
-
                             <Input
                                 :Couple = "false"
-                                :Label = "getName('phone')+ ' 1'"
-                                @onInput = "phone1 = $event"
-                                :isError = "hasKey('phone1')"
-                                :message = "errorObj['phone1']"
-                                :Value = "phone1"
+                                :Label = "getName('Position_employee')"
+                                @onInput = "position = $event"
+                                :isError = "hasKey('position')"
+                                :message = "errorObj['position']"
+                                :Value = "position"
+
                             />
 
                         </div>
 
+
+                        <Input
+                            :Label = "getName('login')"
+                            @onInput = "testLogin($event)"
+                            :Value = "login"
+                            :isError = "isLoginError || errorObj['login']"
+                            :message = " errorObj['login'] ?  errorObj['login'] : 'Login is available !' "
+
+
+                        />
 
                         <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
-
                             <Input
                                 :Couple = "false"
-                                :Label = "getName('phone') + ' 2'"
-                                @onInput = "phone2 = $event"
-                                :isError = "hasKey('phone2')"
-                                :message = "errorObj['phone2']"
-                                :Value = "phone2"
+                                :Label = "getName('password')"
+                                @onInput = "password = $event"
+                                Type = "password"
+                                :isError = "hasKey('password')"
+                                :message = "errorObj['password']"
                             />
-
                             <Input
                                 :Couple = "false"
-                                :Label = "getName('Email')"
-                                @onInput = "email = $event"
-                                :isError = "hasKey('email')"
-                                :message = "errorObj['email']"
-                                :Value = "email"
-                            />
-
-
-
-                        </div>
-
-                        <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
-
-                            <Input
-                                :Couple = "false"
-                                :Label = "getName('Address')"
-                                @onInput = "address = $event"
-                                :isError = "hasKey('address')"
-                                :message = "errorObj['address']"
-                                :Value = "address"
+                                :Label = "getName('reset_password')"
+                                @onInput = "testPassword($event)"
+                                :isError = "isPasswordError"
+                                Type = "password"
+                                :Value = "reset_password"
+                                message = "The password is not the same"
                             />
 
                         </div>
 
-                    </div>
-                    <div class=" pl-7 p-6.5">
-
-                        <button @click="companySetting()" type="button" class="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray">
-                            {{getName('Save')}}
-                        </button>
                     </div>
                 </form>
+
+                <div class=" pl-7 p-6.5"  style="display: flex; justify-content: center">
+                    <loader-spinning v-if="Loader" style="margin: 0 auto; " />
+                    <button v-if="!Loader" @click="sendData" class="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray">
+                        {{getName('Save')}}
+                    </button>
+                </div>
             </div>
 
         </div>
-
     </div>
-
-
-<!--    Alert-->
-
-
-
-
-
+    <!-- ====== Form Layout Section End -->
 
 </template>
 <script >
-
+import {permissions, testLogin, updatePassword} from "@/Api.js";
+import Input from "@/ui-components/Form/Input.vue";
 import {useConterStore} from "@/store/counter.js";
-import Input from "@/components/Pages/Diseases/EditPassword/Inputs/Input.vue";
+import Checkbox from "@/ui-components/Form/Checkbox.vue";
+import InputColor from "@/ui-components/Form/InputColor.vue";
+import {employeeCreate} from "@/Api.js";
+import {showEmployee} from "@/Api.js";
+import {updateEmployee} from "@/Api.js";
 import ImageInput from "@/components/Pages/Employees/Update/Inputs/ImageInput.vue";
-import {companySettingStore} from "@/Api.js";
-import {getCompany} from "@/Api.js";
-import {Alert} from "../../../Config.js";
-
-
+import {Alert} from "@/Config.js";
+import Checkbox01 from "@/ui-components/Form/Checkbox/Checkbox01.vue";
+import Table from "@/components/Pages/Patients/Table.vue";
 export default {
-
     data(){
         return{
-            order: '',
-            code: '',
-            price: '',
-            category: '',
-            material_price: '',
-            technic_price: '',
-            status: 1,
-            isLoginError: false,
-            errorObj: {},
-            categories: [],
-            Checkbox: '',
-            // input varables
             name: '',
-            phone1: '',
-            phone2: '',
-            email: '',
-            address: '',
-            printer_size: '',
-            bot_token: '',
-            logo: 'https://avatars.mds.yandex.net/i?id=094af778330da89e3409830578322fe37146a733-10963969-images-thumbs&n=13',
+            position: '',
+            login: '',
+            profil_photo_path: '',
+            percent_salary: '',
+            salary_static: '',
+            isPasswordError: false,
+            password: '',
+            reset_password: '',
+            isLoginError: false,
+            color: '#FFFFFF',
+            errorObj: {},
+            image: '',
+            photo: '',
+            Roles: [],
+            Permissions: [],
+            PermissionsArr: [],
+            Loader: false,
 
         }
     },
-    components:{ImageInput, Input},
+    components:{Table, Checkbox01, ImageInput, InputColor, Checkbox, Input},
     methods:{
+        addRoles(role){
+            if(this.Roles.includes(role)){
+                this.Roles = this.Roles.filter((item) => item != role);
+                this.PermissionsArr = this.PermissionsArr.filter((e) => e.role_id != role);
+            }else{
+                this.Roles.push(role);
+            }
+        },
+        addAllRoles(){
+            if (this.Roles.length != 16){
+                this.Roles = [];
+                this.Permissions.forEach((e) => {
+                    this.Roles.push(e.id);
+                    console.log('Permission>',e.permissions)
+                    e.permissions.forEach((permission) => {
+                        this.PermissionsArr.push({
+                            role_id: permission.role_id,
+                            permission_id: permission.id,
+                        });
+
+                    })
+                })
+            }else {
+                this.Roles = [];
+                this.PermissionsArr = [];
+            }
+
+        },
+
+        async getPermissions(){
+            const response = await permissions();
+            this.Permissions = response.data
+        },
+        hasPermission(role_id, permission_id){
+            let isRole = false;
+            this.PermissionsArr.forEach((e)=>{
+                if (e.role_id == role_id && e.permission_id == permission_id){
+                    isRole = true;
+                }
+            })
+            if (isRole){
+                return true;
+            }
+            return false;
+        },
 
         getName(val){
             return useConterStore().getName(val)
         },
+        testPassword(val){
+            if (this.password != val){
+                this.isPasswordError = true;
+                this.Loader = false;
+            }else {
+                this.isPasswordError = false;
+            }
+            this.reset_password = val;
+            return this.isPasswordError;
 
-        async companySetting(){
+        },
 
+        async update(){
+            this.Loader = true;
             var data = {
                 'name': this.name,
-                'phone1': this.phone1,
-                'phone2': this.phone2,
-                'email': this.email,
-                'address': this.address,
-                'image': this.logo,
-                'bot_token': this.bot_token,
-                'printer_size': this.printer_size,
+                'position': this.position,
+                'login': this.login,
+                'profil_photo_path': this.profil_photo_path,
+                'percent_salary': this.percent_salary,
+                'salary_static': this.salary_static,
+                'sort_order': this.sort_order,
+                'color': this.color,
+                'image': this.image,
+                'roles': this.Roles,
+                'permissions': this.PermissionsArr
             }
-            const response = await companySettingStore(data);
+
+            const response = await updateEmployee(this.$route.query.id, data);
+
             if (response.status){
-                this.getCompany();
-                Alert('success', 'Saved successfully !')
+                localStorage.setItem('user', JSON.stringify(response.data));
+                Alert('success', 'Updated successfully !')
+                this.$router.push('/employees')
             }else {
-                Alert('error', 'Error !')
+                console.log('data',response.data)
+                this.errorObj = response.data;
+                this.Loader = false;
+            }
+            this.Loader = false;
+
+        },
+        async updatePassword(){
+            if (this.password != undefined && this.password.length > 0){
+                console.log('R 1', this.password)
+                if (this.testPassword(this.reset_password) != true){
+                    var data = {
+                        'id': this.$route.query.id,
+                        'password': this.password,
+                    }
+                    const response = await updatePassword(data);
+                    if (response.status){
+                        this.update();
+                    }else {
+                        console.log(response.data)
+                        this.errorObj = response.data;
+                    }
+                }
+            }else {
+                console.log('R 2')
+                this.update();
+            }
+
+        },
+        async sendData(){
+            this.Loader = true;
+            const val = this.login;
+            const response = await testLogin({
+                'login': val,
+                'id': this.$route.query.id
+            });
+            if (response.status){
+                this.isLoginError = true;
+                this.Loader = false;
+            }else {
+                this.isLoginError = false;
+                this.updatePassword();
+            }
+        },
+        async get(){
+
+            const response = await showEmployee(this.$route.query.id);
+            const item = response.data;
+            console.log(item)
+            if (response.status){
+                this.name = item.name
+                this.position = item.position
+                this.login = item.login
+                this.password = item.password
+                this.profil_photo_path = item.profil_photo_path
+                this.percent_salary = item.percent_salary
+                this.salary_static = item.salary_static
+                this.sort_order = item.sort_order
+                this.photo = item.image[0].url;
+
+                item.roles.forEach((e) => {
+                    this.Roles.push(e.id);
+                })
+
+                if (item.permissions.length > 0){
+                    item.permissions.forEach((e)=>{
+                        this.PermissionsArr.push({
+                            role_id: e.role_id,
+                            permission_id: e.permission_id,
+                        });
+                    })
+                }
+                this.color = item.color == null ? '#ffffff' :  item.color;
+
+            }else {
+                console.log('data:', response.data)
                 this.errorObj = response.data;
             }
 
         },
-        async getCompany(){
+        async testLogin(val){
+            this.login = val;
+            const response = await testLogin({
+                'login': val,
+                'id': this.$route.query.id
+            });
 
-            const response = await getCompany();
-            let data = response.data.items;
-            this.name = data.name;
-            this.phone1 = data.phone1;
-            this.phone2 = data.phone2;
-            this.email = data.email;
-            this.address = data.address;
-            this.printer_size = data.printer_size;
-            this.bot_token = data.bot_token;
-            this.logo = data.logo[0]['url'];
-
+            if (response.status){
+                this.isLoginError = true;
+            }else {
+                this.isLoginError = false;
+            }
         },
-
         hasKey(key) {
             return key in this.errorObj;
         },
 
+        addPermission(role_id, permission_id){
+
+            if (!this.hasPermission(role_id, permission_id)){
+                this.PermissionsArr.push({
+                    role_id: role_id,
+                    permission_id: permission_id,
+                });
+            }else {
+                let arrs = [];
+                this.PermissionsArr = this.PermissionsArr.filter((e) => {
+                    if (e.role_id == role_id && e.permission_id == permission_id){
+                        return false;
+                    }else {
+                        return true;
+                    }
+                })
+            }
+
+
+        },
 
     },
     mounted() {
-        this.getCompany()
+        this.get()
+        this.getPermissions()
+
     }
+
 }
 </script>
 
 
-<style scoped>
-.genderCheckbox{
-    display: flex;
-    align-items: flex-end;
-}
-.Alert_div{
-    width: 300px;
-    height: 100px;
-    background: #17e30d;
-    position: sticky;
-    right: 10px;
-    top: 10px ;
-}
+<style>
+
 .list01{
     padding: 5px 27px;
     display: flex;
-    align-content: space-between;
     justify-content: space-between;
-    flex-direction: column;
 }
-.btn{
-    width: 60px;
-    transform: scale(0.8);
+.td_hidden{
+    opacity: 0.5;
+    pointer-events: none;
 }
-
-.btn2{
-    margin: 20px 0;
-    margin-top: 30px;
-    margin-left: 10px;
-    width: 60px;
-    transform: scale(0.8);
-}
-.btn2 button{
-    background: rgba(255, 0, 0, 0.8);
-}
-
-.alert {
-    width: 500px !important;
-    background: #17e30d;
-    color: white;
-    position: relative;
-    left: 0;
-    width: auto;
-    height: auto;
-    padding: 10px;
-    margin: 10px;
-    line-height: 1.8;
-    border-radius: 5px;
-    cursor: hand;
-    cursor: pointer;
-    font-family: sans-serif;
-    font-weight: 400;
-}
-
-.alertCheckbox {
-    display: none;
-}
-
-:checked + .alert {
-    display: none;
-}
-
-.alertText {
-    display: table;
-    margin: 0 auto;
-    text-align: center;
-    font-size: 16px;
-}
-
-.alertClose {
-    float: right;
-    padding-top: 5px;
-    font-size: 10px;
-}
-
-.clear {
-    clear: both;
-}
-
-.info {
-    background-color: #EEE;
-    border: 1px solid #DDD;
-    color: #999;
-}
-
-.success {
-    background-color: #EFE;
-    border: 1px solid #DED;
-    color: #9A9;
-}
-
-.notice {
-    background-color: #EFF;
-    border: 1px solid #DEE;
-    color: #9AA;
-}
-
-.warning {
-    background-color: #FDF7DF;
-    border: 1px solid #FEEC6F;
-    color: #C9971C;
-}
-
-.error {
-    background-color: #FEE;
-    border: 1px solid #EDD;
-    color: #A66;
-}
-
 
 </style>

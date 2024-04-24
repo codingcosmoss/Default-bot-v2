@@ -2,12 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class PermishshenSeeder extends Seeder
+class RoleSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -30,69 +29,69 @@ class PermishshenSeeder extends Seeder
 //            ],
         $permissions = [
             [
-                'name' => 'showEmployees',
+                'name' => 'Employees',
                 'lang_name' => 'employees'
             ],
             [
-                'name' => 'showServices',
+                'name' => 'Services',
                 'lang_name' => 'services'
             ],
             [
-                'name' => 'showServiceCategories',
+                'name' => 'ServiceCategories',
                 'lang_name' => 'service_types'
             ],
             [
-                'name' => 'showPatients',
+                'name' => 'Patients',
                 'lang_name' => 'Patients'
             ],
             [
-                'name' => 'showTreatments',
+                'name' => 'Treatments',
                 'lang_name' => 'Treatmetns'
             ],
             [
-                'name' => 'showDiseases',
+                'name' => 'Diseases',
                 'lang_name' => 'diseases'
             ],
             [
-                'name' => 'showDebtorTreatments',
+                'name' => 'DebtorTreatments',
                 'lang_name' => 'DebtTreatments'
             ],
             [
-                'name' => 'showPayments',
+                'name' => 'Payments',
                 'lang_name' => 'Payments'
             ],
             [
-                'name' => 'showPaymentTypes',
+                'name' => 'PaymentTypes',
                 'lang_name' => 'PaymentTypes'
             ],
             [
-                'name' => 'showWarehouse',
+                'name' => 'Warehouse',
                 'lang_name' => 'Warehouse'
             ],
 
             [
-                'name' => 'showSettings',
+                'name' => 'Settings',
                 'lang_name' => 'Settings'
             ],
             [
-                'name' => 'showTelegram',
+                'name' => 'Telegram',
                 'lang_name' => 'Telegram'
             ],
             [
-                'name' => 'showReports',
-                'lang_name' => 'Reports'
-            ],
-            [
-                'name' => 'showDailyExpenses',
+                'name' => 'DailyExpenses',
                 'lang_name' => 'DailyExpenses'
             ],
             [
-                'name' => 'showGivenMoney',
+                'name' => 'GivenMoney',
                 'lang_name' => 'GivenMoney'
             ],
             [
-                'name' => 'showPayingEmployees',
+                'name' => 'PayingEmployees',
                 'lang_name' => 'PayingEmployees'
+            ],
+            [
+                'name' => 'Reports',
+                'lang_name' => 'Reports'
             ],
 
         ];
