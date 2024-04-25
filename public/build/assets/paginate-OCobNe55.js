@@ -1,0 +1,1 @@
+import{_ as s,o,c as a,a as t,k as c}from"./app-TemNFbnf.js";const n={},r={class:"box"},_={class:"pagination"};function i(e,d){return o(),a("div",r,[t("div",_,[c(e.$slots,"default")])])}const f=s(n,[["render",i]]);export{f as P};
