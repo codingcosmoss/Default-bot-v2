@@ -18,7 +18,7 @@
 
                             <p>Произошла техническая ошибка или у вас нет доступа к этой странице!</p>
 
-                            <a href = "/" class="link_404">Ortga qaytish</a>
+                            <a href = "/" class="link_404">Ortga qaytish </a>
                         </div>
                     </div>
                 </div>
