@@ -115,15 +115,18 @@ class ServiceService extends AbstractService
 
 
             if ($item->save()) {
-                foreach ($data['personal_procents'] as $key => $value) {
-                    $model = new PersonalPrice();
-                    $model->employee_id = $value['employee_id'];
-                    $model->service_id = $item->id;
-                    $model->type = $value['type'];
-                    $model->amount = $value['amount'];
-                    $model->result_price = $value['result_price'];
-                    $model->save();
+                if (isset($data['personal_procents'])){
+                    foreach ($data['personal_procents'] as $key => $value) {
+                        $model = new PersonalPrice();
+                        $model->employee_id = $value['employee_id'];
+                        $model->service_id = $item->id;
+                        $model->type = $value['type'];
+                        $model->amount = $value['amount'];
+                        $model->result_price = $value['result_price'];
+                        $model->save();
+                    }
                 }
+
                 DB::commit();
             }
              else {

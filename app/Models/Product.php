@@ -21,4 +21,16 @@ class Product extends Model
     {
         return $this->morphMany(Image::class, 'imageable');
     }
+
+    public static $rules = [
+        'product_id' => 'required|integer',
+        'amount' => 'required|integer',
+        'size_type' => 'required|string',
+    ];
+
+    // Yoki
+    public function rules()
+    {
+        return static::$rules;
+    }
 }

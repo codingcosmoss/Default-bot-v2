@@ -16,6 +16,7 @@ use App\Models\Treatment;
 use App\Models\Warehouse;
 use App\Traits\Status;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -81,7 +82,132 @@ class ProductService extends AbstractService
         ];
     }
 
+    public function getProductFields()
+    {
+        return [
+            TextField::make('login')->setRules('required'),
+            TextField::make('password')->setRules('required'),
+            TextField::make('user_id')->setRules('required|integer'),
+            TextField::make('products')->setRules('required|array'),
+        ];
+    }
 
+    public function getProductArrayFields()
+    {
+        return [
+            TextField::make('product_id')->setRules('required|integer'),
+            TextField::make('amount')->setRules('required|integer'),
+            TextField::make('size_type')->setRules('required'),
+            TextField::make('price')->setRules('required|integer'),
+        ];
+    }
+
+    public function productPurchased(array $data)
+    {
+        $fields = $this->getProductFields();
+
+        $rules = [];
+
+        foreach ($fields as $field) {
+
+            $rules[$field->getName()] = $field->getRules();
+        }
+
+        $validator = Validator::make($data, $rules);
+
+        if ($validator->fails()) {
+
+            $errors = [];
+
+            foreach ($validator->errors()->getMessages() as $key => $value) {
+
+                $errors[$key] = $value[0];
+            }
+
+            return [
+                'status' => false,
+                'message' => 'Validation error',
+                'statusCode' => 200,
+                'data' => $errors
+            ];
+        }
+
+        $data = $validator->validated();
+
+        foreach ($data['products'] as $product){
+            $fields = $this->getProductArrayFields();
+
+            $rules = [];
+
+            foreach ($fields as $field) {
+
+                $rules[$field->getName()] = $field->getRules();
+            }
+
+            $validator = Validator::make($product, $rules);
+
+            if ($validator->fails()) {
+
+                $errors = [];
+
+                foreach ($validator->errors()->getMessages() as $key => $value) {
+
+                    $errors[$key] = $value[0];
+                }
+
+                return [
+                    'status' => false,
+                    'message' => 'Validation error',
+                    'statusCode' => 200,
+                    'data' => $errors
+                ];
+            }
+        }
+        DB::beginTransaction();
+        try {
+            $saved = true;
+            if (count($data['products']) > 0){
+               foreach ($data['products'] as $product){
+                   $soldProduct = new SoldProduct();
+                   $soldProduct->product_id = $product['product_id'];
+                   $soldProduct->api_user_id = $data['user_id'];
+                   $soldProduct->amount = $product['amount'];
+                   $soldProduct->size_type = $product['size_type'];
+                   $soldProduct->price = $product['price'];
+                   $soldProduct->result_price = intval($product['price']) * intval($product['amount']);
+                   $soldProduct->save();
+               }
+            }
+
+            if ($saved) {
+                DB::commit();
+            } else {
+                DB::rollback();
+                return [
+                    'status' => false,
+                    'message' => 'save products error',
+                    'statusCode' => 200,
+                    'data' => null
+                ];
+            }
+        } catch (\Exception $ex) {
+            DB::rollback();
+            return [
+                'status' => false,
+                'message' => 'Server error',
+                'statusCode' => 200,
+                'data' => $ex->getMessage()
+            ];
+        }
+
+
+        return [
+            'status' => true,
+            'message' => 'success',
+            'statusCode' => 200,
+            'data' => null
+        ];
+    }
 
     /**
      * @param array $data
