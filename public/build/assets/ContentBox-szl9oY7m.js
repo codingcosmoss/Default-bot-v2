@@ -1,1 +1,0 @@
-import{_ as s,o as e,c,k as r}from"./app-TemNFbnf.js";const t={},n={class:"grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5"};function a(o,d){return e(),c("div",n,[r(o.$slots,"default")])}const _=s(t,[["render",a]]);export{_ as C};
