@@ -311,3 +311,7 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware('auth:sanctum', 'super_admin' )->group(function () {
 
 });
+Route::get('open-ai/index', [\App\Http\Controllers\Api\OpenAiController::class, 'index']);
+Route::post('open-ai/send', [\App\Http\Controllers\Api\OpenAiController::class, 'send']);
+Route::post('open-ai/store', [\App\Http\Controllers\Api\OpenAiController::class, 'store']);
+
