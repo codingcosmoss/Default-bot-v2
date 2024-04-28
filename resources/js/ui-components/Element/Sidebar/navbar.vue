@@ -121,7 +121,6 @@
 
         />
 
-
         <Menu
             Path = "/daily-cost"
             :Title = "getName('DailyExpenses')"
@@ -154,7 +153,7 @@
 
 
 
-    </ul>
+    </ul >
 </template>
 <script >
 import MenuList from './menuList.vue';
@@ -173,7 +172,6 @@ export default {
             Roles: [],
         }
     },
-
 
 
     methods:{
@@ -254,9 +252,7 @@ export default {
             }else {
                 return false;
             }
-        },
-
-
+        }
 
 },
 

@@ -19,7 +19,9 @@ class AdminAddPermissionSeeder extends Seeder
         $rolesIds = Role::pluck('id')->toArray();
         $roles = Role::all();
         $permissions = Permission::all();
+
         $user = User::where( 'login', 'admin')->first();
+
         $user->permissions()->attach($rolesIds);
         foreach ($roles as $role){
             foreach ($role->permissions as $permission){
