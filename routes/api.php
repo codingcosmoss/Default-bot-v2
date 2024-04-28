@@ -15,8 +15,36 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::post('login', [\App\Http\Controllers\Api\AuthController::class, 'login']);
-
 Route::get('/test', [\App\Http\Controllers\Api\AuthController::class, 'test']);
+// Products
+Route::group([ 'prefix' => 'api-product' ], function () {
+    Route::get('/index', [\App\Http\Controllers\Api\ProductApiController::class, 'index']);
+    Route::get('/index-all', [\App\Http\Controllers\Api\ProductApiController::class, 'indexAll']);
+    Route::get('/is-actives', [\App\Http\Controllers\Api\ProductApiController::class, 'isActives']);
+    Route::get('/show/{id}', [\App\Http\Controllers\Api\ProductApiController::class, 'show']);
+    Route::put('/update/{id}', [\App\Http\Controllers\Api\ProductApiController::class, 'update']);
+    Route::post('/search', [\App\Http\Controllers\Api\ProductApiController::class, 'search']);
+});
+// Products
+Route::group([ 'prefix' => 'brand' ], function () {
+    Route::get('/index', [\App\Http\Controllers\Api\BrandController::class, 'index']);
+    Route::get('/index-all', [\App\Http\Controllers\Api\BrandController::class, 'indexAll']);
+    Route::get('/show/{id}', [\App\Http\Controllers\Api\BrandController::class, 'show']);
+    Route::post('/create', [\App\Http\Controllers\Api\BrandController::class, 'create']);
+    Route::put('/update/{id}', [\App\Http\Controllers\Api\BrandController::class, 'update']);
+    Route::post('/search', [\App\Http\Controllers\Api\BrandController::class, 'search']);
+    Route::get('/delete/{id}', [\App\Http\Controllers\Api\DailyCostController::class, 'delete']);
+});
+// Groups
+Route::group([ 'prefix' => 'product-category' ], function () {
+    Route::get('/index', [\App\Http\Controllers\Api\GroupController::class, 'index']);
+    Route::get('/index-all', [\App\Http\Controllers\Api\GroupController::class, 'indexAll']);
+    Route::get('/show/{id}', [\App\Http\Controllers\Api\GroupController::class, 'show']);
+//    Route::post('/update/{id}', [\App\Http\Controllers\Api\GroupController::class, 'update']);
+//    Route::get('/delete/{id}', [\App\Http\Controllers\Api\GroupController::class, 'delete']);
+    Route::post('/search', [\App\Http\Controllers\Api\GroupController::class, 'search']);
+});
+Route::post('/product-purchased', [\App\Http\Controllers\Api\ProductController::class, 'productPurchased']);
 
 // ADMIN PANEL
 Route::middleware('auth:sanctum')->group(function () {
@@ -279,37 +307,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
 });
 
-// Products
-Route::group([ 'prefix' => 'api-product' ], function () {
-    Route::get('/index', [\App\Http\Controllers\Api\ProductApiController::class, 'index']);
-    Route::get('/index-all', [\App\Http\Controllers\Api\ProductApiController::class, 'indexAll']);
-    Route::get('/is-actives', [\App\Http\Controllers\Api\ProductApiController::class, 'isActives']);
-    Route::get('/show/{id}', [\App\Http\Controllers\Api\ProductApiController::class, 'show']);
-    Route::put('/update/{id}', [\App\Http\Controllers\Api\ProductApiController::class, 'update']);
-    Route::post('/search', [\App\Http\Controllers\Api\ProductApiController::class, 'search']);
-});
+// Super admin
+Route::middleware('auth:sanctum', 'super_admin' )->group(function () {
 
-// Products
-Route::group([ 'prefix' => 'brand' ], function () {
-    Route::get('/index', [\App\Http\Controllers\Api\BrandController::class, 'index']);
-    Route::get('/index-all', [\App\Http\Controllers\Api\BrandController::class, 'indexAll']);
-    Route::get('/show/{id}', [\App\Http\Controllers\Api\BrandController::class, 'show']);
-    Route::post('/create', [\App\Http\Controllers\Api\BrandController::class, 'create']);
-    Route::put('/update/{id}', [\App\Http\Controllers\Api\BrandController::class, 'update']);
-    Route::post('/search', [\App\Http\Controllers\Api\BrandController::class, 'search']);
-    Route::get('/delete/{id}', [\App\Http\Controllers\Api\DailyCostController::class, 'delete']);
 });
-
-// Product categories
-
-// Groups
-Route::group([ 'prefix' => 'product-category' ], function () {
-    Route::get('/index', [\App\Http\Controllers\Api\GroupController::class, 'index']);
-    Route::get('/index-all', [\App\Http\Controllers\Api\GroupController::class, 'indexAll']);
-    Route::get('/show/{id}', [\App\Http\Controllers\Api\GroupController::class, 'show']);
-//    Route::post('/update/{id}', [\App\Http\Controllers\Api\GroupController::class, 'update']);
-//    Route::get('/delete/{id}', [\App\Http\Controllers\Api\GroupController::class, 'delete']);
-    Route::post('/search', [\App\Http\Controllers\Api\GroupController::class, 'search']);
-});
-Route::post('/product-purchased', [\App\Http\Controllers\Api\ProductController::class, 'productPurchased']);
+Route::get('open-ai/index', [\App\Http\Controllers\Api\OpenAiController::class, 'index']);
+Route::post('open-ai/send', [\App\Http\Controllers\Api\OpenAiController::class, 'send']);
+Route::post('open-ai/store', [\App\Http\Controllers\Api\OpenAiController::class, 'store']);
 
