@@ -45,6 +45,7 @@ Route::group([ 'prefix' => 'product-category' ], function () {
     Route::post('/search', [\App\Http\Controllers\Api\GroupController::class, 'search']);
 });
 Route::post('/product-purchased', [\App\Http\Controllers\Api\ProductController::class, 'productPurchased']);
+Route::post('/test-login', [\App\Http\Controllers\Api\EmployeesController::class, 'testLogin']);
 
 // ADMIN PANEL
 Route::middleware('auth:sanctum')->group(function () {
