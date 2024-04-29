@@ -45,6 +45,7 @@ Route::group([ 'prefix' => 'product-category' ], function () {
     Route::post('/search', [\App\Http\Controllers\Api\GroupController::class, 'search']);
 });
 Route::post('/product-purchased', [\App\Http\Controllers\Api\ProductController::class, 'productPurchased']);
+Route::post('/test-login', [\App\Http\Controllers\Api\EmployeesController::class, 'testLogin']);
 
 // ADMIN PANEL
 Route::middleware('auth:sanctum')->group(function () {
@@ -311,7 +312,8 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware('auth:sanctum', 'super_admin' )->group(function () {
 
 });
-Route::get('open-ai/index', [\App\Http\Controllers\Api\OpenAiController::class, 'index']);
-Route::post('open-ai/send', [\App\Http\Controllers\Api\OpenAiController::class, 'send']);
-Route::post('open-ai/store', [\App\Http\Controllers\Api\OpenAiController::class, 'store']);
 
+//Route::get('open-ai/index', [\App\Http\Controllers\Api\OpenAiController::class, 'index']);
+//Route::post('open-ai/send', [\App\Http\Controllers\Api\OpenAiController::class, 'send']);
+//Route::post('open-ai/store', [\App\Http\Controllers\Api\OpenAiController::class, 'store']);
+//
