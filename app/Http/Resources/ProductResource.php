@@ -47,7 +47,7 @@ class ProductResource extends JsonResource
             'tegs' => $this->tegs,
             'description_uz' => $this->description_uz,
             'description_ru' => $this->description_ru,
-            'brand' => $this->brand_id != null ? Brand::find($this->brand_id) : '🤌',
+            'brand' => $this->brand_id != null ? Brand::find($this->brand_id) : null,
         ];
     }
 }
