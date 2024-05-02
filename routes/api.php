@@ -33,7 +33,7 @@ Route::group([ 'prefix' => 'brand' ], function () {
     Route::post('/create', [\App\Http\Controllers\Api\BrandController::class, 'create']);
     Route::put('/update/{id}', [\App\Http\Controllers\Api\BrandController::class, 'update']);
     Route::post('/search', [\App\Http\Controllers\Api\BrandController::class, 'search']);
-    Route::get('/delete/{id}', [\App\Http\Controllers\Api\DailyCostController::class, 'delete']);
+    Route::get('/delete/{id}', [\App\Http\Controllers\Api\BrandController::class, 'delete']);
 });
 // Groups
 Route::group([ 'prefix' => 'product-category' ], function () {
@@ -125,6 +125,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('deptor/index', [\App\Http\Controllers\Api\TreatmentController::class, 'deptorIndex']);
         Route::get('employee/treatments/{id}', [\App\Http\Controllers\Api\TreatmentController::class, 'employeeTreatments']);
         Route::post('deptor/search', [\App\Http\Controllers\Api\TreatmentController::class, 'deptorSearch']);
+
+        Route::get('/save-word/{id}', [ \App\Http\Controllers\WordController::class, 'getTreatmentsFile']);
+
     });
 
     Route::post('/treatment-add-service', [\App\Http\Controllers\Api\TreatmentController::class, 'treatmentAddService']);
