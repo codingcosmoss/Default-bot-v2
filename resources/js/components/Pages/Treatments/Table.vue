@@ -227,6 +227,18 @@
 <!--                  -->
 <!--                </div>-->
 
+                <i
+                    title="Wordga chop etish"
+                    @click="onInfoModal(item)"
+                    class="fas fa-file-word setting-icon  cursor-pointer  "
+                ></i>
+
+<!--                <a href="{{route('reception.word.get-treatments-file',['id'=>$treatment->id])}}"-->
+<!--                   class="btn btn-secondary btn-sm" title="{{__('words.generate_word')}}"-->
+<!--                   data-toggle="tooltip">-->
+<!--                    <i class=""></i>-->
+<!--                </a>-->
+
             </p>
           </div>
 

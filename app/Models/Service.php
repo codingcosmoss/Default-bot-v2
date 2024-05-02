@@ -16,5 +16,18 @@ class Service extends Model
         return $this->belongsTo(ServiceCategory::class);
     }
 
+    public function anketas()
+    {
+        return $this->hasMany(ServiceAnketa::class, 'service_id', 'id');
+    }
+
+    public function getSeriveBadgeAnkets()
+    {
+        $text = '';
+        foreach ($this->anketas as $anketa) {
+            $text .= " <span class='badge badge-secondary'>" . $anketa->getAnketaName() . "</span>";
+        }
+        return $text;
+    }
 
 }
