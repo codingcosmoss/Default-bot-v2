@@ -79,7 +79,7 @@ class ProductApiService extends AbstractService
     {
         return [
             TextField::make('brand_id')->setRules('required|integer'),
-            TextField::make('image')->setRules('required|image|mimes:jpeg,png,jpg,gif,svg|max:5048'),
+            TextField::make('image')->setRules('nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5048'),
             TextField::make('tegs')->setRules('required|string'),
             TextField::make('description_uz')->setRules('required|string'),
             TextField::make('description_ru')->setRules('required|string'),
