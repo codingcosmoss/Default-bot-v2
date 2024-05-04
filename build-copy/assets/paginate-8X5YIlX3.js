@@ -1,1 +1,0 @@
-import{_ as s,o,c as a,a as t,e as c}from"./app-8i59_tig.js";const n={},r={class:"box"},_={class:"pagination"};function i(e,d){return o(),a("div",r,[t("div",_,[c(e.$slots,"default")])])}const f=s(n,[["render",i]]);export{f as P};

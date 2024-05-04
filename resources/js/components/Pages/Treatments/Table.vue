@@ -229,7 +229,7 @@
 
                 <i
                     title="Wordga chop etish"
-                    @click="onInfoModal(item)"
+                    @click="saveWord(item.id)"
                     class="fas fa-file-word setting-icon  cursor-pointer  "
                 ></i>
 
@@ -523,7 +523,7 @@ import { Alert } from "../../../Config.js";
 import Input from "../../../ui-components/Form/Input.vue";
 import InputDefault from "../../../ui-components/Form/InputDefault.vue";
 import ModalLayout from "../../../ui-components/Element/Modal01/ModalLayout.vue";
-import {owedTreatmentCreate, patientShow} from "../../../Api.js";
+import {owedTreatmentCreate, patientShow, saveWord} from "../../../Api.js";
 import {
   Treatments,
     treatmentDiscount,
@@ -650,6 +650,10 @@ export default {
   },
 
   methods: {
+      async saveWord(id){
+          const response = await saveWord(id);
+          console.log('Word Response:', response);
+      },
     router() {
       return router;
     },

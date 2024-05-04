@@ -46,6 +46,8 @@ class ProductApiService extends AbstractService
                 'to' => $models->lastItem(),
             ],
         ];
+        // clear
+        //
 
         return [
             'status' => true,

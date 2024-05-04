@@ -25,6 +25,10 @@ export const Login = async (data) => {
     return  POST('/login', data);
 };
 
+export const saveWord = async (id) => {
+    return  GET('treatmetn/save-word/' + id);
+};
+
 
 export const Logout = async () => {
     return  GET('/logout');

@@ -11,7 +11,7 @@
     $settings = \App\Models\CompanySetting::first();
 
     $serviceIds = $model
-    ->cures
+    ->services
     ->pluck('service_id')
     ->toArray();
 
@@ -21,20 +21,20 @@
 
     $arrayUnique = array_unique($serviceAnketaNumberArray);
 
-    $arrayTeethNumbers = $model
-    ->groups
-    ->pluck('tooth_numbers')
-    ->toArray();
-    $toothArray = [];
+//    $arrayTeethNumbers = $model
+//    ->groups
+//    ->pluck('tooth_numbers')
+//    ->toArray();
+//    $toothArray = [];
+//
+//    foreach ($arrayTeethNumbers as $arrayTeethNumber){
+//          $tooths = explode(',',$arrayTeethNumber);
+//          foreach ($tooths as $tooth){
+//              $toothArray[] =intval($tooth);
+//          }
+//    }
 
-    foreach ($arrayTeethNumbers as $arrayTeethNumber){
-          $tooths = explode(',',$arrayTeethNumber);
-          foreach ($tooths as $tooth){
-              $toothArray[] =intval($tooth);
-          }
-    }
-
-    $toothArray = array_unique($toothArray);
+//    $toothArray = array_unique($toothArray);
 
 @endphp
 @include('anketa._header')

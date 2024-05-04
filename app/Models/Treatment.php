@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Word\HtmlToDoc;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Treatment extends Model
 {
+
     use HasFactory;
     protected $guarded = ['id'];
 
@@ -27,7 +29,6 @@ class Treatment extends Model
     public function downloadWord()
     {
         $htmlToDoc = new HtmlToDoc();
-
         $file = $this->getWordContent();
         return $htmlToDoc->createDoc($file, $this->patient->name . '_' . $this->patient->surname . ' №' . $this->daily_number . ' Sana: ' . $this->created_at, true);
     }
