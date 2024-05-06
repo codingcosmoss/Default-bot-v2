@@ -44,7 +44,7 @@
                const response = await GetUser();
                console.log(response)
                if (response.success == 200){
-                   this.$router.push('/');
+                   this.$router.push('/admin');
                }
            },
            async addForm(){
@@ -62,7 +62,7 @@
                            this.Loader = false;
                            localStorage.setItem('0008a78764c2', response.data['token']);
                            localStorage.setItem('user', JSON.stringify(response.data['user']));
-                           this.$router.push('/');
+                           this.$router.push('/admin');
                            Alert('success', 'Tizimga muvoffaqiyatli kirdingiz !')
                        }else {
                            this.Loader = false;
