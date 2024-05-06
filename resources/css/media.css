@@ -1,0 +1,14 @@
+#menu_btn2{
+    display: none;
+}
+@media (max-width: 991px) {
+    #menu_btn2{
+        display: block !important;
+    }
+    #menu_btn{
+        display: none !important;
+    }
+    .navbar-brand-box{
+        display: none;
+    }
+}

@@ -7,6 +7,7 @@ export const useConterStore = defineStore({
 
     state: () => ({
         activePage: 'Home',
+        baseUrl: location.origin,
         sidebarToggle: '',
         Localization: Languages,
         Lang: '',

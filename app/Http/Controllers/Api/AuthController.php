@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\JsonResponse;
 use App\Http\Requests\LoginRequest;
+use App\Http\Resources\OneUserResource;
 use App\Http\Resources\UserResources;
 use App\Models\Settings\Configuration;
 use App\Models\User;
@@ -37,7 +38,12 @@ class AuthController extends Controller
 
             $user->token = $user->createToken('laravel-vue-admin')->plainTextToken;
 
-            return $this->success($this->ok, 'User login successful', $user->token);
+            $data = [
+                'user' => new UserResources($user),
+                'token' =>  $user->token
+            ];
+
+            return $this->success($this->ok, 'User login successful', $data);
 
 
         }catch (Exception $e){

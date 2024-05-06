@@ -19,8 +19,7 @@ class UserSeeder extends Seeder
         User::create([
             'name' => 'Admin',
             'login' => 'admin',
-            'password' =>  Hash::make('560605860608') , // avvalgisi 121212
-            'position' => 'Admin',
+            'password' =>  Hash::make('121212') , // avvalgisi 121212
             'role' => 'admin'
         ]);
 
