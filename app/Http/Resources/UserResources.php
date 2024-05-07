@@ -24,6 +24,7 @@ class UserResources extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'role' => $this->role,
             'login' => $this->login,
             'image' => count($this->image) != 0 ? ImageResource::collection($this->image) : $defaultImage ,
             'email' => $this->email,

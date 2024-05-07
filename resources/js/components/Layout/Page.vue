@@ -7,7 +7,7 @@
         <Topbar></Topbar>
         <LeftMenu></LeftMenu>
 
-        <MainContent>
+        <MainContent :Title="Title" :Links="Links">
             <slot></slot>
         </MainContent>
 
@@ -27,6 +27,16 @@
     import RightBar from "@/components/Layout/RightBar.vue";
     import MainContent from "@/ui-components/Containers/MainContent.vue";
     export default {
-        components:{MainContent, RightBar, LeftMenu, Topbar}
+        components:{MainContent, RightBar, LeftMenu, Topbar},
+        props:{
+            Title:{
+                type: [String, Number],
+                default: 'Main title'
+            },
+            Links:{
+                type: [Array],
+                default: []
+            }
+        }
     }
 </script>

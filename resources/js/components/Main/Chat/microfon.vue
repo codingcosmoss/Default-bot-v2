@@ -29,10 +29,14 @@ body {
 }
 .mic_box{
     position: relative;
-    width: 50%;
-    height: 300px;
-    //background: blue;
+    width: 60%;
+    //height: 300px;
+    height: 100vh;
     margin: 0 auto;
+    background-image: linear-gradient(rgba(34, 39, 54, 0.7), rgba(34, 39, 54, 0.8)), url("https://a-static.besthdwallpaper.com/jinx-in-arcane-netflix-series-league-of-legends-lol-wallpaper-1920x1080-92560_48.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 .mic {
     position: absolute;
@@ -135,6 +139,12 @@ body {
 @media (max-width: 500px) {
     .mic{
         transform: scale(.4);
+    }
+}
+@media (max-width: 754px) {
+    .mic_box{
+        width: 100%;
+        height: 40vh !important;
     }
 }
 

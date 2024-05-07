@@ -10,8 +10,13 @@ export const GetUser = async () => {
 export const Login = async (data) => {
     return  POST('/login', data);
 };
-
+export const Register = async (data) => {
+    return  POST('/register', data);
+};
 export const Logout = async () => {
     return  GET('/logout');
+};
+export const phrases = async () => {
+    return  GET('/phrase/index');
 };
 

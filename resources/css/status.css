@@ -57,3 +57,7 @@
     display: flex !important;
     overflow: hidden;
 }
+.menu_active{
+    /*background: rgba(13, 225, 200, 0.23);*/
+    color: white !important;
+}

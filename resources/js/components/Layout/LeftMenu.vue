@@ -4,9 +4,18 @@
 
 
             <MenuBox>
-                <MenuButton/>
-                <MenuButton/>
-                <MenuButton/>
+
+                <MenuButton
+                    Title="Home"
+                    Path="/admin"
+                    Icon="bx bx-home-circle"
+                />
+                <MenuButton
+                    Title="Mavzular"
+                    Path="/admin/topic"
+                    Icon="bx bx-command"
+                />
+
             </MenuBox>
 
 

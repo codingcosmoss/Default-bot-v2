@@ -36,16 +36,12 @@
                                 </a>
                             </div>
                             <div class="p-2">
+
                                     <slot>
 
                                     </slot>
-                            </div>
-                            <div class="mt-5 text-center">
 
-                                <div>
-                                    <p>Hisobingiz yo‘qmi ? <a @click="this.$router.push('/register')" class="fw-medium text-primary"> Ro'yxatdan o'tish </a> </p>
-                                    <p>© Zari maroqli suhbatdosh loyhasi</p>
-                                </div>
+                                    <br>
                             </div>
 
                         </div>

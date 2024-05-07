@@ -11,7 +11,10 @@ export default {
     components: {Chat},
     methods:{
         darkTheme(){
-            let mode = sessionStorage.setItem('is_visited', 'dark-mode-switch');
+            if (sessionStorage.getItem('is_visited') !=   'dark-mode-switch'){
+                sessionStorage.setItem('is_visited', 'dark-mode-switch');
+                location.reload();
+            }
         }
     },
     mounted() {

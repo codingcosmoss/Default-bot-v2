@@ -7,18 +7,28 @@
             :Value="login"
             @onInput="login = $event"
         />
+
         <LoginInput
-            Label = "Password"
+            Label = "Parol"
             Pholder="password"
             :Value="password"
             @onInput="password = $event"
             Type="password"
         />
 
+        <LoginInput
+            Label = "Parolni takrorlang"
+            Pholder="password"
+            :Value="reset_password"
+            @onInput="reset_password = $event"
+            Type="password"
+        />
+
         <br>
         <div class="mt-3 d-grid">
-            <button :class="Loader && 'disabled' " @click="addForm" class="btn btn-primary waves-effect waves-light" type="submit">Tizimga kirish</button>
+            <button :class="Loader && 'disabled' " @click="addForm" class="btn btn-primary waves-effect waves-light" type="submit">Ro'yxatdan o'tish</button>
         </div>
+
     </Layout>
 
 </template>
@@ -26,7 +36,7 @@
     import Page from "@/components/Layout/Page.vue";
     import Layout from "./layout.vue";
     import LoginInput from "@/ui-components/Forms/LoginInput.vue";
-    import {GetUser, Login} from "@/Api.js";
+    import {GetUser, Login, Register} from "@/Api.js";
     import axios from "axios";
     import {Alert} from "@/Config.js";
     export default {
@@ -35,6 +45,7 @@
             return{
                 login: '',
                 password: '',
+                reset_password: '',
                 isError: false,
                 Loader: false,
             }
@@ -50,11 +61,21 @@
            async addForm(){
                try {
                    this.Loader = true;
+                   if ((this.reset_password != this.password) || this.password.length < 5 ){
+                       this.isError = true;
+                       this.Loader = false;
+                       Alert('error', 'Parolni kiritishda xatolik bor, parol eng kami 5ta harfdan iboratbolishi kerak')
+                       return true;
+                   }
+                   if (this.login.length < 5){
+                       Alert('error', "Formadagi barcha maydonlar eng kami 5ta harf va sonlar bilan toldirilishi kerak ")
+                       return true;
+                   }
                    let data = {
                        login : this.login,
                        password : this.password
                    }
-                   const response = await Login(data);
+                   const response = await Register(data);
                    console.log(response);
                    if (response.success != undefined){
                        if (response.success == 200){
@@ -62,15 +83,15 @@
                            this.Loader = false;
                            localStorage.setItem('0008a78764c2', response.data['token']);
                            localStorage.setItem('user', JSON.stringify(response.data['user']));
-                           this.$router.push('/admin');
-                           Alert('success', 'Tizimga muvoffaqiyatli kirdingiz !')
+                           this.$router.push('/');
+                           Alert('success', 'Muvoffaqiyatli kirdingiz !')
                        }else {
                            this.Loader = false;
-                           Alert('error', "Login yoki parol noto'g'ri")
+                           Alert('error', "Bunday username mavjud !")
                        }
 
                    }else {
-                       Alert('error', "Login yoki parol noto'g'ri")
+                       Alert('error', "Bunday username mavjud")
                        this.isError = true;
                        this.Loader = false;
                    }

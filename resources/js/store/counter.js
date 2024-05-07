@@ -81,6 +81,10 @@ export const useConterStore = defineStore({
                 }
             }
             return result;
+        },
+        sendError(model, error){
+            console.log('Error:', error)
+            // model.$router.push('/login');
         }
 
 

@@ -22,7 +22,6 @@ app.config.globalProperties.$BaseUrl = window.location.origin;
 
 // import the package
 import VueAwesomePaginate from "vue-awesome-paginate";
-// import the necessary css file
 
 
 app.use(router)

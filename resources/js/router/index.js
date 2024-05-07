@@ -12,20 +12,22 @@ const routes = [
         component: () => import('../components/Pages/Login/index.vue'),
     },
     {
+        path: '/register',
+        component: () => import('../components/Pages/Register/index.vue'),
+    },
+    {
         path: '/:pathMatch(.*)*',
-        component: () => import('../components/Main/index.vue')
+        component: () => import('../components/Pages/Error/index.vue')
     },
 
     {
         path: '/admin',
         component: () => import('../components/Pages/Dashboard/index.vue'),
-        children: [
-            {
-                path: 'profile',
-                component: () => import('../components/Pages/Dashboard/index.vue')
-            }
-        ]
     },
+    {
+        path: '/admin/topic',
+        component: () => import('../components/Pages/Topic/index.vue')
+    }
 
 
 ];
