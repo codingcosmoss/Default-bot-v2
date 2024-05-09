@@ -27,6 +27,18 @@ const routes = [
     {
         path: '/admin/topic',
         component: () => import('../components/Pages/Topic/index.vue')
+    },
+    {
+        path: '/admin/words',
+        component: () => import('../components/Pages/Words/index.vue')
+    },
+    {
+        path: '/admin/word/create',
+        component: () => import('../components/Pages/Words/create.vue')
+    },
+    {
+        path: '/admin/word/update',
+        component: () => import('../components/Pages/Words/update.vue')
     }
 
 

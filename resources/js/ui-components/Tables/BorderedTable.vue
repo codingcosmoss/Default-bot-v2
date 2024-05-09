@@ -5,26 +5,25 @@
             <div class="card-body">
                 <h4 class="card-title">{{Title}}</h4>
                 <p class="card-title-desc">{{Desc}}</p>
-                <div class="row mb-3">
-                    <div class="col-lg-3">
+                <div class="row mb-3 justify-content-between "  >
+                    <div class="col-lg-3 col-sm-3">
                         <div>
-                            <input class="form-control" type="text" placeholder="Search..." @click="this.$emit('search', $event.target.value)">
+                            <input class="form-control" type="text" placeholder="Search..." @input="this.$emit('search', $event.target.value)">
                         </div>
                     </div>
+                    <button @click="this.$emit('onCreate', true)" data-bs-toggle="modal" :data-bs-target="'#'+CreateModal" type="button" class="btn btn-primary waves-effect waves-light create_btn" >
+                        Qo'shish
+                    </button>
+
                 </div>
-                <div class="table-responsive">
+                <slot >
+                </slot>
 
-                    <table class="table table-bordered mb-0">
 
-                        <slot>
-
-                        </slot>
-
-                    </table>
-                </div>
 
             </div>
         </div>
+
     </div>
 
 </template>
@@ -38,7 +37,11 @@
             Desc:{
                 type:String,
                 default: 'Add for borders on all sides of the table and cells.'
-            }
+            },
+            CreateModal:{
+                type:String,
+                default: 'modal-01'
+            },
         }
     }
 </script>

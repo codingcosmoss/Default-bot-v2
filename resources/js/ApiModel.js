@@ -1,30 +1,28 @@
-// ____________________________ daily-cost ________________________________________________________
+// ____________________________ word ________________________________________________________
 
 
-export const dailyCosts = async (id, pages) => {
-    if (id != null){
-        return  GET('daily-cost/index?page='+id+'&pages='+pages);
-    }else {
-        return  GET('daily-cost/index?pages='+pages);
-    }
+import {GET} from "@/Config.js";
+
+export const words = async (page, count) => {
+    return  GET('word/index?page='+ page + '&count=' + count);
 };
 
-export const dailyCostShow = async (data) => {
-    return  GET('daily-cost/show/'+data);
+export const wordShow = async (data) => {
+    return  GET('word/show/'+data);
 };
 
-export const dailyCostCreate = async (data) => {
-    return  POST('daily-cost/create', data );
+export const wordCreate = async (data) => {
+    return  POST('word/create', data );
 };
-export const dailyCostUpdate = async (id, data) => {
-    return  POST('daily-cost/update/'+id, data );
-};
-
-export const dailyCostSearch = async (data) => {
-    return  POST('daily-cost/search', data );
+export const wordUpdate = async (id, data) => {
+    return  POST('word/update/'+id, data );
 };
 
-export const dailyCostDelete = async (data) => {
-    return  GET('daily-cost/delete/'+ data );
+export const wordSearch = async (data) => {
+    return  POST('word/search', data );
+};
+
+export const wordDelete = async (data) => {
+    return  GET('word/delete/'+ data );
 };
 

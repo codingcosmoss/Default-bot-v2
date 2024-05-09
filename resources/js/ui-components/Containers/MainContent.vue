@@ -13,7 +13,7 @@
 
                             <div class="page-title-right">
                                 <ol class="breadcrumb m-0">
-                                    <li v-for="(link , index) in Links" :class="link['status'] ? 'link_active' : ''" class="cursor-pointer">{{ link['name'] }} <span v-if="index != Links.length-1" >/&nbsp;</span> </li>
+                                    <li v-for="(link , index) in Links" @click="!link['status'] && this.$router.push(link['path'])" :class="link['status'] ? 'link_active ' : ''" class="cursor-pointer">{{ link['name'] }} <span v-if="index != Links.length-1" >/&nbsp;</span> </li>
                                 </ol>
                             </div>
 

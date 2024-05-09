@@ -15,6 +15,11 @@
                     Path="/admin/topic"
                     Icon="bx bx-command"
                 />
+                <MenuButton
+                    Title="So'zlar"
+                    Path="/admin/words"
+                    Icon="bx bx-detail"
+                />
 
             </MenuBox>
 

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('topics', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->comment('Mavzu nomi');
+            $table->string('name')->unique()->comment('Mavzu nomi');
             $table->timestamps();
         });
     }

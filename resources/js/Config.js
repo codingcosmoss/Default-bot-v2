@@ -31,7 +31,7 @@ export const POST = async ( url, data = null) => {
 };
 export const PUT = async ( url, data = null) => {
     try {
-        const response = await axios.put(url , data, {
+        const response = await axios.put(url + '?_method=PUT' , data, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 Authorization: `Bearer ${localStorage.getItem('0008a78764c2')}`
@@ -60,13 +60,20 @@ export const getName = (val) => {
     console.log(useConterStore().getLang(val))
 }
 
-export const Alert = (type, message) => {
-    console.log(type)
+export const Alert = ( status, type='save') => {
     // type = [ warning, info, default, success, error]
+    let messages = {
+        create: 'Created successfuly',
+        update: 'Updated successfuly',
+        delete: 'Deleted successfuly',
+        save: 'Save successfuly',
+        dublicatColumn: "Malumot bir xil bo'lmasligi kerak"
+    }
+
     const $toast = useToast();
     let instance = $toast.open({
-        message: message,
-        type: type,
+        message: messages[type],
+        type: status,
     });
 
     setTimeout(()=>{

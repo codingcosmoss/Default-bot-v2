@@ -11,9 +11,9 @@ class WordController extends AbstractController
         protected WordService $wordService
     ){}
 
-    public function index()
+    public function index($count = 10)
     {
-        $item = $this->wordService->index(request()->all());
+        $item = $this->wordService->index($count);
         return $this->sendResponse($item);
     }
 

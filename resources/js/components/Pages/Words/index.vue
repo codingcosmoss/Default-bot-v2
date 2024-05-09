@@ -1,8 +1,8 @@
 <template>
-    <Page Title="Mavzular">
+    <Page Title="So'zlar">
         <div class="row">
 
-            <BorderedTable Title="" Desc=""  CreateModal="create_modal" @search="search($event)" >
+            <BorderedTable Title="" Desc=""  @onCreate="this.$router.push('/admin/word/create')" @search="search($event)" >
 
                 <div class="table-responsive">
                     <table class="table table-bordered mb-0">
@@ -10,8 +10,8 @@
                         <thead  >
                         <tr>
                             <th>#</th>
-                            <th style="min-width: 200px">Nomi</th>
-                            <th>So'zlar soni</th>
+                            <th style="min-width: 200px">So'z</th>
+                            <th>Turi</th>
                             <th>Sozlamalar</th>
                         </tr>
                         </thead>
@@ -23,7 +23,7 @@
                             <td>{{ item.words }}</td>
                             <td>
 
-                                <button type="button" class="btn btn-primary waves-effect waves-light setting_btn" data-bs-toggle="modal" data-bs-target="#update" @click="model=item">
+                                <button type="button" class="btn btn-primary waves-effect waves-light setting_btn" data-bs-toggle="modal" data-bs-target="#update" @click="this.$router.push({path:'/admin/word/update', query:{id: item.id}})">
                                     <i class="bx bx-edit-alt"></i>
                                 </button>
                                 &nbsp;
@@ -54,8 +54,6 @@
 
         </div>
 
-        <Create @onCreated="index()" />
-        <Updated @onUpdated="index()" :Model="model" />
         <ConfirmModal Id="delete" Title="O'chirish" @onModal="destroy()" >
             "{{model.name}}" mavzusini o'chirib tashlashni hohlaysizmi ?
         </ConfirmModal>
@@ -67,7 +65,7 @@
     import Page from "@/components/Layout/Page.vue";
     import {useConterStore} from "@/store/counter.js";
     import BorderedTable from "@/ui-components/Tables/BorderedTable.vue";
-    import {topicShow, topics, topicDelete, topicCreate, topicSearch, topicUpdate} from "@/Api.js";
+    import {words, wordSearch, wordShow} from "../../../Api.js";
     import StaticBackdropModal from "@/ui-components/Modals/StaticBackdropModal.vue";
     import Create from './create.vue';
     import Updated from './update.vue';
@@ -89,7 +87,7 @@
             async index(){
                 try {
 
-                    const response = await topics(this.currentPage , 10);
+                    const response = await words(this.currentPage , 10);
                     this.items = response.data.items;
                     this.last_page = response.data.pagination.last_page;
                     this.current_page = response.data.pagination.currentPage;
@@ -100,7 +98,7 @@
             },
             async destroy(){
                 try {
-                    const response = await topicDelete(this.model.id);
+                    const response = await wordDelete(this.model.id);
                     if (response.status){
                         Alert('success','delete');
                         this.index()
@@ -115,7 +113,7 @@
                         'search': val,
                         'paginate': 10
                     }
-                    const response = await topicSearch(data);
+                    const response = await wordSearch(data);
                     this.items = response.data.items;
                 }catch (e){
                     useConterStore().sendError(this,e);

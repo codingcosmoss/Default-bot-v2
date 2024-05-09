@@ -4,3 +4,20 @@
 a{
     cursor: pointer;
 }
+.create_btn{
+    width: auto;
+    margin: 10px;
+    margin-bottom: 0px;
+}
+.setting_btn{
+    padding: 2px 6px;
+}
+.search-item{
+    padding: 3px;
+}
+.search-item:hover{
+    background: rgba(112, 0, 248, 0.68);
+}
+.search_item_active{
+    background: rgb(2, 120, 6);
+}

@@ -18,14 +18,28 @@ class TopicService extends AbstractService
     protected $model = Topic::class;
     protected $resource = TopicResource::class;
 
-    public function index($data = null)
+    public function index($count = 10)
     {
-        $models = $this->model::all();
+        $models = $this->model::orderBy('updated_at', 'desc')
+            ->paginate($count);
+
+        $data = [
+            'items' => $this->resource::collection($models),
+            'pagination' => [
+                'total' => $models->total(),
+                'per_page' => $models->perPage(),
+                'current_page' => $models->currentPage(),
+                'last_page' => $models->lastPage(),
+                'from' => $models->firstItem(),
+                'to' => $models->lastItem(),
+            ],
+        ];
+
         return [
             'status' => true,
             'message' => 'Success',
             'statusCode' => 200,
-            'data' => $this->resource::collection($models)
+            'data' => $data
         ];
     }
 
