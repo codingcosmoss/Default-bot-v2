@@ -21,6 +21,20 @@
                     Icon="bx bx-detail"
                 />
 
+                <MenuButton
+                    Title="So'z olingan manbalar"
+                    Path="/admin/sources"
+                    Icon="bx bx-detail"
+                />
+
+                <MenuButton
+                    Title="Saqlash uchun so'zlar"
+                    Path="/admin/save-words"
+                    Icon="bx bx-detail"
+                />
+
+
+
             </MenuBox>
 
 
@@ -31,4 +45,5 @@
 <script setup>
 import MenuBox from "@/ui-components/Containers/MenuBox.vue";
 import MenuButton from "@/ui-components/Containers/MenuButton.vue";
+import MenuListButton from "@/ui-components/Containers/MenuListButton.vue";
 </script>

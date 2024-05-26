@@ -29,8 +29,8 @@ const totalItems = ref(1);
     width: 40px;
     border-radius: 20px;
     cursor: pointer;
-    background-color: rgb(8, 147, 234);
-    border: 1px solid rgba(217, 217, 217, 0);
+    background-color: #3498db12;
+    border: 1px solid rgb(2, 234, 255);
     color: #ffffff;
 }
 .paginate-buttons:hover {

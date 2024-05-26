@@ -39,7 +39,23 @@ const routes = [
     {
         path: '/admin/word/update',
         component: () => import('../components/Pages/Words/update.vue')
-    }
+    },
+    {
+        path: '/admin/save-words',
+        component: () => import('../components/Pages/SavedWords/index.vue')
+    },
+    {
+        path: '/admin/save-word/create',
+        component: () => import('../components/Pages/SavedWords/create.vue')
+    },
+    {
+        path: '/admin/save-word/update',
+        component: () => import('../components/Pages/SavedWords/update.vue')
+    },
+    {
+        path: '/admin/sources',
+        component: () => import('../components/Pages/Sources/index.vue')
+    },
 
 
 ];

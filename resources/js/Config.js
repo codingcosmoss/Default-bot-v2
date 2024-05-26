@@ -67,12 +67,13 @@ export const Alert = ( status, type='save') => {
         update: 'Updated successfuly',
         delete: 'Deleted successfuly',
         save: 'Save successfuly',
-        dublicatColumn: "Malumot bir xil bo'lmasligi kerak"
+        dublicatColumn: "Malumot bir xil bo'lmasligi kerak",
+        formError: "Formada xatolik bor yoki malumotlar to'liq to'ldirilmagan "
     }
 
     const $toast = useToast();
     let instance = $toast.open({
-        message: messages[type],
+        message: messages[type] != null ? messages[type] : messages,
         type: status,
     });
 

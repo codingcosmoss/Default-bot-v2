@@ -1,8 +1,8 @@
 <template>
-    <Page Title="So'zlar">
+    <Page Title="So'z manbalari">
         <div class="row">
 
-            <BorderedTable Title="" Desc=""  @onCreate="this.$router.push('/admin/word/create')" @search="search($event)" >
+            <BorderedTable Title="" Desc=""  CreateModal="create_modal" @search="search($event)" >
 
                 <div class="table-responsive">
                     <table class="table table-bordered mb-0">
@@ -10,8 +10,10 @@
                         <thead  >
                         <tr>
                             <th>#</th>
-                            <th >So'z</th>
-                            <th>Turi</th>
+                            <th >Nomi</th>
+                            <th style="min-width: 200px">Izoh</th>
+                            <th>So'zlar soni</th>
+                            <th>Saqlanganlar soni</th>
                             <th>Sozlamalar</th>
                         </tr>
                         </thead>
@@ -19,22 +21,19 @@
 
                         <tr v-for="(item, index) in items">
                             <th scope="row">{{((currentPage-1) * 10) + index+1}}</th>
-                            <td style="max-width: 800px" >{{item.text}}</td>
-                            <td>{{ item.phrase.name }}</td>
+                            <td>{{item.name}}</td>
+                            <td>{{ item.text }}</td>
+                            <td>{{ item.words }} ta</td>
+                            <td>{{ item.save_words }} ta</td>
                             <td>
-                                <button @click="model=item" type="button" class="btn btn-primary waves-effect waves-light setting_btn"   data-bs-toggle="modal" data-bs-target="#show" >
-                                    <i class="bx bx-show"></i>
-                                </button>
-                                &nbsp;
-                                <button type="button" class="btn btn-primary waves-effect waves-light setting_btn" data-bs-toggle="modal" data-bs-target="#update" @click="this.$router.push({path:'/admin/word/update', query:{id: item.id}})">
+
+                                <button v-if="item.name != 'Manual' "  type="button" class="btn btn-primary waves-effect waves-light setting_btn" data-bs-toggle="modal" data-bs-target="#update" @click="model=item">
                                     <i class="bx bx-edit-alt"></i>
                                 </button>
                                 &nbsp;
-                                <button  type="button" class="btn btn-danger waves-effect waves-light setting_btn"  @click="model=item" data-bs-toggle="modal" data-bs-target="#delete" >
+                                <button v-if="item.words == 0 && item.name != 'Manual' " type="button" class="btn btn-danger waves-effect waves-light setting_btn"  @click="model=item" data-bs-toggle="modal" data-bs-target="#delete" >
                                     <i class="bx bx-trash-alt"></i>
                                 </button>
-
-
 
                             </td>
                         </tr>
@@ -59,10 +58,11 @@
 
         </div>
 
+        <Create @onCreated="index()" />
+        <Updated @onUpdated="index()" :Model="model" />
         <ConfirmModal Id="delete" Title="O'chirish" @onModal="destroy()" >
-            "{{model.text}}"
+            "{{model.name}}" mavzusini o'chirib tashlashni hohlaysizmi ?
         </ConfirmModal>
-        <Show :Word="model" @onClose="model = []" ></Show>
 
     </Page>
 </template>
@@ -71,16 +71,15 @@
     import Page from "@/components/Layout/Page.vue";
     import {useConterStore} from "@/store/counter.js";
     import BorderedTable from "@/ui-components/Tables/BorderedTable.vue";
-    import {words, wordSearch, wordShow, wordDelete} from "../../../Api.js";
+    import {sourceDelete, sources, sourceCreate, sourceSearch, sourceShow, sourceUpdate} from "../../../Api.js";
     import StaticBackdropModal from "@/ui-components/Modals/StaticBackdropModal.vue";
     import Create from './create.vue';
     import Updated from './update.vue';
     import ConfirmModal from "@/ui-components/Modals/ConfirmModal.vue";
     import {Alert} from "@/Config.js";
     import Loader from "@/ui-components/Items/Loader.vue";
-    import Show from "@/components/Pages/Words/show.vue";
     export default {
-        components:{Show, Loader, ConfirmModal, StaticBackdropModal, BorderedTable, Page, Create, Paginate, Updated},
+        components:{Loader, ConfirmModal, StaticBackdropModal, BorderedTable, Page, Create, Paginate, Updated},
         data(){return{
             model: [],
             items: [],
@@ -94,11 +93,10 @@
             async index(){
                 try {
 
-                    const response = await words(this.currentPage , 10);
+                    const response = await sources(this.currentPage , 10);
                     this.items = response.data.items;
                     this.last_page = response.data.pagination.last_page;
                     this.current_page = response.data.pagination.currentPage;
-                    console.log(response)
                 }catch (e){
                     useConterStore().sendError(this,e);
                 }
@@ -106,8 +104,7 @@
             },
             async destroy(){
                 try {
-                    const response = await wordDelete(this.model.id);
-                    console.log(response)
+                    const response = await sourceDelete(this.model.id);
                     if (response.status){
                         Alert('success','delete');
                         this.index()
@@ -122,7 +119,7 @@
                         'search': val,
                         'paginate': 10
                     }
-                    const response = await wordSearch(data);
+                    const response = await sourceSearch(data);
                     this.items = response.data.items;
                 }catch (e){
                     useConterStore().sendError(this,e);

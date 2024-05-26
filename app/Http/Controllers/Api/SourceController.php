@@ -3,17 +3,17 @@
 namespace App\Http\Controllers\Api;
 use App\Services\Api\ExpressionService;
 use App\Services\Api\PhraseService;
-use App\Services\Api\WordService;
+use App\Services\Api\SourceService;
 
-class WordController extends AbstractController
+class SourceController extends AbstractController
 {
     public function __construct(
-        protected WordService $wordService
+        protected SourceService $sourceService
     ){}
 
     public function index()
     {
-        $item = $this->wordService->index(request()->all());
+        $item = $this->sourceService->index(request()->all());
         return $this->sendResponse($item);
     }
 
@@ -23,7 +23,7 @@ class WordController extends AbstractController
      */
     public function show($id)
     {
-        $item = $this->wordService->show($id);
+        $item = $this->sourceService->show($id);
         return $this->sendResponse($item);
     }
 
@@ -32,7 +32,7 @@ class WordController extends AbstractController
      */
     public function create()
     {
-        $item = $this->wordService->store(request()->all());
+        $item = $this->sourceService->store(request()->all());
         return $this->sendResponse($item);
     }
 
@@ -41,14 +41,14 @@ class WordController extends AbstractController
      */
     public function update($id)
     {
-        $item = $this->wordService->update(request()->all(), $id);
+        $item = $this->sourceService->update(request()->all(), $id);
         return $this->sendResponse($item);
     }
 
 
     public function delete($id)
     {
-        $item = $this->wordService->destroy($id);
+        $item = $this->sourceService->destroy($id);
         return $this->sendResponse($item);
     }
 
@@ -57,7 +57,7 @@ class WordController extends AbstractController
      */
     public function search()
     {
-        $item = $this->wordService->search(request()->all());
+        $item = $this->sourceService->search(request()->all());
         return $this->sendResponse($item);
     }
 

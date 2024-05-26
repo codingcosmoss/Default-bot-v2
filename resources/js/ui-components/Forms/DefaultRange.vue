@@ -1,7 +1,8 @@
 <template>
-    <div>
+    <div class="col-lg-5 position-relative" >
+
         <label class="form-label d-flex align-items-end justify-content-between">
-            <p class="m-0 font-size-15">{{Label}}</p>
+            <p class="m-0 font-size-15">{{Label}}  <i class="bx bx-trash-alt cursor-pointer text-danger" @click="this.$emit('onDelete', true)"></i></p>
             <p class="m-0 text-primary">{{Range}}</p>
         </label>
         <input type="range" class="form-range" id="customRange1" :value="Range" :min="Min" :max="Max" @input="onRange($event.target.value)">

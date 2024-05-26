@@ -78,6 +78,20 @@
                     }
                 ]
             }
+        },
+        methods:{
+            isMenuHidden(){
+                const menuBox = document.querySelector('.vertical-menu');
+                const mainContent = document.querySelector('.main-content');
+                if (menuBox.classList.contains('menuHidden')){
+                    mainContent.classList.add('mainContent');
+                }else {
+                    mainContent.classList.remove('mainContent');
+                }
+            }
+        },
+        mounted() {
+            this.isMenuHidden()
         }
     }
 

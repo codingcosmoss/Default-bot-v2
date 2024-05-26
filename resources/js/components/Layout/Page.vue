@@ -4,8 +4,8 @@
     <div id="layout-wrapper">
 
 
-        <Topbar></Topbar>
-        <LeftMenu></LeftMenu>
+<!--        <Topbar></Topbar>-->
+<!--        <LeftMenu></LeftMenu>-->
 
         <MainContent :Title="Title" :Links="Links">
             <slot></slot>

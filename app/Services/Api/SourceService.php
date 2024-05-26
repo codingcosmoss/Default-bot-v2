@@ -3,19 +3,22 @@
 namespace App\Services\Api;
 
 use App\Fields\Store\TextField;
-use App\Http\Resources\WordResource;
-use App\Models\SavedWord;
+use App\Http\Resources\BrandResource;
+use App\Http\Resources\PhraseResource;
+use App\Http\Resources\SourceResource;
+use App\Http\Resources\TopicResource;
+use App\Models\Brand;
+use App\Models\Phrase;
 use App\Models\Source;
-use App\Models\Word;
-use App\Models\WordTopic;
+use App\Models\Topic;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
-class WordService extends AbstractService
+class SourceService extends AbstractService
 {
-    protected $model = Word::class;
-    protected $resource = WordResource::class;
+    protected $model = Source::class;
+    protected $resource = SourceResource::class;
 
     public function index($data = array())
     {
@@ -48,24 +51,10 @@ class WordService extends AbstractService
     public function getFields()
     {
         return [
-            TextField::make('text')->setRules('required|string'),
-            TextField::make('phrase_id')->setRules('required|integer'),
-            TextField::make('word_topics')->setRules('required|array'),
-            TextField::make('save_word_id')->setRules('nullable'),
-            TextField::make('source_id')->setRules('nullable'),
+            TextField::make('name')->setRules('required|string'),
+            TextField::make('text')->setRules('nullable|string'),
         ];
     }
-
-    public function getUpdateFields()
-    {
-        return [
-            TextField::make('text')->setRules('required|string'),
-            TextField::make('phrase_id')->setRules('required|integer'),
-            TextField::make('word_topics')->setRules('required|array'),
-        ];
-    }
-
-
 
     /**
      * @param array $data
@@ -105,42 +94,13 @@ class WordService extends AbstractService
 
         DB::beginTransaction();
         try {
-            $source_id = null;
-            if (isset($data['source_id'])){
-                $source_id = $data['source_id'];
-            }else{
-                $source = Source::where('name', 'Manual')->first();
-                if (!$source){
-                    $source = new Source();
-                    $source = 'Manual';
-                    $source =  "Qo'lda kiritilgan so'zlar";
-                    $source->save();
-                }
-                $source_id = $source->id;
-            }
 
             $model = new $this->model;
-            $model->text = $data['text'];
-            $model->phrase_id = $data['phrase_id'];
-            $model->source_id = $source_id;
+            $model->name = $data['name'];
+            $model->text = isset($data['text']) ? $data['text'] : null;
 
             if ($model->save()) {
                 DB::commit();
-                if (isset($data['save_word_id'])){
-                    $saveWord = SavedWord::find($data['save_word_id']);
-                    if ($saveWord){
-                        $saveWord->status = 0;
-                        $saveWord->save();
-                    }
-                }
-                foreach($data['word_topics'] as $topic){
-                    $wordTopic = new WordTopic();
-                    $wordTopic->word_id = $model->id;
-                    $wordTopic->topic_id = $topic['id'];
-                    $wordTopic->percent = $topic['percent'];
-                    $wordTopic->save();
-                }
-
             } else {
                 DB::rollback();
                 return [
@@ -190,7 +150,7 @@ class WordService extends AbstractService
             ];
         }
 
-        $fields = $this->getUpdateFields();
+        $fields = $this->getFields();
 
         $rules = [];
 
@@ -217,30 +177,15 @@ class WordService extends AbstractService
                 'data' => $errors
             ];
         }
+
         DB::beginTransaction();
         try {
-            if (!(isset($data['word_topics']) && count($data['word_topics'])>0) ){
-                return [
-                    'status' => false,
-                    'message' => 'Validation error',
-                    'statusCode' => 401,
-                    'data' => ['word_topics' => "Word topics required "]
-                ];
-            }
 
-            $model->text = $data['text'];
-            $model->phrase_id = $data['phrase_id'];
+            $model->name = $data['name'];
+            $model->text = isset($data['text']) ? $data['text'] : null;
 
             if ($model->save()) {
                 DB::commit();
-                $deleteModels = WordTopic::where('word_id', $model->id)->delete();
-                foreach($data['word_topics'] as $topic){
-                    $wordTopic = new WordTopic();
-                    $wordTopic->word_id = $model->id;
-                    $wordTopic->topic_id = $topic['topic_id'];
-                    $wordTopic->percent = $topic['percent'];
-                    $wordTopic->save();
-                }
             } else {
                 DB::rollback();
                 return [
@@ -299,7 +244,6 @@ class WordService extends AbstractService
     public function destroy($id)
     {
         $model = $this->model::find($id);
-        $wordTopics = WordTopic::where('word_id', $id)->delete();
         if ($model) {
             if($model->delete()) {
                 return [
@@ -330,7 +274,8 @@ class WordService extends AbstractService
         $sort = $data['order'] ?? 'desc';
 
         $models = $this->model::where(function ($query) use ($key) {
-            empty($key) ? $query : $query->where('text', 'like', '%' . $key . '%');
+            empty($key) ? $query : $query->orWhere('name', 'like', '%' . $key . '%')
+            ->orWhere('text', 'like', '%' . $key . '%');
         })
             ->orderBy($column, $sort)
             ->paginate(10);

@@ -14,4 +14,9 @@ class Phrase extends Model
     {
         return $this->hasMany(Word::class);
     }
+
+    public function phrase()
+    {
+        return $this->belongsTo(Phrase::class);
+    }
 }

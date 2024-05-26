@@ -8,19 +8,19 @@
     <div >
 
         <!-- Static Backdrop Modal -->
-        <div class="modal fade " :id="Id" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" style="display: none;">
-            <div class="modal-dialog  modal-dialog-centered" role="document">
+        <div class="modal fade  " :id="Id" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog  modal-dialog-centered " :class="ModalLg && 'modal-lg'"  role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="staticBackdropLabel">{{Title}}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button  @click="this.$emit('onClose', true)" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <slot></slot>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                        <button @click="this.$emit('onModal', true)" :class="isDisabled == true ? 'disabled' : ''" data-bs-dismiss="modal" type="button" class=" btn btn-primary" >Submit</button>
+                        <button  @click="this.$emit('onClose', true)" type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                        <button v-if="isSubmit" @click="this.$emit('onModal', true)" :class="isDisabled == true ? 'disabled' : ''" data-bs-dismiss="modal" type="button" class=" btn btn-primary" >Submit</button>
                     </div>
                 </div>
             </div>
@@ -44,6 +44,14 @@
                 type: Boolean,
                 default: true
             },
+            isSubmit:{
+                type: Boolean,
+                default: true
+            },
+            ModalLg:{
+                type: Boolean,
+                default: false
+            }
         }
     }
 </script>

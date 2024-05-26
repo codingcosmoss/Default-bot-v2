@@ -3,8 +3,8 @@
     <div :class="Class" >
         <div>
             <label class="form-label">{{Label}}</label>
-            <textarea class="form-control"  rows="5" :placeholder="Pholder" @input="this.$emit('onInput', $event.target.value)" >{{Value}}</textarea>
-            <p  class="form-label text-danger" >{{Validated[Name]}}</p>
+            <textarea class="form-control" :disabled="isDisabled" :rows="Rows" :placeholder="Pholder" @input="this.$emit('onInput', $event.target.value)" >{{Value}}</textarea>
+            <p  class="form-label text-danger"  >{{Validated[Name]}}</p>
         </div>
     </div>
 
@@ -15,6 +15,14 @@ export default{
         Class:{
             type: String,
             default: 'col-lg-12 col-sm-12'
+        },
+        Rows:{
+            type: Number,
+            default: 5
+        },
+        isDisabled:{
+            type: Boolean,
+            default: false
         },
         Name:{
             type: [String],

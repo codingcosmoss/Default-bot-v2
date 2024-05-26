@@ -18,7 +18,7 @@
                         <tbody>
 
                         <tr v-for="(item, index) in items">
-                            <th scope="row">{{index+1}}</th>
+                            <th scope="row">{{((currentPage-1) * 10) + index+1}}</th>
                             <td>{{item.name}}</td>
                             <td>{{ item.words }}</td>
                             <td>

@@ -11,9 +11,9 @@ class TopicController extends AbstractController
         protected TopicService $topicService
     ){}
 
-    public function index($count = 10)
+    public function index()
     {
-        $item = $this->topicService->index($count);
+        $item = $this->topicService->index(request()->all());
         return $this->sendResponse($item);
     }
 

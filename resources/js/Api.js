@@ -72,7 +72,64 @@ export const wordDelete = async (data) => {
     return  GET('word/delete/'+ data );
 };
 
+// ____________________________ saved-word ________________________________________________________
 
+
+
+export const savedWords = async (page, count) => {
+    return  GET('saved-word/index?page='+ page + '&count=' + count);
+};
+
+export const savedWordShow = async (data) => {
+    return  GET('saved-word/show/'+data);
+};
+
+export const savedWordFirst = async () => {
+    return  GET('saved-word/first');
+};
+
+export const savedWordCreate = async (data) => {
+    return  POST('saved-word/create', data );
+};
+export const savedWordUpdate = async (id, data) => {
+    return  POST('saved-word/update/'+id, data );
+};
+
+export const savedWordSearch = async (data) => {
+    return  POST('saved-word/search', data );
+};
+
+export const savedWordDelete = async (data) => {
+    return  GET('saved-word/delete/'+ data );
+};
+
+
+
+// ____________________________ source ________________________________________________________
+
+
+export const sources = async (page, count) => {
+    return  GET('source/index?page='+ page + '&count=' + count);
+};
+
+export const sourceShow = async (data) => {
+    return  GET('source/show/'+data);
+};
+
+export const sourceCreate = async (data) => {
+    return  POST('source/create', data );
+};
+export const sourceUpdate = async (id, data) => {
+    return  POST('source/update/'+id, data );
+};
+
+export const sourceSearch = async (data) => {
+    return  POST('source/search', data );
+};
+
+export const sourceDelete = async (data) => {
+    return  GET('source/delete/'+ data );
+};
 
 
 

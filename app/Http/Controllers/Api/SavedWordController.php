@@ -3,17 +3,17 @@
 namespace App\Http\Controllers\Api;
 use App\Services\Api\ExpressionService;
 use App\Services\Api\PhraseService;
-use App\Services\Api\WordService;
+use App\Services\Api\SavedWordService;
 
-class WordController extends AbstractController
+class SavedWordController extends AbstractController
 {
     public function __construct(
-        protected WordService $wordService
+        protected SavedWordService $savedWordService
     ){}
 
     public function index()
     {
-        $item = $this->wordService->index(request()->all());
+        $item = $this->savedWordService->index(request()->all());
         return $this->sendResponse($item);
     }
 
@@ -23,7 +23,13 @@ class WordController extends AbstractController
      */
     public function show($id)
     {
-        $item = $this->wordService->show($id);
+        $item = $this->savedWordService->show($id);
+        return $this->sendResponse($item);
+    }
+
+    public function showFirst()
+    {
+        $item = $this->savedWordService->showFirst();
         return $this->sendResponse($item);
     }
 
@@ -32,7 +38,7 @@ class WordController extends AbstractController
      */
     public function create()
     {
-        $item = $this->wordService->store(request()->all());
+        $item = $this->savedWordService->store(request()->all());
         return $this->sendResponse($item);
     }
 
@@ -41,14 +47,14 @@ class WordController extends AbstractController
      */
     public function update($id)
     {
-        $item = $this->wordService->update(request()->all(), $id);
+        $item = $this->savedWordService->update(request()->all(), $id);
         return $this->sendResponse($item);
     }
 
 
     public function delete($id)
     {
-        $item = $this->wordService->destroy($id);
+        $item = $this->savedWordService->destroy($id);
         return $this->sendResponse($item);
     }
 
@@ -57,7 +63,7 @@ class WordController extends AbstractController
      */
     public function search()
     {
-        $item = $this->wordService->search(request()->all());
+        $item = $this->savedWordService->search(request()->all());
         return $this->sendResponse($item);
     }
 

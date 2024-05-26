@@ -2,11 +2,13 @@
 
 namespace App\Http\Resources;
 
-use App\Models\WordTopic;
+use App\Models\SavedWord;
+use App\Models\Source;
+use App\Models\Word;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class WordResource extends JsonResource
+class SourceResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,9 +19,10 @@ class WordResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'name' => $this->name,
             'text' => $this->text,
-            'phrase' => $this->phrase,
-            'topics' => WordTopicResource::collection(WordTopic::where('word_id', $this->id)->get())
+            'words' => SavedWord::where('source_id', $this->id)->count(),
+            'save_words' => Word::where('source_id', $this->id)->count()
         ];
     }
 }

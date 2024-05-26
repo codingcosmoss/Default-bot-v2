@@ -37,12 +37,44 @@ Route::middleware(['auth:sanctum', 'admin' ])->group(function () {
 
     //words => So'zlar
     Route::group([ 'prefix' => 'word' ], function () {
-        Route::get('/index/{count}', [\App\Http\Controllers\Api\WordController::class, 'index']);
+        Route::get('/index', [\App\Http\Controllers\Api\WordController::class, 'index']);
         Route::get('/show/{id}', [\App\Http\Controllers\Api\WordController::class, 'show']);
         Route::post('/create', [\App\Http\Controllers\Api\WordController::class, 'create']);
-        Route::put('/update/{id}', [\App\Http\Controllers\Api\WordController::class, 'update']);
+        Route::post('/update/{id}', [\App\Http\Controllers\Api\WordController::class, 'update']);
         Route::post('/search', [\App\Http\Controllers\Api\WordController::class, 'search']);
         Route::get('/delete/{id}', [\App\Http\Controllers\Api\WordController::class, 'delete']);
+    });
+
+    //words => Saqlash uchun So'zlar
+    Route::group([ 'prefix' => 'saved-word' ], function () {
+        Route::get('/index', [\App\Http\Controllers\Api\SavedWordController::class, 'index']);
+        Route::get('/show/{id}', [\App\Http\Controllers\Api\SavedWordController::class, 'show']);
+        Route::get('/first', [\App\Http\Controllers\Api\SavedWordController::class, 'showFirst']);
+        Route::post('/create', [\App\Http\Controllers\Api\SavedWordController::class, 'create']);
+        Route::post('/update/{id}', [\App\Http\Controllers\Api\SavedWordController::class, 'update']);
+        Route::post('/search', [\App\Http\Controllers\Api\SavedWordController::class, 'search']);
+        Route::get('/delete/{id}', [\App\Http\Controllers\Api\SavedWordController::class, 'delete']);
+    });
+
+    //words => Saqlash uchun So'zlar
+    Route::group([ 'prefix' => 'saved-word' ], function () {
+        Route::get('/index', [\App\Http\Controllers\Api\SavedWordController::class, 'index']);
+        Route::get('/show/{id}', [\App\Http\Controllers\Api\SavedWordController::class, 'show']);
+        Route::get('/show/first', [\App\Http\Controllers\Api\SavedWordController::class, 'showFirst']);
+        Route::post('/create', [\App\Http\Controllers\Api\SavedWordController::class, 'create']);
+        Route::post('/update/{id}', [\App\Http\Controllers\Api\SavedWordController::class, 'update']);
+        Route::post('/search', [\App\Http\Controllers\Api\SavedWordController::class, 'search']);
+        Route::get('/delete/{id}', [\App\Http\Controllers\Api\SavedWordController::class, 'delete']);
+    });
+
+    //words => Saqlash uchun So'zlar
+    Route::group([ 'prefix' => 'source' ], function () {
+        Route::get('/index', [\App\Http\Controllers\Api\SourceController::class, 'index']);
+        Route::get('/show/{id}', [\App\Http\Controllers\Api\SourceController::class, 'show']);
+        Route::post('/create', [\App\Http\Controllers\Api\SourceController::class, 'create']);
+        Route::post('/update/{id}', [\App\Http\Controllers\Api\SourceController::class, 'update']);
+        Route::post('/search', [\App\Http\Controllers\Api\SourceController::class, 'search']);
+        Route::get('/delete/{id}', [\App\Http\Controllers\Api\SourceController::class, 'delete']);
     });
 
 

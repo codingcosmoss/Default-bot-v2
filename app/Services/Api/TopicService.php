@@ -18,10 +18,10 @@ class TopicService extends AbstractService
     protected $model = Topic::class;
     protected $resource = TopicResource::class;
 
-    public function index($count = 10)
+    public function index($data = array())
     {
         $models = $this->model::orderBy('updated_at', 'desc')
-            ->paginate($count);
+            ->paginate($data['count']);
 
         $data = [
             'items' => $this->resource::collection($models),
