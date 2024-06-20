@@ -22,8 +22,8 @@ export default{
             default: 'col-lg-12 col-sm-12'
         },
         Name:{
-            type: [String],
-            default: []
+            type: [String, Number],
+            default: ''
         },
         Label:{
             type:String,

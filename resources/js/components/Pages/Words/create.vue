@@ -9,7 +9,7 @@
                     <div class="col-lg-12 col-sm-12" >
                         <div>
                             <label class="form-label">So'z</label>
-                            <textarea class="form-control" :disabled="loader" rows="5" placeholder="So'z" @input="text = $event.target.value" >{{text}}</textarea>
+                            <textarea class="form-control word_text" :disabled="loader" rows="5" placeholder="So'z" @input="text = $event.target.value" >{{text}}</textarea>
                         </div>
                     </div>
 
@@ -108,8 +108,10 @@ export default {
                     phrase_id: this.phrase_id,
                     word_topics: this.topics,
                 }
+                console.log('D:', data)
                 response = await wordCreate(data);
                 this.validated = response.data;
+                console.log('Res:', response);
                 if (response.status){
                     this.$emit('onCreated', true);
                     this.text = '';
@@ -121,7 +123,6 @@ export default {
                 }else {
                     Alert('error', 'formError')
                 }
-                console.log('res:', response)
             }catch (e){
                 this.validated = response.data;
                 Alert('error', 'formError')
@@ -129,6 +130,7 @@ export default {
         },
         async create2(){
             let response = [];
+            let arr = [];
             try {
                 let data = {
                     text: this.text,
@@ -142,7 +144,6 @@ export default {
                 if (response.status){
                     this.text = '';
                     this.save_word_id = '';
-                    this.phrase_id = '';
                     this.topics = [];
                     this.validated = []
                     Alert('success','create');
@@ -150,7 +151,6 @@ export default {
                 }else {
                     Alert('error', 'formError')
                 }
-                console.log('res:', response)
             }catch (e){
                 this.validated = response.data;
                 Alert('error', 'formError')
@@ -187,6 +187,7 @@ export default {
                     percent: 50
                 })
             }
+            this.searchData = [];
         },
         onTopic(val, number) {
             this.topics = this.topics.map((e) => {
@@ -225,9 +226,11 @@ export default {
 
         async getSaveWord(){
             try {
+                const word_text = document.querySelector('.word_text');
                 const response = await savedWordFirst();
-                console.log(response);
+                console.log('New word',response);
                 this.text = response.data.text;
+                word_text.value = response.data.text;
                 this.save_word_id = response.data.id;
                 this.source_id = response.data.source_id;
             }catch (e){

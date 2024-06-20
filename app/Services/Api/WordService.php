@@ -4,10 +4,15 @@ namespace App\Services\Api;
 
 use App\Fields\Store\TextField;
 use App\Http\Resources\WordResource;
+use App\Models\FakeUser;
+use App\Models\Phrase;
 use App\Models\SavedWord;
 use App\Models\Source;
+use App\Models\User;
+use App\Models\UserQuestionWord;
 use App\Models\Word;
 use App\Models\WordTopic;
+use App\Traits\Status;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -124,8 +129,24 @@ class WordService extends AbstractService
             $model->phrase_id = $data['phrase_id'];
             $model->source_id = $source_id;
 
+
+
             if ($model->save()) {
                 DB::commit();
+
+                $phrase = Phrase::find($data['phrase_id']);
+                if ($phrase){
+                    if ($phrase->type == Status::$question){
+                        $fakeUsers = FakeUser::all();
+                        foreach ($fakeUsers as $fakeUser){
+                            $userQuestion = new UserQuestionWord();
+                            $userQuestion->fake_user_id = $fakeUser->id;
+                            $userQuestion->word_id = $model->id;
+                            $userQuestion->save();
+                        }
+                    }
+                }
+
                 if (isset($data['save_word_id'])){
                     $saveWord = SavedWord::find($data['save_word_id']);
                     if ($saveWord){

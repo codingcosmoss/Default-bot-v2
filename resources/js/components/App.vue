@@ -15,11 +15,17 @@
             async getUser(){
                 const response = await GetUser();
                 console.log('User:', response)
+            },
+            fon(){
+                let fon = localStorage.getItem('fon');
+                if (fon != null && fon == 'dark'){
+                    document.documentElement.setAttribute("data-bs-theme","dark");
+                }
             }
         },
         mounted() {
             // this.getUser()
-
+            this.fon()
         }
     }
 

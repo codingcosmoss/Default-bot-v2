@@ -95,6 +95,7 @@ export default {
     }},
     methods:{
         async update(){
+
             let response = [];
             try {
                 let data = {
@@ -102,6 +103,7 @@ export default {
                     phrase_id: this.phrase_id,
                     word_topics: this.topics,
                 }
+                console.log('D:', data);
                 response = await wordUpdate(this.$route.query.id,data);
                 this.validated = response.data;
                 if (response.status){
@@ -148,7 +150,8 @@ export default {
                 this.topics.push({
                     id: val.id,
                     name: val.name,
-                    percent: 50
+                    percent: 50,
+                    topic_id: val.id
                 })
             }
         },

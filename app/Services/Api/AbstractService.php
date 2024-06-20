@@ -28,6 +28,46 @@ class AbstractService
         return $this->model::orderBy($column, $type)->first();
     }
 
+    public function validator($fields, $data)
+    {
+        $error = null;
+        $rules = [];
+        foreach ($fields as $field) {
+
+            $rules[$field->getName()] = $field->getRules();
+        }
+
+        $validator = Validator::make($data, $rules);
+
+        if ($validator->fails()) {
+
+            $errors = [];
+
+            foreach ($validator->errors()->getMessages() as $key => $value) {
+
+                $errors[$key] = $value[0];
+            }
+
+            $error =  [
+                'status' => false,
+                'message' => 'Validation error',
+                'statusCode' => 200,
+                'data' => $errors
+            ];
+        }
+
+        if ($error != null){
+            return [
+                'error' => true,
+                'data' => null,
+                'message' => $error
+            ];
+        }
+        return [
+            'error' => false,
+            'data' => $validator->validated()
+        ];
+    }
 
     /**
      * @return mixed

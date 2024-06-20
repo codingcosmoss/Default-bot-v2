@@ -20,6 +20,20 @@ export const POST = async ( url, data = null) => {
     try {
         const response = await axios.post(url , data, {
             headers: {
+                // 'Content-Type': 'multipart/form-data',
+                Authorization: `Bearer ${localStorage.getItem('0008a78764c2')}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const POSTFile = async ( url, data = null) => {
+    try {
+        const response = await axios.post(url , data, {
+            headers: {
                 'Content-Type': 'multipart/form-data',
                 Authorization: `Bearer ${localStorage.getItem('0008a78764c2')}`
             }
@@ -29,6 +43,8 @@ export const POST = async ( url, data = null) => {
         throw error;
     }
 };
+
+
 export const PUT = async ( url, data = null) => {
     try {
         const response = await axios.put(url + '?_method=PUT' , data, {
@@ -60,7 +76,7 @@ export const getName = (val) => {
     console.log(useConterStore().getLang(val))
 }
 
-export const Alert = ( status, type='save') => {
+export const Alert = ( status, type='save', message=null) => {
     // type = [ warning, info, default, success, error]
     let messages = {
         create: 'Created successfuly',
@@ -73,7 +89,7 @@ export const Alert = ( status, type='save') => {
 
     const $toast = useToast();
     let instance = $toast.open({
-        message: messages[type] != null ? messages[type] : messages,
+        message: messages[type] != null ? messages[type] : message,
         type: status,
     });
 

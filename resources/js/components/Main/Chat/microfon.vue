@@ -1,7 +1,7 @@
 <template>
 
     <div class="mic_box" >
-        <div class="mic">
+        <div class="mic" @click="isAnime = true">
             <i class="mic-icon"></i>
             <div v-if="isAnime" class="mic-shadow"></div>
         </div>
@@ -29,7 +29,7 @@ body {
 }
 .mic_box{
     position: relative;
-    width: 60%;
+    width: 100%;
     //height: 300px;
     height: 100vh;
     margin: 0 auto;
@@ -37,8 +37,10 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+    //display: none;
 }
 .mic {
+    cursor: pointer;
     position: absolute;
     top: 50%;
     left: 50%;

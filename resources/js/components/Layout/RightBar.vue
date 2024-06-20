@@ -46,7 +46,9 @@
         methods:{
             getSession(){
                 let mode =  sessionStorage.getItem('is_visited');
-                if (mode == 'dark-mode-switch'){
+                let fon = localStorage.getItem('fon');
+                console.log('Fon:', fon);
+                if (mode == 'dark-mode-switch' || fon == 'dark'){
                     this.darkMode = true;
                 }else {
                     this.darkMode = false;
@@ -63,12 +65,18 @@
             addSession(val){
                 if (val == 'dark-mode-switch'){
                     this.darkMode = true;
+                    localStorage.setItem('fon', 'dark');
+                    document.documentElement.setAttribute("data-bs-theme","dark");
                 }else {
+                    document.documentElement.setAttribute("data-bs-theme","light");
+                    localStorage.setItem('fon', 'white');
                     this.darkMode = false;
                 }
                 let mode = sessionStorage.setItem('is_visited', val);
-                location.reload()
+                document.documentElement.removeAttribute("dir")
             }
+
+
         },
         mounted() {
             this.getSession()

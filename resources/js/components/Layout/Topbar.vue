@@ -32,6 +32,11 @@
 
             <div class="d-flex">
 
+
+                <button @click="this.$router.push('/chat')" type="button" class="btn header-item noti-icon waves-effect" >
+                    <i class="bx bx-chat"></i>
+                </button>
+
                 <NotificationBtn/>
 
                 <div class="dropdown d-inline-block">

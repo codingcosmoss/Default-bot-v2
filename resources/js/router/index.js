@@ -5,7 +5,7 @@ const routes = [
     // DASHBOARD
     {
         path: '/',
-        component: () => import('../components/Main/index.vue'),
+        component: () => import('../components/Pages/Loader/index.vue'),
     },
     {
         path: '/login',
@@ -19,7 +19,10 @@ const routes = [
         path: '/:pathMatch(.*)*',
         component: () => import('../components/Pages/Error/index.vue')
     },
-
+    {
+        path: '/chat',
+        component: () => import('../components/Main/index.vue'),
+    },
     {
         path: '/admin',
         component: () => import('../components/Pages/Dashboard/index.vue'),

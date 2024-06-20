@@ -17,7 +17,7 @@ export default{
         },
         Name:{
             type: [String],
-            default: []
+            default: ''
         },
         Label:{
             type:String,

@@ -131,5 +131,12 @@ export const sourceDelete = async (data) => {
     return  GET('source/delete/'+ data );
 };
 
+export const sendMessage = async (data) => {
+    return  POST('chat/send-message', data );
+};
+
+export const getMessages = async (id) => {
+    return  GET('chat/get-messages/' + id );
+};
 
 
