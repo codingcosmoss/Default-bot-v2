@@ -1,7 +1,7 @@
 <template>
     <div class="mb-3">
         <label for="username" class="form-label">{{Label}}</label>
-        <input :type="Type" class="form-control" :value="Value" :placeholder="Pholder" @input ="this.$emit('onInput', $event.target.value)" >
+        <input :class="isError && 'input_error'" :type="Type" class="form-control " :value="Value" :placeholder="Pholder" @input ="this.$emit('onInput', $event.target.value)" >
     </div>
 </template>
 <script>
@@ -22,6 +22,10 @@
             Pholder:{
                 type: [String],
                 default: 'Placeholder...'
+            },
+            isError:{
+                type: Boolean,
+                default: false
             }
         }
     }

@@ -1,14 +1,26 @@
 <template>
 
-    <li>
-        <a href="javascript: void(0)" class="has-arrow waves-effect menu-waves-effect">
-            <i :class="Icon" class="menu_icon"></i>
-            <span class="menu-text" key="t-dashboards">{{Title}}</span>
-        </a>
-        <ul class="sub-menu" aria-expanded="false" >
-            <li v-for="link in ChildLinks" ><a @click = "this.$router.push(link['path'])" key="t-default">{{link['title']}}</a></li>
-        </ul>
-    </li>
+    <div class="accordion" :id="'accordionExample'+Name">
+        <div class="accordion-item ">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="'#collapseTwo'+Name" aria-expanded="false" :aria-controls="'collapseTwo'+Name">
+                    <i :class="Icon" class="menu_icon"></i>
+                   <p class="menu-text">{{Title}}</p>
+                </button>
+            </h2>
+            <div :id="'collapseTwo'+Name" class="accordion-collapse collapse" :data-bs-parent="'#accordionExample' + Name">
+                <div class="accordion-body">
+                    <ul class="sub-menu" aria-expanded="false" >
+                        <li v-for="link in ChildLinks" ><a class="menu-text" @click = "this.$router.push(link['path'])" key="t-default">
+                            <i :class="link.icon" class="menu_icon"></i>
+                            {{link['title']}}</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
 
 </template>
 
@@ -28,10 +40,94 @@
                 default:[
                     {
                         title: 'Link title',
-                        path: '/'
+                        path: '/admin',
+                        icon:'bx bx-home-circle'
+                    },
+                    {
+                        title: 'Link title',
+                        path: '/admin',
+                        icon:'bx bx-home-circle'
                     }
                 ]
-            }
+            },
+            Name:{
+                type: [String, Number],
+                default: 'name'
+            },
         }
     }
 </script>
+
+<style scoped lang="scss">
+    //.accordion:hover{
+    //}
+    .accordion-header:hover{
+        button{
+            .menu-text{
+                display: flex;
+            }
+        }
+    }
+
+
+    .accordion-button:not(.collapsed)::after {
+        transform: var(--bs-accordion-btn-icon-transform) scale(0.7) !important;
+    }
+    .accordion-button::after {
+        transform: scale(0.7);
+    }
+
+    // o'zgarishlarni bekor qilish
+    .accordion-button:not(.collapsed) {
+        border-radius: 0 !important;
+        box-shadow: none !important;
+    }
+
+    .accordion-item:last-of-type .accordion-button.collapsed {
+        border-bottom-right-radius: 0 !important;
+        border-bottom-left-radius: 0 !important;
+    }
+
+    .sub-menu{
+        padding: 0;
+        li{
+            width: 100%;
+            margin: 0;
+        }
+    }
+    .accordion-body{
+        background: #2a3042;
+        border: none;
+    }
+    .accordion-item{
+        border: none;
+        h2{
+            margin: 0;
+            button{
+                padding: .625rem 1.5rem;
+                display: flex;
+                align-items: center;
+                margin: 0 ;
+                background: #2a3042;
+                color: #a6b0cf;
+                border: none;
+                p{
+                    margin: 0;
+                    //background: #2a9c72;
+                    padding-top: 2px;
+                }
+                i{
+                    font-size: 1.25rem;
+                    min-width: 1.75rem;
+                }
+            }
+        }
+    }
+    //.accordion-button:not(.collapsed) {
+    //    .menu_icon{
+    //        color: green !important;
+    //        background-color: rgb(52 64 107);
+    //    }
+    //}
+
+</style>

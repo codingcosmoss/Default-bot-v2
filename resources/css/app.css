@@ -45,3 +45,9 @@ a{
     justify-content: center;
     align-items: center;
 }
+
+.page-topbar{
+    z-index: 100 !important;
+}
+
+
