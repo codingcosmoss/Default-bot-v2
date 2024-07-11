@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Traits\Status;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,7 +16,7 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->user()->role != 'admin') {
+        if (auth()->user()->management != Status::$admin_panel) {
             // User is not authenticated, redirect to the login page
             return redirect()->route('login')->with('error', 'Please log in to access this page.');
         }

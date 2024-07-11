@@ -36,9 +36,8 @@
     import Page from "@/components/Layout/Page.vue";
     import Layout from "./layout.vue";
     import LoginInput from "@/ui-components/Forms/LoginInput.vue";
-    import {GetUser, Login, Register} from "../../helpers/Api.js";
-    import axios from "axios";
-    import {Alert} from "@/Config.js";
+    import {GetUser, Login, Register} from "../../helpers/api.js";
+    import {Alert} from "@/helpers/Config.js"
     export default {
         components:{LoginInput, Layout, Page},
         data(){
@@ -84,7 +83,7 @@
                            localStorage.setItem('0008a78764c2', response.data['token']);
                            localStorage.setItem('user', JSON.stringify(response.data['user']));
                            this.$router.push('/');
-                           Alert('success', 'Muvoffaqiyatli kirdingiz !')
+                           Alert('success', this.$t("loginSuccess"))
                        }else {
                            this.Loader = false;
                            Alert('error', "Bunday username mavjud !")

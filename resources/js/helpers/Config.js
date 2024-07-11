@@ -78,22 +78,10 @@ export const getName = (val) => {
 
 export const Alert = ( status, message) => {
     // type = [ warning, info, default, success, error]
-    let messages = {
-        create: 'Created successfuly',
-        update: 'Updated successfuly',
-        delete: 'Deleted successfuly',
-        save: 'Save successfuly',
-        dublicatColumn: "Malumot bir xil bo'lmasligi kerak",
-        formError: "Formada xatolik bor yoki malumotlar to'liq to'ldirilmagan ",
-        loginSuccess: 'Tizimga muvoffaqiyatli kirdingiz !',
-        loginPasswordError: 'Login yoki parol noto\'g\'ri',
-        copySuccess: 'Copy successfully',
-        copyError: 'Copy failed',
-    }
 
     const $toast = useToast();
     let instance = $toast.open({
-        message: messages[message],
+        message: message,
         type: status,
     });
 

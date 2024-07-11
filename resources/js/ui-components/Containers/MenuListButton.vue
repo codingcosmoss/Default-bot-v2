@@ -11,8 +11,8 @@
             <div :id="'collapseTwo'+Name" class="accordion-collapse collapse" :data-bs-parent="'#accordionExample' + Name">
                 <div class="accordion-body">
                     <ul class="sub-menu" aria-expanded="false" >
-                        <li v-for="link in ChildLinks" ><a class="menu-text" @click = "this.$router.push(link['path'])" key="t-default">
-                            <i :class="link.icon" class="menu_icon"></i>
+                        <li @click="onMenuMedia" v-for="link in ChildLinks" ><a class="menu-text " :class="this.$route.path == link.path ? 'menu_active ' : ''"  @click = "this.$router.push(link['path'])" key="t-default">
+                            <i :class="link.icon" class="menu_icon "></i>
                             {{link['title']}}</a></li>
                     </ul>
                 </div>
@@ -53,6 +53,19 @@
             Name:{
                 type: [String, Number],
                 default: 'name'
+            },
+        },
+        methods:{
+            onMenuMedia(){
+                const body = document.getElementById('body');
+
+                if (body.classList.contains('sidebar-enable')){
+                    body.classList.remove('sidebar-enable');
+
+                }else {
+                    body.classList.add('sidebar-enable');
+
+                }
             },
         }
     }

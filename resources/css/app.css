@@ -46,8 +46,12 @@ a{
     align-items: center;
 }
 
+
 .page-topbar{
     z-index: 100 !important;
 }
 
 
+#header-lang-img{
+    margin-bottom: 3px;
+}

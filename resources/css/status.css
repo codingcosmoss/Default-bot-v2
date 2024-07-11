@@ -65,6 +65,10 @@
     /*background: rgba(13, 225, 200, 0.23);*/
     color: white !important;
 }
+.menu_active i{
+    /*background: rgba(13, 225, 200, 0.23);*/
+    color: white !important;
+}
 .input_error{
     border-color: rgba(243, 13, 13, 0.84);
 }
@@ -98,4 +102,8 @@
         display: flex;
     }
 
+}
+.localActive{
+    background: #2a7e9c;
+    color: white;
 }

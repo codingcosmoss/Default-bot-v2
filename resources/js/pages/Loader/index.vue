@@ -13,21 +13,29 @@
 </template>
 
 <script>
-import {GetUser} from "../../helpers/Api.js";
+import {GetUser} from "../../helpers/api.js";
 export default {
     methods:{
         async getUser(){
 
-
             try {
-                const response = await GetUser();
-                if (response.success == 200){
-                    if(response.data.role == 'admin'){
-                        this.$router.push('/admin');
+                let token = localStorage.getItem('0008a78764c2');
+                // if (!token || token == undefined || token == null){
+                //     this.$router.push('/login');
+                //     return;
+                // }
 
+                const response = await GetUser();
+                console.log(response)
+                if (response.success == 200){
+                    if(response.data.management == 3){
+                        this.$router.push('/admin');
+                        return;
                         // location.reload();
                     }else{
-                        this.$router.push('/chat');
+                        this.$router.push('/login');
+                        Alert('info', "Xozircha cliniclar boshqaruv paneli qilinmagan !")
+                        return;
                     }
                 }
 

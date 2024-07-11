@@ -17,10 +17,10 @@ import EN from "@/locale/en.json"
 import RU from "@/locale/ru.json"
 
 const i18n = createI18n({
-    locale: document.cookie.split('=')[1],
+    locale: localStorage.getItem('locale'),
     messages: {
         EN: EN,
-        DE: RU
+        RU: RU
     }
     // change @click="$i18.locale = `EN`"
     // view $t('name)
@@ -34,6 +34,11 @@ app.config.globalProperties.$BaseUrl = window.location.origin;
 // import the package
 import VueAwesomePaginate from "vue-awesome-paginate";
 
+import * as components from "./components/global/components.js"
+// Barcha componentlarni ro'hatga olish
+for (const [name, component] of Object.entries(components)) {
+    app.component(name, component);
+}
 
 app.use(router)
     .use(pinia)

@@ -37,6 +37,17 @@
                 type: [Array],
                 default: []
             }
+        },
+        methods:{
+            isToken(){
+                let token = localStorage.getItem('0008a78764c2');
+                if (!token || token == undefined || token == null){
+                    this.$router.push('/login');
+                }
+            }
+        },
+        mounted() {
+            this.isToken();
         }
 
     }

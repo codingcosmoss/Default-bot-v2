@@ -4,73 +4,63 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Image;
+use App\Services\Api\AService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
 
 class AbstractController extends Controller
 {
-    /**
-     * @var mixed
-     */
     protected $service;
-    /**
-     *
-     */
-    public function __construct()
-    {
-        $this->service = new $this->service;
-    }
 
-    /**
-     * @return array|JsonResponse
-     */
+
     public function index()
     {
-        $items = $this->service->index();
-        return $this->sendResponse($items);
+        $data = $this->service->index(request()->all());
+        return $this->sendResponse($data);
+    }
+    public function getPaginate($count)
+    {
+        $data = $this->service->getPaginate($count);
+        return $this->sendResponse($data);
     }
 
-    /**
-     * @param $id
-     * @return array|JsonResponse
-     */
+    public function orderBy($column, $type)
+    {
+        $data = $this->service->orderBy($column, $type);
+        return $this->sendResponse($data);
+    }
+    public function activeIndex()
+    {
+        $data = $this->service->index(request()->all());
+        return $this->sendResponse($data);
+    }
     public function show($id)
     {
-        $item = $this->service->show($id);
-        return $this->sendResponse($item);
+        $data = $this->service->show($id);
+        return $this->sendResponse($data);
     }
-
-    /**
-     * @return array|JsonResponse
-     */
-    public function store()
+    public function create()
     {
-
-        $item = $this->service->store(request()->all());
-        return $this->sendResponse($item);
+        $data = $this->service->store(request()->all());
+        return $this->sendResponse($data);
     }
 
-    /**
-     * @param $id
-     * @return array|JsonResponse
-     */
-    public function update($id)
+    public function update($id = null)
     {
-        $item = $this->service->update(request()->all(), $id);
-        return $this->sendResponse($item);
+        $data = $this->service->update(request()->all(), $id);
+        return $this->sendResponse($data);
     }
 
-    /**
-     * @param $id
-     * @return array|JsonResponse
-     */
+    public function search($search)
+    {
+        $data = $this->service->search($search);
+        return $this->sendResponse($data);
+    }
     public function destroy($id)
     {
-        $item = $this->service->destroy($id);
-
-        return $this->sendResponse($item);
+        $data = $this->service->destroy($id);
+        return $this->sendResponse($data);
     }
-
 
     /**
      * @param $data

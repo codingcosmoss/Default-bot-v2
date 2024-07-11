@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Chat</title>
+        <title>Dorixona boshqaruv tizimi</title>
 
         <link rel="shortcut icon" href="{{asset("")}}assets/images/favicon.ico">
         <!-- Bootstrap Css -->
@@ -31,6 +31,7 @@
         <script src="{{asset("")}}assets/libs/metismenu/metisMenu.min.js"></script>
         <script src="{{asset("")}}assets/libs/simplebar/simplebar.min.js"></script>
         <script src="{{asset("")}}assets/libs/node-waves/waves.min.js"></script>
+
         <!-- apexcharts -->
         <script src="{{asset("")}}assets/libs/apexcharts/apexcharts.min.js"></script>
         <!-- dashboard init -->

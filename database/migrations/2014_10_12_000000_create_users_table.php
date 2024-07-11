@@ -15,12 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('name')->nullable();
             $table->string('login')->nullable()->unique();
-            $table->string('role')->default('user');
-            $table->string('profil_photo_path', 500)->nullable();
-            $table->tinyInteger('status')->default(\App\Traits\Status::$status_active);
-            $table->string('email')->nullable()->unique();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
+            $table->integer('role_id');
+            $table->integer('clinic_id');
+            $table->string('phone');
+            $table->string('email')->nullable();
+            $table->tinyInteger('status')->default(\App\Traits\Status::$status_active);
+            $table->integer('management')->default(\App\Traits\Status::$admin_panel);
             $table->rememberToken();
             $table->timestamps();
         });

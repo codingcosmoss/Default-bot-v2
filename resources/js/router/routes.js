@@ -18,7 +18,7 @@ export default[
     },
     {
         path: '/:pathMatch(.*)*',
-        component: () => import('@/pages/Error/index.vue')
+        component: () => import('@/pages/Loader/index.vue'),
     },
     // Qolgan barcha admin panel routlari admin so'zidan keyin ketadi
     {

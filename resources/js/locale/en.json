@@ -1,3 +1,17 @@
 {
-    "menuos": "Menuos"
+    "home": "Home page",
+    "English": "English",
+    "Russian": "Russian",
+    "create": "Created successfully",
+    "update": "Updated successfully",
+    "delete": "Deleted successfully",
+    "save": "Save successfully",
+    "dublicatColumn": "Data must not be duplicated",
+    "formError": "There is an error in the form or data is not fully filled out",
+    "loginSuccess": "You have logged in successfully!",
+    "loginPasswordError": "Incorrect login or password",
+    "copySuccess": "Copy successful",
+    "copyError": "Copy failed",
+    "youlogged": "You are already logged in",
+    "Dashboard": "Dashboard"
 }

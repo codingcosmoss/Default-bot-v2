@@ -1,29 +1,27 @@
 <template>
     <Page Title="">
-
-        <div class="row">
+        <div class="row"  >
+            <h1>{{ $t('home') }}</h1>
         </div>
-
     </Page>
 </template>
 <script>
-    import Page from "@/components/Layout/Page.vue";
-    import DashboardBox from "@/ui-components/Items/Box/DashboardBox.vue";
-    import {useConterStore} from "@/store/counter.js";
-
+    import Page from "@/components/layout/Page.vue";
     export default {
-        components:{Page, DashboardBox},
+        components: {Page},
         data(){return{
-            items: [{name:'Darak gap',words_count:0 },{name:'So\'roq gap',words_count:0 },{name:'Buyruq gap',words_count:0 },{name:'Istak gap',words_count:0 },{name:'His hayajon gap',words_count:0 },],
-            wordsCount: 0
         }},
-
-        mounted(){
+        methods:{
+            async index(){
+                try {
+                }catch(error){
+                    console.log(error);
+                }
+            }
+        },
+        mounted() {
+            this.index()
         }
     }
 </script>
-<style>
-    .test:hover{
-        background: aquamarine;
-    }
-</style>
+<style></style>

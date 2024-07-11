@@ -6,7 +6,6 @@ import {DELETE} from '@/helpers/Config.js';
 export const GetUser = async () => {
     return  GET('/user');
 };
-
 export const Login = async (data) => {
     return  POST('/login', data);
 };
@@ -16,6 +15,8 @@ export const Register = async (data) => {
 export const Logout = async () => {
     return  GET('/logout');
 };
+
+
 
 
 

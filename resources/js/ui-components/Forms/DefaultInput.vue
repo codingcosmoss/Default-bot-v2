@@ -3,7 +3,7 @@
     <div :class="Class" >
         <div>
             <label class="form-label">{{Label}}</label>
-            <input class="form-control" :type="Type" :value="Value" :placeholder="Pholder" @input="this.$emit('onInput', $event.target.value)">
+            <input class="form-control " :type="Type" :value="Value" :placeholder="Pholder" @input="this.$emit('onInput', $event.target.value)">
             <p  class="form-label text-danger" >{{Validated[Name]}}</p>
         </div>
     </div>
@@ -26,7 +26,7 @@ export default{
         },
         Pholder:{
             type:String,
-            default: ''
+            default: 'enter here...'
         },
         Type:{
             type:String,

@@ -32,10 +32,10 @@ export default {
                 try {
                     document.execCommand('copy');
                     window.getSelection().removeAllRanges();
-                    Alert('success', 'copySuccess');
+                    Alert('success', this.$t('copySuccess'));
                 } catch (err) {
                     console.error('Failed to copy: ', err);
-                    Alert('success', 'copyError');
+                    Alert('success', this.$t('copyError'));
                 }
             }
         }

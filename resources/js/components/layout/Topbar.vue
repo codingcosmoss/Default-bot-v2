@@ -31,15 +31,24 @@
             </div>
 
             <div class="d-flex">
-
-
-                <button @click="this.$router.push('/chat')" type="button" class="btn header-item noti-icon waves-effect" >
-                    <i class="bx bx-chat"></i>
-                </button>
+                <div class="dropdown d-inline-block">
+                    <button type="button" class="btn header-item waves-effect" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img id="header-lang-img" :src="getLocale()" alt="Header Language" height="16">
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <!-- item-->
+                        <a :class="local.type == locale ? 'localActive' : '' " v-for="local in locales" @click="saveLocal(local.type)" class="dropdown-item notify-item language" data-lang="en">
+                            <img :src="local.img" alt="user-image" class="me-1" height="12"> <span class="align-middle">{{$t(local.title)}}</span>
+                        </a>
+                    </div>
+                </div>
 
                 <NotificationBtn/>
 
                 <div class="dropdown d-inline-block">
+
+
+
                     <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <img class="rounded-circle header-profile-user" src="http://127.0.0.1:8000/assets/images/users/avatar-1.jpg"
@@ -63,7 +72,6 @@
                         <i class="bx bx-cog bx-spin"></i>
                     </button>
                 </div>
-
             </div>
         </div>
     </header>
@@ -71,10 +79,37 @@
 </template>
 <script>
 import NotificationBtn from "@/ui-components/Items/AnimationButtons/NotificationBtn.vue";
-import {Logout} from "../../helpers/Api.js";
+import {Logout} from "../../helpers/api.js";
     export default {
         components:{NotificationBtn},
+        data(){return{
+            locale: localStorage.getItem('locale'),
+            locales:[
+                {
+                    title: 'English',
+                    type: 'EN',
+                    img: location.origin + '/assets/images/flags/us.jpg'
+                },
+                {
+                    title: 'Russian',
+                    type: 'RU',
+                    img: location.origin + '/assets/images/flags/russia.jpg'
+                }
+
+            ]
+        }},
         methods:{
+            saveLocal(type){
+                this.$i18n.locale = type;
+                localStorage.setItem('locale', type);
+                this.locale = type;
+            },
+            getLocale(){
+                let locale = this.locales.find(local => local.type == localStorage.getItem('locale'));
+                if (locale){
+                    return locale.img;
+                }
+            },
             setting(){
                 const app = document.getElementById('app');
                 if (app.classList.contains('right-bar-enabled')){
@@ -85,6 +120,7 @@ import {Logout} from "../../helpers/Api.js";
             },
             async logout(){
                 const response = Logout();
+                localStorage.removeItem('0008a78764c2');
                 this.$router.push('/login');
             },
             onMenuMedia(){

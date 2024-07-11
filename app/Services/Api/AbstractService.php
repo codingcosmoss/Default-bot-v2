@@ -2,32 +2,254 @@
 
 namespace App\Services\Api;
 
+use App\Fields\Store\TextField;
 use App\Models\Image;
 use App\Traits\Status;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Mockery\Exception;
 
 class AbstractService
 {
     protected $model;
+    protected $resource;
+    protected $columns = [];
 
-    /**
-     * @return mixed
-     */
     public function index()
     {
-        return $this->model::all();
-    }
+        try {
+            $data = $this->resource::collection($this->model::all());
+            return [
+                'status' => true,
+                'code' => 200,
+                'message' => 'Success',
+                'data' => $data
+            ];
+        }catch (Exception $e){
+            return [
+                'status' => false,
+                'code' => $e->getCode(),
+                'message' => $e->getMessage(),
+                'data' => null
+            ];
+        }
 
-    /**
-     * @return mixed
-     */
+    }
+    public function getPaginate($count = 10)
+    {
+
+        try {
+            $models = $this->model::orderBy('updated_at', 'desc')
+                ->paginate($count);
+
+            $data = [
+                'items' => $this->resource::collection($models),
+                'pagination' => [
+                    'total' => $models->total(),
+                    'per_page' => $models->perPage(),
+                    'current_page' => $models->currentPage(),
+                    'last_page' => $models->lastPage(),
+                    'from' => $models->firstItem(),
+                    'to' => $models->lastItem(),
+                ],
+            ];
+
+            return [
+                'status' => true,
+                'code' => 200,
+                'message' => 'Success',
+                'data' => $data
+            ];
+        }catch (Exception $e){
+            return [
+                'status' => false,
+                'code' => $e->getCode(),
+                'message' => $e->getMessage(),
+                'data' => null
+            ];
+        }
+    }
     public function orderBy($column = 'id', $type = 'desc')
     {
-        return $this->model::orderBy($column, $type)->first();
+        try {
+            $data = $this->model::orderBy($column, $type)->get();
+            return [
+                'status' => true,
+                'code' => 200,
+                'message' => 'Success',
+                'data' => $data
+            ];
+        }catch (Exception $e){
+            return [
+                'status' => false,
+                'code' => $e->getCode(),
+                'message' => $e->getMessage(),
+                'data' => null
+            ];
+        }
+    }
+    public function activeIndex()
+    {
+        try {
+            $data = $this->model::where('status', Status::$status_active)->get();
+            return [
+                'status' => true,
+                'code' => 200,
+                'message' => 'Success',
+                'data' => $data
+            ];
+        }catch (Exception $e){
+            return [
+                'status' => false,
+                'code' => $e->getCode(),
+                'message' => $e->getMessage(),
+                'data' => null
+            ];
+        }
+    }
+    public function show($id)
+    {
+        try {
+            $data =  new $this->resource($this->model::find($id));
+            return [
+                'status' => true,
+                'code' => 200,
+                'message' => 'Success',
+                'data' => $data
+            ];
+        }catch (Exception $e){
+            return [
+                'status' => false,
+                'code' => $e->getCode(),
+                'message' => $e->getMessage(),
+                'data' => null
+            ];
+        }
+    }
+    public function store(array $data)
+    {
+        try {
+
+            $validator = $this->dataValidator($data, $this->storeFields());
+            if ($validator['status']) {
+                return [
+                    'status' => false,
+                    'code' => 422,
+                    'message' => 'Validator error',
+                    'errors' => $validator['validator']->errors()
+                ];
+            }
+            $data = $validator['data'];
+
+            $object = new $this->model;
+            foreach ($this->storeFields() as $field) {
+                $field->fill($object, $data);
+            }
+            $object->save();
+
+            return [
+                'status' => true,
+                'code' => 200,
+                'message' => 'Success',
+                'data' => new $this->resource($object)
+            ];
+
+
+        }catch (Exception $e){
+            return [
+                'status' => false,
+                'code' => $e->getCode(),
+                'message' => $e->getMessage(),
+                'data' => null
+            ];
+        }
+
+    }
+    public function update(array $data, $id)
+    {
+        try {
+            $item = $this->model::find($id);
+            $validator = $this->dataValidator($data, $this->storeFields());
+            if ($validator['status']) {
+                return [
+                    'status' => false,
+                    'code' => 422,
+                    'message' => 'Validator error',
+                    'errors' => $validator['validator']->errors()
+                ];
+            }
+            $data = $validator['data'];
+            foreach ($this->updateFields() as $field) {
+                $field->fill($item, $data);
+            }
+            $item->save();
+
+            return [
+                'status' => true,
+                'code' => 200,
+                'message' => 'Success',
+                'data' => new $this->resource($item)
+            ];
+
+        }catch (Exception $e){
+            return [
+                'status' => false,
+                'code' => $e->getCode(),
+                'message' => $e->getMessage(),
+                'data' => null
+            ];
+        }
+    }
+    public function search($search = '')
+    {
+        $data = $this->model::where(function ($query) use ($search) {
+            foreach ($this->columns as $column) {
+                $query->orWhere($column, 'like', '%' . $search . '%');
+            }
+        })->get();
+        return [
+            'status' => true,
+            'message' => 'Success',
+            'statusCode' => 200,
+            'data' => $data
+        ];
+    }
+    public function destroy($id)
+    {
+        try {
+            $item = $this->model::find($id);
+            $item->delete($id);
+            return [
+                'status' => true,
+                'code' => 200,
+                'message' => 'Success',
+                'data' => $item
+            ];
+        }catch (Exception $e){
+            return [
+                'status' => false,
+                'code' => $e->getCode(),
+                'message' => $e->getMessage(),
+                'data' => null
+            ];
+        }
     }
 
+    // ------------------ Additional functions -------------------------------------------
+    public function dataValidator($data, $fields)
+    {
+        $rules = [];
+        foreach ($fields as $field) {
+            $rules[$field->getName()] = $field->getRules();
+        }
+        $validator = Validator::make($data, $rules);
+        return [
+            'status' => $validator->fails(),
+            'data' =>  $validator->validated(),
+            'validator' => $validator
+        ];
+    }
     public function validator($fields, $data)
     {
         $error = null;
@@ -68,100 +290,18 @@ class AbstractService
             'data' => $validator->validated()
         ];
     }
-
-    /**
-     * @return mixed
-     */
-    public function activeIndex()
+    public function storeFields()
     {
-        return $this->model::where('status', Status::$status_active)->get();
+        return [
+            TextField::make('column')->setRules('required|string'),
+        ];
     }
-
-    /**
-     * @param $id
-     * @return mixed
-     */
-    public function show($id)
+    public function updateFields()
     {
-        return $this->model::findOrFail($id);
+        return [
+            TextField::make('column')->setRules('required|string'),
+        ];
     }
-
-    /**
-     * @param array $data
-     * @return JsonResponse|mixed
-     */
-    public function store(array $data)
-    {
-        $fields = $this->getFields();
-        $rules = [];
-        foreach ($fields as $field) {
-            $rules[$field->getName()] = $field->getRules();
-        }
-        $validator = Validator::make($data, $rules);
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-        $data = $validator->validated();
-        $object = new $this->model;
-        foreach ($fields as $field) {
-            $field->fill($object, $data);
-        }
-        $object->save();
-        return $object;
-    }
-
-
-    /**
-     * @param array $data
-     * @param $id
-     * @return JsonResponse|mixed
-     */
-    public function update(array $data, $id)
-    {
-
-        $item = $this->show($id);
-
-        $fields = $this->getFields();
-
-        $rules = [];
-        foreach ($fields as $field) {
-            $rules[$field->getName()] = $field->getRules();
-        }
-        $validator = Validator::make($data, $rules);
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-        $data = $validator->validated();
-
-        foreach ($fields as $field) {
-            $field->fill($item, $data);
-        }
-        $item->save();
-        return $item;
-    }
-
-    /**
-     * @param $id
-     * @return mixed
-     */
-    public function destroy($id)
-    {
-        $item = $this->show($id);
-        return $item->delete($id);
-    }
-
-    public function getFields()
-    {
-        return [];
-    }
-
-    /**
-     * @param bool $status
-     * @param string $message
-     * @param int $statusCode
-     * @param array|null $data
-     * @return array
-     */
     public function sendResponse(bool $status = true, string $message = 'success', int $statusCode = 200, $data = null)
     {
         return [

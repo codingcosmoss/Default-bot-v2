@@ -8,6 +8,7 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\OneUserResource;
 use App\Http\Resources\UserResources;
+use App\Models\ClinicUser;
 use App\Models\Settings\Configuration;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -25,6 +26,39 @@ class AuthController extends Controller
         try {
 
             $user = User::where('login', $loginRequest->input('login'))->first();
+
+            if (!$user){
+                return $this->error($this->unAuthorized, "User not fount");
+
+            }
+
+            if (empty($user) || !Hash::check($loginRequest->input('password'), $user->password)) {
+
+                return $this->error($this->unAuthorized, "User not fount");
+
+            }
+
+            $user->token = $user->createToken('laravel-vue-admin')->plainTextToken;
+
+            $data = [
+                'user' => new UserResources($user),
+                'token' =>  $user->token
+            ];
+
+            return $this->success($this->ok, 'User login successful', $data);
+
+
+        }catch (Exception $e){
+            return $this->error($this->badRequest, $e->getMessage());
+        }
+
+    }
+
+    public function clinicLogin(LoginRequest $loginRequest)
+    {
+        try {
+
+            $user = ClinicUser::where('login', $loginRequest->input('login'))->first();
 
             if (!$user){
                 return $this->error($this->unAuthorized, "User not fount");

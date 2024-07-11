@@ -1,7 +1,7 @@
 <template>
     <div class="row mb-4" >
         <div class="docs_box">
-            <h4 class="mb-sm-0 font-size-16">1. d_card_block </h4>
+            <h4 class="mb-sm-0 font-size-16">{{Title}} </h4>
         </div>
 
         <slot ></slot>
@@ -11,6 +11,15 @@
 
 </template>
 <script>
+export default
+{
+    props:{
+        Title:{
+            type: String,
+            default: 'Title'
+        }
+    }
+}
 </script>
 
 <style scoped>
