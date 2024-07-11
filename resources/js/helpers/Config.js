@@ -2,6 +2,7 @@ import axios from "axios";
 import {useConterStore} from "@/store/counter.js";
 import {useToast} from 'vue-toast-notification';
 import 'vue-toast-notification/dist/theme-sugar.css';
+import {GetUser} from "@/helpers/api.js";
 export const GET = async (url) => {
     try {
         const response = await axios.get(url,{
@@ -89,6 +90,29 @@ export const Alert = ( status, message) => {
         instance.dismiss();
         $toast.clear();
     },2000);
+}
+
+export const ApiError = (model, error) => {
+    console.log('!! Error !! ',error)
+
+    // if (!getUser()){
+    //     model.$router.push('/login');
+    // }else {
+    //     model.$router.push({path: '/error', query:{error: error}});
+    // }
+
+}
+async function getUser(){
+    try {
+        const response = await GetUser();
+        console.log(response)
+        if (response.success == 200){
+            return true;
+        }
+        return false;
+    }catch (error){
+        return false;
+    }
 }
 
 // const formData = new FormData();

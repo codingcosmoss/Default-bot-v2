@@ -7,6 +7,7 @@
 </template>
 <script>
     import Page from "@/components/layout/Page.vue";
+    import {ApiError} from "@/helpers/Config.js";
     export default {
         components: {Page},
         data(){return{
@@ -14,8 +15,10 @@
         methods:{
             async index(){
                 try {
+                    // const response = Api();
                 }catch(error){
-                    console.log(error);
+                    // ApiError(this, error);
+                    // console.log(error);
                 }
             }
         },

@@ -33,7 +33,13 @@
     import {GetUser, Login} from "../../helpers/api.js";
     import axios from "axios";
     import {Alert} from "../../helpers/Config.js";
+    import {useConterStore} from "@/store/counter.js";
+
     export default {
+        setup(){
+            const counterStore = useConterStore();
+            return{counterStore}
+        },
         components:{LoginInput, Layout, Page},
         data(){
             return{
@@ -50,6 +56,8 @@
                console.log(response)
                if (response.success == 200){
                    Alert('info', this.$t('youlogged'));
+                   localStorage.setItem('user', JSON.stringify(response.data));
+                   this.counterStore.updateUser(response.data);
                    this.$router.push('/admin');
                }
            },
@@ -61,7 +69,6 @@
                        password : this.password
                    }
                    const response = await Login(data);
-                   console.log(response);
                    if (response.success != undefined){
                        if (response.success == 200){
                            this.isError = false;
@@ -70,9 +77,11 @@
                            localStorage.setItem('user', JSON.stringify(response.data['user']));
                            this.$router.push('/admin');
                            Alert('success', this.$t('loginSuccess'));
+                           return true;
                        }else {
                            this.Loader = false;
                            Alert('error', this.$t("loginPasswordError"))
+                           return false;
                        }
 
                    }else {
@@ -80,10 +89,11 @@
                        Alert('error', this.$t("loginPasswordError"))
                        this.isError = true;
                        this.Loader = false;
+                       return false;
                    }
 
-
                } catch (error) {
+                   Alert('error', this.$t("loginPasswordError"))
                    this.Loader = false;
                    this.isError = true;
                }

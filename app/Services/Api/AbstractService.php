@@ -132,14 +132,16 @@ class AbstractService
         try {
 
             $validator = $this->dataValidator($data, $this->storeFields());
+
             if ($validator['status']) {
                 return [
                     'status' => false,
                     'code' => 422,
                     'message' => 'Validator error',
-                    'errors' => $validator['validator']->errors()
+                    'errors' => $validator['validator']
                 ];
             }
+
             $data = $validator['data'];
 
             $object = new $this->model;
@@ -170,13 +172,13 @@ class AbstractService
     {
         try {
             $item = $this->model::find($id);
-            $validator = $this->dataValidator($data, $this->storeFields());
+            $validator = $this->dataValidator($data, $this->updateFields());
             if ($validator['status']) {
                 return [
                     'status' => false,
                     'code' => 422,
                     'message' => 'Validator error',
-                    'errors' => $validator['validator']->errors()
+                    'errors' => $validator['validator']
                 ];
             }
             $data = $validator['data'];
@@ -244,11 +246,23 @@ class AbstractService
             $rules[$field->getName()] = $field->getRules();
         }
         $validator = Validator::make($data, $rules);
+
+        if ($validator->fails()){
+            $errors = [];
+            foreach ($validator->errors()->getMessages() as $key => $value) {
+                $errors[$key] = $value[0];
+            }
+            return [
+                'status' => $validator->fails(),
+                'validator' => $errors
+            ];
+        }
         return [
             'status' => $validator->fails(),
             'data' =>  $validator->validated(),
             'validator' => $validator
         ];
+
     }
     public function validator($fields, $data)
     {
@@ -300,6 +314,12 @@ class AbstractService
     {
         return [
             TextField::make('column')->setRules('required|string'),
+        ];
+    }
+    public function imageFields()
+    {
+        return [
+            TextField::make('image')->setRules('nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10048'),
         ];
     }
     public function sendResponse(bool $status = true, string $message = 'success', int $statusCode = 200, $data = null)

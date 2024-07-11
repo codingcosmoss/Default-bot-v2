@@ -21,12 +21,14 @@ class UserResources extends JsonResource
                 'url' => asset('').'Photos/user.png'
             ]
         ];
+
         return [
             'id' => $this->id,
             'name' => $this->name,
             'login' => $this->login,
-//            'image' => count($this->image) != 0 ? ImageResource::collection($this->image) : $defaultImage ,
+            'image' => count($this->image) != 0 ? ImageResource::collection($this->image) : $defaultImage ,
             'email' => $this->email,
+            'phone' => $this->phone,
             'management' => $this->management
         ];
 

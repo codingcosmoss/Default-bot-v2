@@ -17,4 +17,11 @@ class UserController extends AbstractController
         return $this->sendResponse($data);
     }
 
+    public function update($id = null)
+    {
+        $data = $this->service->update(request()->all(), $id, request());
+        return $this->sendResponse($data);
+    }
+
+
 }

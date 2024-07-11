@@ -55,7 +55,7 @@ class UserService extends AbstractService
                     'status' => false,
                     'code' => 422,
                     'message' => 'Validator error',
-                    'errors' => $validator['validator']->errors()
+                    'errors' => $validator['validator']
                 ];
             }
             $data = $validator['data'];
@@ -68,6 +68,107 @@ class UserService extends AbstractService
                 'code' => 200,
                 'message' => 'Success',
                 'data' => $user
+            ];
+
+        }catch (Exception $e){
+            return [
+                'status' => false,
+                'code' => $e->getCode(),
+                'message' => $e->getMessage(),
+                'data' => null
+            ];
+        }
+    }
+
+    public function store(array $data)
+    {
+        try {
+
+            $validator = $this->dataValidator($data, $this->storeFields());
+
+            if ($validator['status']) {
+                return [
+                    'status' => false,
+                    'code' => 422,
+                    'message' => 'Validator error',
+                    'errors' => $validator['validator']
+                ];
+            }
+
+            $data = $validator['data'];
+            $isLogin = $this->model::where('login', $data['login'])->first();
+            if ($isLogin){
+                return [
+                    'status' => false,
+                    'code' => 422,
+                    'message' => 'This login name is busy',
+                    'errors' => ['login'=> 'This login name is busy']
+                ];
+            }
+            $object = new $this->model;
+            foreach ($this->storeFields() as $field) {
+                $field->fill($object, $data);
+            }
+            $object->save();
+
+            return [
+                'status' => true,
+                'code' => 200,
+                'message' => 'Success',
+                'data' => new $this->resource($object)
+            ];
+
+
+        }catch (Exception $e){
+            return [
+                'status' => false,
+                'code' => $e->getCode(),
+                'message' => $e->getMessage(),
+                'data' => null
+            ];
+        }
+
+    }
+    public function update(array $data, $id, $image = null)
+    {
+        try {
+            $item = $this->model::find($id);
+
+            $validator = $this->dataValidator($data, $this->updateFields());
+            $imageValidator = $this->dataValidator($data, $this->imageFields());
+            if ($validator['status']) {
+                return [
+                    'status' => false,
+                    'code' => 422,
+                    'message' => 'Validator error',
+                    'errors' => $validator['validator']
+                ];
+            }
+            if (!$imageValidator['status']) {
+                $this->uploadImagesOne($item, $image);
+            }
+
+            $data = $validator['data'];
+            $isLogin = $this->model::where('login', $data['login'])->first();
+            if ($isLogin && $isLogin->id != $id){
+                return [
+                    'status' => false,
+                    'code' => 422,
+                    'message' => 'This login name is busy',
+                    'errors' => ['login'=> 'This login name is busy']
+                ];
+            }
+
+            foreach ($this->updateFields() as $field) {
+                $field->fill($item, $data);
+            }
+            $item->save();
+
+            return [
+                'status' => true,
+                'code' => 200,
+                'message' => 'Success',
+                'data' => new $this->resource($item)
             ];
 
         }catch (Exception $e){

@@ -9,7 +9,8 @@ export const useConterStore = defineStore({
         baseUrl: location.origin,
         sidebarToggle: '',
         Lang: '',
-        roles: []
+        roles: [],
+        user: localStorage.getItem('user') != null ? JSON.parse(localStorage.getItem('user')) : []
     }),
 
     getters: {
@@ -20,6 +21,9 @@ export const useConterStore = defineStore({
 
         updatePage(val){
             this.activePage = val;
+        },
+        updateUser(val){
+            this.user = val;
         },
         updateRoles(val){
             this.roles = val;

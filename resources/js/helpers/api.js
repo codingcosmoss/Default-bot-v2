@@ -1,4 +1,4 @@
-import {GET} from '@/helpers/Config.js';
+import {GET, POSTFile} from '@/helpers/Config.js';
 import {POST} from '@/helpers/Config.js';
 import {PUT} from '@/helpers/Config.js';
 import {DELETE} from '@/helpers/Config.js';
@@ -37,8 +37,12 @@ export const userCreate = async (data) => {
     return  POST('/user/create', data );
 };
 export const userUpdate = async (id, data) => {
-    return  POST('/user/update/'+id, data );
+    return  POSTFile('/user/update/'+id, data );
 };
+export const userUpdatePassword = async (id, data) => {
+    return  POST('/user/update-password/'+id, data );
+};
+
 export const userSearch = async (text) => {
     return  GET('/user/search/' + text );
 };

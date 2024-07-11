@@ -13,5 +13,18 @@
     "copySuccess": "Copy successful",
     "copyError": "Copy failed",
     "youlogged": "You are already logged in",
-    "Dashboard": "Dashboard"
+    "Dashboard": "Dashboard",
+    "ServerError": "Sorry, there was an error on the server. Please take a screenshot and send it to us, we will solve your problem soon!",
+    "Error": "Error",
+    "Email": "Email",
+    "UserInfo": "User Information",
+    "Save": "Save",
+    "Phone": "Phone",
+    "Login": "Login",
+    "Name": "Name",
+    "ProfilPhoto": "Profile picture",
+    "UpdatePassword": "Password update",
+    "Password": "Password",
+    "RepeatPassword": "Repeat the password",
+    "RepeatPasswordAlert": "Passwords are not the same"
 }

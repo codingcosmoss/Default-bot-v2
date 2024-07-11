@@ -29,8 +29,8 @@ export default[
         component: () => import('@/pages/Register/index.vue'),
     },
     {
-        path: '/admin',
-        component: () => import('@/pages/Dashboard/index.vue'),
+        path: '/error',
+        component: () => import('../pages/Error/index.vue'),
     },
     {
         path: '/:pathMatch(.*)*',
@@ -40,6 +40,10 @@ export default[
     // Qolgan barcha admin panel routlari admin so'zidan keyin ketadi
     {
         path: '/admin',
-        component: () => import('@/pages/Dashboard/index.vue'),
+        component: () => import('../pages/Default/index.vue'),
+    },
+    {
+        path: '/admin/profile',
+        component: () => import('../pages/Profile/index.vue'),
     },
 ]
