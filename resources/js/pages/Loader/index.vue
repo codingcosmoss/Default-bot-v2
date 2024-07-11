@@ -26,7 +26,6 @@ export default {
                 // }
 
                 const response = await GetUser();
-                console.log(response)
                 if (response.success == 200){
                     if(response.data.management == 3){
                         this.$router.push('/admin');
@@ -38,11 +37,11 @@ export default {
                         return;
                     }
                 }
-
-            }catch (e){
+                this.$router.push('/login');
+            }catch (error){
                 this.$router.push('/login');
             }
-
+            this.$router.push('/login');
         }
     },
     mounted() {

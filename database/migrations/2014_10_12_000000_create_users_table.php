@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('login')->nullable()->unique();
             $table->string('password')->nullable();
-            $table->integer('role_id');
-            $table->integer('clinic_id');
+            $table->integer('role_id')->nullable();
+            $table->integer('clinic_id')->nullable();
             $table->string('phone');
             $table->string('email')->nullable();
             $table->tinyInteger('status')->default(\App\Traits\Status::$status_active);

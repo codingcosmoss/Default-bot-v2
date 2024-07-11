@@ -1,4 +1,20 @@
 export default[
+
+    // Docs routes start
+    {
+        path: '/admin/docs/dashboard',
+        component: () => import('@/pages/Docs/Dashboard.vue'),
+    },
+    {
+        path: '/admin/docs/tables',
+        component: () => import('@/pages/Docs/Tables.vue'),
+    },
+    {
+        path: '/admin/docs/forms',
+        component: () => import('@/pages/Docs/Forms.vue'),
+    },
+    // Docs Routes finished
+
     // DASHBOARD
     {
         path: '/',
@@ -6,7 +22,7 @@ export default[
     },
     {
         path: '/login',
-        component: () => import('@/pages/Login/index.vue'),
+        component: () => import('../pages/Login/index.vue'),
     },
     {
         path: '/register',
@@ -20,6 +36,7 @@ export default[
         path: '/:pathMatch(.*)*',
         component: () => import('@/pages/Loader/index.vue'),
     },
+
     // Qolgan barcha admin panel routlari admin so'zidan keyin ketadi
     {
         path: '/admin',
