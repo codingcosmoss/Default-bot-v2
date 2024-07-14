@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\JsonResponse;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Resources\AuthUserResource;
 use App\Http\Resources\OneUserResource;
 use App\Http\Resources\UserResources;
 use App\Models\ClinicUser;
@@ -26,22 +27,21 @@ class AuthController extends Controller
         try {
 
             $user = User::where('login', $loginRequest->input('login'))->first();
-
             if (!$user){
-                return $this->error($this->unAuthorized, "User not fount");
+                return $this->error($this->unAuthorized, "User not fount ");
 
             }
 
             if (empty($user) || !Hash::check($loginRequest->input('password'), $user->password)) {
 
-                return $this->error($this->unAuthorized, "User not fount");
+                return $this->error($this->unAuthorized, "User not fount ");
 
             }
 
             $user->token = $user->createToken('laravel-vue-admin')->plainTextToken;
 
             $data = [
-                'user' => new UserResources($user),
+                'user' => new AuthUserResource($user),
                 'token' =>  $user->token
             ];
 
@@ -130,7 +130,7 @@ class AuthController extends Controller
     public function user()
     {
         try {
-            return $this->success($this->ok, 'Get user successful', new UserResources(auth()->user()));
+            return $this->success($this->ok, 'Get user successful', new AuthUserResource(auth()->user()));
         }catch (\Exception $e){
             return $this->error($this->badRequest, $e->getMessage());
         }

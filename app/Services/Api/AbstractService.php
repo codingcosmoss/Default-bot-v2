@@ -4,8 +4,12 @@ namespace App\Services\Api;
 
 use App\Fields\Store\TextField;
 use App\Models\Image;
+use App\Models\Permission;
+use App\Models\Role;
+use App\Models\RolePermission;
 use App\Traits\Status;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Mockery\Exception;
@@ -14,11 +18,21 @@ class AbstractService
 {
     protected $model;
     protected $resource;
+    protected $menu;
     protected $columns = [];
 
     public function index()
     {
         try {
+//            if (!$this->hasPermission('index')){
+//                return [
+//                    'status' => false,
+//                    'code' => 403,
+//                    'message' => 'Root access is not allowed ',
+//                    'data' => null
+//                ];
+//            }
+
             $data = $this->resource::collection($this->model::all());
             return [
                 'status' => true,
@@ -40,7 +54,17 @@ class AbstractService
     {
 
         try {
-            $models = $this->model::orderBy('updated_at', 'desc')
+
+            if (!$this->hasPermission('index')){
+                return [
+                    'status' => false,
+                    'code' => 403,
+                    'message' => 'Root access is not allowed ',
+                    'data' => null
+                ];
+            }
+
+            $models = $this->model::orderBy('id', 'asc')
                 ->paginate($count);
 
             $data = [
@@ -73,6 +97,15 @@ class AbstractService
     public function orderBy($column = 'id', $type = 'desc')
     {
         try {
+            if (!$this->hasPermission('index')){
+                return [
+                    'status' => false,
+                    'code' => 403,
+                    'message' => 'Root access is not allowed ',
+                    'data' => null
+                ];
+            }
+
             $data = $this->model::orderBy($column, $type)->get();
             return [
                 'status' => true,
@@ -92,6 +125,14 @@ class AbstractService
     public function activeIndex()
     {
         try {
+            if (!$this->hasPermission('index')){
+                return [
+                    'status' => false,
+                    'code' => 403,
+                    'message' => 'Root access is not allowed ',
+                    'data' => null
+                ];
+            }
             $data = $this->model::where('status', Status::$status_active)->get();
             return [
                 'status' => true,
@@ -111,6 +152,14 @@ class AbstractService
     public function show($id)
     {
         try {
+            if (!$this->hasPermission('index')){
+                return [
+                    'status' => false,
+                    'code' => 403,
+                    'message' => 'Root access is not allowed ',
+                    'data' => null
+                ];
+            }
             $data =  new $this->resource($this->model::find($id));
             return [
                 'status' => true,
@@ -130,7 +179,14 @@ class AbstractService
     public function store(array $data)
     {
         try {
-
+            if (!$this->hasPermission('create')){
+                return [
+                    'status' => false,
+                    'code' => 403,
+                    'message' => 'Root access is not allowed ',
+                    'data' => null
+                ];
+            }
             $validator = $this->dataValidator($data, $this->storeFields());
 
             if ($validator['status']) {
@@ -171,6 +227,14 @@ class AbstractService
     public function update(array $data, $id)
     {
         try {
+            if (!$this->hasPermission('update')){
+                return [
+                    'status' => false,
+                    'code' => 403,
+                    'message' => 'Root access is not allowed ',
+                    'data' => null
+                ];
+            }
             $item = $this->model::find($id);
             $validator = $this->dataValidator($data, $this->updateFields());
             if ($validator['status']) {
@@ -205,6 +269,14 @@ class AbstractService
     }
     public function search($search = '')
     {
+        if (!$this->hasPermission('index')){
+            return [
+                'status' => false,
+                'code' => 403,
+                'message' => 'Root access is not allowed ',
+                'data' => null
+            ];
+        }
         $data = $this->model::where(function ($query) use ($search) {
             foreach ($this->columns as $column) {
                 $query->orWhere($column, 'like', '%' . $search . '%');
@@ -214,12 +286,21 @@ class AbstractService
             'status' => true,
             'message' => 'Success',
             'statusCode' => 200,
-            'data' => $data
+            'data' => $this->resource::collection($data)
         ];
     }
     public function destroy($id)
     {
         try {
+            if (!$this->hasPermission('delete')){
+                return [
+                    'status' => false,
+                    'code' => 403,
+                    'message' => 'Root access is not allowed ',
+                    'data' => null
+                ];
+            }
+
             $item = $this->model::find($id);
             $item->delete($id);
             return [
@@ -374,5 +455,19 @@ class AbstractService
 
         }
         return true;
+    }
+
+    public function hasPermission($name)
+    {
+        if ($this->menu == 'public'){
+            return true;
+        }
+
+        $isPermission = RolePermission::where('role_id', auth()->user()->role_id)
+                ->where('permission_name', $this->menu.'-'.$name )
+                ->first();
+
+        return $isPermission;
+
     }
 }

@@ -1,7 +1,7 @@
 <!-- MyComponent.vue -->
 <template>
     <div class="form-check font-size-16">
-        <input class="form-check-input" type="checkbox" id="transactionCheck02" :checked="isCheck" >
+        <input class="form-check-input" :name="Name" type="checkbox"  :checked="isCheck" >
         <label class="form-check-label" for="transactionCheck02">{{Title}}</label>
     </div>
 </template>
@@ -17,6 +17,10 @@ export default {
         isCheck:{
             type: Boolean,
             default: false
+        },
+        Name:{
+            type: String,
+            default: 'name'
         }
     }
     // Other component options like props, data, methods, etc.

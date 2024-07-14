@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\Role;
+use App\Models\RolePermission;
 use App\Models\UserPermission;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -29,7 +30,12 @@ class UserResources extends JsonResource
             'image' => count($this->image) != 0 ? ImageResource::collection($this->image) : $defaultImage ,
             'email' => $this->email,
             'phone' => $this->phone,
-            'management' => $this->management
+            'role_id' => $this->role_id,
+            'role' => isset($this->role) ? $this->role->name : '',
+            'position' => $this->position,
+            'management' => $this->management,
+            'permissions' => RolePermission::where('role_id', $this->role_id)->pluck('permission_name')->toArray()
+
         ];
 
     }

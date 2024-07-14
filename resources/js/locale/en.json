@@ -26,5 +26,12 @@
     "UpdatePassword": "Password update",
     "Password": "Password",
     "RepeatPassword": "Repeat the password",
-    "RepeatPasswordAlert": "Passwords are not the same"
+    "RepeatPasswordAlert": "Passwords are not the same",
+    "Users": "Users",
+    "Id": "ID",
+    "Settings": "Settings",
+    "Picture": "Picture",
+    "Submit": "Submit",
+    "Close": "Close",
+    "Update": "Update"
 }

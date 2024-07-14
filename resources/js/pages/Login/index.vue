@@ -57,6 +57,7 @@
                if (response.success == 200){
                    Alert('info', this.$t('youlogged'));
                    localStorage.setItem('user', JSON.stringify(response.data));
+                   localStorage.setItem('token', response.data.role_token);
                    this.counterStore.updateUser(response.data);
                    this.$router.push('/admin');
                }
@@ -75,7 +76,10 @@
                            this.Loader = false;
                            localStorage.setItem('0008a78764c2', response.data['token']);
                            localStorage.setItem('user', JSON.stringify(response.data['user']));
-                           this.$router.push('/admin');
+                           localStorage.setItem('token', response.data['user']['role_token']);
+                           localStorage.setItem('reload', true);
+                           this.counterStore.updateUser(response.data['user']);
+                           this.$router.push('/redirect');
                            Alert('success', this.$t('loginSuccess'));
                            return true;
                        }else {

@@ -1,17 +1,21 @@
 <template>
 
-    <div class="accordion" :id="'accordionExample'+Name">
+    <div class="accordion" :id="'accordionExample'+Name" >
         <div class="accordion-item ">
             <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="'#collapseTwo'+Name" aria-expanded="false" :aria-controls="'collapseTwo'+Name">
+                <button @click="chevron = !chevron" class="accordion-button collapsed "  type="button" data-bs-toggle="collapse" :data-bs-target="'#collapseTwo'+Name" aria-expanded="false" :aria-controls="'collapseTwo'+Name">
                     <i :class="Icon" class="menu_icon"></i>
-                   <p class="menu-text">{{Title}}</p>
+                    <p class="menu-text" :id="Name">{{Title}}</p>
+                    <div class="chevronIcon" :class="chevron ? 'chevronTop'  : '' ">
+                        <i class="bx bx-chevron-down "></i>
+                    </div>
                 </button>
+
             </h2>
-            <div :id="'collapseTwo'+Name" class="accordion-collapse collapse" :data-bs-parent="'#accordionExample' + Name">
+            <div  :id="'collapseTwo'+Name" class="accordion-collapse collapse" :data-bs-parent="'#accordionExample' + Name">
                 <div class="accordion-body">
                     <ul class="sub-menu" aria-expanded="false" >
-                        <li @click="onMenuMedia" v-for="link in ChildLinks" ><a class="menu-text " :class="this.$route.path == link.path ? 'menu_active ' : ''"  @click = "this.$router.push(link['path'])" key="t-default">
+                        <li @click="onMenuMedia" v-for="link in ChildLinks.filter(item => item.isPermission == true)" ><a class="menu-text " :class="this.$route.path == link.path ? 'menu_active ' : ''"  @click = "this.$router.push(link['path'])" key="t-default">
                             <i :class="link.icon" class="menu_icon "></i>
                             {{link['title']}}</a></li>
                     </ul>
@@ -26,6 +30,9 @@
 
 <script>
     export default {
+        data(){return{
+           chevron: false
+        }},
         props:{
             Title:{
                 type: [String, Number],
@@ -56,6 +63,7 @@
             },
         },
         methods:{
+
             onMenuMedia(){
                 const body = document.getElementById('body');
 
@@ -72,8 +80,39 @@
 </script>
 
 <style scoped lang="scss">
-    //.accordion:hover{
-    //}
+    .accordion:hover{
+        .accordion-item{
+            .menu-text{
+                display: block;
+            }
+        }
+    }
+
+    .accordion-button{
+        position: relative;
+    }
+    .chevronIcon{
+        background: unset;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        top: 10px;
+        right: 15px;
+        position: absolute;
+        transition: .1s;
+        align-items: center;
+        /* justify-content: center; */
+        border-radius: 50%;
+        padding-bottom: 1px;
+    }
+
+    .chevronTop{
+        transform: rotate(-180deg) !important;
+    }
+
+    .accordion-button[data-v-bc1d6530]::after {
+        display: none;
+    }
     .accordion-header:hover{
         button{
             .menu-text{
@@ -84,6 +123,7 @@
 
 
     .accordion-button:not(.collapsed)::after {
+        display: none;
         transform: var(--bs-accordion-btn-icon-transform) scale(0.7) !important;
     }
     .accordion-button::after {

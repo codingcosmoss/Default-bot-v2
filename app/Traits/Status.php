@@ -20,6 +20,7 @@ trait Status
     public static int $status_active = 1;
     public static int $main_panel = 2;
     public static int $admin_panel = 3;
+    public static int $change_role = 4;
 
     /**
      * @return string[]
@@ -31,6 +32,7 @@ trait Status
             self::$status_inactive => 'Nofaol',
             self::$main_panel => "Main main panel",
             self::$admin_panel => "Admin panel",
+            self::$change_role => "Change role",
         ];
     }
 

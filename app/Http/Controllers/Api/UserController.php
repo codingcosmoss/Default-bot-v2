@@ -11,9 +11,9 @@ class UserController extends AbstractController
         $this->service = $service;
     }
 
-    public function changePassword()
+    public function changePassword($id)
     {
-        $data = $this->service->changePassword(request()->all());
+        $data = $this->service->changePassword(request()->all(), $id);
         return $this->sendResponse($data);
     }
 
@@ -22,6 +22,12 @@ class UserController extends AbstractController
         $data = $this->service->update(request()->all(), $id, request());
         return $this->sendResponse($data);
     }
+    public function create()
+    {
+        $data = $this->service->store(request()->all(), request());
+        return $this->sendResponse($data);
+    }
+
 
 
 }

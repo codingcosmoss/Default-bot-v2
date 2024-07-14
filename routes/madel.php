@@ -1,12 +1,12 @@
 
-Route::prefix('/user')->group(function () {
-    Route::get('/index', [\App\Http\Controllers\Api\UserController::class, 'index']);
-    Route::get('/index/actives', [\App\Http\Controllers\Api\UserController::class, 'activeIndex']);
-    Route::get('/get/paginate/{count}', [\App\Http\Controllers\Api\UserController::class, 'getPaginate']);
-    Route::get('/orderBy/{column}/{type}', [\App\Http\Controllers\Api\UserController::class, 'orderBy']);
-    Route::get('/show/{id}', [\App\Http\Controllers\Api\UserController::class, 'show']);
-    Route::post('/create', [\App\Http\Controllers\Api\UserController::class, 'create']);
-    Route::post('/update/{id}', [\App\Http\Controllers\Api\UserController::class, 'update']);
-    Route::get('/search/{search}', [\App\Http\Controllers\Api\UserController::class, 'search']);
-    Route::get('/delete/{id}', [\App\Http\Controllers\Api\UserController::class, 'destroy']);
+Route::prefix('/menu')->group(function () {
+    Route::get('/index', [\App\Http\Controllers\Api\MenuController::class, 'index']);
+    Route::get('/actives', [\App\Http\Controllers\Api\MenuController::class, 'activeIndex']);
+    Route::get('/paginate/{count}', [\App\Http\Controllers\Api\MenuController::class, 'getPaginate']);
+    Route::get('/orderBy/{column}/{type}', [\App\Http\Controllers\Api\MenuController::class, 'orderBy']);
+    Route::get('/show/{id}', [\App\Http\Controllers\Api\MenuController::class, 'show']);
+    Route::post('/create', [\App\Http\Controllers\Api\MenuController::class, 'create']);
+    Route::post('/update/{id}', [\App\Http\Controllers\Api\MenuController::class, 'update']);
+    Route::get('/search/{search}', [\App\Http\Controllers\Api\MenuController::class, 'search']);
+    Route::get('/delete/{id}', [\App\Http\Controllers\Api\MenuController::class, 'destroy']);
 });

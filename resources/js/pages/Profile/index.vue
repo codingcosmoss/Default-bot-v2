@@ -44,7 +44,7 @@
                     @onInput="email = $event,  delete this.errors.email"
                 />
 
-                <PrimaryButton @click="update">{{$t('Save')}}</PrimaryButton>
+                <PrimaryButton :Loader="loader" @onButton="update">{{$t('Save')}}</PrimaryButton>
             </BaseBox>
 
             <BaseBox Col="col-xl-6" :Title="$t('UpdatePassword')">
@@ -65,7 +65,7 @@
                     @onInput="repeatPassword = $event,  delete this.passwordErrors.password"
                 />
 
-                <PrimaryButton @click="updatePassword">{{$t('Save')}}</PrimaryButton>
+                <PrimaryButton :Loader="loaderPass" @onButton="updatePassword">{{$t('Save')}}</PrimaryButton>
             </BaseBox>
 
         </div>
@@ -95,7 +95,8 @@ export default {
         type: 'desc',
         errors: [],
         passwordErrors: [],
-
+        loader: false,
+        loaderPass: false,
         // forms
         name: "",
         login: '',
@@ -173,30 +174,37 @@ export default {
         },
         async update(){
             try {
+                this.loader = true;
                 let data = {
                     name: this.name,
                     phone: this.phone,
                     login: this.login,
                     email: this.email,
                     image: this.image,
+                    role_id: this.item.role_id,
+                    position: this.item.position,
                 }
                 console.log('Data', data)
                 const response = await userUpdate(this.item.id , data);
                 if (response.status){
                     Alert('success', this.$t('update'));
                     this.show(this.item.id);
+                    this.loader = false;
                     return true;
                 }
                 this.errors = response.errors;
                 Alert('error', this.$t('formError'));
+                this.loader = false;
                 return false;
             }catch(error){
                 ApiError(this, error);
+                this.loader = false;
                 return false;
             }
         },
         async updatePassword(){
             try {
+                this.loaderPass = true;
                 if (this.password.length > 0 && this.password != this.repeatPassword){
                     this.passwordErrors = {password: this.$t('RepeatPasswordAlert')};
                     return false;
@@ -210,13 +218,16 @@ export default {
                     Alert('success', this.$t('update'));
                     this.password = '';
                     this.repeatPassword = '';
+                    this.loaderPass = false;
                     return true;
                 }
                 this.passwordErrors = response.errors;
                 Alert('error', this.$t('formError'));
+                this.loaderPass = false;
                 return false;
             }catch(error){
                 ApiError(this, error);
+                this.loaderPass = false;
                 return false;
             }
         },

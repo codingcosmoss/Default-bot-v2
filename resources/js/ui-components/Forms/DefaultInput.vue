@@ -2,7 +2,7 @@
 
     <div :class="Class" >
         <div>
-            <label class="form-label">{{Label}}</label>
+            <label class="form-label" v-if="Label != '' ">{{Label}}</label>
             <input class="form-control " :class="Validated[Name] ? 'border-danger' : '' " :type="Type" :value="Value" :placeholder="Pholder" @input="this.$emit('onInput', $event.target.value)"    >
             <p  class="form-label text-danger" >{{Validated[Name]}}</p>
         </div>

@@ -1,31 +1,31 @@
-// --------------------- user started--------------------------------------------
+// --------------------- menu started--------------------------------------------
 
-export const users = async () => {
-    return  GET('/user/index');
+export const menus = async () => {
+    return  GET('/menu/index');
 };
-export const userActives = async () => {
-    return  GET('/user/actives');
+export const menuActives = async () => {
+    return  GET('/menu/actives');
 };
-export const userPaginates = async (count) => {
-    return  GET('/user/paginate/' + count);
+export const menuPaginates = async (count, page= 1) => {
+    return  GET('/menu/paginate/' + count+'?page='+page);
 };
-export const userOrderBys = async (column, type) => {
-    return  GET('/user/orderBy/' + column + '/' + type);
+export const menuOrderBys = async (column, type) => {
+    return  GET('/menu/orderBy/' + column + '/' + type);
 };
-export const userShow = async (id) => {
-    return  GET('/user/show/'+id);
+export const menuShow = async (id) => {
+    return  GET('/menu/show/'+id);
 };
-export const userCreate = async (data) => {
-    return  POST('/user/create', data );
+export const menuCreate = async (data) => {
+    return  POST('/menu/create', data );
 };
-export const userUpdate = async (id, data) => {
-    return  POST('/user/update/'+id, data );
+export const menuUpdate = async (id, data) => {
+    return  POST('/menu/update/'+id, data );
 };
-export const userSearch = async (text) => {
-    return  GET('/user/search/' + text );
+export const menuSearch = async (text) => {
+    return  GET('/menu/search/' + text );
 };
-export const userDelete = async (id) => {
-    return  GET('/user/delete/'+ id );
+export const menuDelete = async (id) => {
+    return  GET('/menu/delete/'+ id );
 };
 
-// --------------------- user finished --------------------------------------------
+// --------------------- menu finished --------------------------------------------

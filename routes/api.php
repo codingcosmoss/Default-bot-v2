@@ -41,14 +41,14 @@ Route::prefix('clinic')->group(function () {
 
 // Super Admin
 Route::middleware(['auth:sanctum', 'admin' ])->group(function () {
-
     Route::get('/user', [\App\Http\Controllers\Api\AuthController::class, 'user']);
     Route::get('logout', [\App\Http\Controllers\Api\AuthController::class, 'logout']);
 
     Route::prefix('user')->group(function () {
+
         Route::get('/index', [\App\Http\Controllers\Api\UserController::class, 'index']);
-        Route::get('/index/actives', [\App\Http\Controllers\Api\UserController::class, 'activeIndex']);
-        Route::get('/get/paginate/{count}', [\App\Http\Controllers\Api\UserController::class, 'getPaginate']);
+        Route::get('/actives', [\App\Http\Controllers\Api\UserController::class, 'activeIndex']);
+        Route::get('/paginate/{count}', [\App\Http\Controllers\Api\UserController::class, 'getPaginate']);
         Route::get('/orderBy/{column}/{type}', [\App\Http\Controllers\Api\UserController::class, 'orderBy']);
         Route::get('/show/{id}', [\App\Http\Controllers\Api\UserController::class, 'show']);
         Route::post('/create', [\App\Http\Controllers\Api\UserController::class, 'create']);
@@ -59,5 +59,28 @@ Route::middleware(['auth:sanctum', 'admin' ])->group(function () {
         // change password
         Route::post('/changePassword', [\App\Http\Controllers\Api\UserController::class, 'changePassword']);
     });
+
+    Route::prefix('/role')->group(function () {
+        Route::get('/index', [\App\Http\Controllers\Api\RoleController::class, 'index']);
+        Route::get('/notification/{id}', [\App\Http\Controllers\Api\RoleController::class, 'getNotification']);
+        Route::get('/actives', [\App\Http\Controllers\Api\RoleController::class, 'activeIndex']);
+        Route::get('/paginate/{count}', [\App\Http\Controllers\Api\RoleController::class, 'getPaginate']);
+        Route::get('/orderBy/{column}/{type}', [\App\Http\Controllers\Api\RoleController::class, 'orderBy']);
+        Route::get('/show/{id}', [\App\Http\Controllers\Api\RoleController::class, 'show']);
+        Route::post('/create', [\App\Http\Controllers\Api\RoleController::class, 'create']);
+        Route::post('/update/{id}', [\App\Http\Controllers\Api\RoleController::class, 'update']);
+        Route::get('/search/{search}', [\App\Http\Controllers\Api\RoleController::class, 'search']);
+        Route::get('/delete/{id}', [\App\Http\Controllers\Api\RoleController::class, 'destroy']);
+    });
+
+    Route::prefix('/menu')->group(function () {
+        Route::get('/index', [\App\Http\Controllers\Api\MenuController::class, 'index']);
+        Route::get('/actives', [\App\Http\Controllers\Api\MenuController::class, 'activeIndex']);
+        Route::get('/paginate/{count}', [\App\Http\Controllers\Api\MenuController::class, 'getPaginate']);
+        Route::get('/orderBy/{column}/{type}', [\App\Http\Controllers\Api\MenuController::class, 'orderBy']);
+        Route::get('/show/{id}', [\App\Http\Controllers\Api\MenuController::class, 'show']);
+    });
+
+
 
 });

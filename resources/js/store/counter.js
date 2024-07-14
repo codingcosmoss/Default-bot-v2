@@ -82,6 +82,15 @@ export const useConterStore = defineStore({
         sendError(model, error){
             console.log('Error:', error)
             // model.$router.push('/login');
+        },
+        hasRole(role){
+            if (this.user.permissions == null){
+                return false;
+            }
+            if (this.user.permissions.includes(role) || role == 'public'){
+                return true;
+            }
+            return false;
         }
 
 

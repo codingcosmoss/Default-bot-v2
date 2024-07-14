@@ -1,45 +1,51 @@
 <template>
-    <div class="col-md-10">
-        <select class="form-select" >
-            <option>Select</option>
-            <option>Large select</option>
-            <option>Small select</option>
-        </select>
-    </div>
-</template>
 
+    <div :class="Class">
+        <div>
+            <label class="form-label" v-if="Label != '' ">{{ Label }}</label>
+            <select class="form-select"
+                    :class="Validated[Name] ? 'border-danger' : '' "
+                    @input="this.$emit('onInput', $event.target.value)"
+            >
+                <slot></slot>
+            </select>
+            <p class="form-label text-danger">{{ Validated[Name] }}</p>
+        </div>
+    </div>
+
+</template>
 <script>
-export default{
-    props:{
-        Class:{
+export default {
+    props: {
+        Class: {
             type: String,
             default: 'col-lg-12 col-sm-12'
         },
-        Name:{
+        Name: {
             type: [String],
             default: ''
         },
-        Label:{
-            type:String,
+        Label: {
+            type: String,
             default: 'Label title'
         },
-        Pholder:{
-            type:String,
-            default: ''
+        Pholder: {
+            type: String,
+            default: 'enter here...'
         },
-        Type:{
-            type:String,
+        Type: {
+            type: String,
             default: 'text'
         },
-        Value:{
+        Value: {
             type: [String, Number],
             default: ''
         },
-        Validated:{
+        Validated: {
             type: [Array, Object, String],
             default: []
         }
-    }
-
+    },
 }
+
 </script>

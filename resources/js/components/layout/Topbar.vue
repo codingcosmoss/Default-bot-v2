@@ -51,7 +51,7 @@
 
                     <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <img class="rounded-circle header-profile-user" :src="counterStore.user.image[0].url"
+                        <img class="rounded-circle header-profile-user" :src="counterStore.user.image != null ? counterStore.user.image[0].url : '' "
                              alt="Header Avatar">
                         <span class="d-none d-xl-inline-block ms-1" key="t-henry">{{counterStore.user.name}}</span>
                         <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
@@ -98,6 +98,11 @@ export default {
                     title: 'Russian',
                     type: 'RU',
                     img: location.origin + '/assets/images/flags/russia.jpg'
+                },
+                {
+                    title: 'Uzbek',
+                    type: 'UZ',
+                    img: location.origin + '/assets/images/flags/uz.jpg'
                 }
 
             ]

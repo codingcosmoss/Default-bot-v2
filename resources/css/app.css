@@ -1,6 +1,7 @@
 
 @import "media.css";
 @import "status.css";
+@import "global.css";
 a{
     cursor: pointer;
 }
@@ -55,3 +56,4 @@ a{
 #header-lang-img{
     margin-bottom: 3px;
 }
+

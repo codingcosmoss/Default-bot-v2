@@ -89,7 +89,6 @@ class AbstractController extends Controller
                 $newImage = new Image();
                 $newImage->url = $path;
                 $model->images()->save($newImage);
-
             }
         }
         return true;

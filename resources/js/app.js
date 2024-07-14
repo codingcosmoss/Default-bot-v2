@@ -15,12 +15,14 @@ import Vuesalize from 'vuesalize'
 
 import EN from "@/locale/en.json"
 import RU from "@/locale/ru.json"
+import UZ from "@/locale/uz.json"
 
 const i18n = createI18n({
     locale: localStorage.getItem('locale'),
     messages: {
         EN: EN,
-        RU: RU
+        RU: RU,
+        UZ: UZ
     }
     // change @click="$i18.locale = `EN`"
     // view $t('name)
