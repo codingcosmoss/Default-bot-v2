@@ -17,6 +17,9 @@ import EN from "@/locale/en.json"
 import RU from "@/locale/ru.json"
 import UZ from "@/locale/uz.json"
 
+import VueAwesomePaginate from "vue-awesome-paginate";
+
+
 const i18n = createI18n({
     locale: localStorage.getItem('locale'),
     messages: {
@@ -34,7 +37,6 @@ const pinia = createPinia();
 // Global verebles
 app.config.globalProperties.$BaseUrl = window.location.origin;
 // import the package
-import VueAwesomePaginate from "vue-awesome-paginate";
 
 import * as components from "./components/global/components.js"
 // Barcha componentlarni ro'hatga olish
