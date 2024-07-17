@@ -12,17 +12,19 @@ class AService extends AbstractService
     protected $model = ClinicUser::class;
     protected $resource = ClinicUserResource::class;
     protected $columns = ['name'];
+    protected $menu = '';
+
 
     public function storeFields()
     {
         return [
-            TextField::make('column')->setRules('required|string'),
+            TextField::make('clinic_id')->setRules('nullable'),
         ];
     }
     public function updateFields()
     {
         return [
-            TextField::make('column')->setRules('required|string'),
+            TextField::make('clinic_id')->setRules('nullable'),
         ];
     }
 

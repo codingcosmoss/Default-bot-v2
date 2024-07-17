@@ -1,6 +1,6 @@
 <template>
 
-    <div class="main-content">
+    <div class="main-content data_box">
 
         <div class="page-content">
             <div class="container-fluid">
@@ -96,3 +96,6 @@
     }
 
 </script>
+<style>
+
+</style>

@@ -3,7 +3,7 @@
         <div class="row"  >
             <BasicTable
                 :Th="[ $t('Id'),$t('Picture'),$t('Name'),$t('Position'),$t('SystemRole'),$t('Login'),$t('Phone'),$t('Settings')]"
-                Title="All Users"
+                :Title="$t('Employees')"
                 Col="col-lg-12"
             >
                 <template v-slot:inputs>
@@ -26,7 +26,7 @@
                         <option value="20" >20</option>
                         <option value="50" >50</option>
                         <option value="100" >100</option>
-                    </DefaultSelect>
+                    </DefaultSelect>&nbsp;&nbsp;
                 </template>
 
                 <template v-slot:buttons>

@@ -82,5 +82,68 @@ Route::middleware(['auth:sanctum', 'admin' ])->group(function () {
     });
 
 
+    Route::prefix('/setting')->group(function () {
+        Route::get('/index', [\App\Http\Controllers\Api\SettingController::class, 'index']);
+        Route::get('/actives', [\App\Http\Controllers\Api\SettingController::class, 'activeIndex']);
+        Route::get('/paginate/{count}', [\App\Http\Controllers\Api\SettingController::class, 'getPaginate']);
+        Route::get('/orderBy/{column}/{type}', [\App\Http\Controllers\Api\SettingController::class, 'orderBy']);
+        Route::get('/show/{id}', [\App\Http\Controllers\Api\SettingController::class, 'show']);
+        Route::post('/create', [\App\Http\Controllers\Api\SettingController::class, 'create']);
+        Route::post('/update/{id}', [\App\Http\Controllers\Api\SettingController::class, 'update']);
+        Route::get('/search/{search}', [\App\Http\Controllers\Api\SettingController::class, 'search']);
+        Route::get('/delete/{id}', [\App\Http\Controllers\Api\SettingController::class, 'destroy']);
+    });
+
+    Route::prefix('/customer')->group(function () {
+        Route::get('/index', [\App\Http\Controllers\Api\CustomerController::class, 'index']);
+        Route::get('/actives', [\App\Http\Controllers\Api\CustomerController::class, 'activeIndex']);
+        Route::get('/paginate/{count}', [\App\Http\Controllers\Api\CustomerController::class, 'getPaginate']);
+        Route::get('/orderBy/{column}/{type}', [\App\Http\Controllers\Api\CustomerController::class, 'orderBy']);
+        Route::get('/show/{id}', [\App\Http\Controllers\Api\CustomerController::class, 'show']);
+        Route::post('/create', [\App\Http\Controllers\Api\CustomerController::class, 'create']);
+        Route::post('/update/{id}', [\App\Http\Controllers\Api\CustomerController::class, 'update']);
+        Route::get('/search/{search}', [\App\Http\Controllers\Api\CustomerController::class, 'search']);
+        Route::get('/delete/{id}', [\App\Http\Controllers\Api\CustomerController::class, 'destroy']);
+    });
+
+    Route::prefix('/expense')->group(function () {
+        Route::get('/index', [\App\Http\Controllers\Api\ExpenseController::class, 'index']);
+        Route::get('/total', [\App\Http\Controllers\Api\ExpenseController::class, 'total']);
+        Route::get('/currencies/{id}', [\App\Http\Controllers\Api\ExpenseController::class, 'currencies']);
+        Route::get('/actives', [\App\Http\Controllers\Api\ExpenseController::class, 'activeIndex']);
+        Route::get('/paginate/{count}', [\App\Http\Controllers\Api\ExpenseController::class, 'getPaginate']);
+        Route::get('/orderBy/{column}/{type}', [\App\Http\Controllers\Api\ExpenseController::class, 'orderBy']);
+        Route::get('/show/{id}', [\App\Http\Controllers\Api\ExpenseController::class, 'show']);
+        Route::post('/create', [\App\Http\Controllers\Api\ExpenseController::class, 'create']);
+        Route::post('/update/{id}', [\App\Http\Controllers\Api\ExpenseController::class, 'update']);
+        Route::get('/search/{search}', [\App\Http\Controllers\Api\ExpenseController::class, 'search']);
+        Route::get('/delete/{id}', [\App\Http\Controllers\Api\ExpenseController::class, 'destroy']);
+    });
+
+
+    Route::prefix('/expense_category')->group(function () {
+        Route::get('/index', [\App\Http\Controllers\Api\ExpenseCategoryController::class, 'index']);
+        Route::get('/actives', [\App\Http\Controllers\Api\ExpenseCategoryController::class, 'activeIndex']);
+        Route::get('/paginate/{count}', [\App\Http\Controllers\Api\ExpenseCategoryController::class, 'getPaginate']);
+        Route::get('/orderBy/{column}/{type}', [\App\Http\Controllers\Api\ExpenseCategoryController::class, 'orderBy']);
+        Route::get('/show/{id}', [\App\Http\Controllers\Api\ExpenseCategoryController::class, 'show']);
+        Route::post('/create', [\App\Http\Controllers\Api\ExpenseCategoryController::class, 'create']);
+        Route::post('/update/{id}', [\App\Http\Controllers\Api\ExpenseCategoryController::class, 'update']);
+        Route::get('/search/{search}', [\App\Http\Controllers\Api\ExpenseCategoryController::class, 'search']);
+        Route::get('/delete/{id}', [\App\Http\Controllers\Api\ExpenseCategoryController::class, 'destroy']);
+    });
+
+    Route::prefix('/currency')->group(function () {
+        Route::get('/index', [\App\Http\Controllers\Api\CurrencyController::class, 'index']);
+        Route::get('/actives', [\App\Http\Controllers\Api\CurrencyController::class, 'activeIndex']);
+        Route::get('/paginate/{count}', [\App\Http\Controllers\Api\CurrencyController::class, 'getPaginate']);
+        Route::get('/orderBy/{column}/{type}', [\App\Http\Controllers\Api\CurrencyController::class, 'orderBy']);
+        Route::get('/show/{id}', [\App\Http\Controllers\Api\CurrencyController::class, 'show']);
+        Route::post('/create', [\App\Http\Controllers\Api\CurrencyController::class, 'create']);
+        Route::post('/update/{id}', [\App\Http\Controllers\Api\CurrencyController::class, 'update']);
+        Route::get('/search/{search}', [\App\Http\Controllers\Api\CurrencyController::class, 'search']);
+        Route::get('/delete/{id}', [\App\Http\Controllers\Api\CurrencyController::class, 'destroy']);
+    });
 
 });
+

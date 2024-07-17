@@ -5,7 +5,7 @@
 
                 <h5 class="m-0 me-2">Settings</h5>
 
-                <a @click="setting()" style="cursor: pointer" class="right-bar-toggle ms-auto">
+                <a @click="setting()" style="cursor: pointer" class="right-bar-toggle ms-auto right_bar_icon">
                     <i class="mdi mdi-close noti-icon"></i>
                 </a>
             </div>

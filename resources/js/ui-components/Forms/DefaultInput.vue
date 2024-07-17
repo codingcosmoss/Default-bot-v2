@@ -3,7 +3,7 @@
     <div :class="Class" >
         <div>
             <label class="form-label" v-if="Label != '' ">{{Label}}</label>
-            <input class="form-control " :class="Validated[Name] ? 'border-danger' : '' " :type="Type" :value="Value" :placeholder="Pholder" @input="this.$emit('onInput', $event.target.value)"    >
+            <input class="form-control " :class="Validated[Name] ? 'border-danger ' + inputClass : inputClass " :type="Type" :value="Value" :placeholder="Pholder" @input="this.$emit('onInput', $event.target.value)"    >
             <p  class="form-label text-danger" >{{Validated[Name]}}</p>
         </div>
     </div>
@@ -15,6 +15,10 @@ export default{
         Class:{
             type: String,
             default: 'col-lg-12 col-sm-12'
+        },
+        inputClass:{
+            type: String,
+            default: ''
         },
         Name:{
             type: [String],

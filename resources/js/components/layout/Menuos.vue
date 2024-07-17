@@ -42,6 +42,7 @@
             :Title="$t('Employees')"
             Name="Employees"
             Icon="bx bxs-user-detail"
+            v-if="counterStore.hasRole('Employees-index')"
             :ChildLinks="[
                     {
                         title: $t('AllEmployees'),
@@ -54,6 +55,45 @@
                         path: '/admin/roles',
                         icon:'bx bxs-check-shield',
                         isPermission: this.counterStore.hasRole('Role&Permissions-index')
+                    },
+                ]"
+        />
+
+        <MenuButton
+            :Title="$t('Settings')"
+            Name="Settings"
+            Icon="bx bx-cog "
+            Path="/admin/settings"
+            @click="onMenuMedia()"
+            v-if="counterStore.hasRole('Settings-index')"
+        />
+
+        <MenuButton
+            :Title="$t('Customers')"
+            Name="Customers"
+            Icon="bx bx-group"
+            Path="/admin/customers"
+            @click="onMenuMedia()"
+            v-if="counterStore.hasRole('Customers-index')"
+        />
+
+        <MenuListButton
+            :Title="$t('Expenses')"
+            Name="Expenses"
+            Icon="bx bx-notepad"
+            v-if="counterStore.hasRole('Expenses-index')"
+            :ChildLinks="[
+                    {
+                        title: $t('AllExpenses'),
+                        path: '/admin/expenses',
+                        icon:'bx bx-book-content',
+                        isPermission: this.counterStore.hasRole('Expenses-index')
+                    },
+                     {
+                        title: $t('ExpenseCategories'),
+                        path: '/admin/expense/categories',
+                        icon:'bx bx-circle',
+                        isPermission: this.counterStore.hasRole('ExpenseCategories-index')
                     },
                 ]"
         />

@@ -3,7 +3,7 @@
     <div :class="Col">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title mb-4">{{Title}}</h4>
+                <h4 class="card-title mb-4" v-if="Title != '' " >{{Title}}</h4>
                 <slot></slot>
             </div>
             <!-- end card body -->

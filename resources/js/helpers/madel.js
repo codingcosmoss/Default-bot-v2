@@ -1,31 +1,32 @@
-// --------------------- menu started--------------------------------------------
+// --------------------- currency started--------------------------------------------
 
-export const menus = async () => {
-    return  GET('/menu/index');
+export const currencys = async () => {
+    return  GET('/currency/index');
 };
-export const menuActives = async () => {
-    return  GET('/menu/actives');
+export const currencyActives = async () => {
+    return  GET('/currency/actives');
 };
-export const menuPaginates = async (count, page= 1) => {
-    return  GET('/menu/paginate/' + count+'?page='+page);
+export const currencyPaginates = async (count, page= 1) => {
+    return  GET('/currency/paginate/' + count+'?page='+page);
 };
-export const menuOrderBys = async (column, type) => {
-    return  GET('/menu/orderBy/' + column + '/' + type);
+export const currencyOrderBys = async (column, type) => {
+    return  GET('/currency/orderBy/' + column + '/' + type);
 };
-export const menuShow = async (id) => {
-    return  GET('/menu/show/'+id);
+export const currencyShow = async (id) => {
+    return  GET('/currency/show/'+id);
 };
-export const menuCreate = async (data) => {
-    return  POST('/menu/create', data );
+export const currencyCreate = async (data) => {
+    return  POST('/currency/create', data );
 };
-export const menuUpdate = async (id, data) => {
-    return  POST('/menu/update/'+id, data );
+export const currencyUpdate = async (id, data) => {
+    return  POST('/currency/update/'+id, data );
 };
-export const menuSearch = async (text) => {
-    return  GET('/menu/search/' + text );
+export const currencySearch = async (text) => {
+    return  GET('/currency/search/' + text );
 };
-export const menuDelete = async (id) => {
-    return  GET('/menu/delete/'+ id );
+export const currencyDelete = async (id) => {
+    return  GET('/currency/delete/'+ id );
 };
 
-// --------------------- menu finished --------------------------------------------
+// --------------------- currency finished --------------------------------------------
+

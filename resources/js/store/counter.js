@@ -91,11 +91,45 @@ export const useConterStore = defineStore({
                 return true;
             }
             return false;
+        },
+        hiddenModal(id){
+            const modalElement = document.getElementById(id);
+            if (modalElement) {
+                const modalInstance = bootstrap.Modal.getInstance(modalElement);
+                if (modalInstance) {
+                    modalInstance.hide();
+                } else {
+                    console.error('Modal instance not found.');
+                }
+            } else {
+                console.error('Modal element not found.');
+            }
+        },
+        inputNumberFormat(inputClass, defaultAmount, val ) {
+            const format_input = document.querySelector('.'+inputClass);
+            let numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ', ''];
+            if (numbers.includes(val.slice(val.length - 1, val.length)) == true) {
+                format_input.value = this.formatNumber(val.replace(/\s+/g, ''));
+                console.log(this.formatNumber(val))
+                return Number(val.replace(/\s+/g, ''))
+            } else {
+                format_input.value = this.formatNumber(defaultAmount);
+                return defaultAmount;
+            }
+        },
+        currentDate(){
+            const today = new Date();
+
+            const month = String(today.getMonth() + 1).padStart(2, '0'); // getMonth() 0 dan boshlanadi, shuning uchun 1 qo'shish kerak
+            const day = String(today.getDate()).padStart(2, '0');
+            const year = today.getFullYear();
+            console.log(`${month}-${day}-${year}`)
+            return `${year}-${month}-${day}`;
+        },
+        updateCurrency(val){
+            this.user.currency = val;
+            this.user.currency_id = val.id;
         }
-
-
-
-
 
 
 }

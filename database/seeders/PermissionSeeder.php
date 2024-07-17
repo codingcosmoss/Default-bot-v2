@@ -29,6 +29,22 @@ class PermissionSeeder extends Seeder
                 "name" => "Role&Permissions",
                 "desc" => "Rol va ruxsatlar"
             ],
+            [
+                "name" => "Settings",
+                "desc" => "Sozlamalar"
+            ],
+            [
+                "name" => "Customers",
+                "desc" => "Xaridorlar"
+            ],
+            [
+                "name" => "Expenses",
+                "desc" => "Xarajatlar"
+            ],
+            [
+                "name" => "ExpenseCategories",
+                "desc" => "Xarajat turlari"
+            ],
         ];
 
         $newMenus = [];

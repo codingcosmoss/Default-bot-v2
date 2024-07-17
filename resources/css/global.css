@@ -10,6 +10,14 @@ html{
     scroll-behavior: auto !important;
 }
 
+.data_box{
+    min-height: 100vh;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    /*background-image:  url(https://img.fonwall.ru/o/4c/zima-zakat-sneg-sugroby-g3sg.jpg?auto=compress&amp;fit=resize&amp;w=1200&amp;display=large);*/
+}
 
 .rounded-circle{
     background-position: center;
@@ -27,4 +35,11 @@ html{
 
 .search_input{
     margin-right: 10px;
+}
+
+.right_bar_icon {
+    background-color: #556ee6 !important;
+}
+.right_bar_icon:hover {
+    background-color: #556ee6 !important;
 }

@@ -165,7 +165,7 @@ class AbstractService
                 'status' => true,
                 'code' => 200,
                 'message' => 'Success',
-                'data' => $data
+                'data' => new $this->resource($data)
             ];
         }catch (Exception $e){
             return [
@@ -199,7 +199,7 @@ class AbstractService
             }
 
             $data = $validator['data'];
-
+            $data['clinic_id'] = auth()->user()->clinic_id;
             $object = new $this->model;
             foreach ($this->storeFields() as $field) {
                 $field->fill($object, $data);
@@ -246,6 +246,8 @@ class AbstractService
                 ];
             }
             $data = $validator['data'];
+            $data['clinic_id'] = auth()->user()->clinic_id;
+
             foreach ($this->updateFields() as $field) {
                 $field->fill($item, $data);
             }

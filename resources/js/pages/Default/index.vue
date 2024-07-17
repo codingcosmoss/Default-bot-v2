@@ -10,6 +10,7 @@
     import {ApiError} from "@/helpers/Config.js";
     import {Alert} from "@/helpers/Config.js";
     import {useConterStore} from "@/store/counter.js";
+    import {myModels, myModelCreate, myModelSearch, myModelUpdate, myModelShow, myModelDelete, myModelPaginates, myModelActives, myModelOrderBys} from "@/helpers/api.js";
     export default {
         components: {Page},
         setup(){

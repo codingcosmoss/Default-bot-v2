@@ -86,5 +86,25 @@ export default[
         permission: 'Role&Permissions-update',
         component: () => import('../pages/Roles/update.vue'),
     },
+    {
+        path: '/admin/settings',
+        permission: 'Settings-index',
+        component: () => import('../pages/Settings/index.vue'),
+    },
+    {
+        path: '/admin/customers',
+        permission: 'Customers-index',
+        component: () => import('../pages/Customers/index.vue'),
+    },
+    {
+        path: '/admin/expenses',
+        permission: 'Expenses-index',
+        component: () => import('../pages/Expenses/index.vue'),
+    },
+    {
+        path: '/admin/expense/categories',
+        permission: 'ExpenseCategories-index',
+        component: () => import('../pages/ExpenseCategories/index.vue'),
+    },
 
 ]
