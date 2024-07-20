@@ -35,7 +35,7 @@ export const useConterStore = defineStore({
             this.Lang = val;
         },
 
-        formatNumber(number) {
+        formatNumber(number=0) {
             return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
         },
         formatPhoneNumber(input) {

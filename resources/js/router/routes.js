@@ -106,5 +106,25 @@ export default[
         permission: 'ExpenseCategories-index',
         component: () => import('../pages/ExpenseCategories/index.vue'),
     },
+    {
+        path: '/admin/expense/categories/show',
+        permission: 'ExpenseCategories-index',
+        component: () => import('../pages/ExpenseCategories/show.vue'),
+    },
+    {
+        path: '/admin/suppliers',
+        permission: 'Suppliers-index',
+        component: () => import('../pages/Suppliers/index.vue'),
+    },
+    {
+        path: '/admin/size-types',
+        permission: 'Medicines-index',
+        component: () => import('../pages/SizeTypes/index.vue'),
+    },
+    {
+        path: '/admin/medicine-categories',
+        permission: 'Medicines-index',
+        component: () => import('../pages/MedicineCategories/index.vue'),
+    },
 
 ]

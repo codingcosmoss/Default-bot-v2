@@ -4,9 +4,9 @@
         <div class="row"  >
             <BaseBox Col="col-xl-12" Title="">
                 <ImageInput
-                    :Title="$t('ProfilPhoto') + '1'"
-                    Name="createImage"
-                    @createImage="image = $event, delete this.errors.image"
+                    :Title="$t('ProfilPhoto')"
+                    Name="customerCreateImage"
+                    @customerCreateImage="image = $event, delete this.errors.image"
                     :Validated="errors"
                 />
 
@@ -129,10 +129,7 @@ export default {
                 this.email = response.data.email;
                 this.phone = response.data.phone;
                 this.image = response.data.image[0].url;
-                if (this.item.id == this.counterStore.user.id) {
-                    localStorage.setItem('user', JSON.stringify(response.data))
-                    this.counterStore.updateUser(response.data)
-                }
+
             } catch (error) {
                 ApiError(this, error);
             }

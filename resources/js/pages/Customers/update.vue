@@ -4,9 +4,9 @@
         <div class="row"  >
             <BaseBox Col="col-xl-12" Title="">
                 <ImageInput
-                    :Title="$t('ProfilPhoto') + '1'"
-                    Name="createImage"
-                    @createImage="image = $event, delete this.errors.image"
+                    :Title="$t('ProfilPhoto')"
+                    Name="customerUpdateImage"
+                    @customerUpdateImage="image = $event, delete this.errors.image"
                     :Validated="errors"
                     :Image="image"
                 />

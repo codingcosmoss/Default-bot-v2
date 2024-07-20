@@ -22,6 +22,7 @@ class RoleService extends AbstractService
     protected $resource = RoleResource::class;
     protected $columns = ['name'];
     protected $menu = 'Role&Permissions';
+    protected $isClinic = true; // Clinikalarga bog'liqmi yoki yo'qmi
 
     public function storeFields()
     {

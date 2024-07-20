@@ -20,6 +20,7 @@ class ExpenseService extends AbstractService
     protected $resource = ExpenseResource::class;
     protected $columns = ['title', 'amount', 'date'];
     protected $menu = 'Expenses';
+    protected $isClinic = true; // Clinikalarga bog'liqmi yoki yo'qmi
 
 
     public function storeFields()
@@ -57,7 +58,8 @@ class ExpenseService extends AbstractService
                 ];
             }
 
-            $data = $this->model::where('currency_id', $id)
+            $data = $this->model::where('clinic_id', auth()->user()->clinic_id )
+                ->where('currency_id', $id)
                 ->orderBy('date', 'desc')
                 ->get();
 
@@ -88,7 +90,8 @@ class ExpenseService extends AbstractService
                 ];
             }
 
-            $expensesGroupedByCurrency = Expense::select('currency_id', DB::raw('SUM(amount) as total_amount'))
+            $expensesGroupedByCurrency = Expense::where('clinic_id', auth()->user()->clinic_id )
+                ->select('currency_id', DB::raw('SUM(amount) as total_amount'))
                 ->groupBy('currency_id')
                 ->get();
 
@@ -98,6 +101,50 @@ class ExpenseService extends AbstractService
                 'message' => 'Success',
                 'data' => ExpenceTotalResource::collection($expensesGroupedByCurrency)
             ];
+        }catch (Exception $e){
+            return [
+                'status' => false,
+                'code' => $e->getCode(),
+                'message' => $e->getMessage(),
+                'data' => null
+            ];
+        }
+    }
+    public function getCategoryExpenses($id)
+    {
+        try {
+            if (!$this->hasPermission('index')){
+                return [
+                    'status' => false,
+                    'code' => 403,
+                    'message' => 'Root access is not allowed ',
+                    'data' => null
+                ];
+            }
+
+            $expenses = Expense::where('clinic_id', auth()->user()->clinic_id )
+                ->where('expense_category_id', $id)
+                ->paginate(100);
+
+            $data = [
+                'items' => $this->resource::collection($expenses),
+                'pagination' => [
+                    'total' => $expenses->total(),
+                    'per_page' => $expenses->perPage(),
+                    'current_page' => $expenses->currentPage(),
+                    'last_page' => $expenses->lastPage(),
+                    'from' => $expenses->firstItem(),
+                    'to' => $expenses->lastItem(),
+                ],
+            ];
+
+            return [
+                'status' => true,
+                'code' => 200,
+                'message' => 'Success',
+                'data' => $data
+            ];
+
         }catch (Exception $e){
             return [
                 'status' => false,

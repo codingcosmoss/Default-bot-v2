@@ -75,5 +75,19 @@
     "ExpensesCategory": "Xarajat turi",
     "Currency": "Valyuta",
     "currenciesAlert": "Joriy valyutaga doir barcha xarajatlar olindi",
-    "Total": "Jami"
+    "Total": "Jami",
+    "Payable": "To'lanadigan summa",
+    "Due": "To'lash muddati",
+    "Day": "Kun",
+    "Suppliers": "Yetkazib beruvchilar",
+    "Medicines": "Dorilar",
+    "SizeTypes": "O'lchov birliklari",
+    "Status": "Holati",
+    "Active": "Faol",
+    "InActive": "Faol emas",
+    "BoxSizes": "Quti hajmlari",
+    "Size": "Hajmi",
+    "Companies&Categories": "Firma va kategoriyalari",
+    "Categories": "Kategoriyalar",
+    "DrugCompanies": "Dori firmalari"
 }

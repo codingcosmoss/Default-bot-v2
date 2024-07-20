@@ -31,7 +31,7 @@ class AbstractController extends Controller
     }
     public function activeIndex()
     {
-        $data = $this->service->index(request()->all());
+        $data = $this->service->activeIndex(request()->all());
         return $this->sendResponse($data);
     }
     public function show($id)

@@ -5,8 +5,8 @@
             <BaseBox Col="col-xl-6" :Title="$t('CompanySettings')">
                 <ImageInput
                     :Title="$t('CompanyLogo')"
-                    Name="image"
-                    @image="image = $event,  delete this.errors.image"
+                    Name="CompanyLogo"
+                    @CompanyLogo="image = $event,  delete this.errors.image"
                     :Image="image"
                     :Validated="errors"
                 />

@@ -2,13 +2,30 @@
     <Page Title="">
         <div class="row"  >
 
-            <div v-for="total in totals" @click="getCurrencies(total.currency_id)" class="col-lg-3 cursor-pointer">
+            <div v-for="i in 4" v-if="totalLoader"  class="col-lg-3 cursor-pointer">
                 <div class="card mini-stats-wid">
                     <div  class="card-body">
                         <div  class="d-flex flex-wrap">
                             <div class="me-3">
+                                <p class=" mb-2 placeholder">Uzbekistani</p><br>
+                                <h5 class="mb-0 placeholder ">201 000 сўм</h5>
+                            </div>
+                            <div class="avatar-sm ms-auto">
+                                <div class="avatar-title bg-light rounded-circle text-primary font-size-20">
+                                    <i class="bx bx-money"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div v-for="total in totals" v-else @click="getCurrencies(total.currency_id)" class="col-lg-3 cursor-pointer ">
+                <div class="card mini-stats-wid " :class="totalId == total.currency_id && 'bg-primary-subtle' ">
+                    <div  class="card-body">
+                        <div  class="d-flex flex-wrap">
+                            <div class="me-3">
                                 <p class="text-muted mb-2">{{total.title == 'Sum' ? $t('Total') : total.title}}</p>
-                                <h5 class="mb-0">{{counterStore.formatNumber(total.total_amount)}} {{total.sign}}</h5>
+                                <h5 class="mb-0 ">{{counterStore.formatNumber(total.total_amount)}} {{total.sign}}</h5>
                             </div>
                             <div class="avatar-sm ms-auto">
                                 <div class="avatar-title bg-light rounded-circle text-primary font-size-20">
@@ -46,6 +63,14 @@
                         <option value="50" >50</option>
                         <option value="100" >100</option>
                     </DefaultSelect>&nbsp;&nbsp;
+<!--                    <DefaultSelect-->
+<!--                        Label=""-->
+<!--                        Class="col-lg-2 col-sm-2"-->
+<!--                        @onInput="getCategoryExpensies($event)"-->
+<!--                    >-->
+<!--                        <option value="0" selected >{{$t('ExpensesCategory')}}</option>-->
+<!--                        <option v-for="category in categories" :value="category.id" >{{category.name}}</option>-->
+<!--                    </DefaultSelect>&nbsp;&nbsp;-->
                 </template>
 
                 <template v-slot:buttons>
@@ -108,7 +133,7 @@
         expensePaginates,
         expenseActives,
         expenseOrderBys,
-        expenseTotal, expenseCurrencies
+        expenseTotal, expenseCurrencies,expense_categorys,getCategoryExpenses
     } from "@/helpers/api.js";
     import GrowingLoader from "@/components/all/GrowingLoader.vue";
     import PrimaryButton from "@/components/all/PrimaryButton.vue";
@@ -151,7 +176,10 @@
             type: 'desc',
             errors: [],
             loader: false,
-            totals: []
+            totals: [],
+            categories: [],
+            totalLoader: true,
+            totalId: 0
         }},
         methods:{
             async index(){
@@ -162,14 +190,25 @@
                     ApiError(this, error);
                 }
             },
+            async indexCategories(){
+                try {
+                    const response = await expense_categorys();
+                    this.categories = response.data;
+                }catch(error){
+                    ApiError(this, error);
+                }
+            },
             async getCurrencies(id){
                 try {
+                    this.totalId = id;
+                    this.loader = true;
                     if (id == 0){
                         this.indexPaginates(1)
                         Alert('info', this.$t('currenciesAlert'))
                         return;
                     }
                     const response = await expenseCurrencies(id);
+                    this.loader = false;
                     this.items = response.data;
                     Alert('info', this.$t('currenciesAlert'))
                 }catch(error){
@@ -178,6 +217,8 @@
             },
             async getTotals(){
                 try {
+                    this.totalId = 0;
+                    this.totalLoader = true;
                     const response = await expenseTotal();
                     let sum = 0;
                     response.data.forEach(e => {
@@ -191,6 +232,7 @@
                         total_amount: sum
                     })
                     this.totals = arr;
+                    this.totalLoader = false;
                 }catch(error){
                     ApiError(this, error);
                 }
@@ -293,6 +335,7 @@
                     if (response.status){
                         Alert('success', this.$t('delete'));
                         this.indexPaginates(this.current_page)
+                        this.getTotals()
                     }
                     Alert('error', this.$t('formError'));
                     return false;
@@ -301,10 +344,22 @@
                     return false;
                 }
             },
+            async getCategoryExpensies(id){
+                try {
+                    if (id == 0){
+                        this.indexPaginates();
+                    }
+                    const response = await getCategoryExpenses(id);
+                    this.items = response.data;
+                }catch(error){
+                    ApiError(this, error);
+                }
+            }
         },
         mounted() {
-            this.indexPaginates(),
+            this.indexPaginates()
                 this.getTotals()
+            this.indexCategories()
         }
     }
 </script>

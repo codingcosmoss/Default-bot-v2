@@ -57,3 +57,6 @@ a{
     margin-bottom: 3px;
 }
 
+.menu_list_btn:after{
+    display: none !important;
+}

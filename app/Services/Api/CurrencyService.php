@@ -9,7 +9,7 @@ use App\Models\ClinicUser;
 use App\Models\Currency;
 
 
-class CurrencyService extends AbstractService
+class CurrencyService extends AbstractPublicService
 {
     protected $model = Currency::class;
     protected $resource = CurrencyResource::class;

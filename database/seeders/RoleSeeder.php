@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Clinic;
 use App\Models\Menu;
 use App\Models\Permission;
 use App\Models\Role;
@@ -18,8 +19,8 @@ class RoleSeeder extends Seeder
     {
         // new Super admin role
         $role = new Role();
-        $role->name = 'Super admin';
-        $role->clinic_id = 1;
+        $role->name = 'Clinic 2 super admin';
+        $role->clinic_id = 2;
         $role->save();
 
         $allPermissions = Permission::all()->pluck('id')->toArray();

@@ -43,3 +43,19 @@ html{
 .right_bar_icon:hover {
     background-color: #556ee6 !important;
 }
+
+.site_footer{
+    width: 100%;
+    height: 60px;
+    /*background: black;*/
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.site_footer p{
+    margin: 0;
+}
+.page-content{
+    padding-bottom: 0px;
+}

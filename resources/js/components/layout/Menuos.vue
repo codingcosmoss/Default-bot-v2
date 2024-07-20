@@ -97,7 +97,35 @@
                     },
                 ]"
         />
+        <MenuButton
+            :Title="$t('Suppliers')"
+            Name="Suppliers"
+            Icon="bx bx-group"
+            Path="/admin/suppliers"
+            @click="onMenuMedia()"
+            v-if="counterStore.hasRole('Suppliers-index')"
+        />
 
+        <MenuListButton
+            :Title="$t('Medicines')"
+            Name="Medicines"
+            Icon="bx bx-band-aid"
+            v-if="counterStore.hasRole('Medicines-index')"
+            :ChildLinks="[
+                    {
+                        title: $t('Companies&Categories'),
+                        path: '/admin/medicine-categories',
+                        icon:'bx bx-collection',
+                        isPermission: this.counterStore.hasRole('Medicines-index')
+                    },
+                    {
+                        title: $t('SizeTypes'),
+                        path: '/admin/size-types',
+                        icon:'bx bx-paragraph',
+                        isPermission: this.counterStore.hasRole('Medicines-index')
+                    },
+                ]"
+        />
 
     </MenuBox>
 

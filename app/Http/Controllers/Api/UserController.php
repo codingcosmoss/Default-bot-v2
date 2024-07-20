@@ -10,6 +10,12 @@ class UserController extends AbstractController
     public function __construct(UserService $service){
         $this->service = $service;
     }
+    public function profilUpdate($id)
+    {
+        $data = $this->service->profilUpdate(request()->all(), $id, request());
+        return $this->sendResponse($data);
+    }
+
 
     public function changePassword($id)
     {

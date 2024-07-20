@@ -45,6 +45,14 @@ class PermissionSeeder extends Seeder
                 "name" => "ExpenseCategories",
                 "desc" => "Xarajat turlari"
             ],
+            [
+                "name" => "Suppliers",
+                "desc" => "Yetkazib beruvchilar"
+            ],
+            [
+                "name" => "Medicines",
+                "desc" => "Dorilar"
+            ],
         ];
 
         $newMenus = [];

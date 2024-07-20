@@ -18,6 +18,7 @@ class CustomerService extends AbstractService
     protected $resource = CustomerResource::class;
     protected $columns = ['name', 'email', 'phone'];
     protected $menu = 'Customers';
+    protected $isClinic = true; // Clinikalarga bog'liqmi yoki yo'qmi
 
 
     public function storeFields()

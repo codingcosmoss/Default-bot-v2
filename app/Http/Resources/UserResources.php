@@ -33,6 +33,8 @@ class UserResources extends JsonResource
             'role_id' => $this->role_id,
             'role' => isset($this->role) ? $this->role->name : '',
             'position' => $this->position,
+            'payable' => $this->payable,
+            'due' => $this->due,
             'management' => $this->management,
             'permissions' => RolePermission::where('role_id', $this->role_id)->pluck('permission_name')->toArray()
 

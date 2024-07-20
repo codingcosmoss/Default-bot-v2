@@ -42,6 +42,9 @@ export const userCreate = async (data) => {
 export const userUpdate = async (id, data) => {
     return  POSTFile('/user/update/'+id, data );
 };
+export const userProfilUpdate = async (id, data) => {
+    return  POSTFile('/user/profil-update/'+id, data );
+};
 export const userUpdatePassword = async (id, data) => {
     return  POST('/user/update-password/'+id, data );
 };
@@ -199,6 +202,10 @@ export const expenses = async () => {
 export const expenseTotal = async () => {
     return  GET('/expense/total');
 };
+export const getCategoryExpenses = async (id, page) => {
+    return  GET('/expense/category-expenses/'+ id + '?page='+page);
+};
+
 export const expenseCurrencies = async (id) => {
     return  GET('/expense/currencies/'+id);
 };
@@ -255,6 +262,9 @@ export const expense_categoryUpdate = async (id, data) => {
 export const expense_categorySearch = async (text) => {
     return  GET('/expense_category/search/' + text );
 };
+export const expense_categoryExpensesSearch = async (id, text) => {
+    return  GET('/expense_category/expenses/' + id + '/' + text);
+};
 export const expense_categoryDelete = async (id) => {
     return  GET('/expense_category/delete/'+ id );
 };
@@ -293,4 +303,164 @@ export const currencyDelete = async (id) => {
 };
 
 // --------------------- currency finished --------------------------------------------
+
+// --------------------- supplier started--------------------------------------------
+
+export const suppliers = async () => {
+    return  GET('/supplier/index');
+};
+export const supplierActives = async () => {
+    return  GET('/supplier/actives');
+};
+export const supplierPaginates = async (count, page= 1) => {
+    return  GET('/supplier/paginate/' + count+'?page='+page);
+};
+export const supplierOrderBys = async (column, type) => {
+    return  GET('/supplier/orderBy/' + column + '/' + type);
+};
+export const supplierShow = async (id) => {
+    return  GET('/supplier/show/'+id);
+};
+export const supplierCreate = async (data) => {
+    return  POSTFile('/supplier/create', data );
+};
+export const supplierUpdate = async (id, data) => {
+    return  POSTFile('/supplier/update/'+id, data );
+};
+export const supplierSearch = async (text) => {
+    return  GET('/supplier/search/' + text );
+};
+export const supplierDelete = async (id) => {
+    return  GET('/supplier/delete/'+ id );
+};
+
+// --------------------- supplier finished --------------------------------------------
+
+// --------------------- size_type started--------------------------------------------
+
+export const size_types = async () => {
+    return  GET('/size-type/index');
+};
+export const size_typeActives = async () => {
+    return  GET('/size-type/actives');
+};
+export const size_typePaginates = async (count, page= 1) => {
+    return  GET('/size-type/paginate/' + count+'?page='+page);
+};
+export const size_typeOrderBys = async (column, type) => {
+    return  GET('/size-type/orderBy/' + column + '/' + type);
+};
+export const size_typeShow = async (id) => {
+    return  GET('/size-type/show/'+id);
+};
+export const size_typeCreate = async (data) => {
+    return  POST('/size-type/create', data );
+};
+export const size_typeUpdate = async (id, data) => {
+    return  POST('/size-type/update/'+id, data );
+};
+export const size_typeSearch = async (text) => {
+    return  GET('/size-type/search/' + text );
+};
+export const size_typeDelete = async (id) => {
+    return  GET('/size-type/delete/'+ id );
+};
+
+// --------------------- size_type finished --------------------------------------------
+// --------------------- box_size started--------------------------------------------
+
+export const box_sizes = async () => {
+    return  GET('/box-size/index');
+};
+export const box_sizeActives = async () => {
+    return  GET('/box-size/actives');
+};
+export const box_sizePaginates = async (count, page= 1) => {
+    return  GET('/box-size/paginate/' + count+'?page='+page);
+};
+export const box_sizeOrderBys = async (column, type) => {
+    return  GET('/box-size/orderBy/' + column + '/' + type);
+};
+export const box_sizeShow = async (id) => {
+    return  GET('/box-size/show/'+id);
+};
+export const box_sizeCreate = async (data) => {
+    return  POST('/box-size/create', data );
+};
+export const box_sizeUpdate = async (id, data) => {
+    return  POST('/box-size/update/'+id, data );
+};
+export const box_sizeSearch = async (text) => {
+    return  GET('/box-size/search/' + text );
+};
+export const box_sizeDelete = async (id) => {
+    return  GET('/box-size/delete/'+ id );
+};
+
+// --------------------- box_size finished --------------------------------------------
+
+// --------------------- medicine_category started--------------------------------------------
+
+export const medicine_categorys = async () => {
+    return  GET('/medicine-category/index');
+};
+export const medicine_categoryActives = async () => {
+    return  GET('/medicine-category/actives');
+};
+export const medicine_categoryPaginates = async (count, page= 1) => {
+    return  GET('/medicine-category/paginate/' + count+'?page='+page);
+};
+export const medicine_categoryOrderBys = async (column, type) => {
+    return  GET('/medicine-category/orderBy/' + column + '/' + type);
+};
+export const medicine_categoryShow = async (id) => {
+    return  GET('/medicine-category/show/'+id);
+};
+export const medicine_categoryCreate = async (data) => {
+    return  POST('/medicine-category/create', data );
+};
+export const medicine_categoryUpdate = async (id, data) => {
+    return  POST('/medicine-category/update/'+id, data );
+};
+export const medicine_categorySearch = async (text) => {
+    return  GET('/medicine-category/search/' + text );
+};
+export const medicine_categoryDelete = async (id) => {
+    return  GET('/medicine-category/delete/'+ id );
+};
+
+// --------------------- medicine_category finished --------------------------------------------
+
+
+// --------------------- drug_company started--------------------------------------------
+
+export const drug_companys = async () => {
+    return  GET('/drug-company/index');
+};
+export const drug_companyActives = async () => {
+    return  GET('/drug-company/actives');
+};
+export const drug_companyPaginates = async (count, page= 1) => {
+    return  GET('/drug-company/paginate/' + count+'?page='+page);
+};
+export const drug_companyOrderBys = async (column, type) => {
+    return  GET('/drug-company/orderBy/' + column + '/' + type);
+};
+export const drug_companyShow = async (id) => {
+    return  GET('/drug-company/show/'+id);
+};
+export const drug_companyCreate = async (data) => {
+    return  POST('/drug-company/create', data );
+};
+export const drug_companyUpdate = async (id, data) => {
+    return  POST('/drug-company/update/'+id, data );
+};
+export const drug_companySearch = async (text) => {
+    return  GET('/drug-company/search/' + text );
+};
+export const drug_companyDelete = async (id) => {
+    return  GET('/drug-company/delete/'+ id );
+};
+
+// --------------------- drug_company finished --------------------------------------------
 

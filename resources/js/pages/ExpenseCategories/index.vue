@@ -41,10 +41,10 @@
                         {{ item.name }}
                     </td>
                     <td>{{ item.description }}</td>
-                    <td :class="item.expenses_count > 0 ? 'cursor-pointer text-info' : '' ">{{ item.expenses_count }}</td>
+                    <td @click="this.$router.push({path:'/admin/expense/categories/show', query:{id: item.id}})" :class="item.expenses_count > 0 ? 'cursor-pointer text-info' : '' ">{{ item.expenses_count }}</td>
                     <td>
                         <PrimaryIconBtn v-if="counterStore.hasRole('ExpenseCategories-update')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="expense_categoryUpdate"/>&nbsp;
-                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/expense-categories/show', query:{id: item.id}})" Icon="bx bx-show"/>&nbsp;
+                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/expense/categories/show', query:{id: item.id}})" Icon="bx bx-show"/>&nbsp;
                         <PrimaryIconBtn  v-if="counterStore.hasRole('ExpenseCategories-delete') && item.expenses_count == 0" @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
                     </td>
 

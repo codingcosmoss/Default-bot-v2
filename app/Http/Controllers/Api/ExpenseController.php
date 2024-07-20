@@ -16,6 +16,12 @@ class ExpenseController extends AbstractController
         return $this->sendResponse($data);
     }
 
+    public function getCategoryExpenses($id)
+    {
+        $data = $this->service->getCategoryExpenses($id);
+        return $this->sendResponse($data);
+    }
+
     public function currencies($id)
     {
         $data = $this->service->currencies($id);

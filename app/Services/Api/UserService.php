@@ -3,6 +3,7 @@
 namespace App\Services\Api;
 
 use App\Fields\Store\TextField;
+use App\Http\Resources\AuthUserResource;
 use App\Http\Resources\ClinicUserResource;
 use App\Http\Resources\UserResources;
 use App\Models\ClinicUser;
@@ -21,6 +22,7 @@ class UserService extends AbstractService
     protected $resource = UserResources::class;
     protected $columns = ['name', 'position', 'login'];
     protected $menu = 'Employees';
+    protected $isClinic = true;
 
     public function storeFields()
     {
@@ -34,6 +36,8 @@ class UserService extends AbstractService
             TextField::make('email')->setRules('nullable'),
             TextField::make('position')->setRules('nullable'),
             TextField::make('password')->setRules('required|min:5'),
+            TextField::make('payable')->setRules('numeric|required'),
+            TextField::make('due')->setRules('integer|required'),
         ];
     }
     public function updateFields()
@@ -47,6 +51,19 @@ class UserService extends AbstractService
             TextField::make('management')->setRules('nullable'),
             TextField::make('email')->setRules('nullable'),
             TextField::make('position')->setRules('nullable'),
+            TextField::make('payable')->setRules('numeric|required'),
+            TextField::make('due')->setRules('integer|required'),
+        ];
+    }
+
+    public function profileUpdateFields()
+    {
+        return [
+            TextField::make('name')->setRules('required|string'),
+            TextField::make('login')->setRules('required|string|min:5'),
+            TextField::make('phone')->setRules('required|string'),
+            TextField::make('management')->setRules('nullable'),
+            TextField::make('email')->setRules('nullable'),
         ];
     }
 
@@ -57,6 +74,40 @@ class UserService extends AbstractService
         ];
     }
 
+    public function show($id)
+    {
+        try {
+            if (!$this->hasPermission('index')){
+                return [
+                    'status' => false,
+                    'code' => 403,
+                    'message' => 'Root access is not allowed ',
+                    'data' => null
+                ];
+            }
+            if ($this->isClinic){
+                $data = $this->model::where('clinic_id', auth()->user()->clinic_id)
+                    ->where('id', $id)
+                    ->first();
+            }else{
+                $data =  $this->model::find($id);
+            }
+
+            return [
+                'status' => true,
+                'code' => 200,
+                'message' => 'Success',
+                'data' => new AuthUserResource($data)
+            ];
+        }catch (Exception $e){
+            return [
+                'status' => false,
+                'code' => $e->getCode(),
+                'message' => $e->getMessage(),
+                'data' => null
+            ];
+        }
+    }
     public function changePassword($data, $id)
     {
         try {
@@ -229,6 +280,65 @@ class UserService extends AbstractService
                 'code' => 200,
                 'message' => 'Success',
                 'data' => new $this->resource($item)
+            ];
+
+        }catch (Exception $e){
+            return [
+                'status' => false,
+                'code' => $e->getCode(),
+                'message' => $e->getMessage(),
+                'data' => null
+            ];
+        }
+    }
+    public function profilUpdate(array $data, $id, $image = null)
+    {
+        try {
+
+            $item = $this->model::find($id);
+
+            $validator = $this->dataValidator($data, $this->profileUpdateFields());
+            $imageValidator = $this->dataValidator($data, $this->imageFields());
+            if ($validator['status']) {
+                return [
+                    'status' => false,
+                    'code' => 422,
+                    'message' => 'Validator error',
+                    'errors' => $validator['validator']
+                ];
+            }
+            if (!$imageValidator['status']) {
+                $this->uploadImagesOne($item, $image);
+            }
+
+            $data = $validator['data'];
+            $isLogin = $this->model::where('login', $data['login'])->first();
+            if ($isLogin && $isLogin->id != $id){
+                return [
+                    'status' => false,
+                    'code' => 422,
+                    'message' => 'This login name is busy',
+                    'errors' => ['login'=> 'This login name is busy']
+                ];
+            }
+
+            $data['role_id'] = $item->role_id;
+            $data['clinic_id'] =$item->clinic_id;
+            $data['management'] = Status::$admin_panel;
+            $data['email'] = isset($data['email']) ? $data['email'] : '';
+            $data['position'] = isset($data['position']) ? $data['position'] : '';
+            $data['payable'] = $item->payable;
+            $data['due'] = $item->due;
+            foreach ($this->updateFields() as $field) {
+                $field->fill($item, $data);
+            }
+            $item->save();
+
+            return [
+                'status' => true,
+                'code' => 200,
+                'message' => 'Success',
+                'data' => new AuthUserResource($item)
             ];
 
         }catch (Exception $e){

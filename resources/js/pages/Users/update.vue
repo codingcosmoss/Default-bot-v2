@@ -6,8 +6,8 @@
 
                 <ImageInput
                     :Title="$t('ProfilPhoto')"
-                    Name="updateImg"
-                    @updateImg="image = $event, delete this.errors.image"
+                    Name="userUpdateImage"
+                    @userUpdateImage="image = $event, delete this.errors.image"
                     :Image="image"
                     :Validated="errors"
                 />
@@ -77,12 +77,35 @@
                         <option v-for="role in roles" :selected="item.role_id == role.id" :value="role.id" >{{role.name}}</option>
                     </DefaultSelect>
                 </div>
+                <div class="row">
+                    <DefaultInput
+                        :Label="$t('Payable') + ' (' +sign+ ')'"
+                        Name="payable"
+                        Type="text"
+                        :Validated="errors"
+                        :Value="this.counterStore.formatNumber(payable)"
+                        @onInput="onPayable($event),  delete this.errors.payable"
+                        Class="col-lg-6 col-sm-12 payable"
+                    />
+
+                    <DefaultInput
+                        :Label="$t('Due') + ' (' +$t('Day')+ ')'"
+                        Name="due"
+                        Type="number"
+                        :Validated="errors"
+                        :Value="due"
+                        @onInput="due = $event,  delete this.errors.due"
+                        Class="col-lg-6 col-sm-12"
+                    />
+                </div>
 
 
                 <BtnBox>
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{ $t('Close') }}</button>&nbsp;&nbsp;
                     <PrimaryBtn  :Loader="loader" @onButton="update">{{$t('Save')}}</PrimaryBtn>
                 </BtnBox>
+
+
             </BaseBox>
 
             <BaseBox Col="col-xl-6" :Title="$t('UpdatePassword')">
@@ -167,7 +190,10 @@ export default {
             repeatPassword: '',
             position: '',
             role: '',
-            roles: []
+            payable: 0,
+            due: 0,
+            roles: [],
+            sign: ''
         }
     },
     methods: {
@@ -181,6 +207,9 @@ export default {
                 ApiError(this, error);
             }
         },
+        onPayable(val){
+            this.payable = this.counterStore.inputNumberFormat('payable',this.payable, val);
+        },
         async show(id) {
             try {
                 const response = await userShow(id);
@@ -191,6 +220,8 @@ export default {
                 this.phone = response.data.phone;
                 this.position = response.data.position;
                 this.role = response.data.role_id;
+                this.payable = this.counterStore.formatNumber(response.data.payable);
+                this.due = response.data.due;
                 this.image = response.data.image[0].url;
                 if (this.item.id == this.counterStore.user.id){
                     localStorage.setItem('user', JSON.stringify(response.data))
@@ -202,6 +233,8 @@ export default {
         },
         async save() {
             try {
+                console.log(this.Item)
+                this.sign = this.counterStore.user.currency.sign
                 this.item = this.Item;
                 this.name = this.Item.name;
                 this.login = this.Item.login;
@@ -209,6 +242,8 @@ export default {
                 this.phone = this.Item.phone;
                 this.role = this.Item.role_id;
                 this.position = this.Item.position;
+                this.payable = this.Item.payable;
+                this.due = this.Item.due;
                 this.image = this.Item.image[0].url;
                 if (this.item.id == this.counterStore.user.id){
                     localStorage.setItem('user', JSON.stringify(response.data))
@@ -217,6 +252,20 @@ export default {
             } catch (error) {
                 ApiError(this, error);
             }
+        },
+        discharge() {
+            this.item = '';
+            this.name = '';
+            this.login = '';
+            this.email = '';
+            this.phone = '';
+            this.image = '';
+            this.payable = 0;
+            this.due = 0;
+            this.password = '';
+            this.repeatPassword = '';
+            this.position = '';
+            this.role = '';
         },
         async update() {
 
@@ -229,13 +278,15 @@ export default {
                     email: this.email,
                     image: this.image,
                     role_id: this.role,
+                    payable: this.payable,
+                    due: this.due,
                     position: this.position,
                 }
-                console.log('Data', data)
                 const response = await userUpdate(this.item.id, data);
                 if (response.status) {
                     Alert('success', this.$t('update'));
-                    this.show(this.item.id);
+                    this.counterStore.hiddenModal('userUpdate');
+                    this.discharge()
                     this.loader = false;
                     this.$emit('onUpdate', true)
                     return true;

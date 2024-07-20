@@ -19,7 +19,7 @@
 
                 </div>
             </div>
-            <p  class="form-label text-danger" >{{Validated[Name]}}</p>
+            <p  class="form-label text-danger" >{{Validated[ValidatedName]}}</p>
         </div>
     </div>
 </template>
@@ -31,6 +31,10 @@ export default
         Validated:{
             type: [Array, Object, String],
             default: []
+        },
+        ValidatedName:{
+            type: String,
+            default: 'image'
         },
         Image:{
             type: String,

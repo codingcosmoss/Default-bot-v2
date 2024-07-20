@@ -3,7 +3,7 @@
     <div class="accordion" :id="'accordionExample'+Name" >
         <div class="accordion-item ">
             <h2 class="accordion-header">
-                <button @click="chevron = !chevron" class="accordion-button collapsed "  type="button" data-bs-toggle="collapse" :data-bs-target="'#collapseTwo'+Name" aria-expanded="false" :aria-controls="'collapseTwo'+Name">
+                <button @click="chevron = !chevron" class="accordion-button collapsed menu_list_btn "  type="button" data-bs-toggle="collapse" :data-bs-target="'#collapseTwo'+Name" aria-expanded="false" :aria-controls="'collapseTwo'+Name">
                     <i :class="Icon" class="menu_icon"></i>
                     <p class="menu-text" :id="Name">{{Title}}</p>
                     <div class="chevronIcon" :class="chevron ? 'chevronTop'  : '' ">
@@ -86,6 +86,9 @@
                 display: block;
             }
         }
+    }
+    .accordion-button[data-v-e4b5b3b2]:after{
+        display: none !important;
     }
 
     .accordion-button{

@@ -178,7 +178,7 @@ export default {
 
                 const response = await expenseUpdate( this.Item.id ,data);
                 if (response.status) {
-                    Alert('success', this.$t('Update'));
+                    Alert('success', this.$t('update'));
                     this.counterStore.hiddenModal('expenseUpdate');
                     this.errors = [];
                     this.save();

@@ -11,4 +11,10 @@ class ExpenseCategoryController extends AbstractController
         $this->service = $service;
     }
 
+    public function getCategoryExpensesSearch($id , $search)
+    {
+        $data = $this->service->getCategoryExpensesSearch($id, $search);
+        return $this->sendResponse($data);
+    }
+
 }

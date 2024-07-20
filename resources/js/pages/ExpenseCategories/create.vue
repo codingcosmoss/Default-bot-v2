@@ -96,11 +96,6 @@ export default {
                 this.item = '';
                 this.name = '';
                 this.description = '';
-
-                // if (this.item.id == this.counterStore.user.id) {
-                //     localStorage.setItem('user', JSON.stringify(response.data))
-                //     this.counterStore.updateUser(response.data)
-                // }
             } catch (error) {
                 ApiError(this, error);
             }

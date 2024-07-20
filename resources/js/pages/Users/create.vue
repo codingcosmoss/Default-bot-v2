@@ -7,8 +7,8 @@
 
                 <ImageInput
                     :Title="$t('ProfilPhoto') + '1'"
-                    Name="createImage"
-                    @createImage="image = $event, delete this.errors.image"
+                    Name="userCreateImage"
+                    @userCreateImage="image = $event, delete this.errors.image"
                     :Validated="errors"
                 />
 
@@ -86,6 +86,29 @@
             </BaseBox>
 
             <BaseBox Col="col-xl-6" Title="" >
+
+                <div class="row">
+                    <DefaultInput
+                        :Label="$t('Payable') + ' (' +sign+ ')'"
+                        Name="payable"
+                        Type="text"
+                        :Validated="errors"
+                        :Value="this.counterStore.formatNumber(payable)"
+                        @onInput="onPayable($event),  delete this.errors.payable"
+                        Class="col-lg-6 col-sm-12 payable"
+                    />
+
+                    <DefaultInput
+                        :Label="$t('Due') + ' (' +$t('Day')+ ')'"
+                        Name="due"
+                        Type="number"
+                        :Validated="errors"
+                        :Value="due"
+                        @onInput="due = $event,  delete this.errors.due"
+                        Class="col-lg-6 col-sm-12"
+                    />
+                </div>
+
                 <DefaultInput
                     :Label="$t('Password')"
                     Name="password"
@@ -155,6 +178,9 @@ export default {
             repeatPassword: '',
             position: '',
             role: '',
+            payable: 0,
+            due: 0,
+            sign: '',
             roles: []
         }
     },
@@ -169,22 +195,8 @@ export default {
                 ApiError(this, error);
             }
         },
-        async show(id) {
-            try {
-                const response = await userShow(id);
-                this.item = response.data;
-                this.name = response.data.name;
-                this.login = response.data.login;
-                this.email = response.data.email;
-                this.phone = response.data.phone;
-                this.image = response.data.image[0].url;
-                if (this.item.id == this.counterStore.user.id) {
-                    localStorage.setItem('user', JSON.stringify(response.data))
-                    this.counterStore.updateUser(response.data)
-                }
-            } catch (error) {
-                ApiError(this, error);
-            }
+        onPayable(val){
+            this.payable = this.counterStore.inputNumberFormat('payable',this.payable, val);
         },
         async save() {
             try {
@@ -193,6 +205,8 @@ export default {
                 this.login = '';
                 this.email = '';
                 this.phone = '';
+                this.payable = 0;
+                this.due = 0;
                 this.image = '';
                 this.password = '';
                 this.repeatPassword = '';
@@ -215,6 +229,8 @@ export default {
                     login: this.login,
                     email: this.email,
                     image: this.image,
+                    payable: this.payable,
+                    due: this.due,
                     role_id: this.role,
                     position: this.position,
                     password: this.password,
@@ -223,6 +239,7 @@ export default {
                 const response = await userCreate(data);
                 if (response.status) {
                     Alert('success', this.$t('create'));
+                    this.counterStore.hiddenModal('userCreate');
                     this.save();
                     this.loader = false;
                     this.$emit('onCreate', true)
@@ -242,6 +259,7 @@ export default {
     mounted() {
         // this.save()
         this.roleIndex()
+        this.sign = this.counterStore.user.currency.sign;
     },
     watch: {
         Item: function (newVal, oldVal) { // watch it

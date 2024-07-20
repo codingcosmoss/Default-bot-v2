@@ -1,32 +1,32 @@
-// --------------------- currency started--------------------------------------------
+// --------------------- drug_company started--------------------------------------------
 
-export const currencys = async () => {
-    return  GET('/currency/index');
+export const drug_companys = async () => {
+    return  GET('/drug-company/index');
 };
-export const currencyActives = async () => {
-    return  GET('/currency/actives');
+export const drug_companyActives = async () => {
+    return  GET('/drug-company/actives');
 };
-export const currencyPaginates = async (count, page= 1) => {
-    return  GET('/currency/paginate/' + count+'?page='+page);
+export const drug_companyPaginates = async (count, page= 1) => {
+    return  GET('/drug-company/paginate/' + count+'?page='+page);
 };
-export const currencyOrderBys = async (column, type) => {
-    return  GET('/currency/orderBy/' + column + '/' + type);
+export const drug_companyOrderBys = async (column, type) => {
+    return  GET('/drug-company/orderBy/' + column + '/' + type);
 };
-export const currencyShow = async (id) => {
-    return  GET('/currency/show/'+id);
+export const drug_companyShow = async (id) => {
+    return  GET('/drug-company/show/'+id);
 };
-export const currencyCreate = async (data) => {
-    return  POST('/currency/create', data );
+export const drug_companyCreate = async (data) => {
+    return  POST('/drug-company/create', data );
 };
-export const currencyUpdate = async (id, data) => {
-    return  POST('/currency/update/'+id, data );
+export const drug_companyUpdate = async (id, data) => {
+    return  POST('/drug-company/update/'+id, data );
 };
-export const currencySearch = async (text) => {
-    return  GET('/currency/search/' + text );
+export const drug_companySearch = async (text) => {
+    return  GET('/drug-company/search/' + text );
 };
-export const currencyDelete = async (id) => {
-    return  GET('/currency/delete/'+ id );
+export const drug_companyDelete = async (id) => {
+    return  GET('/drug-company/delete/'+ id );
 };
 
-// --------------------- currency finished --------------------------------------------
+// --------------------- drug_company finished --------------------------------------------
 

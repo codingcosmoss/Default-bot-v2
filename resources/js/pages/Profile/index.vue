@@ -4,8 +4,8 @@
             <BaseBox Col="col-xl-6" :Title="$t('UserInfo')">
                 <ImageInput
                     :Title="$t('ProfilPhoto')"
-                    Name="image"
-                    @onImage="image = $event,  delete this.errors.image"
+                    Name="ProfilImage"
+                    @ProfilImage="image = $event,  delete this.errors.image"
                     :Image="image"
                     :Validated="errors"
                 />
@@ -75,7 +75,7 @@
 import Page from "@/components/layout/Page.vue";
 import {ApiError} from "@/helpers/Config.js";
 import DefaultInput from "@/ui-components/Forms/DefaultInput.vue";
-import {users, userCreate, userSearch, userUpdate, userShow, userDelete, userPaginates, userActives, userOrderBys, userUpdatePassword} from "../../helpers/api.js";
+import {users, userProfilUpdate, userSearch, userUpdate, userShow, userDelete, userPaginates, userActives, userOrderBys, userUpdatePassword} from "../../helpers/api.js";
 import PrimaryButton from "@/components/all/PrimaryButton.vue";
 import {Alert} from "@/helpers/Config.js";
 import ImageInput from "@/components/all/ImageInput.vue";
@@ -154,24 +154,6 @@ export default {
                 ApiError(this, error);
             }
         },
-        async create(){
-            try {
-                let data = {
-                    // ...
-                }
-                const response = await userCreate(data);
-                if (response.status){
-                    Alert('success', this.$t('create'));
-                    return true;
-                }
-                this.errors = response.errors;
-                Alert('error', this.$t('formError'));
-                return false;
-            }catch(error){
-                ApiError(this, error);
-                return false;
-            }
-        },
         async update(){
             try {
                 this.loader = true;
@@ -182,13 +164,12 @@ export default {
                     email: this.email,
                     image: this.image,
                     role_id: this.item.role_id,
-                    position: this.item.position,
                 }
                 console.log('Data', data)
-                const response = await userUpdate(this.item.id , data);
+                const response = await userProfilUpdate(this.item.id , data);
                 if (response.status){
                     Alert('success', this.$t('update'));
-                    this.show(this.item.id);
+                    this.show(response.data.id);
                     this.loader = false;
                     return true;
                 }

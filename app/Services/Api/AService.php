@@ -13,6 +13,7 @@ class AService extends AbstractService
     protected $resource = ClinicUserResource::class;
     protected $columns = ['name'];
     protected $menu = '';
+    protected $isClinic = false; // Clinikalarga bog'liqmi yoki yo'qmi
 
 
     public function storeFields()

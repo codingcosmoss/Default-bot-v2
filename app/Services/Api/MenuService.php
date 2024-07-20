@@ -9,7 +9,7 @@ use App\Models\ClinicUser;
 use App\Models\Menu;
 
 
-class MenuService extends AbstractService
+class MenuService extends AbstractPublicService
 {
     protected $model = Menu::class;
     protected $resource = MenuResource::class;

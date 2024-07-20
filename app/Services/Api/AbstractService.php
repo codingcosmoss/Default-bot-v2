@@ -19,27 +19,37 @@ class AbstractService
     protected $model;
     protected $resource;
     protected $menu;
+    protected $isClinic = false; // Clinikalarga bog'liqmi yoki yo'qmi
     protected $columns = [];
 
     public function index()
     {
         try {
-//            if (!$this->hasPermission('index')){
-//                return [
-//                    'status' => false,
-//                    'code' => 403,
-//                    'message' => 'Root access is not allowed ',
-//                    'data' => null
-//                ];
-//            }
+            if (!$this->hasPermission('index')){
+                return [
+                    'status' => false,
+                    'code' => 403,
+                    'message' => 'Root access is not allowed ',
+                    'data' => null
+                ];
+            }
 
-            $data = $this->resource::collection($this->model::all());
+            if ($this->isClinic){
+                $data = $this->resource::collection(
+                    $this->model::where('clinic_id', auth()->user()->clinic_id)
+                        ->get()
+                );
+            }else{
+                $data = $this->resource::collection($this->model::all());
+            }
+
             return [
                 'status' => true,
                 'code' => 200,
                 'message' => 'Success',
                 'data' => $data
             ];
+
         }catch (Exception $e){
             return [
                 'status' => false,
@@ -64,8 +74,15 @@ class AbstractService
                 ];
             }
 
-            $models = $this->model::orderBy('id', 'asc')
-                ->paginate($count);
+            if ($this->isClinic){
+                $models = $this->model::where('clinic_id', auth()->user()->clinic_id)
+                    ->orderBy('id', 'asc')
+                    ->paginate($count);
+            }else{
+                $models = $this->model::orderBy('id', 'asc')
+                    ->paginate($count);
+            }
+
 
             $data = [
                 'items' => $this->resource::collection($models),
@@ -106,7 +123,14 @@ class AbstractService
                 ];
             }
 
-            $data = $this->model::orderBy($column, $type)->get();
+            if($this->isClinic){
+                $data = $this->model::where('clinic_id', auth()->user()->clinic_id)
+                    ->orderBy($column, $type)
+                    ->get();
+            }else{
+                $data = $this->model::orderBy($column, $type)->get();
+            }
+
             return [
                 'status' => true,
                 'code' => 200,
@@ -133,7 +157,13 @@ class AbstractService
                     'data' => null
                 ];
             }
-            $data = $this->model::where('status', Status::$status_active)->get();
+            if($this->isClinic){
+                $data = $this->model::where('clinic_id', auth()->user()->clinic_id)
+                    ->where('status', Status::$status_active)->get();
+            }else{
+                $data = $this->model::where('status', Status::$status_active)->get();
+            }
+
             return [
                 'status' => true,
                 'code' => 200,
@@ -160,7 +190,14 @@ class AbstractService
                     'data' => null
                 ];
             }
-            $data =  new $this->resource($this->model::find($id));
+            if ($this->isClinic){
+                $data = $this->model::where('clinic_id', auth()->user()->clinic_id)
+                    ->where('id', $id)
+                    ->first();
+            }else{
+                $data =  $this->model::find($id);
+            }
+
             return [
                 'status' => true,
                 'code' => 200,
@@ -279,11 +316,23 @@ class AbstractService
                 'data' => null
             ];
         }
-        $data = $this->model::where(function ($query) use ($search) {
-            foreach ($this->columns as $column) {
-                $query->orWhere($column, 'like', '%' . $search . '%');
-            }
-        })->get();
+
+        if ($this->isClinic){
+            $data = $this->model::where(function ($query) use ($search) {
+                foreach ($this->columns as $column) {
+                    $query->orWhere($column, 'like', '%' . $search . '%');
+                }
+            })
+                ->where('clinic_id', auth()->user()->clinic_id)
+                ->get();
+        }else{
+            $data = $this->model::where(function ($query) use ($search) {
+                foreach ($this->columns as $column) {
+                    $query->orWhere($column, 'like', '%' . $search . '%');
+                }
+            })->get();
+        }
+
         return [
             'status' => true,
             'message' => 'Success',
