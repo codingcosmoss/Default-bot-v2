@@ -90,7 +90,20 @@ export default {
         },
         save() {
             this.item = this.Item;
+            this.medicine_category_id = this.Item.medicine_category_id;
+            this.box_size_id = this.Item.box_size_id;
+            this.drug_company_id = this.Item.drug_company_id;
             this.name = this.Item.name;
+            this.generic_name = this.Item.generic_name;
+            this.buy_price = this.Item.buy_price;
+            this.price = this.Item.price;
+            this.qr_code = this.Item.qr_code;
+            this.hns_code = this.Item.hns_code;
+            this.desc = this.Item.desc;
+            this.strength = this.Item.strength;
+            this.shelf = this.Item.shelf;
+            this.vat = this.Item.vat;
+            this.igta = this.Item.igta;
             this.status = this.Item.status;
             console.log('Item', this.Item)
         },

@@ -1,5 +1,5 @@
 <template>
-    <td colspan="8" class="paginate_td">
+    <td :colspan="Cols" class="paginate_td">
         <div class="btn-group me-2 paginate_box" role="group" aria-label="First group">
             <button
                 v-for="page in pages"
@@ -16,6 +16,10 @@
 <script>
 export default {
     props: {
+        Cols: {
+            type: Number,
+            default: 8
+        },
         currentPage: {
             type: Number,
             default: 1

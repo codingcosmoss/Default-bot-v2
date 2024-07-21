@@ -31,7 +31,14 @@
             </div>
 
             <BasicTable
-                :Th="headers"
+                :Th=" [
+            $t('Id'),
+            $t('Title'),
+            $t('Amount'),
+            $t('Date'),
+            $t('ExpensesCategory'),
+            $t('Settings')
+        ]"
                 :Title="$t('Expenses')"
                 Col="col-lg-12"
             >
@@ -140,14 +147,7 @@ export default {
     data(){return{
         items: [],
         item: [],
-        headers: [
-            this.$t('Id'),
-            this.$t('Title'),
-            this.$t('Amount'),
-            this.$t('Date'),
-            this.$t('ExpensesCategory'),
-            this.$t('Settings')
-        ],
+        headers: [1,2,3,4,5,6],
         paginateCount: 10,
         last_page: 1,
         current_page: 1,

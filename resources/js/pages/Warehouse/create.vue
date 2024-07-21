@@ -1,6 +1,6 @@
 <template>
     <!--    Modal   -->
-    <ModalCentered :Title="$t('Create')" ModalName="medicine_categoryCreate"  :isModalFooter="false">
+    <ModalCentered :Title="$t('Create')" ModalName="warehouseCreate"  :isModalFooter="false">
         <div class="row"  >
             <BaseBox Col="col-xl-12" Title="">
 
@@ -15,8 +15,8 @@
                     />
                     <div class="col-12 d-flex flex-column">
                         <label class="form-label" >{{ $t('Status') }} </label>
-                        <input type="checkbox" id="medicine_category_create" switch="none"  @input="status = status == 1 ? 0 : 1" :checked="status == 1 ? true : false" >
-                        <label for="medicine_category_create" data-on-label="On" data-off-label="Off"></label>
+                        <input type="checkbox" id="warehouse_create" switch="none"  @input="status = status == 1 ? 0 : 1" :checked="status == 1 ? true : false" >
+                        <label for="warehouse_create" data-on-label="On" data-off-label="Off"></label>
                     </div>
                 </div>
 
@@ -46,7 +46,7 @@ import {
     userActives,
     userOrderBys,
     userUpdatePassword,
-    medicine_categoryCreate
+    warehouseCreate
 } from "../../helpers/api.js";
 import PrimaryButton from "@/components/all/PrimaryButton.vue";
 import {Alert} from "@/helpers/Config.js";
@@ -115,13 +115,13 @@ export default {
                     status: this.status,
                 }
 
-                const response = await medicine_categoryCreate(data);
+                const response = await warehouseCreate(data);
                 if (response.status) {
                     Alert('success', this.$t('create'));
                     this.save();
                     this.loader = false;
                     this.errors = [];
-                    this.counterStore.hiddenModal('medicine_categoryCreate');
+                    this.counterStore.hiddenModal('warehouseCreate');
                     this.$emit('onCreate', true)
                     return true;
                 }

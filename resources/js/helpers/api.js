@@ -464,3 +464,67 @@ export const drug_companyDelete = async (id) => {
 
 // --------------------- drug_company finished --------------------------------------------
 
+// --------------------- medicine started--------------------------------------------
+
+export const medicines = async () => {
+    return  GET('/medicine/index');
+};
+export const medicineActives = async () => {
+    return  GET('/medicine/actives');
+};
+export const medicinePaginates = async (count, page= 1) => {
+    return  GET('/medicine/paginate/' + count+'?page='+page);
+};
+export const medicineOrderBys = async (column, type) => {
+    return  GET('/medicine/orderBy/' + column + '/' + type);
+};
+export const medicineShow = async (id) => {
+    return  GET('/medicine/show/'+id);
+};
+export const medicineCreate = async (data) => {
+    return  POSTFile('/medicine/create', data );
+};
+export const medicineUpdate = async (id, data) => {
+    return  POSTFile('/medicine/update/'+id, data );
+};
+export const medicineSearch = async (text) => {
+    return  GET('/medicine/search/' + text );
+};
+export const medicineDelete = async (id) => {
+    return  GET('/medicine/delete/'+ id );
+};
+
+// --------------------- medicine finished --------------------------------------------
+
+// --------------------- warehouse started--------------------------------------------
+
+export const warehouses = async () => {
+    return  GET('/warehouse/index');
+};
+export const warehouseActives = async () => {
+    return  GET('/warehouse/actives');
+};
+export const warehousePaginates = async (count, page= 1) => {
+    return  GET('/warehouse/paginate/' + count+'?page='+page);
+};
+export const warehouseOrderBys = async (column, type) => {
+    return  GET('/warehouse/orderBy/' + column + '/' + type);
+};
+export const warehouseShow = async (id) => {
+    return  GET('/warehouse/show/'+id);
+};
+export const warehouseCreate = async (data) => {
+    return  POST('/warehouse/create', data );
+};
+export const warehouseUpdate = async (id, data) => {
+    return  POST('/warehouse/update/'+id, data );
+};
+export const warehouseSearch = async (text) => {
+    return  GET('/warehouse/search/' + text );
+};
+export const warehouseDelete = async (id) => {
+    return  GET('/warehouse/delete/'+ id );
+};
+
+// --------------------- warehouse finished --------------------------------------------
+

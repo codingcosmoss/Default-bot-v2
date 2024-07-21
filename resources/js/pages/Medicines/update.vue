@@ -1,12 +1,16 @@
 <template>
     <!--    Modal   -->
-    <ModalCentered :Title="$t('Create')" ModalName="medicineCreate" ModalTypes="modal-xl"  :isModalFooter="false">
-        <div class="row"  >
+    <ModalCentered :Title="$t('Update')" ModalName="medicineUpdate" ModalTypes="modal-xl"  :isModalFooter="false">
+        <div class="row position-relative"  >
+            <div v-if="mloader" class="modal_loader">
+                <GrowingLoader></GrowingLoader>
+            </div>
             <BaseBox Col="col-xl-6" Title="">
                 <ImageInput
                     :Title="$t('Photo')"
-                    Name="medicineCreateImage"
-                    @medicineCreateImage="image = $event, delete this.errors.image"
+                    Name="medicineUpdateImage"
+                    :Image="image"
+                    @medicineUpdateImage="image = $event, delete this.errors.image"
                     :Validated="errors"
                 />
 
@@ -34,7 +38,7 @@
                 <div class="row">
 
                     <DefaultInput
-                        :Label="$t('BuyPrice')"
+                        :Label="$t('BuyPrice') + ' (' + currency.sign + ')'"
                         Name="buy_price"
                         Type="number"
                         :Validated="errors"
@@ -43,7 +47,7 @@
                         Class="col-lg-6 col-sm-12"
                     />
                     <DefaultInput
-                        :Label="$t('SellingPrice')"
+                        :Label="$t('SellingPrice') + ' (' + currency.sign + ')'"
                         Name="price"
                         Type="Number"
                         :Validated="errors"
@@ -60,12 +64,11 @@
                         :isButton="true"
                         Name="medicine_category_id"
                         :Validated="errors"
-                        :Value="medicine_category_id"
                         @onInput="medicine_category_id = $event,  delete this.errors.medicine_category_id"
                         Class="col-lg-6 col-sm-12"
                     >
                         <option selected>---</option>
-                        <option v-for="medicineCategory in medicineCategories" :value="medicineCategory.id" >{{medicineCategory.name}}</option>
+                        <option v-for="medicineCategory in medicineCategories"  :selected="medicine_category_id == medicineCategory.id"  :value="medicineCategory.id" >{{medicineCategory.name}}</option>
                     </DefaultSelect>
 
                     <DefaultSelect
@@ -74,12 +77,10 @@
                         :isButton="true"
                         Name="box_size_id"
                         :Validated="errors"
-                        :Value="box_size_id"
                         @onInput="box_size_id = $event,  delete this.errors.box_size_id"
                         Class="col-lg-6 col-sm-12"
                     >
-                        <option selected>---</option>
-                        <option v-for="boxSize in boxSizes" :value="boxSize.id" >{{boxSize.size}}</option>
+                        <option v-for="boxSize in boxSizes" :value="boxSize.id" :selected="box_size_id == boxSize.id" >{{boxSize.size}}</option>
                     </DefaultSelect>
 
                 </div>
@@ -90,12 +91,11 @@
                         ModalName="drug_companyCreate"
                         :isButton="true"
                         :Validated="errors"
-                        :Value="drug_company_id"
                         @onInput="drug_company_id = $event,  delete this.errors.drug_company_id"
                         Class="col-lg-6 col-sm-12"
                     >
                         <option selected>---</option>
-                        <option v-for="drugCompany in drugCompanies" :value="drugCompany.id" >{{drugCompany.name}}</option>
+                        <option v-for="drugCompany in drugCompanies" :value="drugCompany.id" :selected="drug_company_id == drugCompany.id" >{{drugCompany.name}}</option>
                     </DefaultSelect>
 
                     <DefaultSelect
@@ -104,20 +104,18 @@
                         ModalName="size_typeCreate"
                         :isButton="true"
                         :Validated="errors"
-                        :Value="size_type_id"
                         @onInput="size_type_id = $event,  delete this.errors.size_type_id"
                         Class="col-lg-6 col-sm-12"
                     >
                         <option selected>---</option>
-                        <option v-for="sizeType in sizeTypes" :value="sizeType.id" >{{sizeType.name}}</option>
+                        <option v-for="sizeType in sizeTypes"  :selected="size_type_id == sizeType.id" :value="sizeType.id" >{{sizeType.name}}</option>
                     </DefaultSelect>
 
 
                 </div>
 
             </BaseBox>
-            <BaseBox Col="col-xl-6" Title="">
-
+            <BaseBox Col="col-xl-6" :Title="$t('OptionalFields')" >
 
                 <div class="row">
 
@@ -153,7 +151,7 @@
                         Class="col-lg-6 col-sm-12"
                     />
                     <DefaultInput
-                        :Label="$t('Vat')"
+                        :Label="$t('Vat') + ' (' + currency.sign + ')'"
                         Name="vat"
                         Type="number"
                         :Validated="errors"
@@ -165,7 +163,7 @@
                 <div class="row">
 
                     <DefaultInput
-                        :Label="$t('Igta')"
+                        :Label="$t('Igta') + ' (' + currency.sign + ')'"
                         Name="igta"
                         Type="number"
                         :Validated="errors"
@@ -196,25 +194,24 @@
                     />
                     <div class="col-lg-6 col-sm-12 d-flex flex-column">
                         <label class="form-label" >{{ $t('Status') }} </label>
-                        <input type="checkbox" id="medicine_category_create" switch="none"  @input="status = status == 1 ? 0 : 1" :checked="status == 1 ? true : false" >
-                        <label for="medicine_category_create" data-on-label="On" data-off-label="Off"></label>
+                        <input type="checkbox" id="medicine_category_update_status" switch="none"  @input="status = status == 1 ? 0 : 1" :checked="status == 1 ? true : false" >
+                        <label for="medicine_category_update_status" data-on-label="On" data-off-label="Off"></label>
                     </div>
                 </div>
 
             </BaseBox>
             <BtnBox>
                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{ $t('Close') }}</button>&nbsp;&nbsp;
-                <PrimaryBtn  :Loader="loader" @onButton="create()">{{$t('Save')}}</PrimaryBtn>
+                <PrimaryBtn  :Loader="loader" @onButton="update()">{{$t('Save')}}</PrimaryBtn>
             </BtnBox>
-
 
         </div>
 
     </ModalCentered>
-    <CategoryCreate @onCreate="this.$emit('indexCategoryActives', true), opanModal()"></CategoryCreate>
-    <CompanyCreate @onCreate="this.$emit('indexCompaniesActives', true), opanModal()"></CompanyCreate>
-    <SizeCreate @onCreate="this.$emit('indexBoxSizesActives', true), opanModal()"></SizeCreate>
-    <TypeCreate @onCreate="this.$emit('indexTypesActives', true), opanModal()"></TypeCreate>
+    <CategoryCreate @onClose="opanModal()" @onCreate="this.$emit('indexCategoryActives', true), opanModal()"></CategoryCreate>
+    <CompanyCreate @onClose="opanModal()" @onCreate="this.$emit('indexCompaniesActives', true), opanModal()"></CompanyCreate>
+    <SizeCreate @onClose="opanModal()" @onCreate="this.$emit('indexBoxSizesActives', true), opanModal()"></SizeCreate>
+    <TypeCreate @onClose="opanModal()" @onCreate="this.$emit('indexTypesActives', true), opanModal()"></TypeCreate>
 
 </template>
 <script>
@@ -222,18 +219,7 @@ import Page from "@/components/layout/Page.vue";
 import {ApiError} from "@/helpers/Config.js";
 import DefaultInput from "@/ui-components/Forms/DefaultInput.vue";
 import {
-    users,
-    userCreate,
-    userSearch,
-    roles,
-    userUpdate,
-    userShow,
-    userDelete,
-    userPaginates,
-    userActives,
-    userOrderBys,
-    userUpdatePassword,
-    medicineCreate, medicine_categoryActives, box_sizeActives, drug_companyActives, size_typeActives
+ medicineUpdate
 } from "../../helpers/api.js";
 import PrimaryButton from "@/components/all/PrimaryButton.vue";
 import {Alert} from "@/helpers/Config.js";
@@ -248,9 +234,13 @@ import CategoryCreate from '../MedicineCategories/create.vue';
 import CompanyCreate from '../MedicineCategories/boxCreate.vue';
 import SizeCreate from '../SizeTypes/boxCreate.vue';
 import TypeCreate from '../SizeTypes/create.vue';
+import Loader from "@/ui-components/Items/Loader.vue";
+import GrowingLoader from "@/components/all/GrowingLoader.vue";
 
 export default {
     components: {
+        GrowingLoader,
+        Loader,
         DefaultTextarea,
         ImageInput, DefaultSelect, CompanyCreate,SizeCreate,TypeCreate, PrimaryBtn, BtnBox, ModalCentered, PrimaryButton, DefaultInput, Page, CategoryCreate},
     setup() {
@@ -263,9 +253,13 @@ export default {
         boxSizes: Object,
         drugCompanies: Object,
         sizeTypes: Object,
+        hello: String,
+        mloader: Boolean,
+        crud: String
     },
     data() {
         return {
+            currency:'',
             items: [],
             item: [],
             paginateCount: 10,
@@ -298,7 +292,13 @@ export default {
 
     methods: {
         opanModal() {
-            const myModal = new bootstrap.Modal(document.getElementById('medicineCreate'));
+            let modal = '';
+            if (this.crud == 'update'){
+                modal = 'medicineUpdate';
+            }else {
+                modal = 'medicineCreate';
+            }
+            const myModal = new bootstrap.Modal(document.getElementById(modal));
             myModal.show();
         },
         async show(id) {
@@ -332,6 +332,7 @@ export default {
             this.image = this.Item.image[0].url;
             this.medicine_category_id = this.Item.medicine_category_id;
             this.box_size_id = this.Item.box_size_id;
+            this.currency = this.Item.currency;
             this.size_type_id = this.Item.size_type_id;
             this.drug_company_id = this.Item.drug_company_id;
             this.name = this.Item.name;
@@ -346,7 +347,6 @@ export default {
             this.vat = this.Item.vat;
             this.igta = this.Item.igta;
             this.status = this.Item.status;
-            console.log('Item', this.Item)
         },
         async save() {
             this.item = '';
@@ -368,7 +368,7 @@ export default {
             this.igta = null;
             this.status = null;
         },
-        async create() {
+        async update() {
             try {
                 this.loader = true;
                 let data = {
@@ -391,13 +391,13 @@ export default {
                     status: this.status,
                 }
 
-                const response = await medicineCreate(data);
+                const response = await medicineUpdate(this.Item.id, data);
                 if (response.status) {
-                    Alert('success', this.$t('create'));
+                    Alert('success', this.$t('update'));
+                    this.counterStore.hiddenModal('medicineUpdate');
+                    this.$emit('onUpdate', true)
                     this.save();
                     this.loader = false;
-                    this.counterStore.hiddenModal('medicineCreate');
-                    this.$emit('onCreate', true)
                     return true;
                 }
                 this.errors = response.errors;
@@ -413,12 +413,11 @@ export default {
 
     },
     mounted() {
-
         // this.save()
     },
     watch: {
         Item: function (newVal, oldVal) { // watch it
-            this.save()
+            this.save2()
         }
     }
 }

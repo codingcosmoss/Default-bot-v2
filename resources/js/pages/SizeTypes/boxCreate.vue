@@ -22,7 +22,7 @@
 
             </BaseBox>
             <BtnBox>
-                <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{ $t('Close') }}</button>&nbsp;&nbsp;
+                <button @click="this.$emit('onClose')" type="button" class="btn btn-light" data-bs-dismiss="modal">{{ $t('Close') }}</button>&nbsp;&nbsp;
                 <PrimaryBtn  :Loader="loader" @onButton="create()">{{$t('Save')}}</PrimaryBtn>
             </BtnBox>
 

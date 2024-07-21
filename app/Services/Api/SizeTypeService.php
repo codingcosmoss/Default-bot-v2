@@ -14,7 +14,7 @@ class SizeTypeService extends AbstractService
     protected $model = SizeType::class;
     protected $resource = SizeTypeResource::class;
     protected $columns = ['name'];
-    protected $menu = 'Medicines';
+    protected $menu = 'DrugSizeTypes';
     protected $isClinic = true; // Clinikalarga bog'liqmi yoki yo'qmi
 
 

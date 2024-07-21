@@ -53,6 +53,27 @@ class PermissionSeeder extends Seeder
                 "name" => "Medicines",
                 "desc" => "Dorilar"
             ],
+            [
+                "name" => "MedicineCategories",
+                "desc" => "Dori kategoriyalari"
+            ],
+            [
+                "name" => "DrugCompanies",
+                "desc" => "Dori firmalari"
+            ],
+            [
+                "name" => "DrugSizeTypes",
+                "desc" => "Dori o'lchov birliklari"
+            ],
+            [
+                "name" => "BoxSizes",
+                "desc" => "Quti hajmlari"
+            ],
+            [
+                "name" => "Warehouse",
+                "desc" => "Ombor"
+            ],
+
         ];
 
         $newMenus = [];

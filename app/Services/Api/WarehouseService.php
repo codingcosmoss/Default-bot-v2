@@ -3,20 +3,24 @@
 namespace App\Services\Api;
 
 use App\Fields\Store\TextField;
-use App\Http\Resources\BoxSizeResource;
 use App\Http\Resources\ClinicUserResource;
+use App\Http\Resources\MedicineCategoryResource;
 use App\Http\Resources\SizeTypeResource;
-use App\Models\BoxSize;
+use App\Http\Resources\WarehouseCategoryResource;
+use App\Http\Resources\WarehouseResource;
 use App\Models\ClinicUser;
+use App\Models\MedicineCategory;
 use App\Models\SizeType;
+use App\Models\Warehouse;
+use App\Models\WarehouseCategory;
 
 
-class BoxSizeService extends AbstractService
+class WarehouseService extends AbstractService
 {
-    protected $model = BoxSize::class;
-    protected $resource = BoxSizeResource::class;
-    protected $columns = ['size'];
-    protected $menu = 'BoxSizes';
+    protected $model = Warehouse::class;
+    protected $resource = WarehouseResource::class;
+    protected $columns = ['name'];
+    protected $menu = 'Warehouse';
     protected $isClinic = true; // Clinikalarga bog'liqmi yoki yo'qmi
 
 
@@ -24,7 +28,7 @@ class BoxSizeService extends AbstractService
     {
         return [
             TextField::make('clinic_id')->setRules('nullable'),
-            TextField::make('size')->setRules('required|numeric'),
+            TextField::make('name')->setRules('required|string'),
             TextField::make('status')->setRules('required|integer'),
         ];
     }
@@ -32,7 +36,7 @@ class BoxSizeService extends AbstractService
     {
         return [
             TextField::make('clinic_id')->setRules('nullable'),
-            TextField::make('size')->setRules('required|string'),
+            TextField::make('name')->setRules('required|string'),
             TextField::make('status')->setRules('required|integer'),
         ];
     }

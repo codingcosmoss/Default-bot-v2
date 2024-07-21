@@ -1,6 +1,6 @@
 <template>
     <!--    Modal   -->
-    <ModalCentered :Title="$t('Create')" ModalName="medicine_categoryCreate"  :isModalFooter="false">
+    <ModalCentered :Title="$t('Update')" ModalName="warehouseUpdate"  :isModalFooter="false">
         <div class="row"  >
             <BaseBox Col="col-xl-12" Title="">
 
@@ -14,16 +14,16 @@
                         @onInput="name = $event,  delete this.errors.name"
                     />
                     <div class="col-12 d-flex flex-column">
-                        <label class="form-label" >{{ $t('Status') }} </label>
-                        <input type="checkbox" id="medicine_category_create" switch="none"  @input="status = status == 1 ? 0 : 1" :checked="status == 1 ? true : false" >
-                        <label for="medicine_category_create" data-on-label="On" data-off-label="Off"></label>
+                        <label class="form-label" >{{ $t('Status') }}</label>
+                        <input type="checkbox" id="warehouse_update" switch="none" @input="status = status == 1 ? 0 : 1" :checked="status == 1 ? true : false" >
+                        <label for="warehouse_update" data-on-label="On" data-off-label="Off"></label>
                     </div>
                 </div>
 
             </BaseBox>
             <BtnBox>
-                <button @click="this.$emit('onClose')" type="button" class="btn btn-light" data-bs-dismiss="modal">{{ $t('Close') }}</button>&nbsp;&nbsp;
-                <PrimaryBtn  :Loader="loader" @onButton="create()">{{$t('Save')}}</PrimaryBtn>
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{ $t('Close') }}</button>&nbsp;&nbsp;
+                <PrimaryBtn  :Loader="loader" @onButton="update()">{{$t('Save')}}</PrimaryBtn>
             </BtnBox>
 
 
@@ -35,18 +35,9 @@ import Page from "@/components/layout/Page.vue";
 import {ApiError} from "@/helpers/Config.js";
 import DefaultInput from "@/ui-components/Forms/DefaultInput.vue";
 import {
-    users,
-    userCreate,
-    userSearch,
-    roles,
-    userUpdate,
-    userShow,
-    userDelete,
-    userPaginates,
-    userActives,
-    userOrderBys,
-    userUpdatePassword,
-    medicine_categoryCreate
+
+    warehouseShow,
+    warehouseUpdate
 } from "../../helpers/api.js";
 import PrimaryButton from "@/components/all/PrimaryButton.vue";
 import {Alert} from "@/helpers/Config.js";
@@ -89,7 +80,7 @@ export default {
     methods: {
         async show(id) {
             try {
-                const response = await userShow(id);
+                const response = await warehouseShow(id);
                 this.item = response.data;
                 this.name = response.data.name;
                 this.status = response.data.status;
@@ -97,32 +88,43 @@ export default {
                 ApiError(this, error);
             }
         },
-        async save() {
-            try {
-                this.item = '';
-                this.name = '';
-                this.status = 1;
-            } catch (error) {
-                ApiError(this, error);
-            }
+        save() {
+            this.item = this.Item;
+            this.warehouse_id = this.Item.warehouse_id;
+            this.box_size_id = this.Item.box_size_id;
+            this.drug_company_id = this.Item.drug_company_id;
+            this.name = this.Item.name;
+            this.generic_name = this.Item.generic_name;
+            this.buy_price = this.Item.buy_price;
+            this.price = this.Item.price;
+            this.qr_code = this.Item.qr_code;
+            this.hns_code = this.Item.hns_code;
+            this.desc = this.Item.desc;
+            this.strength = this.Item.strength;
+            this.shelf = this.Item.shelf;
+            this.vat = this.Item.vat;
+            this.igta = this.Item.igta;
+            this.status = this.Item.status;
+            console.log('Item', this.Item)
         },
-        async create() {
+        async update() {
             try {
                 this.loader = true;
 
                 let data = {
                     name: this.name,
-                    status: this.status,
+                    status: Number(this.status),
                 }
+                console.log(data)
 
-                const response = await medicine_categoryCreate(data);
+                const response = await warehouseUpdate(this.Item.id, data);
                 if (response.status) {
                     Alert('success', this.$t('create'));
-                    this.save();
-                    this.loader = false;
+                    // this.show(response.data.id);
                     this.errors = [];
-                    this.counterStore.hiddenModal('medicine_categoryCreate');
-                    this.$emit('onCreate', true)
+                    this.loader = false;
+                    this.counterStore.hiddenModal('warehouseUpdate');
+                    this.$emit('onUpdate', true)
                     return true;
                 }
                 this.errors = response.errors;

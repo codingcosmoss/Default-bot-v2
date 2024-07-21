@@ -2,7 +2,10 @@
 
     <div :class="Class">
         <div>
-            <label class="form-label" v-if="Label != '' ">{{ Label }}</label>
+            <label class="form-label" v-if="Label != '' ">
+                {{ Label }}
+                <a v-if="isButton" class="btn btn-primary waves-effect waves-light" role="button" data-bs-toggle="modal" :data-bs-target="'#'+ModalName" style="padding: 0px 5px;font-size: 10px;"> {{$t('Create')}} </a>
+            </label>
             <select class="form-select"
                     :class="Validated[Name] ? 'border-danger' : '' "
                     @input="this.$emit('onInput', $event.target.value)"
@@ -17,9 +20,17 @@
 <script>
 export default {
     props: {
+        isButton: {
+            type: Boolean,
+            default: false
+        },
         Class: {
             type: String,
             default: 'col-lg-12 col-sm-12'
+        },
+        ModalName: {
+            type: String,
+            default: 'modal'
         },
         Name: {
             type: [String],

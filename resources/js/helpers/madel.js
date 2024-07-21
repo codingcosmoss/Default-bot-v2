@@ -1,32 +1,32 @@
-// --------------------- drug_company started--------------------------------------------
+// --------------------- warehouse_category started--------------------------------------------
 
-export const drug_companys = async () => {
-    return  GET('/drug-company/index');
+export const warehouse_categorys = async () => {
+    return  GET('warehouse-category/index');
 };
-export const drug_companyActives = async () => {
-    return  GET('/drug-company/actives');
+export const warehouse_categoryActives = async () => {
+    return  GET('warehouse-category/actives');
 };
-export const drug_companyPaginates = async (count, page= 1) => {
-    return  GET('/drug-company/paginate/' + count+'?page='+page);
+export const warehouse_categoryPaginates = async (count, page= 1) => {
+    return  GET('warehouse-category/paginate/' + count+'?page='+page);
 };
-export const drug_companyOrderBys = async (column, type) => {
-    return  GET('/drug-company/orderBy/' + column + '/' + type);
+export const warehouse_categoryOrderBys = async (column, type) => {
+    return  GET('warehouse-category/orderBy/' + column + '/' + type);
 };
-export const drug_companyShow = async (id) => {
-    return  GET('/drug-company/show/'+id);
+export const warehouse_categoryShow = async (id) => {
+    return  GET('warehouse-category/show/'+id);
 };
-export const drug_companyCreate = async (data) => {
-    return  POST('/drug-company/create', data );
+export const warehouse_categoryCreate = async (data) => {
+    return  POST('warehouse-category/create', data );
 };
-export const drug_companyUpdate = async (id, data) => {
-    return  POST('/drug-company/update/'+id, data );
+export const warehouse_categoryUpdate = async (id, data) => {
+    return  POST('warehouse-category/update/'+id, data );
 };
-export const drug_companySearch = async (text) => {
-    return  GET('/drug-company/search/' + text );
+export const warehouse_categorySearch = async (text) => {
+    return  GET('warehouse-category/search/' + text );
 };
-export const drug_companyDelete = async (id) => {
-    return  GET('/drug-company/delete/'+ id );
+export const warehouse_categoryDelete = async (id) => {
+    return  GET('warehouse-category/delete/'+ id );
 };
 
-// --------------------- drug_company finished --------------------------------------------
+// --------------------- warehouse_category finished --------------------------------------------
 

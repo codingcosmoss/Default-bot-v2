@@ -16,7 +16,7 @@ class DrugCompanyService extends AbstractService
     protected $model = DrugCompany::class;
     protected $resource = DrugCompanyResource::class;
     protected $columns = ['name'];
-    protected $menu = 'Medicines';
+    protected $menu = 'DrugCompanies';
     protected $isClinic = true; // Clinikalarga bog'liqmi yoki yo'qmi
 
 

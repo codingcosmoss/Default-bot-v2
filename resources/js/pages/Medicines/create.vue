@@ -1,7 +1,10 @@
 <template>
     <!--    Modal   -->
     <ModalCentered :Title="$t('Create')" ModalName="medicineCreate" ModalTypes="modal-xl"  :isModalFooter="false">
-        <div class="row"  >
+        <div class="row position-relative"  >
+            <div v-if="mloader" class="modal_loader">
+                <GrowingLoader></GrowingLoader>
+            </div>
             <BaseBox Col="col-xl-6" Title="">
                 <ImageInput
                     :Title="$t('Photo')"
@@ -34,7 +37,7 @@
                 <div class="row">
 
                     <DefaultInput
-                        :Label="$t('BuyPrice')"
+                        :Label="$t('BuyPrice') + ' (' + currency.sign + ')' "
                         Name="buy_price"
                         Type="number"
                         :Validated="errors"
@@ -43,7 +46,7 @@
                         Class="col-lg-6 col-sm-12"
                     />
                     <DefaultInput
-                        :Label="$t('SellingPrice')"
+                        :Label="$t('SellingPrice') + ' (' + currency.sign + ')'"
                         Name="price"
                         Type="Number"
                         :Validated="errors"
@@ -116,7 +119,7 @@
                 </div>
 
             </BaseBox>
-            <BaseBox Col="col-xl-6" Title="">
+            <BaseBox Col="col-xl-6" :Title="$t('OptionalFields')">
 
 
                 <div class="row">
@@ -153,7 +156,7 @@
                         Class="col-lg-6 col-sm-12"
                     />
                     <DefaultInput
-                        :Label="$t('Vat')"
+                        :Label="$t('Vat') + ' (' + currency.sign + ')'"
                         Name="vat"
                         Type="number"
                         :Validated="errors"
@@ -165,7 +168,7 @@
                 <div class="row">
 
                     <DefaultInput
-                        :Label="$t('Igta')"
+                        :Label="$t('Igta') + ' (' + currency.sign + ')'"
                         Name="igta"
                         Type="number"
                         :Validated="errors"
@@ -196,8 +199,8 @@
                     />
                     <div class="col-lg-6 col-sm-12 d-flex flex-column">
                         <label class="form-label" >{{ $t('Status') }} </label>
-                        <input type="checkbox" id="medicine_category_create" switch="none"  @input="status = status == 1 ? 0 : 1" :checked="status == 1 ? true : false" >
-                        <label for="medicine_category_create" data-on-label="On" data-off-label="Off"></label>
+                        <input type="checkbox" id="medicine_category_create_status" switch="none"  @input="status = status == 1 ? 0 : 1" :checked="status == 1 ? true : false" >
+                        <label for="medicine_category_create_status" data-on-label="On" data-off-label="Off"></label>
                     </div>
                 </div>
 
@@ -207,11 +210,11 @@
                 <PrimaryBtn  :Loader="loader" @onButton="create()">{{$t('Save')}}</PrimaryBtn>
             </BtnBox>
 
-
         </div>
 
     </ModalCentered>
-    <CategoryCreate @onCreate="this.$emit('indexCategoryActives', true), opanModal()"></CategoryCreate>
+
+    <CategoryCreate @onCreate="this.$emit('indexCategoryActives', true), opanModal()"/>
     <CompanyCreate @onCreate="this.$emit('indexCompaniesActives', true), opanModal()"></CompanyCreate>
     <SizeCreate @onCreate="this.$emit('indexBoxSizesActives', true), opanModal()"></SizeCreate>
     <TypeCreate @onCreate="this.$emit('indexTypesActives', true), opanModal()"></TypeCreate>
@@ -248,9 +251,13 @@ import CategoryCreate from '../MedicineCategories/create.vue';
 import CompanyCreate from '../MedicineCategories/boxCreate.vue';
 import SizeCreate from '../SizeTypes/boxCreate.vue';
 import TypeCreate from '../SizeTypes/create.vue';
+import Loader from "@/ui-components/Items/Loader.vue";
+import GrowingLoader from "@/components/all/GrowingLoader.vue";
 
 export default {
     components: {
+        GrowingLoader,
+        Loader,
         DefaultTextarea,
         ImageInput, DefaultSelect, CompanyCreate,SizeCreate,TypeCreate, PrimaryBtn, BtnBox, ModalCentered, PrimaryButton, DefaultInput, Page, CategoryCreate},
     setup() {
@@ -258,11 +265,12 @@ export default {
         return {counterStore}
     },
     props: {
-        Item: Object,
         medicineCategories: Object,
         boxSizes: Object,
         drugCompanies: Object,
         sizeTypes: Object,
+        hello: String,
+        mloader: Boolean
     },
     data() {
         return {
@@ -293,6 +301,7 @@ export default {
             igta: 0,
             desc: "",
             status: 1,
+            currency:''
         }
     },
 
@@ -326,27 +335,6 @@ export default {
             } catch (error) {
                 ApiError(this, error);
             }
-        },
-        save2() {
-            this.item = this.Item;
-            this.image = this.Item.image[0].url;
-            this.medicine_category_id = this.Item.medicine_category_id;
-            this.box_size_id = this.Item.box_size_id;
-            this.size_type_id = this.Item.size_type_id;
-            this.drug_company_id = this.Item.drug_company_id;
-            this.name = this.Item.name;
-            this.generic_name = this.Item.generic_name;
-            this.buy_price = this.Item.buy_price;
-            this.price = this.Item.price;
-            this.qr_code = this.Item.qr_code;
-            this.hns_code = this.Item.hns_code;
-            this.desc = this.Item.desc;
-            this.strength = this.Item.strength;
-            this.shelf = this.Item.shelf;
-            this.vat = this.Item.vat;
-            this.igta = this.Item.igta;
-            this.status = this.Item.status;
-            console.log('Item', this.Item)
         },
         async save() {
             this.item = '';
@@ -393,11 +381,11 @@ export default {
 
                 const response = await medicineCreate(data);
                 if (response.status) {
+                    this.counterStore.hiddenModal('medicineCreate');
+                    this.$emit('onCreate', true)
                     Alert('success', this.$t('create'));
                     this.save();
                     this.loader = false;
-                    this.counterStore.hiddenModal('medicineCreate');
-                    this.$emit('onCreate', true)
                     return true;
                 }
                 this.errors = response.errors;
@@ -413,8 +401,7 @@ export default {
 
     },
     mounted() {
-
-        // this.save()
+        this.currency = this.counterStore.user.currency;
     },
     watch: {
         Item: function (newVal, oldVal) { // watch it

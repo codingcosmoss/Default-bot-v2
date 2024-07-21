@@ -30,7 +30,7 @@
                 </template>
 
                 <template v-slot:buttons>
-                    <PrimaryBtn v-if="counterStore.hasRole('Medicines-index')" role="button" data-bs-toggle="modal" data-bs-target="#size_typeCreate" >{{$t('Create')}}</PrimaryBtn>
+                    <PrimaryBtn v-if="counterStore.hasRole('DrugSizeTypes-create')" role="button" data-bs-toggle="modal" data-bs-target="#size_typeCreate" >{{$t('Create')}}</PrimaryBtn>
                 </template>
 
                 <tr v-for="item in items" >
@@ -46,9 +46,9 @@
 
                     </td>
                     <td>
-                        <PrimaryIconBtn v-if="counterStore.hasRole('Medicines-index')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="size_typeUpdate"/>&nbsp;
+                        <PrimaryIconBtn v-if="counterStore.hasRole('DrugSizeTypes-update')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="size_typeUpdate"/>&nbsp;
 <!--                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/size-types/show', query:{id: item.id}})" Icon="bx bx-show"/>&nbsp;-->
-                        <PrimaryIconBtn v-if="counterStore.hasRole('Medicines-index')" @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
+                        <PrimaryIconBtn v-if="counterStore.hasRole('DrugSizeTypes-delete')" @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
                     </td>
 
                 </tr>
@@ -91,7 +91,7 @@
                 </template>
 
                 <template v-slot:buttons>
-                    <PrimaryBtn v-if="counterStore.hasRole('Medicines-index')" role="button" data-bs-toggle="modal" data-bs-target="#boxSizeCreate" >{{$t('Create')}}</PrimaryBtn>
+                    <PrimaryBtn v-if="counterStore.hasRole('BoxSizes-create')" role="button" data-bs-toggle="modal" data-bs-target="#boxSizeCreate" >{{$t('Create')}}</PrimaryBtn>
                 </template>
 
                 <tr v-for="item in boxItems" >
@@ -108,9 +108,9 @@
                     </td>
 
                     <td>
-                        <PrimaryIconBtn v-if="counterStore.hasRole('Medicines-index')" @click="boxItem = item" Icon="bx bx-edit-alt" Modal="boxSizeUpdate"/>&nbsp;
+                        <PrimaryIconBtn v-if="counterStore.hasRole('BoxSizes-update')" @click="boxItem = item" Icon="bx bx-edit-alt" Modal="boxSizeUpdate"/>&nbsp;
 <!--                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/size-types/show', query:{id: item.id}})" Icon="bx bx-show"/>&nbsp;-->
-                        <PrimaryIconBtn v-if="counterStore.hasRole('Medicines-index')" @click="this.boxDelete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
+                        <PrimaryIconBtn v-if="counterStore.hasRole('BoxSizes-delete')" @click="this.boxDelete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
                     </td>
 
                 </tr>
@@ -137,7 +137,18 @@
     import {Alert} from "@/helpers/Config.js";
     import {useConterStore} from "@/store/counter.js";
     import BasicTable from "@/components/all/BasicTable.vue";
-    import {box_sizes, box_sizeCreate, box_sizeSearch, box_sizeUpdate, box_sizeShow, box_sizeDelete, box_sizePaginates, box_sizeActives, box_sizeOrderBys} from "@/helpers/api.js";
+    import {
+        box_sizes,
+        box_sizeCreate,
+        box_sizeSearch,
+        box_sizeUpdate,
+        box_sizeShow,
+        box_sizeDelete,
+        box_sizePaginates,
+        box_sizeActives,
+        box_sizeOrderBys,
+        medicine_categoryActives, drug_companyActives
+    } from "@/helpers/api.js";
     import {size_types, size_typeCreate, size_typeSearch, size_typeUpdate, size_typeShow, size_typeDelete, size_typePaginates, size_typeActives, size_typeOrderBys} from "@/helpers/api.js";
     import GrowingLoader from "@/components/all/GrowingLoader.vue";
     import PrimaryButton from "@/components/all/PrimaryButton.vue";
@@ -178,7 +189,8 @@
             errors: [],
             loader: false,
             boxLoader: false,
-            boxItems: []
+            boxItems: [],
+
         }},
         methods:{
             async indexPaginates(page=1, islaoder = true){
@@ -291,10 +303,12 @@
                     return false;
                 }
             },
+
         },
         mounted() {
             this.indexPaginates()
             this.indexBoxPaginates()
+
         }
     }
 </script>

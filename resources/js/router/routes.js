@@ -126,5 +126,16 @@ export default[
         permission: 'Medicines-index',
         component: () => import('../pages/MedicineCategories/index.vue'),
     },
+    {
+        path: '/admin/medicines',
+        permission: 'Medicines-index',
+        component: () => import('../pages/Medicines/index.vue'),
+    },
+    {
+        path: '/admin/warehouse',
+        permission: 'Warehouse-index',
+        component: () => import('../pages/Warehouse/index.vue'),
+    },
+
 
 ]

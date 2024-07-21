@@ -30,7 +30,7 @@
                 </template>
 
                 <template v-slot:buttons>
-                    <PrimaryBtn v-if="counterStore.hasRole('Medicines-index')" role="button" data-bs-toggle="modal" data-bs-target="#medicine_categoryCreate" >{{$t('Create')}}</PrimaryBtn>
+                    <PrimaryBtn v-if="counterStore.hasRole('MedicineCategories-create')" role="button" data-bs-toggle="modal" data-bs-target="#medicine_categoryCreate" >{{$t('Create')}}</PrimaryBtn>
                 </template>
 
                 <tr v-for="item in items" >
@@ -46,9 +46,9 @@
 
                     </td>
                     <td>
-                        <PrimaryIconBtn v-if="counterStore.hasRole('Medicines-index')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="medicine_categoryUpdate"/>&nbsp;
+                        <PrimaryIconBtn v-if="counterStore.hasRole('MedicineCategories-update')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="medicine_categoryUpdate"/>&nbsp;
 <!--                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/size-types/show', query:{id: item.id}})" Icon="bx bx-show"/>&nbsp;-->
-                        <PrimaryIconBtn v-if="counterStore.hasRole('Medicines-index')" @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
+                        <PrimaryIconBtn v-if="counterStore.hasRole('MedicineCategories-delete')" @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
                     </td>
 
                 </tr>
@@ -91,7 +91,7 @@
                 </template>
 
                 <template v-slot:buttons>
-                    <PrimaryBtn v-if="counterStore.hasRole('Medicines-index')" role="button" data-bs-toggle="modal" data-bs-target="#drug_companyCreate" >{{$t('Create')}}</PrimaryBtn>
+                    <PrimaryBtn v-if="counterStore.hasRole('DrugCompanies-create')" role="button" data-bs-toggle="modal" data-bs-target="#drug_companyCreate" >{{$t('Create')}}</PrimaryBtn>
                 </template>
 
                 <tr v-for="item in boxItems" >
@@ -108,9 +108,9 @@
                     </td>
 
                     <td>
-                        <PrimaryIconBtn v-if="counterStore.hasRole('Medicines-index')" @click="boxItem = item" Icon="bx bx-edit-alt" Modal="drug_companyUpdate"/>&nbsp;
+                        <PrimaryIconBtn v-if="counterStore.hasRole('DrugCompanies-update')" @click="boxItem = item" Icon="bx bx-edit-alt" Modal="drug_companyUpdate"/>&nbsp;
 <!--                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/size-types/show', query:{id: item.id}})" Icon="bx bx-show"/>&nbsp;-->
-                        <PrimaryIconBtn v-if="counterStore.hasRole('Medicines-index')" @click="this.boxDelete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
+                        <PrimaryIconBtn v-if="counterStore.hasRole('DrugCompanies-delete')" @click="this.boxDelete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
                     </td>
 
                 </tr>

@@ -1,52 +1,20 @@
 <template>
     <Page Title="">
         <div class="row"  >
-
-            <div v-for="i in 4" v-if="totalLoader"  class="col-lg-3 cursor-pointer">
-                <div class="card mini-stats-wid">
-                    <div  class="card-body">
-                        <div  class="d-flex flex-wrap">
-                            <div class="me-3">
-                                <p class=" mb-2 placeholder">Uzbekistani</p><br>
-                                <h5 class="mb-0 placeholder ">201 000 сўм</h5>
-                            </div>
-                            <div class="avatar-sm ms-auto">
-                                <div class="avatar-title bg-light rounded-circle text-primary font-size-20">
-                                    <i class="bx bx-money"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div v-for="total in totals" v-else @click="getCurrencies(total.currency_id)" class="col-lg-3 cursor-pointer ">
-                <div class="card mini-stats-wid " :class="totalId == total.currency_id && 'bg-primary-subtle' ">
-                    <div  class="card-body">
-                        <div  class="d-flex flex-wrap">
-                            <div class="me-3">
-                                <p class="text-muted mb-2">{{total.title == 'Sum' ? $t('Total') : total.title}}</p>
-                                <h5 class="mb-0 ">{{counterStore.formatNumber(total.total_amount)}} {{total.sign}}</h5>
-                            </div>
-                            <div class="avatar-sm ms-auto">
-                                <div class="avatar-title bg-light rounded-circle text-primary font-size-20">
-                                    <i class="bx bx-money"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <BasicTable
-                :Th="[
-                $t('Id'),
-                $t('Title'),
-                $t('Amount'),
-                $t('Date'),
-                $t('ExpensesCategory'),
-                $t('Settings')
-            ]"
-                :Title="$t('Expenses')"
+                :Th=" [
+                    $t('Id'),
+                    $t('Picture'),
+                    $t('ModalName'),
+                    $t('GenericName'),
+                    $t('Amount'),
+                    $t('SellingPrice'),
+                    $t('BuyPrice'),
+                    $t('Category'),
+                    $t('Status'),
+                    $t('Settings'),
+                ]"
+                :Title="$t('Medicines')"
                 Col="col-lg-12"
             >
                 <template v-slot:inputs>
@@ -70,18 +38,10 @@
                         <option value="50" >50</option>
                         <option value="100" >100</option>
                     </DefaultSelect>&nbsp;&nbsp;
-<!--                    <DefaultSelect-->
-<!--                        Label=""-->
-<!--                        Class="col-lg-2 col-sm-2"-->
-<!--                        @onInput="getCategoryExpensies($event)"-->
-<!--                    >-->
-<!--                        <option value="0" selected >{{$t('ExpensesCategory')}}</option>-->
-<!--                        <option v-for="category in categories" :value="category.id" >{{category.name}}</option>-->
-<!--                    </DefaultSelect>&nbsp;&nbsp;-->
                 </template>
 
                 <template v-slot:buttons>
-                    <PrimaryBtn v-if="counterStore.hasRole('Expenses-create')" role="button" data-bs-toggle="modal" data-bs-target="#expenseCreate" >{{$t('Create')}}</PrimaryBtn>
+                    <PrimaryBtn v-if="counterStore.hasRole('Medicines-create')" @click="crud= 'create' " role="button" data-bs-toggle="modal" data-bs-target="#medicineCreate" >{{$t('Create')}}</PrimaryBtn>
                 </template>
 
                 <tr v-for="item in items" >
@@ -89,15 +49,25 @@
                         #{{ item.id }}
                     </td>
                     <td>
-                        {{ item.title }}
+                        <div class="table_image"  :style="'background-image: url('+ item.image[0].url +')'"></div>
                     </td>
-                    <td>{{ counterStore.formatNumber(item.amount) +' '+ item.currency.sign }}</td>
-                    <td>{{ item.date }}</td>
-                    <td>{{ item.category }}</td>
                     <td>
-                        <PrimaryIconBtn v-if="counterStore.hasRole('Expenses-update')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="expenseUpdate"/>&nbsp;
-                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/expenses/show', query:{id: item.id}})" Icon="bx bx-show"/>&nbsp;
-                        <PrimaryIconBtn v-if="counterStore.hasRole('Expenses-delete')" @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
+                        {{ item.name }}
+                    </td>
+                    <td>{{ item.generic_name }}</td>
+                    <td>{{ item.amount }}</td>
+                    <td>{{ counterStore.formatNumber(item.price)}} {{item.currency.sign}}</td>
+                    <td>{{ counterStore.formatNumber(item.buy_price)}} {{item.currency.sign}}</td>
+                    <td>{{ item.medicine_category_name }}</td>
+                    <td>
+                        <span :class="item.status == 1 ? 'badge-soft-success' : 'badge-soft-danger' "
+                              class="badge badge-pill badge-soft-success font-size-11">{{ item.status  == 1 ? $t('Active') : $t('InActive') }}</span>
+
+                    </td>
+                    <td>
+                        <PrimaryIconBtn v-if="counterStore.hasRole('Medicines-update')" @click="this.item = item, crud='update'" Icon="bx bx-edit-alt" Modal="medicineUpdate"/>&nbsp;
+                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/medicines/show', query:{id: item.id}})" Icon="bx bx-show"/>&nbsp;
+                        <PrimaryIconBtn v-if="counterStore.hasRole('Medicines-delete')" @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
                     </td>
 
                 </tr>
@@ -106,22 +76,41 @@
                     :currentPage="this.current_page"
                     :totalPages="this.last_page"
                     @changePage="indexPaginates($event)"
+                    :Cols="headers.length"
                 />
 
-                <GrowingLoader v-if="loader" Cols="7"/>
+                <GrowingLoader v-if="loader" :Cols="headers.length"/>
 
-
-                <tr>
-
-
-                </tr>
             </BasicTable>
-
 
         </div>
 
-        <Update :Item="item" @onUpdate="indexPaginates(this.current_page), getTotals()" />
-        <Create  @onCreate="indexPaginates(this.current_page), getTotals()" />
+        <Update
+            :crud="crud"
+            :Item="item"
+            :medicineCategories="medicineCategories"
+            :boxSizes="boxSizes"
+            :drugCompanies="drugCompanies"
+            :sizeTypes="sizeTypes"
+            @indexCategoryActives="indexCategoryActives()"
+            @indexCompaniesActives="indexCompaniesActives()"
+            @indexBoxSizesActives="indexBoxSizesActives()"
+            @indexTypesActives="indexTypesActives()"
+            @onUpdate="indexPaginates(this.current_page)"
+            :mloader="mloader"
+        />
+        <Create
+            :medicineCategories="medicineCategories"
+            :boxSizes="boxSizes"
+            :drugCompanies="drugCompanies"
+            :sizeTypes="sizeTypes"
+            @indexCategoryActives="indexCategoryActives()"
+            @indexCompaniesActives="indexCompaniesActives()"
+            @indexBoxSizesActives="indexBoxSizesActives()"
+            @indexTypesActives="indexTypesActives()"
+            @onCreate="indexPaginates(this.current_page)"
+            :mloader="mloader"
+        />
     </Page>
 </template>
 <script>
@@ -131,16 +120,16 @@
     import {useConterStore} from "@/store/counter.js";
     import BasicTable from "@/components/all/BasicTable.vue";
     import {
-        expenses,
-        expenseCreate,
-        expenseSearch,
-        expenseUpdate,
-        expenseShow,
-        expenseDelete,
-        expensePaginates,
-        expenseActives,
-        expenseOrderBys,
-        expenseTotal, expenseCurrencies,expense_categorys,getCategoryExpenses
+        medicines,
+        medicineCreate,
+        medicineSearch,
+        medicineUpdate,
+        medicineShow,
+        medicineDelete,
+        medicinePaginates,
+        medicineActives,
+        medicineOrderBys,
+        medicine_categoryActives, box_sizeActives, drug_companyActives, size_typeActives
     } from "@/helpers/api.js";
     import GrowingLoader from "@/components/all/GrowingLoader.vue";
     import PrimaryButton from "@/components/all/PrimaryButton.vue";
@@ -152,10 +141,8 @@
     import DefaultInput from "@/ui-components/Forms/DefaultInput.vue";
     import Paginate from "@/components/all/Paginate.vue";
     import DefaultSelect from "@/ui-components/Forms/DefaultSelect.vue";
-    import CardBlock from "@/components/all/CardBlock.vue";
     export default {
         components: {
-            CardBlock,
             DefaultSelect,
             Paginate,
             DefaultInput,
@@ -168,71 +155,34 @@
         data(){return{
             items: [],
             item: [],
-            headers: [1,2,3,4,5,6],
             paginateCount: 10,
+            headers: [1,2,3,4,5,6,7,8,9,10],
             last_page: 1,
             current_page: 1,
             column: 'id',
             type: 'desc',
             errors: [],
             loader: false,
-            totals: [],
-            categories: [],
-            totalLoader: true,
-            totalId: 0
+            medicineCategories: [],
+            boxSizes: [],
+            drugCompanies: [],
+            sizeTypes: [],
+            mloader: false,
+            crud: 'create'
         }},
         methods:{
             async index(){
                 try {
-                    const response = await expenses();
+                    const response = await medicines();
                     this.items = response.data;
                 }catch(error){
                     ApiError(this, error);
                 }
             },
-            async indexCategories(){
+            async indexActives(){
                 try {
-                    const response = await expense_categorys();
-                    this.categories = response.data;
-                }catch(error){
-                    ApiError(this, error);
-                }
-            },
-            async getCurrencies(id){
-                try {
-                    this.totalId = id;
-                    this.loader = true;
-                    if (id == 0){
-                        this.indexPaginates(1)
-                        Alert('info', this.$t('currenciesAlert'))
-                        return;
-                    }
-                    const response = await expenseCurrencies(id);
-                    this.loader = false;
+                    const response = await medicineActives(this.paginateCount);
                     this.items = response.data;
-                    Alert('info', this.$t('currenciesAlert'))
-                }catch(error){
-                    ApiError(this, error);
-                }
-            },
-            async getTotals(){
-                try {
-                    this.totalId = 0;
-                    this.totalLoader = true;
-                    const response = await expenseTotal();
-                    let sum = 0;
-                    response.data.forEach(e => {
-                        sum +=e.total_amount;
-                    })
-                    let arr = response.data;
-                    arr.push({
-                        title: 'Sum',
-                        sign: '',
-                        currency_id: 0,
-                        total_amount: sum
-                    })
-                    this.totals = arr;
-                    this.totalLoader = false;
                 }catch(error){
                     ApiError(this, error);
                 }
@@ -240,11 +190,10 @@
             async indexPaginates(page=1){
                 try {
                     this.loader = true;
-                    const response = await expensePaginates(this.paginateCount, page);
+                    const response = await medicinePaginates(this.paginateCount, page);
                     this.current_page = response.data.pagination.current_page;
                     this.last_page = response.data.pagination.last_page;
                     this.items = response.data.items;
-                    this.item = response.data.items[0];
                     this.loader = false;
                 }catch(error){
                     ApiError(this, error);
@@ -252,7 +201,7 @@
             },
             async orderBys(){
                 try {
-                    const response = await expenseOrderBys(this.column, this.type);
+                    const response = await medicineOrderBys(this.column, this.type);
                     this.items = response.data;
                 }catch(error){
                     ApiError(this, error);
@@ -260,7 +209,7 @@
             },
             async show(id){
                 try {
-                    const response = await expenseShow(id);
+                    const response = await medicineShow(id);
                     this.item = response.data;
                 }catch(error){
                     ApiError(this, error);
@@ -271,7 +220,7 @@
                     let data = {
                         // ...
                     }
-                    const response = await expenseCreate(data);
+                    const response = await medicineCreate(data);
                     if (response.status){
                         Alert('success', this.$t('create'));
                         return true;
@@ -289,7 +238,7 @@
                     let data = {
                         // ...
                     }
-                    const response = await expenseUpdate(data);
+                    const response = await medicineUpdate(data);
                     if (response.status){
                         Alert('success', this.$t('update'));
                         return true;
@@ -309,7 +258,7 @@
                         this.indexPaginates();
                         return true;
                     }
-                    const response = await expenseSearch(text);
+                    const response = await medicineSearch(text);
                     this.items = response.data;
                     this.loader = false;
                     if (!response.status){
@@ -330,12 +279,11 @@
                     if (!confirm(this.$t('DeleteAlert'))){
                         return false;
                     }
-                    const response = await expenseDelete(id);
+                    const response = await medicineDelete(id);
                     this.items = response.data;
                     if (response.status){
-                        Alert('success', this.$t('delete'));
                         this.indexPaginates(this.current_page)
-                        this.getTotals()
+                        Alert('success', this.$t('delete'));
                     }
                     Alert('error', this.$t('formError'));
                     return false;
@@ -344,22 +292,53 @@
                     return false;
                 }
             },
-            async getCategoryExpensies(id){
+            async indexCategoryActives() {
                 try {
-                    if (id == 0){
-                        this.indexPaginates();
-                    }
-                    const response = await getCategoryExpenses(id);
-                    this.items = response.data;
-                }catch(error){
+                    this.mloader = true;
+                    const response = await medicine_categoryActives();
+                    this.medicineCategories = response.data;
+                    this.mloader = false;
+                } catch (error) {
                     ApiError(this, error);
                 }
-            }
+            },
+            async indexBoxSizesActives() {
+                try {
+                    this.mloader = true;
+                    const response = await box_sizeActives();
+                    this.boxSizes = response.data;
+                    this.mloader = false;
+                } catch (error) {
+                    ApiError(this, error);
+                }
+            },
+            async indexCompaniesActives() {
+                try {
+                    this.mloader = true;
+                    const response = await drug_companyActives();
+                    this.drugCompanies = response.data;
+                    this.mloader = false;
+                } catch (error) {
+                    ApiError(this, error);
+                }
+            },
+            async indexTypesActives() {
+                try {
+                    this.mloader = true;
+                    const response = await size_typeActives();
+                    this.sizeTypes = response.data;
+                    this.mloader = false;
+                } catch (error) {
+                    ApiError(this, error);
+                }
+            },
         },
         mounted() {
             this.indexPaginates()
-                this.getTotals()
-            this.indexCategories()
+            this.indexCategoryActives()
+            this.indexBoxSizesActives()
+            this.indexCompaniesActives()
+            this.indexTypesActives()
         }
     }
 </script>

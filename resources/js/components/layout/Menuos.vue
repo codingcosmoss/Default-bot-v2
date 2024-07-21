@@ -113,17 +113,38 @@
             v-if="counterStore.hasRole('Medicines-index')"
             :ChildLinks="[
                     {
+                        title: $t('AllMedicines'),
+                        path: '/admin/medicines',
+                        icon:'bx bx-first-aid',
+                        isPermission: this.counterStore.hasRole('MedicineCategories-index') || this.counterStore.hasRole('DrugCompanies-index')
+                    },
+                    {
                         title: $t('Companies&Categories'),
                         path: '/admin/medicine-categories',
                         icon:'bx bx-collection',
-                        isPermission: this.counterStore.hasRole('Medicines-index')
+                        isPermission: this.counterStore.hasRole('MedicineCategories-index') || this.counterStore.hasRole('DrugCompanies-index')
                     },
                     {
                         title: $t('SizeTypes'),
                         path: '/admin/size-types',
                         icon:'bx bx-paragraph',
-                        isPermission: this.counterStore.hasRole('Medicines-index')
+                        isPermission: this.counterStore.hasRole('DrugSizeTypes-index') || this.counterStore.hasRole('BoxSizes-index')
                     },
+                ]"
+        />
+        <MenuListButton
+            :Title="$t('Warehouse')"
+            Name="Warehouse"
+            Icon="bx bx-home-alt"
+            v-if="counterStore.hasRole('Warehouse-index')"
+            :ChildLinks="[
+                    {
+                        title: $t('Warehouse'),
+                        path: '/admin/warehouse',
+                        icon:'bx bx-building-house',
+                        isPermission: this.counterStore.hasRole('Warehouse-index')
+                    },
+
                 ]"
         />
 

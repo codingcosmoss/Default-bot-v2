@@ -16,7 +16,7 @@ class MedicineCategoryService extends AbstractService
     protected $model = MedicineCategory::class;
     protected $resource = MedicineCategoryResource::class;
     protected $columns = ['name'];
-    protected $menu = 'Medicines';
+    protected $menu = 'MedicineCategories';
     protected $isClinic = true; // Clinikalarga bog'liqmi yoki yo'qmi
 
 
