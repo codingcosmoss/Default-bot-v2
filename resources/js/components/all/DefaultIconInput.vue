@@ -3,8 +3,15 @@
     <div :class="Class" >
         <div>
             <label class="form-label" v-if="Label != '' ">{{Label}}</label>
-            <input class="form-control " :class="Validated[Name] ? 'border-danger ' + inputClass : inputClass " :type="Type" :value="Value" :placeholder="Pholder" @input="this.$emit('onInput', $event.target.value)"    >
-            <p  class="form-label text-danger" v-if="Validated[Name]">{{Validated[Name]}}</p>
+            <div class="input-group" id="timepicker-input-group1">
+                <input class="form-control " :class="Validated[Name] ? 'border-danger ' + inputClass : inputClass " :type="Type" :value="Value" :placeholder="Pholder" @input="this.$emit('onInput', $event.target.value)"    >
+                <span class="input-group-text">
+                    <slot></slot>
+                </span>
+            </div>
+
+
+            <p  class="form-label text-danger" v-if="Validated[Name]" >{{Validated[Name]}}</p>
         </div>
     </div>
 
@@ -48,3 +55,6 @@ export default{
 }
 
 </script>
+<style>
+
+</style>

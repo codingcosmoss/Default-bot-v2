@@ -14,4 +14,18 @@ class Medicine extends Model
     {
         return $this->morphMany(Image::class, 'imageable');
     }
+    public function boxSize()
+    {
+        return $this->belongsTo(BoxSize::class);
+    }
+
+    public function sizeType()
+    {
+        return $this->belongsTo(SizeType::class);
+    }
+
+        public function drugCompany()
+    {
+        return $this->belongsTo(DrugCompany::class);
+    }
 }

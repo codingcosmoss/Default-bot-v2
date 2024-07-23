@@ -73,6 +73,18 @@ class PermissionSeeder extends Seeder
                 "name" => "Warehouse",
                 "desc" => "Ombor"
             ],
+            [
+                "name" => "PaymentTypes",
+                "desc" => "Tolov turlari"
+            ],
+            [
+                "name" => "Documents",
+                "desc" => "Dori qabul qilish documentlari"
+            ],
+            [
+                "name" => "ImportDocuments",
+                "desc" => "Dori import qilish "
+            ],
 
         ];
 

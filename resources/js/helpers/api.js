@@ -528,3 +528,67 @@ export const warehouseDelete = async (id) => {
 
 // --------------------- warehouse finished --------------------------------------------
 
+// --------------------- payment_type started--------------------------------------------
+
+export const payment_types = async () => {
+    return  GET('/payment-type/index');
+};
+export const payment_typeActives = async () => {
+    return  GET('/payment-type/actives');
+};
+export const payment_typePaginates = async (count, page= 1) => {
+    return  GET('/payment-type/paginate/' + count+'?page='+page);
+};
+export const payment_typeOrderBys = async (column, type) => {
+    return  GET('/payment-type/orderBy/' + column + '/' + type);
+};
+export const payment_typeShow = async (id) => {
+    return  GET('/payment-type/show/'+id);
+};
+export const payment_typeCreate = async (data) => {
+    return  POST('/payment-type/create', data );
+};
+export const payment_typeUpdate = async (id, data) => {
+    return  POST('/payment-type/update/'+id, data );
+};
+export const payment_typeSearch = async (text) => {
+    return  GET('/payment-type/search/' + text );
+};
+export const payment_typeDelete = async (id) => {
+    return  GET('/payment-type/delete/'+ id );
+};
+
+// --------------------- payment_type finished --------------------------------------------
+
+// --------------------- document started--------------------------------------------
+
+export const documents = async () => {
+    return  GET('/document/index');
+};
+export const documentActives = async () => {
+    return  GET('/document/actives');
+};
+export const documentPaginates = async (count, page= 1) => {
+    return  GET('/document/paginate/' + count+'?page='+page);
+};
+export const documentOrderBys = async (column, type) => {
+    return  GET('/document/orderBy/' + column + '/' + type);
+};
+export const documentShow = async (id) => {
+    return  GET('/document/show/'+id);
+};
+export const documentCreate = async (data) => {
+    return  POSTFile('/document/create', data );
+};
+export const documentUpdate = async (id, data) => {
+    return  POSTFile('/document/update/'+id, data );
+};
+export const documentSearch = async (text) => {
+    return  GET('/document/search/' + text );
+};
+export const documentDelete = async (id) => {
+    return  GET('/document/delete/'+ id );
+};
+
+// --------------------- document finished --------------------------------------------
+

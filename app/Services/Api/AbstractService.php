@@ -324,13 +324,16 @@ class AbstractService
                 }
             })
                 ->where('clinic_id', auth()->user()->clinic_id)
+                ->limit(10)
                 ->get();
         }else{
             $data = $this->model::where(function ($query) use ($search) {
                 foreach ($this->columns as $column) {
                     $query->orWhere($column, 'like', '%' . $search . '%');
                 }
-            })->get();
+            })
+                ->limit(10)
+                ->get();
         }
 
         return [
@@ -452,6 +455,12 @@ class AbstractService
     {
         return [
             TextField::make('image')->setRules('nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10048'),
+        ];
+    }
+    public function documentFields()
+    {
+        return [
+            TextField::make('image')->setRules('nullable|file|mimes:jpeg,png,jpg,gif,svg,doc,docx,xls,xlsx|max:10048'),
         ];
     }
     public function sendResponse(bool $status = true, string $message = 'success', int $statusCode = 200, $data = null)

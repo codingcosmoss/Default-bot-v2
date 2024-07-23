@@ -2,8 +2,8 @@
     <Page Title="">
         <div class="row"  >
             <BasicTable
-                :Th="[ $t('Id'),$t('ModalName'),$t('Status'),$t('Settings')]"
-                :Title="$t('Warehouses')"
+                :Th="[ $t('Id'),$t('Warehouse'),$t('Supplier'),$t('ImportedDate'),$t('Subtotal'),$t('AmountPaid'),$t('Indebtedness'),$t('Status'),$t('Settings')]"
+                :Title="$t('ImportMedicines')"
                 Col="col-lg-12"
             >
                 <template v-slot:inputs>
@@ -12,7 +12,7 @@
                         Label=""
                         Name="name"
                         Type="text"
-                        Pholder="Search..."
+                        :Pholder="$t('DateSearch')"
                         @onInput="search($event)"
                     />
 
@@ -30,41 +30,61 @@
                 </template>
 
                 <template v-slot:buttons>
-                    <PrimaryBtn v-if="counterStore.hasRole('MedicineCategories-create')" role="button" data-bs-toggle="modal" data-bs-target="#warehouseCreate" >{{$t('Create')}}</PrimaryBtn>
+                    <PrimaryBtn v-if="counterStore.hasRole('MedicineCategories-create')" role="button" data-bs-toggle="modal" data-bs-target="#documentCreate" >{{$t('NewImportMedicines')}}</PrimaryBtn>
                 </template>
 
                 <tr v-for="item in items" >
                     <td>
                         #{{ item.id }}
                     </td>
+                    <td>{{ item.warehouse.name }}</td>
+                    <td>{{ item.supplier.name }}</td>
+                    <td>{{ item.date }}</td>
+                    <td>{{ counterStore.formatNumber(item.subtotal)}} {{item.currency.sign}} </td>
+                    <td>{{ counterStore.formatNumber(item.amount_paid)}} {{item.currency.sign}} </td>
+                    <td>{{ Number(item.subtotal) - Number(item.amount_paid) }}  {{item.currency.sign}}</td>
+
                     <td>
-                        {{ item.name }}
-                    </td>
-                    <td>
-                        <span :class="item.status == 1 ? 'badge-soft-success' : 'badge-soft-danger' "
-                              class="badge badge-pill badge-soft-success font-size-11">{{ item.status  == 1 ? $t('Active') : $t('InActive') }}</span>
+                        <span :class="item.status == 5 ? 'badge-soft-success' : 'badge-soft-warning' "
+                              class="badge badge-pill  font-size-11">{{ item.status  == 5 ? $t('Saved') : $t('NotSaved') }}</span>
 
                     </td>
                     <td>
-                        <PrimaryIconBtn v-if="counterStore.hasRole('MedicineCategories-update')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="warehouseUpdate"/>&nbsp;
-<!--                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/size-types/show', query:{id: item.id}})" Icon="bx bx-show"/>&nbsp;-->
+                        <PrimaryIconBtn v-if="counterStore.hasRole('MedicineCategories-update')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="documentUpdate"/>&nbsp;
+
+                        <PrimaryIconBtn v-if="counterStore.hasRole('MedicineCategories-update')"
+                                        @click="this.$router.push({path:'/admin/import', query:{id: item.id}})"
+                                        Icon="bx bx-receipt"/>&nbsp;
+
                         <PrimaryIconBtn v-if="counterStore.hasRole('MedicineCategories-delete')" @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
                     </td>
 
                 </tr>
                 <Paginate
+                    Cols="9"
                     v-if="last_page != 1"
                     :currentPage="this.current_page"
                     :totalPages="this.last_page"
                     @changePage="indexPaginates($event)"
                 />
 
-                <GrowingLoader v-if="loader" Cols="4"/>
+                <GrowingLoader v-if="loader" Cols="9"/>
 
             </BasicTable>
         </div>
-        <Update :Item="item" @onUpdate="indexPaginates(this.current_page, false)" />
-        <Create  @onCreate="indexPaginates(this.current_page, false)" />
+
+        <Update
+            :mloader="boxLoader"
+            :warehouses="warehouses"
+            :suppliers="suppliers"
+            :Item="item" @onUpdate="indexPaginates(this.current_page, false)"
+        />
+        <Create
+            :mloader="boxLoader"
+            :warehouses="warehouses"
+            :suppliers="suppliers"
+            @onCreate="indexPaginates(this.current_page, false)"
+        />
 
     </Page>
 </template>
@@ -74,7 +94,18 @@
     import {Alert} from "@/helpers/Config.js";
     import {useConterStore} from "@/store/counter.js";
     import BasicTable from "@/components/all/BasicTable.vue";
-    import {warehouses, warehouseCreate, warehouseSearch, warehouseUpdate, warehouseShow, warehouseDelete, warehousePaginates, warehouseActives, warehouseOrderBys} from "@/helpers/api.js";
+    import {
+        documents,
+        documentCreate,
+        documentSearch,
+        documentUpdate,
+        documentShow,
+        documentDelete,
+        documentPaginates,
+        documentActives,
+        documentOrderBys,
+        suppliers, warehouses
+    } from "@/helpers/api.js";
     import GrowingLoader from "@/components/all/GrowingLoader.vue";
     import PrimaryButton from "@/components/all/PrimaryButton.vue";
     import PrimaryIconBtn from "@/components/all/PrimaryIconBtn.vue";
@@ -110,13 +141,15 @@
             errors: [],
             loader: false,
             boxLoader: false,
-            boxItems: []
+            boxItems: [],
+            warehouses: Object,
+            suppliers: Object,
         }},
         methods:{
             async indexPaginates(page=1, islaoder = true){
                 try {
                     this.loader = islaoder;
-                    const response = await warehousePaginates(this.paginateCount, page);
+                    const response = await documentPaginates(this.paginateCount, page);
                     if (response.status){
                         this.current_page = response.data.pagination.current_page;
                         this.last_page = response.data.pagination.last_page;
@@ -134,7 +167,7 @@
                         this.indexPaginates();
                         return true;
                     }
-                    const response = await warehouseSearch(text);
+                    const response = await documentSearch(text);
                     this.items = response.data;
                     this.loader = false;
                     if (!response.status){
@@ -155,7 +188,7 @@
                     if (!confirm(this.$t('DeleteAlert'))){
                         return false;
                     }
-                    const response = await warehouseDelete(id);
+                    const response = await documentDelete(id);
                     if (response.status){
                         this.indexPaginates(this.current_page)
                         Alert('success', this.$t('delete'));
@@ -168,9 +201,31 @@
                     return false;
                 }
             },
+            async indexSuppliers(){
+                try {
+                    this.boxLoader = true;
+                    const response = await suppliers();
+                    this.suppliers = response.data;
+                    this.boxLoader = false;
+                }catch(error){
+                    ApiError(this, error);
+                }
+            },
+            async indexWarehouses(){
+                try {
+                    this.boxLoader = true;
+                    const response = await warehouses();
+                    this.warehouses = response.data;
+                    this.boxLoader = false;
+                }catch(error){
+                    ApiError(this, error);
+                }
+            },
         },
         mounted() {
             this.indexPaginates()
+            this.indexWarehouses()
+            this.indexSuppliers()
         }
     }
 </script>

@@ -14,14 +14,15 @@ return new class extends Migration
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
             $table->integer('clinic_id');
-            $table->foreignId('warehouse_id')->constrained();
+            $table->integer('warehouse_id');
             $table->integer('supplier_id');
             $table->integer('user_id');
             $table->date('date');
             $table->double('subtotal', 20, 2)->comment('Jami summa');
-            $table->double('amount_paid ', 20, 2)->comment('Tolangan miqdori');
-            $table->integer('payment_type_id')->comment('Tolov turi');
+            $table->double('amount_paid', 20, 2)->comment('Tolangan miqdori');
             $table->integer('currency_id');
+            $table->integer('status')->default(\App\Traits\Status::$notSaved);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

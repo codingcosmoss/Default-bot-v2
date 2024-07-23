@@ -3,7 +3,7 @@
         <div class="row"  >
             <BasicTable
                 :Th="[ $t('Id'),$t('ModalName'),$t('Status'),$t('Settings')]"
-                :Title="$t('Warehouses')"
+                :Title="$t('PaymentTypes')"
                 Col="col-lg-12"
             >
                 <template v-slot:inputs>
@@ -30,7 +30,7 @@
                 </template>
 
                 <template v-slot:buttons>
-                    <PrimaryBtn v-if="counterStore.hasRole('MedicineCategories-create')" role="button" data-bs-toggle="modal" data-bs-target="#warehouseCreate" >{{$t('Create')}}</PrimaryBtn>
+                    <PrimaryBtn v-if="counterStore.hasRole('PaymentTypes-create')" role="button" data-bs-toggle="modal" data-bs-target="#payment_typeCreate" >{{$t('Create')}}</PrimaryBtn>
                 </template>
 
                 <tr v-for="item in items" >
@@ -46,9 +46,9 @@
 
                     </td>
                     <td>
-                        <PrimaryIconBtn v-if="counterStore.hasRole('MedicineCategories-update')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="warehouseUpdate"/>&nbsp;
+                        <PrimaryIconBtn v-if="counterStore.hasRole('PaymentTypes-update')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="payment_typeUpdate"/>&nbsp;
 <!--                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/size-types/show', query:{id: item.id}})" Icon="bx bx-show"/>&nbsp;-->
-                        <PrimaryIconBtn v-if="counterStore.hasRole('MedicineCategories-delete')" @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
+                        <PrimaryIconBtn v-if="counterStore.hasRole('PaymentTypes-delete')" @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
                     </td>
 
                 </tr>
@@ -74,7 +74,7 @@
     import {Alert} from "@/helpers/Config.js";
     import {useConterStore} from "@/store/counter.js";
     import BasicTable from "@/components/all/BasicTable.vue";
-    import {warehouses, warehouseCreate, warehouseSearch, warehouseUpdate, warehouseShow, warehouseDelete, warehousePaginates, warehouseActives, warehouseOrderBys} from "@/helpers/api.js";
+    import {payment_types, payment_typeCreate, payment_typeSearch, payment_typeUpdate, payment_typeShow, payment_typeDelete, payment_typePaginates, payment_typeActives, payment_typeOrderBys} from "@/helpers/api.js";
     import GrowingLoader from "@/components/all/GrowingLoader.vue";
     import PrimaryButton from "@/components/all/PrimaryButton.vue";
     import PrimaryIconBtn from "@/components/all/PrimaryIconBtn.vue";
@@ -116,7 +116,7 @@
             async indexPaginates(page=1, islaoder = true){
                 try {
                     this.loader = islaoder;
-                    const response = await warehousePaginates(this.paginateCount, page);
+                    const response = await payment_typePaginates(50, page);
                     if (response.status){
                         this.current_page = response.data.pagination.current_page;
                         this.last_page = response.data.pagination.last_page;
@@ -134,7 +134,7 @@
                         this.indexPaginates();
                         return true;
                     }
-                    const response = await warehouseSearch(text);
+                    const response = await payment_typeSearch(text);
                     this.items = response.data;
                     this.loader = false;
                     if (!response.status){
@@ -155,7 +155,7 @@
                     if (!confirm(this.$t('DeleteAlert'))){
                         return false;
                     }
-                    const response = await warehouseDelete(id);
+                    const response = await payment_typeDelete(id);
                     if (response.status){
                         this.indexPaginates(this.current_page)
                         Alert('success', this.$t('delete'));

@@ -21,6 +21,8 @@ trait Status
     public static int $main_panel = 2;
     public static int $admin_panel = 3;
     public static int $change_role = 4;
+    public static int $saved = 5;
+    public static int $notSaved = 6;
 
     /**
      * @return string[]
@@ -33,6 +35,8 @@ trait Status
             self::$main_panel => "Main main panel",
             self::$admin_panel => "Admin panel",
             self::$change_role => "Change role",
+            self::$saved => "Saqlangan",
+            self::$notSaved => "Saqlanmagan",
         ];
     }
 

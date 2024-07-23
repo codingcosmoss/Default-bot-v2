@@ -136,6 +136,21 @@ export default[
         permission: 'Warehouse-index',
         component: () => import('../pages/Warehouse/index.vue'),
     },
+    {
+        path: '/admin/payment-types',
+        permission: 'PaymentTypes-index',
+        component: () => import('../pages/PaymentTypes/index.vue'),
+    },
+    {
+        path: '/admin/documents',
+        permission: 'ImportDocuments-index',
+        component: () => import('../pages/Documents/index.vue'),
+    },
+    {
+        path: '/admin/import',
+        permission: 'ImportDocuments-index',
+        component: () => import('../pages/ImportMedicines/index.vue'),
+    },
 
 
 ]

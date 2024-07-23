@@ -144,10 +144,23 @@
                         icon:'bx bx-building-house',
                         isPermission: this.counterStore.hasRole('Warehouse-index')
                     },
+                      {
+                        title: $t('ImportDocuments'),
+                        path: '/admin/documents',
+                        icon:'bx bx-import',
+                        isPermission: this.counterStore.hasRole('ImportDocuments-index')
+                    },
 
                 ]"
         />
-
+        <MenuButton
+            :Title="$t('PaymentTypes')"
+            Name="PaymentTypes"
+            Icon="bx bx-credit-card"
+            Path="/admin/payment-types"
+            @click="onMenuMedia()"
+            v-if="counterStore.hasRole('PaymentTypes-index')"
+        />
     </MenuBox>
 
 </template>
