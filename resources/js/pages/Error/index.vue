@@ -23,7 +23,7 @@
             <div class="row justify-content-center">
                 <div class="col-md-8 col-xl-6">
                     <div>
-                        <img src="http://127.0.0.1:8000/assets/images/error-img.png" alt="" class="img-fluid">
+                        <img :src="counterStore.baseUrl+'/assets/images/error-img.png'" alt="" class="img-fluid">
                     </div>
                 </div>
             </div>
@@ -39,5 +39,13 @@
         padding-top: 100px !important;
     }
 </style>
-<script setup>
+<script>
+import {useConterStore} from "@/store/counter.js";
+export default
+{
+    setup(){
+        const counterStore = useConterStore();
+        return{counterStore}
+    },
+}
 </script>

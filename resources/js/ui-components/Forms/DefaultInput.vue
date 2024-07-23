@@ -4,7 +4,7 @@
         <div>
             <label class="form-label" v-if="Label != '' ">{{Label}}</label>
             <input class="form-control " :class="Validated[Name] ? 'border-danger ' + inputClass : inputClass " :type="Type" :value="Value" :placeholder="Pholder" @input="this.$emit('onInput', $event.target.value)"    >
-            <p  class="form-label text-danger" v-if="Validated[Name]">{{Validated[Name]}}</p>
+            <p  class="form-label text-danger" >{{Validated[Name]}}</p>
         </div>
     </div>
 

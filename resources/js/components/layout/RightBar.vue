@@ -16,7 +16,7 @@
 
             <div class="p-4">
                 <div class="mb-2">
-                    <img src="http://127.0.0.1:8000/assets/images/layouts/layout-1.jpg" class="img-thumbnail" alt="layout images">
+                    <img :src=" counterStore.baseUrl +'/assets/images/layouts/layout-1.jpg'" class="img-thumbnail" alt="layout images">
                 </div>
 
                 <div class="form-check form-switch mb-3">
@@ -25,7 +25,7 @@
                 </div>
 
                 <div class="mb-2">
-                    <img src="http://127.0.0.1:8000/assets/images/layouts/layout-2.jpg" class="img-thumbnail" alt="layout images">
+                    <img :src=" counterStore.baseUrl + '/assets/images/layouts/layout-2.jpg'" class="img-thumbnail" alt="layout images">
                 </div>
                 <div class="form-check form-switch mb-3">
                     <input class="form-check-input theme-choice" type="checkbox" :checked="darkMode" id="dark-mode-switch" @click="addSession('dark-mode-switch')" >
@@ -39,10 +39,15 @@
 
 </template>
 <script>
+    import {useConterStore} from "@/store/counter.js";
     export default {
         data(){return{
             darkMode: true,
         }},
+        setup(){
+            const counterStore = useConterStore();
+            return{counterStore}
+        },
         methods:{
             getSession(){
                 let mode =  sessionStorage.getItem('is_visited');
