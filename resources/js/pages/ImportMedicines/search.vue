@@ -42,7 +42,7 @@ import DefaultInput from "@/ui-components/Forms/DefaultInput.vue";
 import PrimaryBtn from "@/components/all/PrimaryBtn.vue";
 import {useConterStore} from "@/store/counter.js";
 import BtnBox from "@/components/all/BtnBox.vue";
-import {medicineSearch} from "@/helpers/api.js";
+import {medicineActiveSearch} from "@/helpers/api.js";
 import GrowingLoader from "@/components/all/GrowingLoader.vue";
 import {ApiError} from "@/helpers/Config.js";
 
@@ -83,7 +83,7 @@ export default
         async search(text = ''){
             try {
                 this.loader = true;
-                const response = await medicineSearch(text);
+                const response = await medicineActiveSearch(text);
                 this.items = response.data;
                 this.loader = false;
                 if (!response.status){

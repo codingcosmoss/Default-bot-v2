@@ -6,23 +6,39 @@
 
                 <div class="row">
                     <DefaultInput
+                        :Label="$t('DataName')"
+                        Name="name"
+                        Type="text"
+                        :Validated="errors"
+                        :Value="name"
+                        @onInput="name = $event,  delete this.errors.name"
+                    />
+                    <DefaultInput
                         :Label="$t('Size')"
                         Name="size"
                         Type="number"
                         :Validated="errors"
-                        :Value="name"
-                        @onInput="name = $event,  delete this.errors.size"
+                        :Value="size"
+                        @onInput="size = $event,  delete this.errors.size"
+                    />
+                    <DefaultInput
+                        :Label="$t('SizeType')"
+                        Name="sign"
+                        Type="text"
+                        :Validated="errors"
+                        :Value="sign"
+                        @onInput="sign = $event,  delete this.errors.sign"
                     />
                     <div class="col-12 d-flex flex-column">
-                        <label class="form-label" >{{ $t('Status') }}</label>
-                        <input type="checkbox" id="box_size_update" switch="none" @input="status = status == 1 ? 0 : 1" :checked="status == 1 ? true : false" >
-                        <label for="box_size_update" data-on-label="On" data-off-label="Off"></label>
+                        <label class="form-label" >{{ $t('Status') }} </label>
+                        <input type="checkbox" id="box_size_create" switch="none"  @input="status = status == 1 ? 0 : 1" :checked="status == 1 ? true : false" >
+                        <label for="box_size_create" data-on-label="On" data-off-label="Off"></label>
                     </div>
                 </div>
 
             </BaseBox>
             <BtnBox>
-                <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{ $t('Close') }}</button>&nbsp;&nbsp;
+                <button @click="this.$emit('onClose')" type="button" class="btn btn-light" data-bs-dismiss="modal">{{ $t('Close') }}</button>&nbsp;&nbsp;
                 <PrimaryBtn  :Loader="loader" @onButton="update()">{{$t('Save')}}</PrimaryBtn>
             </BtnBox>
 
@@ -35,10 +51,7 @@ import Page from "@/components/layout/Page.vue";
 import {ApiError} from "@/helpers/Config.js";
 import DefaultInput from "@/ui-components/Forms/DefaultInput.vue";
 import {
-    box_sizeUpdate,
-
-    size_typeShow,
-    size_typeUpdate
+    userShow, box_sizeUpdate
 } from "../../helpers/api.js";
 import PrimaryButton from "@/components/all/PrimaryButton.vue";
 import {Alert} from "@/helpers/Config.js";
@@ -71,9 +84,9 @@ export default {
             loaderPass: false,
             status: 1,
             // forms
-            name: "",
-            address: '',
-            phone: '',
+            size: "",
+            sign: 'piece',
+            name: '',
             email: '',
             image: '',
         }
@@ -81,18 +94,28 @@ export default {
     methods: {
         async show(id) {
             try {
-                const response = await size_typeShow(id);
+                const response = await userShow(id);
                 this.item = response.data;
+                this.size = response.data.name;
+                this.sign = response.data.name;
                 this.name = response.data.name;
                 this.status = response.data.status;
             } catch (error) {
                 ApiError(this, error);
             }
         },
-        save() {
-            console.log(this.Item)
+        async save() {
+            this.item = '';
+            this.size = '';
+            this.sign = 'piece';
+            this.name = '';
+            this.status = 1;
+        },
+        async save2() {
             this.item = this.Item;
-            this.name = this.Item.size;
+            this.size = this.Item.size;
+            this.sign = this.Item.sign;
+            this.name = this.Item.name;
             this.status = this.Item.status;
         },
         async update() {
@@ -100,17 +123,18 @@ export default {
                 this.loader = true;
 
                 let data = {
-                    size: this.name,
-                    status: Number(this.status),
+                    size: this.size,
+                    sign: this.sign,
+                    name: this.name,
+                    status: this.status,
                 }
-                console.log(data)
 
                 const response = await box_sizeUpdate(this.Item.id, data);
                 if (response.status) {
                     Alert('success', this.$t('create'));
-                    // this.show(response.data.id);
-                    this.errors = [];
+                    this.save();
                     this.loader = false;
+                    this.errors = [];
                     this.counterStore.hiddenModal('boxSizeUpdate');
                     this.$emit('onUpdate', true)
                     return true;
@@ -131,7 +155,7 @@ export default {
     },
     watch: {
         Item: function (newVal, oldVal) { // watch it
-            this.save()
+            this.save2()
         }
     }
 }

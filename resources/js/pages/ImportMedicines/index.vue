@@ -13,12 +13,13 @@
                     },
                 ]">
         <div class="row"  >
-            <Header/>
+            <Header :document="document" />
             <Search  :isChange="change" @onAdd="addItem($event)" />
             <BasicTable
                 :Th="[$t('No'),
                     $t('Picture'),
                     $t('ModalName'),
+                    $t('ExpiryDateFinished'),
                     $t('BoxSize'),
                     $t('BuyPrice'),
                     $t('Amount'),
@@ -35,26 +36,34 @@
                         <div class="table_image"  :style="'background-image: url('+ item.image[0].url +')'"></div>
                     </td>
                     <td>
-                        {{ item.name }}
+                        {{ item.name }} {{item.id}}
                     </td>
                     <td>
-                        <IconSelect
+                        <BasicInput
+                            Label=""
+                            Name="date"
+                            Type="date"
+                            :Value="medicines[index]['expiry_date_finished']"
+                            :Validated="this.dataErrors.includes('date'+item.sortId) ? errors : '' "
+                            @onInput="medicines[index]['expiry_date_finished'] = $event"
+                        />
+                    </td>
+                    <td>
+                        <BasicSelect
                             Label=""
                             Name="size_type_id"
-                            Type="text"
-                            :Validated="errors"
-                            @onInput="medicines[index]['box_size_id'] == $event"
+                            @onInput="medicines[index]['box_size_id'] = $event"
                         >
-                            <option v-for="boxSize in boxSizes" :value="boxSize.id" :selected="boxSize.id == item.box_size_id">{{boxSize.size}}</option>
-                            <template v-slot:icon>{{item.size_type}}</template>
-                        </IconSelect>
+                            <option v-for="boxSize in boxSizes" :value="boxSize.id" :selected="boxSize.id == item.box_size_id">{{boxSize.name}}</option>
+                        </BasicSelect>
                     </td>
+
                     <td>
                         <DefaultIconInput
                             Label=""
-                            Name="warehouse_id"
+                            Name="buy_price"
                             Type="text"
-                            :Validated="errors"
+                            :Validated="this.dataErrors.includes('buy_price'+item.sortId) ? errors : '' "
                             :Value="counterStore.formatNumber(item.buy_price)"
                             @onInput="changePrice($event, index) , isChange = !isChange"
                             :inputClass=" 'medicinePrice' + index"
@@ -63,34 +72,35 @@
                         </DefaultIconInput>
                     </td>
                     <td>
-                        <DefaultInput
+                        <BasicInput
                             Label=""
-                            Name="warehouse_id"
+                            Name="buy_amount"
+                            :Validated="this.dataErrors.includes('buy_amount'+item.sortId) ? errors : '' "
                             Type="number"
-                            :Validated="errors"
-                            :Value="counterStore.formatNumber(item.buy_amount)"
+                            :Value="item.buy_amount"
                             @onInput="medicines[index]['buy_amount'] = $event, isChange = !isChange"
                         />
                     </td>
                     <td>{{ counterStore.formatNumber(Number(item.buy_price) * Number(item.buy_amount))}} {{item.currency.sign}}</td>
 
                     <td>
-                        <PrimaryIconBtn v-if="counterStore.hasRole('Documents-update')" @click="change = item.id, medicines.splice(index, 1), isChange = !isChange" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
+                        <PrimaryIconBtn v-if="counterStore.hasRole('Documents-update')" @click="change = item.id, medicines.splice(index, 1), deleteError(item.sortId)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
                     </td>
 
                 </tr>
-                <Paginate
-                    Cols="8"
-                    v-if="last_page != 1"
-                    :currentPage="this.current_page"
-                    :totalPages="this.last_page"
-                    @changePage="indexPaginates($event)"
-                />
+
+<!--                <Paginate-->
+<!--                    Cols="8"-->
+<!--                    v-if="last_page != 1"-->
+<!--                    :currentPage="this.current_page"-->
+<!--                    :totalPages="this.last_page"-->
+<!--                    @changePage="indexPaginates($event)"-->
+<!--                />-->
 
                 <GrowingLoader v-if="loader" Cols="8"/>
 
             </BasicTable>
-            <Report :medicines="medicines"  :isChange="isChange" />
+            <Report @dataErrors="dataErrors = $event" :medicines="medicines" :document="document" :isChange="isChange" />
         </div>
 
         <CreateMedicine
@@ -116,7 +126,13 @@
     import {Alert} from "@/helpers/Config.js";
     import {useConterStore} from "@/store/counter.js";
     import BasicTable from "@/components/all/BasicTable.vue";
-    import {box_sizeActives, drug_companyActives,size_typeActives,medicine_categoryActives  } from "@/helpers/api.js";
+    import {
+        box_sizeActives,
+        drug_companyActives,
+        size_typeActives,
+        medicine_categoryActives,
+        payment_types, documentShow
+    } from "@/helpers/api.js";
     import GrowingLoader from "@/components/all/GrowingLoader.vue";
     import PrimaryButton from "@/components/all/PrimaryButton.vue";
     import PrimaryIconBtn from "@/components/all/PrimaryIconBtn.vue";
@@ -133,8 +149,12 @@
     import Search from "./search.vue";
     import DefaultIconInput from "@/components/all/DefaultIconInput.vue";
     import IconSelect from "@/components/all/IconSelect.vue";
+    import BasicInput from "@/components/all/BasicInput.vue";
+    import BasicSelect from "@/components/all/BasicSelect.vue";
     export default {
         components: {
+            BasicSelect,
+            BasicInput,
             IconSelect,
             DefaultIconInput,
             Update,
@@ -162,7 +182,11 @@
             boxCurrent_page: 1,
             column: 'id',
             type: 'desc',
-            errors: [],
+            errors: {
+                date: this.$t('dateRequired'),
+                buy_amount: this.$t('buyAmountError'),
+                buy_price: this.$t('buyPriceError')
+            },
             loader: false,
             boxLoader: false,
             boxItems: [],
@@ -172,21 +196,51 @@
             boxSizes: [],
             drugCompanies: [],
             sizeTypes: [],
-            medicines: []
+            medicines: [],
+            dataErrors: [],
+            paymentTypes: [],
+            amount_paid: 0,
+            document: [],
+            sortId: 1,
+
         }},
         methods:{
+            deleteError(id){
+                this.isChange = !this.isChange;
+                this.dataErrors = this.dataErrors.filter(number => (number != 'date'+id && number != 'buy_price'+id && number != 'bu_amount'+id ));
+            },
+            async show(){
+                try {
+                    const response = await documentShow(this.$route.query.id);
+                    if(response.data.status == 5){
+                        Alert('info', this.$t('SavedDocumentError'))
+                        this.$router.push('/admin/documents');
+                    }
+                    this.document = response.data;
+
+                }catch(error){
+                    ApiError(this, error);
+                }
+            },
+
             changePrice(price, index){
                 let newMedicine = { ...this.medicines[index] }; // Yangi nusxa yaratish
                 let amount = this.counterStore.inputNumberFormat('medicinePrice' + index, newMedicine['buy_price'], price);
                 newMedicine['buy_price'] = amount;
                 this.medicines[index] = newMedicine; // Yangi nusxani yangilash
             },
-            addItem(item){
-                console.log('item', item)
-                item['buy_amount'] = 1;
-                this.medicines.push(item);
+            addItem(item) {
+                let id = this.sortId + 1;
+                let newMedicine = { ...item };
+                newMedicine['sortId'] = id;
+                newMedicine['buy_amount'] = 1;
+                this.sortId = id;
+
+                this.medicines.push(newMedicine);
+
                 this.isChange = !this.isChange;
             },
+
             async search(text = ''){
                 try {
                     this.loader = true;
@@ -270,6 +324,7 @@
             },
         },
         mounted() {
+            this.show();
             this.indexCategoryActives()
             this.indexBoxSizesActives()
             this.indexCompaniesActives()

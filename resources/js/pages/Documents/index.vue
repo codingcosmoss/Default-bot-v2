@@ -2,7 +2,7 @@
     <Page Title="">
         <div class="row"  >
             <BasicTable
-                :Th="[ $t('Id'),$t('Warehouse'),$t('Supplier'),$t('ImportedDate'),$t('Subtotal'),$t('AmountPaid'),$t('Indebtedness'),$t('Status'),$t('Settings')]"
+                :Th="[ $t('No'),$t('Warehouse'),$t('Supplier'),$t('ImportedDate'),$t('Subtotal'),$t('AmountPaid'),$t('Indebtedness'),$t('Status'),$t('Settings')]"
                 :Title="$t('ImportMedicines')"
                 Col="col-lg-12"
             >
@@ -30,13 +30,11 @@
                 </template>
 
                 <template v-slot:buttons>
-                    <PrimaryBtn v-if="counterStore.hasRole('MedicineCategories-create')" role="button" data-bs-toggle="modal" data-bs-target="#documentCreate" >{{$t('NewImportMedicines')}}</PrimaryBtn>
+                    <PrimaryBtn v-if="counterStore.hasRole('Documents-create')" role="button" data-bs-toggle="modal" data-bs-target="#documentCreate" >{{$t('NewImportMedicines')}}</PrimaryBtn>
                 </template>
 
-                <tr v-for="item in items" >
-                    <td>
-                        #{{ item.id }}
-                    </td>
+                <tr v-for="(item,i) in items" >
+                    <td>{{ ((current_page - 1) * paginateCount) +  i + 1 }}</td>
                     <td>{{ item.warehouse.name }}</td>
                     <td>{{ item.supplier.name }}</td>
                     <td>{{ item.date }}</td>
@@ -50,13 +48,15 @@
 
                     </td>
                     <td>
-                        <PrimaryIconBtn v-if="counterStore.hasRole('MedicineCategories-update')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="documentUpdate"/>&nbsp;
-
-                        <PrimaryIconBtn v-if="counterStore.hasRole('MedicineCategories-update')"
+                        <PrimaryIconBtn v-if="counterStore.hasRole('Documents-update')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="documentUpdate"/>
+                        <PrimaryIconBtn v-if="counterStore.hasRole('Documents-update') && item.status != 5"
                                         @click="this.$router.push({path:'/admin/import', query:{id: item.id}})"
-                                        Icon="bx bx-receipt"/>&nbsp;
+                                        Icon="bx bx-receipt"/>
 
-                        <PrimaryIconBtn v-if="counterStore.hasRole('MedicineCategories-delete')" @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
+                        <PrimaryIconBtn v-if="counterStore.hasRole('Documents-update') && item.status == 5"
+                                        @click="this.$router.push({path:'/admin/document/show', query:{id: item.id}})"
+                                        Icon="bx bx-show"/>
+                        <PrimaryIconBtn v-if="counterStore.hasRole('Documents-delete')" @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
                     </td>
 
                 </tr>

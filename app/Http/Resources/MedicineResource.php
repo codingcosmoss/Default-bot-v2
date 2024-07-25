@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Models\Currency;
 use App\Models\MedicineCategory;
+use App\Models\RemainingDrug;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -22,6 +23,13 @@ class MedicineResource extends JsonResource
                 'url' => asset('').'Photos/medicine.png'
             ]
         ];
+        $madel = RemainingDrug::where('medicine_id', $this->id)->latest()->first();
+        $currency =  Currency::find($this->currency_id);
+        $realAmount = 0;
+        if ($madel){
+            $realAmount = $madel->amount;
+        }
+
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -46,8 +54,10 @@ class MedicineResource extends JsonResource
             'igta' => $this->igta,
             'status' => $this->status,
             // Logical
-            'amount' => 0,
-            'currency' => Currency::find($this->currency_id)
+            'amount' => $realAmount,
+            'percentage' => intval($this->percentage),
+            'selling_price' => intval($this->selling_price),
+            'currency' => $currency
         ];
     }
 }

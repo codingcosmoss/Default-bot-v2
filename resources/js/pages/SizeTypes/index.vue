@@ -2,8 +2,8 @@
     <Page Title="">
         <div class="row"  >
             <BasicTable
-                :Th="[ $t('Id'),$t('ModalName'),$t('Status'),$t('Settings')]"
-                :Title="$t('SizeTypes')"
+                :Th="[ $t('No'),$t('ModalName'),$t('Status'),$t('Settings')]"
+                :Title="$t('Strengths')"
                 Col="col-lg-6"
             >
                 <template v-slot:inputs>
@@ -33,10 +33,8 @@
                     <PrimaryBtn v-if="counterStore.hasRole('DrugSizeTypes-create')" role="button" data-bs-toggle="modal" data-bs-target="#size_typeCreate" >{{$t('Create')}}</PrimaryBtn>
                 </template>
 
-                <tr v-for="item in items" >
-                    <td>
-                        #{{ item.id }}
-                    </td>
+                <tr v-for="(item, i) in items" >
+                    <td>{{ ((current_page - 1) * paginateCount) +  i + 1 }}</td>
                     <td>
                         {{ item.name }}
                     </td>
@@ -46,7 +44,7 @@
 
                     </td>
                     <td>
-                        <PrimaryIconBtn v-if="counterStore.hasRole('DrugSizeTypes-update')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="size_typeUpdate"/>&nbsp;
+                        <PrimaryIconBtn v-if="counterStore.hasRole('DrugSizeTypes-update')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="size_typeUpdate"/>
 <!--                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/size-types/show', query:{id: item.id}})" Icon="bx bx-show"/>&nbsp;-->
                         <PrimaryIconBtn v-if="counterStore.hasRole('DrugSizeTypes-delete')" @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
                     </td>
@@ -63,7 +61,7 @@
 
             </BasicTable>
             <BasicTable
-                :Th="[ $t('Id'),$t('Size'),$t('Status'),$t('Settings')]"
+                :Th="[ $t('No'),$t('DataName'),$t('Size'),$t('SizeType'),$t('Status'),$t('Settings')]"
                 :Title="$t('BoxSizes')"
                 Col="col-lg-6"
             >
@@ -94,13 +92,13 @@
                     <PrimaryBtn v-if="counterStore.hasRole('BoxSizes-create')" role="button" data-bs-toggle="modal" data-bs-target="#boxSizeCreate" >{{$t('Create')}}</PrimaryBtn>
                 </template>
 
-                <tr v-for="item in boxItems" >
-                    <td>
-                        #{{ item.id }}
-                    </td>
+                <tr v-for="(item,i) in boxItems" >
+                    <td>{{ ((boxCurrent_page - 1) * paginateCount) +  i + 1 }}</td>
+                    <td>{{item.name}}</td>
                     <td>
                         {{ counterStore.formatNumber(item.size) }}
                     </td>
+                    <td>{{item.sign}}</td>
                     <td>
                         <span :class="item.status == 1 ? 'badge-soft-success' : 'badge-soft-danger' "
                               class="badge badge-pill badge-soft-success font-size-11">{{ item.status  == 1 ? $t('Active') : $t('InActive') }}</span>
@@ -108,7 +106,7 @@
                     </td>
 
                     <td>
-                        <PrimaryIconBtn v-if="counterStore.hasRole('BoxSizes-update')" @click="boxItem = item" Icon="bx bx-edit-alt" Modal="boxSizeUpdate"/>&nbsp;
+                        <PrimaryIconBtn v-if="counterStore.hasRole('BoxSizes-update')" @click="boxItem = item" Icon="bx bx-edit-alt" Modal="boxSizeUpdate"/>
 <!--                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/size-types/show', query:{id: item.id}})" Icon="bx bx-show"/>&nbsp;-->
                         <PrimaryIconBtn v-if="counterStore.hasRole('BoxSizes-delete')" @click="this.boxDelete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
                     </td>
@@ -121,7 +119,7 @@
                     @changePage="indexBoxPaginates($event)"
                 />
 
-                <GrowingLoader v-if="boxLoader" Cols="4"/>
+                <GrowingLoader v-if="boxLoader" Cols="6"/>
 
             </BasicTable>
         </div>

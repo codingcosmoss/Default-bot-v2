@@ -21,7 +21,12 @@ class AuthUserResource extends JsonResource
         $defaultImage = [
             [
                 'url' => asset('').'Photos/user.png'
-            ]
+            ],
+        ];
+        $defaultLogo = [
+            [
+                'url' => asset('').'Photos/company-logo.png'
+            ],
         ];
 
         $data = Notification::where('clinic_id', $this->clinic_id)
@@ -46,6 +51,7 @@ class AuthUserResource extends JsonResource
             'role_token' => $data != null ? $data->token : '---',
             'position' => $this->position,
             'management' => $this->management,
+            'logo' => count($setting->image) != 0 ? ImageResource::collection($setting->image) : $defaultLogo ,
             'currency' => $setting->currency,
             'currency_id' => $setting->currency_id,
             'permissions' => RolePermission::where('role_id', $this->role_id)->pluck('permission_name')->toArray()

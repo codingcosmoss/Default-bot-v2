@@ -206,8 +206,8 @@ export const getCategoryExpenses = async (id, page) => {
     return  GET('/expense/category-expenses/'+ id + '?page='+page);
 };
 
-export const expenseCurrencies = async (id) => {
-    return  GET('/expense/currencies/'+id);
+export const expenseCurrencies = async (id, page) => {
+    return  GET('/expense/currencies/'+id+'?page='+page);
 };
 export const expenseActives = async () => {
     return  GET('/expense/actives');
@@ -490,6 +490,9 @@ export const medicineUpdate = async (id, data) => {
 export const medicineSearch = async (text) => {
     return  GET('/medicine/search/' + text );
 };
+export const medicineActiveSearch = async (text) => {
+    return  GET('/medicine/active-search/' + text );
+};
 export const medicineDelete = async (id) => {
     return  GET('/medicine/delete/'+ id );
 };
@@ -591,4 +594,36 @@ export const documentDelete = async (id) => {
 };
 
 // --------------------- document finished --------------------------------------------
+
+// --------------------- imported_medicine started--------------------------------------------
+
+export const imported_medicines = async () => {
+    return  GET('imported-medicine/index');
+};
+export const imported_medicineActives = async () => {
+    return  GET('imported-medicine/actives');
+};
+export const imported_medicinePaginates = async (count, page= 1) => {
+    return  GET('imported-medicine/paginate/' + count+'?page='+page);
+};
+export const imported_medicineOrderBys = async (column, type) => {
+    return  GET('imported-medicine/orderBy/' + column + '/' + type);
+};
+export const imported_medicineShow = async (id) => {
+    return  GET('imported-medicine/show/'+id);
+};
+export const imported_medicineCreate = async (data) => {
+    return  POST('imported-medicine/create', data );
+};
+export const imported_medicineUpdate = async (id, data) => {
+    return  POST('imported-medicine/update/'+id, data );
+};
+export const imported_medicineSearch = async (text) => {
+    return  GET('imported-medicine/search/' + text );
+};
+export const imported_medicineDelete = async (id) => {
+    return  GET('imported-medicine/delete/'+ id );
+};
+
+// --------------------- imported_medicine finished --------------------------------------------
 

@@ -9,9 +9,6 @@
                     <slot></slot>
                 </span>
             </div>
-
-
-            <p  class="form-label text-danger" v-if="Validated[Name]" >{{Validated[Name]}}</p>
         </div>
     </div>
 

@@ -53,22 +53,12 @@ export default
         const counterStore = useConterStore();
         return{counterStore}
     },
-    data(){return{
-        document: []
-    }},
-    methods:{
-        async show(){
-            try {
-                const response = await documentShow(this.$route.query.id);
-                console.log(response)
-                this.document = response.data;
-            }catch(error){
-                ApiError(this, error);
-            }
-        },
+    props:{
+        document:{
+            type: [Array, Object],
+            default: []
+        }
     },
-    mounted() {
-        this.show()
-    }
+
 }
 </script>

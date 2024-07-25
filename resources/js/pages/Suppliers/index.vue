@@ -2,7 +2,7 @@
     <Page Title="">
         <div class="row"  >
             <BasicTable
-                :Th="[ $t('Id'),$t('Image'),$t('Name'),$t('Phone'),$t('Address'),$t('Settings')]"
+                :Th="[ $t('No'),$t('Image'),$t('Name'),$t('Phone'),$t('Address'),$t('Settings')]"
                 :Title="$t('Suppliers')"
                 Col="col-lg-12"
             >
@@ -33,10 +33,8 @@
                     <PrimaryBtn v-if="counterStore.hasRole('Suppliers-create')" role="button" data-bs-toggle="modal" data-bs-target="#supplierCreate" >{{$t('Create')}}</PrimaryBtn>
                 </template>
 
-                <tr v-for="item in items" >
-                    <td>
-                        #{{ item.id }}
-                    </td>
+                <tr v-for="(item, i) in items" >
+                    <td>{{ ((current_page - 1) * paginateCount) +  i + 1 }}</td>
                     <td>
                         <div class="table_image" :style="'background-image: url('+ item.image[0].url +')'"></div>
                     </td>
@@ -46,8 +44,8 @@
                     <td>{{ item.phone }}</td>
                     <td>{{ item.address }}</td>
                     <td>
-                        <PrimaryIconBtn v-if="counterStore.hasRole('Suppliers-update')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="supplierUpdate"/>&nbsp;
-                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/suppliers/show', query:{id: item.id}})" Icon="bx bx-show"/>&nbsp;
+                        <PrimaryIconBtn v-if="counterStore.hasRole('Suppliers-update')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="supplierUpdate"/>
+                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/suppliers/show', query:{id: item.id}})" Icon="bx bx-show"/>
                         <PrimaryIconBtn v-if="counterStore.hasRole('Suppliers-delete')" @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
                     </td>
 

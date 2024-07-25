@@ -2,7 +2,7 @@
     <Page Title="">
         <div class="row"  >
             <BasicTable
-                :Th="[ $t('Id'),$t('Picture'),$t('Name'),$t('Position'),$t('SystemRole'),$t('Login'),$t('Phone'),$t('Settings')]"
+                :Th="[ $t('No'),$t('Picture'),$t('Name'),$t('Position'),$t('SystemRole'),$t('Login'),$t('Phone'),$t('Settings')]"
                 :Title="$t('Employees')"
                 Col="col-lg-12"
             >
@@ -33,10 +33,9 @@
                     <PrimaryBtn v-if="counterStore.hasRole('Employees-create')" role="button" data-bs-toggle="modal" data-bs-target="#userCreate" >{{$t('Create')}}</PrimaryBtn>
                 </template>
 
-                <tr v-for="item in items" >
-                    <td>
-                        #{{ item.id }}
-                    </td>
+                <tr v-for="(item, i)  in items" >
+                    <td>{{ ((current_page - 1) * paginateCount) +  i + 1 }}</td>
+
                     <td>
                         <div class="table_image" :style="'background-image: url('+ item.image[0].url +')'"></div>
                     </td>
@@ -48,9 +47,9 @@
                     <td>{{ item.login }}</td>
                     <td>{{ item.phone }}</td>
                     <td>
-                        <PrimaryIconBtn v-if="counterStore.hasRole('Employees-update')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="userUpdate"/>&nbsp;
-                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/users/show', query:{id: item.id}})" Icon="bx bx-show"/>&nbsp;
-                        <PrimaryIconBtn v-if="counterStore.hasRole('Employees-delete')" @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
+                        <PrimaryIconBtn v-if="counterStore.hasRole('Employees-update') && item.private != 1" @click="this.item = item" Icon="bx bx-edit-alt" Modal="userUpdate"/>
+                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/users/show', query:{id: item.id}})" Icon="bx bx-show"/>
+                        <PrimaryIconBtn v-if="counterStore.hasRole('Employees-delete') && item.private != 1 " @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
                     </td>
 
                 </tr>

@@ -33,29 +33,6 @@
                         Class="col-lg-6 col-sm-12"
                     />
                 </div>
-
-                <div class="row">
-
-                    <DefaultInput
-                        :Label="$t('BuyPrice') + ' (' + currency.sign + ')' "
-                        Name="buy_price"
-                        Type="number"
-                        :Validated="errors"
-                        :Value="buy_price"
-                        @onInput="buy_price = $event,  delete this.errors.buy_price"
-                        Class="col-lg-6 col-sm-12"
-                    />
-                    <DefaultInput
-                        :Label="$t('SellingPrice') + ' (' + currency.sign + ')'"
-                        Name="price"
-                        Type="Number"
-                        :Validated="errors"
-                        :Value="price"
-                        @onInput="price = $event,  delete this.errors.price"
-                        Class="col-lg-6 col-sm-12"
-                    />
-                </div>
-
                 <div class="row">
                     <DefaultSelect
                         :Label="$t('MedicineCategory')"
@@ -72,7 +49,7 @@
                     </DefaultSelect>
 
                     <DefaultSelect
-                        :Label="$t('BoxSizes')"
+                        :Label="$t('BoxSize')"
                         ModalName="boxSizeCreate"
                         :isButton="true"
                         Name="box_size_id"
@@ -82,7 +59,7 @@
                         Class="col-lg-6 col-sm-12"
                     >
                         <option selected>---</option>
-                        <option v-for="boxSize in boxSizes" :value="boxSize.id" >{{boxSize.size}}</option>
+                        <option v-for="boxSize in boxSizes" :value="boxSize.id" >{{boxSize.name}}</option>
                     </DefaultSelect>
 
                 </div>
@@ -102,13 +79,13 @@
                     </DefaultSelect>
 
                     <DefaultSelect
-                        :Label="$t('SizeType')"
+                        :Label="$t('Strength')"
                         Name="size_type_id"
                         ModalName="size_typeCreate"
                         :isButton="true"
                         :Validated="errors"
                         :Value="size_type_id"
-                        @onInput="size_type_id = $event,  delete this.errors.size_type_id"
+                        @onInput="addSize($event) , delete this.errors.size_type_id"
                         Class="col-lg-6 col-sm-12"
                     >
                         <option selected>---</option>
@@ -117,6 +94,59 @@
 
 
                 </div>
+                <div class="row">
+                    <DefaultInput
+                        :Label="$t('BuyPrice') + ' (' + currency.sign + ')'"
+                        Name="buy_price"
+                        Type="text"
+                        :Validated="errors"
+                        :Value="counterStore.formatNumber(buy_price)"
+                        @onInput="addBuyAmount($event), calculatorPracent(percentage), delete this.errors.buy_price"
+                        Class="col-lg-6 col-sm-12"
+                        inputClass ='buy_price'
+                    />
+
+                    <DefaultInput
+                        :Label="$t('InterestSale') + '(%)'"
+                        Name="percentage"
+                        Type="Number"
+                        :Validated="errors"
+                        :Value="percentage"
+                        @onInput=" calculatorPracent($event),  delete this.errors.percentage"
+                        Class="col-lg-6 col-sm-12"
+                        :Min="1"
+                    />
+
+
+
+                </div>
+                <div class="row">
+
+                    <DefaultInput
+                        :Label="$t('PriceSale') + ' (' + currency.sign + ')'"
+                        Name="selling_price"
+                        Type="text"
+                        :Validated="errors"
+                        :Value="counterStore.formatNumber(selling_price)"
+                        @onInput="calculatorPrice($event),  delete this.errors.selling_price"
+                        Class="col-lg-6 col-sm-12 "
+                        inputClass ='selling_price'
+
+                    />
+                    <DefaultInput
+                        :Label="$t('SellingPrice') + ' (' + currency.sign + ')' "
+                        :isDisabled="true"
+                        Name="price"
+                        Type="text"
+                        :Validated="errors"
+                        :Value="counterStore.formatNumber(price)"
+                        Class="col-lg-6 col-sm-12"
+                    />
+                </div>
+
+
+
+
 
             </BaseBox>
             <BaseBox Col="col-xl-6" :Title="$t('OptionalFields')">
@@ -176,18 +206,6 @@
                         @onInput="igta = $event,  delete this.errors.igta"
                         Class="col-lg-6 col-sm-12"
                     />
-                    <DefaultInput
-                        :Label="$t('Strength')"
-                        Name="strength"
-                        Type="number"
-                        :Validated="errors"
-                        :Value="strength"
-                        @onInput="strength = $event,  delete this.errors.strength"
-                        Class="col-lg-6 col-sm-12"
-                    />
-
-                </div>
-                <div class="row">
                     <DefaultTextarea
                         :Label="$t('Desc')"
                         Name="desc"
@@ -197,11 +215,16 @@
                         @onInput="desc = $event,  delete this.errors.desc"
                         Class="col-lg-6 col-sm-12"
                     />
+
+                </div>
+                <div class="row">
+
                     <div class="col-lg-6 col-sm-12 d-flex flex-column">
                         <label class="form-label" >{{ $t('Status') }} </label>
                         <input type="checkbox" id="medicine_category_create_status" switch="none"  @input="status = status == 1 ? 0 : 1" :checked="status == 1 ? true : false" >
                         <label for="medicine_category_create_status" data-on-label="On" data-off-label="Off"></label>
                     </div>
+
                 </div>
 
             </BaseBox>
@@ -277,6 +300,7 @@ export default {
             items: [],
             item: [],
             paginateCount: 10,
+            sizeTypeSign: 'piece',
             column: 'id',
             type: 'desc',
             errors: [],
@@ -301,43 +325,38 @@ export default {
             igta: 0,
             desc: "",
             status: 1,
-            currency:''
+            currency:'',
+            percentage: 0,
+            selling_price: 0
         }
     },
 
     methods: {
+        calculatorPracent(pracent){
+            this.percentage = pracent;
+            let sum = (this.buy_price*pracent)/100;
+            this.addAmount(this.counterStore.formatNumber(sum));
+            this.price = this.buy_price + sum;
+        },
+        calculatorPrice(val){
+            this.addAmount(val);
+            let sum = (this.selling_price*100)/this.buy_price;
+            this.calculatorPracent(sum)
+        },
+        addAmount(val){
+            let formatAmount = this.counterStore.inputNumberFormat('selling_price', this.selling_price, val);
+            this.selling_price = formatAmount;
+        },
+        addBuyAmount(val){
+            let formatAmount = this.counterStore.inputNumberFormat('buy_price', this.buy_price, val);
+            this.buy_price = formatAmount;
+        },
         opanModal() {
             const myModal = new bootstrap.Modal(document.getElementById('medicineCreate'));
             myModal.show();
         },
-        async show(id) {
-            try {
-                const response = await userShow(id);
-                this.item = response.data;
-                this.medicine_category_id = response.data.medicine_category_id;
-                this.box_size_id = response.data.box_size_id;
-                this.size_type_id = response.data.size_type_id;
-                this.drug_company_id = response.data.drug_company_id;
-                this.name = response.data.name;
-                this.generic_name = response.data.generic_name;
-                this.buy_price = response.data.buy_price;
-                this.price = response.data.price;
-                this.qr_code = response.data.qr_code;
-                this.hns_code = response.data.hns_code;
-                this.desc = response.data.desc;
-                this.strength = response.data.strength;
-                this.shelf = response.data.shelf;
-                this.vat = response.data.vat;
-                this.igta = response.data.igta;
-                this.status = response.data.status;
-                this.image = response.data.image[0].url;
-
-            } catch (error) {
-                ApiError(this, error);
-            }
-        },
         async save() {
-            this.item = '';
+            this.item = [];
             this.image = '';
             this.medicine_category_id = null;
             this.box_size_id = null;
@@ -345,16 +364,23 @@ export default {
             this.drug_company_id = null;
             this.name = '';
             this.generic_name = '';
-            this.buy_price = null;
-            this.price = null;
+            this.buy_price = 0;
+            this.price = 0;
             this.qr_code = '';
             this.hns_code = '';
             this.desc = '';
             this.strength = null;
             this.shelf = '';
-            this.vat = null;
-            this.igta = null;
+            this.vat = 0;
+            this.igta = 0;
+            this.selling_price = 0;
+            this.percentage = 0;
             this.status = null;
+        },
+        addSize(val){
+            this.size_type_id = val;
+            let size = this.sizeTypes.find(e=> e.id == val);
+            this.sizeTypeSign = size.name;
         },
         async create() {
             try {
@@ -376,7 +402,8 @@ export default {
                     shelf: this.shelf,
                     vat: this.vat,
                     igta: this.igta,
-                    status: this.status,
+                    selling_price: this.selling_price,
+                    percentage: this.percentage,
                 }
 
                 const response = await medicineCreate(data);

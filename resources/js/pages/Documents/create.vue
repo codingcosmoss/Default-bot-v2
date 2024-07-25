@@ -154,6 +154,7 @@ export default {
                     this.loader = false;
                     this.errors = [];
                     this.counterStore.hiddenModal('documentCreate');
+                    this.$router.push({ path:'/admin/import', query:{id: response.data.id} });
                     this.$emit('onCreate', true)
                     return true;
                 }

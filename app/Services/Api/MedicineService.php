@@ -31,8 +31,10 @@ class MedicineService extends AbstractService
             TextField::make('name')->setRules('required|string'),
             TextField::make('generic_name')->setRules('required|string'),
             TextField::make('buy_price')->setRules('required|numeric'),
-            TextField::make('price')->setRules('required|numeric'),
+            TextField::make('selling_price')->setRules('required|numeric'),
+            TextField::make('percentage')->setRules('required|numeric'),
             TextField::make('size_type_id')->setRules('required|numeric'),
+            TextField::make('price')->setRules('required|numeric'),
 
             TextField::make('qr_code')->setRules('nullable|string'),
             TextField::make('hns_code')->setRules('nullable|string'),
@@ -57,8 +59,10 @@ class MedicineService extends AbstractService
             TextField::make('name')->setRules('required|string'),
             TextField::make('generic_name')->setRules('required|string'),
             TextField::make('buy_price')->setRules('required|numeric'),
-            TextField::make('price')->setRules('required|numeric'),
+            TextField::make('selling_price')->setRules('required|numeric'),
+            TextField::make('percentage')->setRules('required|numeric'),
             TextField::make('size_type_id')->setRules('required|numeric'),
+            TextField::make('price')->setRules('required|numeric'),
 
             TextField::make('qr_code')->setRules('nullable|string'),
             TextField::make('hns_code')->setRules('nullable|string'),
@@ -107,6 +111,7 @@ class MedicineService extends AbstractService
             $data['strength'] = $data['strength'] ?? '';
             $data['shelf'] = $data['shelf'] ?? '';
             $data['vat'] = $data['vat'] ?? 0;
+            $data['parent_id'] = 0;
             $data['igta'] = $data['igta'] ?? 0;
             $data['status'] = $data['status'] ?? Status::$status_active;
 
@@ -114,6 +119,8 @@ class MedicineService extends AbstractService
             foreach ($this->storeFields() as $field) {
                 $field->fill($object, $data);
             }
+            $object->save();
+            $object->parent_id = $object->id;
             $object->save();
 
             if (!$imageValidator['status']) {
@@ -173,6 +180,8 @@ class MedicineService extends AbstractService
             $data['igta'] = $data['igta'] ?? 0;
             $data['status'] = $data['status'] ?? Status::$status_active;
 
+            $data['price'] = $data['buy_price'] + $data['selling_price'];
+
             if (!$imageValidator['status']) {
                 $this->uploadImagesOne($item, $image);
             }
@@ -197,5 +206,43 @@ class MedicineService extends AbstractService
             ];
         }
     }
+    public function activeSearch($search = '')
+    {
+        if (!$this->hasPermission('index')){
+            return [
+                'status' => false,
+                'code' => 403,
+                'message' => 'Root access is not allowed ',
+                'data' => null
+            ];
+        }
 
+        if ($this->isClinic){
+            $data = $this->model::where(function ($query) use ($search) {
+                foreach ($this->columns as $column) {
+                    $query->orWhere($column, 'like', '%' . $search . '%');
+                }
+            })
+                ->where('clinic_id', auth()->user()->clinic_id)
+                ->where('status', Status::$status_active)
+                ->limit(10)
+                ->get();
+        }else{
+            $data = $this->model::where(function ($query) use ($search) {
+                foreach ($this->columns as $column) {
+                    $query->orWhere($column, 'like', '%' . $search . '%');
+                }
+            })
+                ->where('status', Status::$status_active)
+                ->limit(10)
+                ->get();
+        }
+
+        return [
+            'status' => true,
+            'message' => 'Success',
+            'statusCode' => 200,
+            'data' => $this->resource::collection($data)
+        ];
+    }
 }

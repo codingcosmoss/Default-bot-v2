@@ -84,6 +84,8 @@
     }
 
 </script>
-<style>
-
+<style scoped>
+.page-title-box {
+    padding-top: 15px;
+}
 </style>

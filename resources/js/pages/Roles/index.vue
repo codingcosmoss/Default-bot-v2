@@ -3,7 +3,7 @@
         <div class="row"  >
             <BasicTable
                 Modal="userCreate"
-                :Th="[ $t('Id'),$t('RoleName'),$t('Employees'),$t('CreatedAt'),$t('Settings')]"
+                :Th="[ $t('No'),$t('RoleName'),$t('Employees'),$t('CreatedAt'),$t('Settings')]"
                 Title="All Roles"
                 Col="col-lg-12"
                 @onSearch="search($event)"
@@ -22,9 +22,8 @@
                 <template v-slot:buttons>
                     <PrimaryBtn @click="this.$router.push('/admin/roles/create')" role="button" >{{$t('Create')}}</PrimaryBtn>
                 </template>
-                <tr v-for="item in items" >
-
-                    <td>#{{ item.id }}</td>
+                <tr v-for="(item, i) in items" >
+                    <td>{{i +1 }}</td>
                     <td>{{ item.name }}</td>
                     <td>
                        <div class="role_user_block">
@@ -34,7 +33,7 @@
                     </td>
                     <td>{{ counterStore.formatDate(item.created_at) }}</td>
                     <td>
-                        <PrimaryIconBtn @click="this.$router.push({path:'/admin/roles/update', query:{id:item.id}})" Icon="bx bx-edit-alt" />&nbsp;
+                        <PrimaryIconBtn @click="this.$router.push({path:'/admin/roles/update', query:{id:item.id}})" Icon="bx bx-edit-alt" />
                         <PrimaryIconBtn v-if="item.users.length == 0" @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
 
                     </td>
@@ -96,7 +95,7 @@
             async indexPaginates(){
                 try {
                     this.loader = true;
-                    const response = await rolePaginates(this.paginateCount);
+                    const response = await rolePaginates(1000);
                     this.items = response.data.items;
                     this.loader = false;
                 }catch(error){

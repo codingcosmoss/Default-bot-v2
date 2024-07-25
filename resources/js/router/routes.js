@@ -147,6 +147,11 @@ export default[
         component: () => import('../pages/Documents/index.vue'),
     },
     {
+        path: '/admin/document/show',
+        permission: 'ImportDocuments-index',
+        component: () => import('../pages/ImportMedicines/show.vue'),
+    },
+    {
         path: '/admin/import',
         permission: 'ImportDocuments-index',
         component: () => import('../pages/ImportMedicines/index.vue'),

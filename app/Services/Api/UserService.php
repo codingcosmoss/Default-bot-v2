@@ -56,6 +56,88 @@ class UserService extends AbstractService
         ];
     }
 
+    public function index()
+    {
+        try {
+            if (!$this->hasPermission('index')){
+                return [
+                    'status' => false,
+                    'code' => 403,
+                    'message' => 'Root access is not allowed ',
+                    'data' => null
+                ];
+            }
+
+            $data = $this->resource::collection(
+                $this->model::where('clinic_id', auth()->user()->clinic_id)
+                    ->where('private', Status::$status_inactive)
+                    ->get()
+            );
+
+            return [
+                'status' => true,
+                'code' => 200,
+                'message' => 'Success',
+                'data' => $data
+            ];
+
+        }catch (Exception $e){
+            return [
+                'status' => false,
+                'code' => $e->getCode(),
+                'message' => $e->getMessage(),
+                'data' => null
+            ];
+        }
+
+    }
+    public function getPaginate($count = 10)
+    {
+
+        try {
+
+            if (!$this->hasPermission('index')){
+                return [
+                    'status' => false,
+                    'code' => 403,
+                    'message' => 'Root access is not allowed ',
+                    'data' => null
+                ];
+            }
+
+            $models = $this->model::where('clinic_id', auth()->user()->clinic_id)
+                ->where('private', Status::$status_inactive)
+                ->orderBy('id', 'asc')
+                ->paginate($count);
+
+            $data = [
+                'items' => $this->resource::collection($models),
+                'pagination' => [
+                    'total' => $models->total(),
+                    'per_page' => $models->perPage(),
+                    'current_page' => $models->currentPage(),
+                    'last_page' => $models->lastPage(),
+                    'from' => $models->firstItem(),
+                    'to' => $models->lastItem(),
+                ],
+            ];
+
+            return [
+                'status' => true,
+                'code' => 200,
+                'message' => 'Success',
+                'data' => $data
+            ];
+        }catch (Exception $e){
+            return [
+                'status' => false,
+                'code' => $e->getCode(),
+                'message' => $e->getMessage(),
+                'data' => null
+            ];
+        }
+    }
+
     public function profileUpdateFields()
     {
         return [
@@ -150,7 +232,6 @@ class UserService extends AbstractService
             ];
         }
     }
-
     public function store(array $data, $image = null)
     {
         try {
@@ -260,15 +341,18 @@ class UserService extends AbstractService
             $data['email'] = isset($data['email']) ? $data['email'] : '';
             $data['position'] = isset($data['position']) ? $data['position'] : '';
 
-            $alert = new Notification();
-            $alert->name = "Change role";
-            $alert->desc = "The user role named ".$item->role->name." has been changed";
-            $alert->type = Status::$change_role;
-            $alert->model_id = $item->role->id;
-            $alert->user_id = $item->id;
-            $alert->clinic_id = auth()->user()->clinic_id;
-            $alert->token =  Str::random(10);
-            $alert->save();
+            if (isset($data['role_id']) && $data['role_id'] != $item->id){
+                $alert = new Notification();
+                $alert->name = "Change role";
+                $alert->desc = "The user role named ".$item->role->name." has been changed";
+                $alert->type = Status::$change_role;
+                $alert->model_id = $item->role->id;
+                $alert->user_id = $item->id;
+                $alert->clinic_id = auth()->user()->clinic_id;
+                $alert->token =  Str::random(10);
+                $alert->save();
+            }
+
 
             foreach ($this->updateFields() as $field) {
                 $field->fill($item, $data);
@@ -326,9 +410,10 @@ class UserService extends AbstractService
             $data['clinic_id'] =$item->clinic_id;
             $data['management'] = Status::$admin_panel;
             $data['email'] = isset($data['email']) ? $data['email'] : '';
-            $data['position'] = isset($data['position']) ? $data['position'] : '';
+            $data['position'] = $item->position;
             $data['payable'] = $item->payable;
             $data['due'] = $item->due;
+
             foreach ($this->updateFields() as $field) {
                 $field->fill($item, $data);
             }
@@ -349,6 +434,67 @@ class UserService extends AbstractService
                 'data' => null
             ];
         }
+    }
+
+    public function destroy($id)
+    {
+        try {
+            if (!$this->hasPermission('delete')){
+                return [
+                    'status' => false,
+                    'code' => 403,
+                    'message' => 'Root access is not allowed ',
+                    'data' => null
+                ];
+            }
+
+            $item = $this->model::find($id);
+            if ($item->private != Status::$status_active){
+                $item->delete($id);
+            }
+
+            return [
+                'status' => true,
+                'code' => 200,
+                'message' => 'Success',
+                'data' => $item
+            ];
+        }catch (Exception $e){
+            return [
+                'status' => false,
+                'code' => $e->getCode(),
+                'message' => $e->getMessage(),
+                'data' => null
+            ];
+        }
+    }
+    public function search($search = '')
+    {
+        if (!$this->hasPermission('index')){
+            return [
+                'status' => false,
+                'code' => 403,
+                'message' => 'Root access is not allowed ',
+                'data' => null
+            ];
+        }
+
+        $data = $this->model::where(function ($query) use ($search) {
+            foreach ($this->columns as $column) {
+                $query->orWhere($column, 'like', '%' . $search . '%');
+            }
+        })
+            ->where('private', Status::$status_inactive)
+            ->where('clinic_id', auth()->user()->clinic_id)
+            ->limit(10)
+            ->get();
+
+        return [
+            'status' => true,
+            'message' => 'Success',
+            'statusCode' => 200,
+            'data' => $this->resource::collection($data)
+        ];
     }
 
 }

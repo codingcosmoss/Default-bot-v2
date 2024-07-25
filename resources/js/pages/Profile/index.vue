@@ -161,6 +161,7 @@ export default {
                     name: this.name,
                     phone: this.phone,
                     login: this.login,
+                    position: this.item.position,
                     email: this.email,
                     image: this.image,
                     role_id: this.item.role_id,

@@ -2,7 +2,7 @@
     <Page Title="">
         <div class="row"  >
             <BasicTable
-                :Th="[ $t('Id'),$t('ModalName'),$t('Status'),$t('Settings')]"
+                :Th="[ $t('No'),$t('ModalName'),$t('Status'),$t('Settings')]"
                 :Title="$t('PaymentTypes')"
                 Col="col-lg-12"
             >
@@ -33,10 +33,8 @@
                     <PrimaryBtn v-if="counterStore.hasRole('PaymentTypes-create')" role="button" data-bs-toggle="modal" data-bs-target="#payment_typeCreate" >{{$t('Create')}}</PrimaryBtn>
                 </template>
 
-                <tr v-for="item in items" >
-                    <td>
-                        #{{ item.id }}
-                    </td>
+                <tr v-for="(item,i) in items" >
+                    <td>{{ ((current_page - 1) * paginateCount) +  i + 1 }}</td>
                     <td>
                         {{ item.name }}
                     </td>
@@ -46,7 +44,7 @@
 
                     </td>
                     <td>
-                        <PrimaryIconBtn v-if="counterStore.hasRole('PaymentTypes-update')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="payment_typeUpdate"/>&nbsp;
+                        <PrimaryIconBtn v-if="counterStore.hasRole('PaymentTypes-update')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="payment_typeUpdate"/>
 <!--                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/size-types/show', query:{id: item.id}})" Icon="bx bx-show"/>&nbsp;-->
                         <PrimaryIconBtn v-if="counterStore.hasRole('PaymentTypes-delete')" @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
                     </td>

@@ -3,7 +3,7 @@
         <div class="row"  >
             <BasicTable
                 :Th="[
-                $t('Id'),
+                $t('No'),
                 $t('ModalName'),
                 $t('Desc'),
                 $t('Expenses'),
@@ -39,18 +39,16 @@
                     <PrimaryBtn v-if="counterStore.hasRole('ExpenseCategories-create')" role="button" data-bs-toggle="modal" data-bs-target="#expense_categoryCreate" >{{$t('Create')}}</PrimaryBtn>
                 </template>
 
-                <tr v-for="item in items" >
-                    <td>
-                        #{{ item.id }}
-                    </td>
+                <tr v-for="(item,i) in items" >
+                    <td>{{ ((current_page - 1) * paginateCount) +  i + 1 }}</td>
                     <td>
                         {{ item.name }}
                     </td>
                     <td>{{ item.description }}</td>
                     <td @click="this.$router.push({path:'/admin/expense/categories/show', query:{id: item.id}})" :class="item.expenses_count > 0 ? 'cursor-pointer text-info' : '' ">{{ item.expenses_count }}</td>
                     <td>
-                        <PrimaryIconBtn v-if="counterStore.hasRole('ExpenseCategories-update')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="expense_categoryUpdate"/>&nbsp;
-                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/expense/categories/show', query:{id: item.id}})" Icon="bx bx-show"/>&nbsp;
+                        <PrimaryIconBtn v-if="counterStore.hasRole('ExpenseCategories-update')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="expense_categoryUpdate"/>
+                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/expense/categories/show', query:{id: item.id}})" Icon="bx bx-show"/>
                         <PrimaryIconBtn  v-if="counterStore.hasRole('ExpenseCategories-delete') && item.expenses_count == 0" @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
                     </td>
 

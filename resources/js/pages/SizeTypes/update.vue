@@ -1,221 +1,34 @@
 <template>
     <!--    Modal   -->
-    <ModalCentered :Title="$t('Create')" ModalName="medicineCreate" ModalTypes="modal-xl"  :isModalFooter="false">
+    <ModalCentered :Title="$t('Update')" ModalName="size_typeUpdate"  :isModalFooter="false">
         <div class="row"  >
-            <BaseBox Col="col-xl-6" Title="">
-                <ImageInput
-                    :Title="$t('Photo')"
-                    Name="medicineCreateImage"
-                    @medicineCreateImage="image = $event, delete this.errors.image"
-                    :Validated="errors"
-                />
+            <BaseBox Col="col-xl-12" Title="">
 
                 <div class="row">
                     <DefaultInput
-                        :Label="$t('DataName')"
+                        :Label="$t('ModalName')"
                         Name="name"
                         Type="text"
                         :Validated="errors"
                         :Value="name"
                         @onInput="name = $event,  delete this.errors.name"
-                        Class="col-lg-6 col-sm-12"
                     />
-                    <DefaultInput
-                        :Label="$t('GenericName')"
-                        Name="generic_name"
-                        Type="text"
-                        :Validated="errors"
-                        :Value="generic_name"
-                        @onInput="generic_name = $event,  delete this.errors.generic_name"
-                        Class="col-lg-6 col-sm-12"
-                    />
-                </div>
-
-                <div class="row">
-
-                    <DefaultInput
-                        :Label="$t('BuyPrice')"
-                        Name="buy_price"
-                        Type="number"
-                        :Validated="errors"
-                        :Value="buy_price"
-                        @onInput="buy_price = $event,  delete this.errors.buy_price"
-                        Class="col-lg-6 col-sm-12"
-                    />
-                    <DefaultInput
-                        :Label="$t('SellingPrice')"
-                        Name="price"
-                        Type="Number"
-                        :Validated="errors"
-                        :Value="price"
-                        @onInput="price = $event,  delete this.errors.price"
-                        Class="col-lg-6 col-sm-12"
-                    />
-                </div>
-
-                <div class="row">
-                    <DefaultSelect
-                        :Label="$t('MedicineCategory')"
-                        ModalName="medicine_categoryCreate"
-                        :isButton="true"
-                        Name="medicine_category_id"
-                        :Validated="errors"
-                        :Value="medicine_category_id"
-                        @onInput="medicine_category_id = $event,  delete this.errors.medicine_category_id"
-                        Class="col-lg-6 col-sm-12"
-                    >
-                        <option selected>---</option>
-                        <option v-for="medicineCategory in medicineCategories" :value="medicineCategory.id" >{{medicineCategory.name}}</option>
-                    </DefaultSelect>
-
-                    <DefaultSelect
-                        :Label="$t('BoxSizes')"
-                        ModalName="boxSizeCreate"
-                        :isButton="true"
-                        Name="box_size_id"
-                        :Validated="errors"
-                        :Value="box_size_id"
-                        @onInput="box_size_id = $event,  delete this.errors.box_size_id"
-                        Class="col-lg-6 col-sm-12"
-                    >
-                        <option selected>---</option>
-                        <option v-for="boxSize in boxSizes" :value="boxSize.id" >{{boxSize.size}}</option>
-                    </DefaultSelect>
-
-                </div>
-                <div class="row">
-                    <DefaultSelect
-                        :Label="$t('DrugCompanies')"
-                        Name="drug_company_id"
-                        ModalName="drug_companyCreate"
-                        :isButton="true"
-                        :Validated="errors"
-                        :Value="drug_company_id"
-                        @onInput="drug_company_id = $event,  delete this.errors.drug_company_id"
-                        Class="col-lg-6 col-sm-12"
-                    >
-                        <option selected>---</option>
-                        <option v-for="drugCompany in drugCompanies" :value="drugCompany.id" >{{drugCompany.name}}</option>
-                    </DefaultSelect>
-
-                    <DefaultSelect
-                        :Label="$t('SizeType')"
-                        Name="size_type_id"
-                        ModalName="size_typeCreate"
-                        :isButton="true"
-                        :Validated="errors"
-                        :Value="size_type_id"
-                        @onInput="size_type_id = $event,  delete this.errors.size_type_id"
-                        Class="col-lg-6 col-sm-12"
-                    >
-                        <option selected>---</option>
-                        <option v-for="sizeType in sizeTypes" :value="sizeType.id" >{{sizeType.name}}</option>
-                    </DefaultSelect>
-
-
-                </div>
-
-            </BaseBox>
-            <BaseBox Col="col-xl-6" Title="">
-
-
-                <div class="row">
-
-                    <DefaultInput
-                        :Label="$t('HnsCode')"
-                        Name="hns_code"
-                        Type="text"
-                        :Validated="errors"
-                        :Value="hns_code"
-                        @onInput="hns_code = $event,  delete this.errors.hns_code"
-                        Class="col-lg-6 col-sm-12"
-                    />
-                    <DefaultInput
-                        :Label="$t('QrCode')"
-                        Name="qr_code"
-                        Type="text"
-                        :Validated="errors"
-                        :Value="qr_code"
-                        @onInput="qr_code = $event,  delete this.errors.qr_code"
-                        Class="col-lg-6 col-sm-12"
-                    />
-
-                </div>
-                <div class="row">
-
-                    <DefaultInput
-                        :Label="$t('Shelf')"
-                        Name="shelf"
-                        Type="text"
-                        :Validated="errors"
-                        :Value="shelf"
-                        @onInput="shelf = $event,  delete this.errors.shelf"
-                        Class="col-lg-6 col-sm-12"
-                    />
-                    <DefaultInput
-                        :Label="$t('Vat')"
-                        Name="vat"
-                        Type="number"
-                        :Validated="errors"
-                        :Value="vat"
-                        @onInput="vat = $event,  delete this.errors.vat"
-                        Class="col-lg-6 col-sm-12"
-                    />
-                </div>
-                <div class="row">
-
-                    <DefaultInput
-                        :Label="$t('Igta')"
-                        Name="igta"
-                        Type="number"
-                        :Validated="errors"
-                        :Value="igta"
-                        @onInput="igta = $event,  delete this.errors.igta"
-                        Class="col-lg-6 col-sm-12"
-                    />
-                    <DefaultInput
-                        :Label="$t('Strength')"
-                        Name="strength"
-                        Type="number"
-                        :Validated="errors"
-                        :Value="strength"
-                        @onInput="strength = $event,  delete this.errors.strength"
-                        Class="col-lg-6 col-sm-12"
-                    />
-
-                </div>
-                <div class="row">
-                    <DefaultTextarea
-                        :Label="$t('Desc')"
-                        Name="desc"
-                        Type="text"
-                        :Validated="errors"
-                        :Value="desc"
-                        @onInput="desc = $event,  delete this.errors.desc"
-                        Class="col-lg-6 col-sm-12"
-                    />
-                    <div class="col-lg-6 col-sm-12 d-flex flex-column">
+                    <div class="col-12 d-flex flex-column">
                         <label class="form-label" >{{ $t('Status') }} </label>
-                        <input type="checkbox" id="medicine_category_create" switch="none"  @input="status = status == 1 ? 0 : 1" :checked="status == 1 ? true : false" >
-                        <label for="medicine_category_create" data-on-label="On" data-off-label="Off"></label>
+                        <input type="checkbox" id="size_type_create" switch="none"  @input="status = status == 1 ? 0 : 1" :checked="status == 1 ? true : false" >
+                        <label for="size_type_create" data-on-label="On" data-off-label="Off"></label>
                     </div>
                 </div>
 
             </BaseBox>
             <BtnBox>
-                <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{ $t('Close') }}</button>&nbsp;&nbsp;
-                <PrimaryBtn  :Loader="loader" @onButton="create()">{{$t('Save')}}</PrimaryBtn>
+                <button @click="this.$emit('onClose')" type="button" class="btn btn-light" data-bs-dismiss="modal">{{ $t('Close') }}</button>&nbsp;&nbsp;
+                <PrimaryBtn  :Loader="loader" @onButton="update()">{{$t('Save')}}</PrimaryBtn>
             </BtnBox>
 
 
         </div>
-
     </ModalCentered>
-    <CategoryCreate @onCreate="this.$emit('indexCategoryActives', true), opanModal()"></CategoryCreate>
-    <CompanyCreate @onCreate="this.$emit('indexCompaniesActives', true), opanModal()"></CompanyCreate>
-    <SizeCreate @onCreate="this.$emit('indexBoxSizesActives', true), opanModal()"></SizeCreate>
-    <TypeCreate @onCreate="this.$emit('indexTypesActives', true), opanModal()"></TypeCreate>
-
 </template>
 <script>
 import Page from "@/components/layout/Page.vue";
@@ -233,7 +46,7 @@ import {
     userActives,
     userOrderBys,
     userUpdatePassword,
-    medicineCreate, medicine_categoryActives, box_sizeActives, drug_companyActives, size_typeActives
+    size_typeUpdate
 } from "../../helpers/api.js";
 import PrimaryButton from "@/components/all/PrimaryButton.vue";
 import {Alert} from "@/helpers/Config.js";
@@ -243,26 +56,15 @@ import BtnBox from "@/components/all/BtnBox.vue";
 import PrimaryBtn from "@/components/all/PrimaryBtn.vue";
 import DefaultSelect from "@/ui-components/Forms/DefaultSelect.vue";
 import ImageInput from "@/components/all/ImageInput.vue";
-import DefaultTextarea from "@/ui-components/Forms/DefaultTextarea.vue";
-import CategoryCreate from '../MedicineCategories/create.vue';
-import CompanyCreate from '../MedicineCategories/boxCreate.vue';
-import SizeCreate from '../SizeTypes/boxCreate.vue';
-import TypeCreate from '../SizeTypes/create.vue';
 
 export default {
-    components: {
-        DefaultTextarea,
-        ImageInput, DefaultSelect, CompanyCreate,SizeCreate,TypeCreate, PrimaryBtn, BtnBox, ModalCentered, PrimaryButton, DefaultInput, Page, CategoryCreate},
+    components: {ImageInput, DefaultSelect, PrimaryBtn, BtnBox, ModalCentered, PrimaryButton, DefaultInput, Page},
     setup() {
         const counterStore = useConterStore();
         return {counterStore}
     },
     props: {
-        Item: Object,
-        medicineCategories: Object,
-        boxSizes: Object,
-        drugCompanies: Object,
-        sizeTypes: Object,
+        Item: Object
     },
     data() {
         return {
@@ -275,129 +77,53 @@ export default {
             passwordErrors: [],
             loader: false,
             loaderPass: false,
-            // forms
-            image: '',
-            name: "",
-            generic_name: "",
-            buy_price: 0,
-            price: 0,
-            medicine_category_id: null,
-            box_size_id: null,
-            size_type_id: null,
-            drug_company_id: null,
-            qr_code: "",
-            hns_code: "",
-            strength: 0,
-            shelf: "",
-            vat: 0,
-            igta: 0,
-            desc: "",
             status: 1,
+            // forms
+            name: "",
+            address: '',
+            phone: '',
+            email: '',
+            image: '',
         }
     },
-
     methods: {
-        opanModal() {
-            const myModal = new bootstrap.Modal(document.getElementById('medicineCreate'));
-            myModal.show();
-        },
         async show(id) {
             try {
                 const response = await userShow(id);
                 this.item = response.data;
-                this.medicine_category_id = response.data.medicine_category_id;
-                this.box_size_id = response.data.box_size_id;
-                this.size_type_id = response.data.size_type_id;
-                this.drug_company_id = response.data.drug_company_id;
                 this.name = response.data.name;
-                this.generic_name = response.data.generic_name;
-                this.buy_price = response.data.buy_price;
-                this.price = response.data.price;
-                this.qr_code = response.data.qr_code;
-                this.hns_code = response.data.hns_code;
-                this.desc = response.data.desc;
-                this.strength = response.data.strength;
-                this.shelf = response.data.shelf;
-                this.vat = response.data.vat;
-                this.igta = response.data.igta;
                 this.status = response.data.status;
-                this.image = response.data.image[0].url;
-
             } catch (error) {
                 ApiError(this, error);
             }
         },
-        save2() {
-            this.item = this.Item;
-            this.image = this.Item.image[0].url;
-            this.medicine_category_id = this.Item.medicine_category_id;
-            this.box_size_id = this.Item.box_size_id;
-            this.size_type_id = this.Item.size_type_id;
-            this.drug_company_id = this.Item.drug_company_id;
-            this.name = this.Item.name;
-            this.generic_name = this.Item.generic_name;
-            this.buy_price = this.Item.buy_price;
-            this.price = this.Item.price;
-            this.qr_code = this.Item.qr_code;
-            this.hns_code = this.Item.hns_code;
-            this.desc = this.Item.desc;
-            this.strength = this.Item.strength;
-            this.shelf = this.Item.shelf;
-            this.vat = this.Item.vat;
-            this.igta = this.Item.igta;
-            this.status = this.Item.status;
-            console.log('Item', this.Item)
-        },
         async save() {
             this.item = '';
-            this.image = '';
-            this.medicine_category_id = null;
-            this.box_size_id = null;
-            this.size_type_id = null;
-            this.drug_company_id = null;
             this.name = '';
-            this.generic_name = '';
-            this.buy_price = null;
-            this.price = null;
-            this.qr_code = '';
-            this.hns_code = '';
-            this.desc = '';
-            this.strength = null;
-            this.shelf = '';
-            this.vat = null;
-            this.igta = null;
-            this.status = null;
+            this.status = 1;
         },
-        async create() {
+        async save2() {
+            this.item = this.Item;
+            this.name = this.Item.name;
+            this.status = this.Item.status;
+        },
+        async update() {
             try {
                 this.loader = true;
+
                 let data = {
-                    image: this.image,
-                    medicine_category_id: this.medicine_category_id,
-                    box_size_id: this.box_size_id,
-                    size_type_id: this.size_type_id,
-                    drug_company_id: this.drug_company_id,
                     name: this.name,
-                    generic_name: this.generic_name,
-                    buy_price: this.buy_price,
-                    price: this.price,
-                    qr_code: this.qr_code,
-                    hns_code: this.hns_code,
-                    desc: this.desc,
-                    strength: this.strength,
-                    shelf: this.shelf,
-                    vat: this.vat,
-                    igta: this.igta,
                     status: this.status,
                 }
 
-                const response = await medicineCreate(data);
+                const response = await size_typeUpdate(this.Item.id, data);
                 if (response.status) {
-                    Alert('success', this.$t('create'));
+                    Alert('success', this.$t('update'));
                     this.save();
                     this.loader = false;
-                    this.counterStore.hiddenModal('medicineCreate');
-                    this.$emit('onCreate', true)
+                    this.errors = [];
+                    this.counterStore.hiddenModal('size_typeUpdate');
+                    this.$emit('onUpdate', true)
                     return true;
                 }
                 this.errors = response.errors;
@@ -409,16 +135,14 @@ export default {
                 this.loader = false;
                 return false;
             }
-        },
-
+        }
     },
     mounted() {
-
         // this.save()
     },
     watch: {
         Item: function (newVal, oldVal) { // watch it
-            this.save()
+            this.save2()
         }
     }
 }

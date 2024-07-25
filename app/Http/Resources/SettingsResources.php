@@ -27,8 +27,7 @@ class SettingsResources extends JsonResource
             'address' => $this->address,
             'currency' => $this->currency,
             'currency_id' => $this->currency->id,
-            'image' => count($this->image) != 0 ? ImageResource::collection($this->image) : $defaultImage ,
-
+            'logo' => count($this->image) != 0 ? ImageResource::collection($this->image) : $defaultImage ,
         ];
     }
 }

@@ -175,8 +175,12 @@
                     this.email = response.data.email;
                     this.phone = response.data.phone;
                     this.currency_id = response.data.currency_id;
-                    this.image = response.data.image[0].url;
+                    this.image = response.data.logo[0].url;
                     this.loader = false;
+                    let user = this.counterStore.user;
+                    user['logo'] = response.data.logo;
+                    localStorage.setItem('user', JSON.stringify(user));
+                    this.counterStore.updateUser(user);
                 }catch(error){
                     ApiError(this, error);
                 }
@@ -214,11 +218,11 @@
                         currency_id: this.currency_id,
                         image: this.image
                     }
-                    const response = await settingUpdate(1, data);
+                    const response = await settingUpdate(null, data);
                     if (response.status){
                         Alert('success', this.$t('update'));
                         this.counterStore.updateCurrency(response.data.currency)
-                        this.show(1);
+                        this.show(response.data.clinic_id);
                         this.loader = false;
                         return true;
                     }

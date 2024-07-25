@@ -4,7 +4,9 @@ namespace App\Services\Api;
 
 use App\Fields\Store\TextField;
 use App\Http\Resources\DocumentResource;
+use App\Http\Resources\ImportedMedicineResource;
 use App\Models\Document;
+use App\Models\ImportedMedicine;
 use App\Models\Setting;
 use Illuminate\Support\Facades\DB;
 use Mockery\Exception;
@@ -48,6 +50,57 @@ class DocumentService extends AbstractService
         ];
     }
 
+    public function getPaginate($count = 10)
+    {
+
+        try {
+
+            if (!$this->hasPermission('index')){
+                return [
+                    'status' => false,
+                    'code' => 403,
+                    'message' => 'Root access is not allowed ',
+                    'data' => null
+                ];
+            }
+
+            if ($this->isClinic){
+                $models = $this->model::where('clinic_id', auth()->user()->clinic_id)
+                    ->orderBy('updated_at', 'desc')
+                    ->paginate($count);
+            }else{
+                $models = $this->model::orderBy('updated_at', 'desc')
+                    ->paginate($count);
+            }
+
+
+            $data = [
+                'items' => $this->resource::collection($models),
+                'pagination' => [
+                    'total' => $models->total(),
+                    'per_page' => $models->perPage(),
+                    'current_page' => $models->currentPage(),
+                    'last_page' => $models->lastPage(),
+                    'from' => $models->firstItem(),
+                    'to' => $models->lastItem(),
+                ],
+            ];
+
+            return [
+                'status' => true,
+                'code' => 200,
+                'message' => 'Success',
+                'data' => $data
+            ];
+        }catch (Exception $e){
+            return [
+                'status' => false,
+                'code' => $e->getCode(),
+                'message' => $e->getMessage(),
+                'data' => null
+            ];
+        }
+    }
 
     public function store(array $data, $file=null ): array
     {

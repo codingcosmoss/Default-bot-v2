@@ -6,12 +6,28 @@
 
                 <div class="row">
                     <DefaultInput
+                        :Label="$t('DataName')"
+                        Name="name"
+                        Type="text"
+                        :Validated="errors"
+                        :Value="name"
+                        @onInput="name = $event,  delete this.errors.name"
+                    />
+                    <DefaultInput
                         :Label="$t('Size')"
                         Name="size"
                         Type="number"
                         :Validated="errors"
                         :Value="size"
                         @onInput="size = $event,  delete this.errors.size"
+                    />
+                    <DefaultInput
+                        :Label="$t('SizeType')"
+                        Name="sign"
+                        Type="text"
+                        :Validated="errors"
+                        :Value="sign"
+                        @onInput="sign = $event,  delete this.errors.sign"
                     />
                     <div class="col-12 d-flex flex-column">
                         <label class="form-label" >{{ $t('Status') }} </label>
@@ -80,8 +96,8 @@ export default {
             status: 1,
             // forms
             size: "",
-            address: '',
-            phone: '',
+            sign: 'piece',
+            name: '',
             email: '',
             image: '',
         }
@@ -92,6 +108,8 @@ export default {
                 const response = await userShow(id);
                 this.item = response.data;
                 this.size = response.data.name;
+                this.sign = response.data.name;
+                this.name = response.data.name;
                 this.status = response.data.status;
             } catch (error) {
                 ApiError(this, error);
@@ -101,6 +119,8 @@ export default {
             try {
                 this.item = '';
                 this.size = '';
+                this.sign = 'piece';
+                this.name = '';
                 this.status = 1;
             } catch (error) {
                 ApiError(this, error);
@@ -112,6 +132,8 @@ export default {
 
                 let data = {
                     size: this.size,
+                    sign: this.sign,
+                    name: this.name,
                     status: this.status,
                 }
 

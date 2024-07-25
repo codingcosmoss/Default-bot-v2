@@ -2,7 +2,7 @@
     <Page Title="">
         <div class="row"  >
             <BasicTable
-                :Th="[ $t('Id'),$t('ModalName'),$t('Status'),$t('Settings')]"
+                :Th="[ $t('No'),$t('ModalName'),$t('Status'),$t('Settings')]"
                 :Title="$t('Categories')"
                 Col="col-lg-6"
             >
@@ -33,10 +33,8 @@
                     <PrimaryBtn v-if="counterStore.hasRole('MedicineCategories-create')" role="button" data-bs-toggle="modal" data-bs-target="#medicine_categoryCreate" >{{$t('Create')}}</PrimaryBtn>
                 </template>
 
-                <tr v-for="item in items" >
-                    <td>
-                        #{{ item.id }}
-                    </td>
+                <tr v-for="(item,i) in items" >
+                    <td>{{ ((current_page - 1) * paginateCount) +  i + 1 }}</td>
                     <td>
                         {{ item.name }}
                     </td>
@@ -46,7 +44,7 @@
 
                     </td>
                     <td>
-                        <PrimaryIconBtn v-if="counterStore.hasRole('MedicineCategories-update')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="medicine_categoryUpdate"/>&nbsp;
+                        <PrimaryIconBtn v-if="counterStore.hasRole('MedicineCategories-update')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="medicine_categoryUpdate"/>
 <!--                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/size-types/show', query:{id: item.id}})" Icon="bx bx-show"/>&nbsp;-->
                         <PrimaryIconBtn v-if="counterStore.hasRole('MedicineCategories-delete')" @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
                     </td>
@@ -63,7 +61,7 @@
 
             </BasicTable>
             <BasicTable
-                :Th="[ $t('Id'),$t('Size'),$t('Status'),$t('Settings')]"
+                :Th="[ $t('No'),$t('Size'),$t('Status'),$t('Settings')]"
                 :Title="$t('DrugCompanies')"
                 Col="col-lg-6"
             >
@@ -94,10 +92,8 @@
                     <PrimaryBtn v-if="counterStore.hasRole('DrugCompanies-create')" role="button" data-bs-toggle="modal" data-bs-target="#drug_companyCreate" >{{$t('Create')}}</PrimaryBtn>
                 </template>
 
-                <tr v-for="item in boxItems" >
-                    <td>
-                        #{{ item.id }}
-                    </td>
+                <tr v-for="(item,i) in boxItems" >
+                    <td>{{ ((boxCurrent_page - 1) * paginateCount) +  i + 1 }}</td>
                     <td>
                         {{ item.name }}
                     </td>
@@ -108,7 +104,7 @@
                     </td>
 
                     <td>
-                        <PrimaryIconBtn v-if="counterStore.hasRole('DrugCompanies-update')" @click="boxItem = item" Icon="bx bx-edit-alt" Modal="drug_companyUpdate"/>&nbsp;
+                        <PrimaryIconBtn v-if="counterStore.hasRole('DrugCompanies-update')" @click="boxItem = item" Icon="bx bx-edit-alt" Modal="drug_companyUpdate"/>
 <!--                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/size-types/show', query:{id: item.id}})" Icon="bx bx-show"/>&nbsp;-->
                         <PrimaryIconBtn v-if="counterStore.hasRole('DrugCompanies-delete')" @click="this.boxDelete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
                     </td>

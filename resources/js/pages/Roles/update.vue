@@ -1,21 +1,20 @@
 <template>
     <Page Title="">
         <div class="row"  >
-            <BaseBox Col="col-xl-6" :Title="$t('Update')" >
-                <DefaultInput
-                    :Label="$t('RoleName')"
-                    Name="name"
-                    Type="text"
-                    :Validated="errors"
-                    :Value="name"
-                    @onInput="name = $event,  delete this.errors.name"
-                />
-                <BtnBox>
-                    <PrimaryBtn class="btn btn-secondary" @click="this.$router.go(-1)"  >{{ $t('Close') }}</PrimaryBtn>&nbsp;&nbsp;
-                    <PrimaryBtn @click="update()" :Loader="loader" >{{ $t('Save') }}</PrimaryBtn>
-                </BtnBox>
-            </BaseBox>
 
+            <div class="col-xl-12">
+                <BaseBox Col="col-xl-6" :Title="$t('Update')" >
+                    <DefaultInput
+                        :Label="$t('RoleName')"
+                        Name="name"
+                        Type="text"
+                        :Validated="errors"
+                        :Value="name"
+                        @onInput="name = $event,  delete this.errors.name"
+                    />
+
+                </BaseBox>
+            </div>
             <BaseBox Col="col-xl-6"  :Title="$t('Permissions')"  >
                 <BaseCheck
                     @click="addAllPermission()"
@@ -28,7 +27,7 @@
                     Title="Latest Transaction"
                     Col="col-lg-12"
                 >
-                    <tr v-for="menu in items">
+                    <tr v-for="menu in items.slice(0, items.length/2)">
                         <td> <BaseCheck :Title="$t(menu.name)" @click="addMenu(menu)" :isCheck="this.menus.find(id => id == menu.id)" /> </td>
                         <td class="text-primary">
                             <BaseCheck
@@ -40,6 +39,33 @@
                         </td>
                     </tr>
                 </PrimaryTable>
+            </BaseBox>
+            <BaseBox Col="col-xl-6"  Title=""  >
+                <h4 class="card-title mb-4 d-none d-xl-block">&nbsp;</h4>
+                <div class="m-xl-5" ></div>
+                <br>
+                <PrimaryTable
+                    :Th="[ $t('Sections'), $t('Permissions')]"
+                    Title="Latest Transaction"
+                    Col="col-lg-12"
+                >
+                    <tr v-for="menu in items.slice(items.length/2, items.length)">
+                        <td> <BaseCheck :Title="$t(menu.name)" @click="addMenu(menu)" :isCheck="this.menus.find(id => id == menu.id)" /> </td>
+                        <td class="text-primary">
+                            <BaseCheck
+                                v-for="permission in menu.permissions"
+                                @click="addPermission(permission)"
+                                :isCheck="this.permissions.find(id => id == permission.id)"
+                                :Title="$t(permission.name.toUpperCase())"
+                            />
+                        </td>
+                    </tr>
+                </PrimaryTable>
+                <br>
+                <BtnBox>
+                    <PrimaryBtn class="btn btn-secondary" @click="this.$router.go(-1)"  >{{ $t('Close') }}</PrimaryBtn>&nbsp;&nbsp;
+                    <PrimaryBtn @click="update()" :Loader="loader" >{{ $t('Save') }}</PrimaryBtn>
+                </BtnBox>
             </BaseBox>
 
         </div>
@@ -98,7 +124,6 @@
                     const response = await roleShow(this.$route.query.id);
                     this.item = response.data;
                     this.name = response.data.name;
-                    console.log('Permissions:', response.data.permissions.length);
                     response.data.permissions.forEach(permission => {
                         this.permissions.push(permission.id);
                         this.menus.push(permission.menu_id);
@@ -182,7 +207,7 @@
                     this.menus = [];
                     this.permissions = [];
                 }
-                console.log(this.permissions)
+                console.log('Uzenligi:', this.menus.length)
             },
             addMenu(menu){
                 let isData = this.menus.find(item => item == menu.id);

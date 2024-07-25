@@ -32,7 +32,9 @@ class DocumentResource extends JsonResource
             'supplier' => $this->supplier,
             'date' => $this->date,
             'subtotal' => $this->subtotal,
+            'loan_amount' => $this->loan_amount,
             'amount_paid' => $this->amount_paid,
+            'status' => $this->status,
             'currency' => Currency::find($this->currency_id),
             'file' => count($this->image) != 0 ? ImageResource::collection($this->image) : $defaultFile ,
 

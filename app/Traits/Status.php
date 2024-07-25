@@ -23,6 +23,7 @@ trait Status
     public static int $change_role = 4;
     public static int $saved = 5;
     public static int $notSaved = 6;
+    public static int $import = 7;
 
     /**
      * @return string[]
@@ -37,6 +38,9 @@ trait Status
             self::$change_role => "Change role",
             self::$saved => "Saqlangan",
             self::$notSaved => "Saqlanmagan",
+            self::$import => "Olib kelingan",
+            self::$admin => "Admin",
+            self::$user => "User",
         ];
     }
 

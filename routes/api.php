@@ -216,6 +216,7 @@ Route::middleware(['auth:sanctum', 'admin' ])->group(function () {
         Route::get('/show/{id}', [\App\Http\Controllers\Api\MedicineController::class, 'show']);
         Route::post('/create', [\App\Http\Controllers\Api\MedicineController::class, 'create']);
         Route::post('/update/{id}', [\App\Http\Controllers\Api\MedicineController::class, 'update']);
+        Route::get('/active-search/{search}', [\App\Http\Controllers\Api\MedicineController::class, 'activeSearch']);
         Route::get('/search/{search}', [\App\Http\Controllers\Api\MedicineController::class, 'search']);
         Route::get('/delete/{id}', [\App\Http\Controllers\Api\MedicineController::class, 'destroy']);
     });
@@ -255,6 +256,18 @@ Route::middleware(['auth:sanctum', 'admin' ])->group(function () {
         Route::post('/update/{id}', [\App\Http\Controllers\Api\DocumentController::class, 'update']);
         Route::get('/search/{search}', [\App\Http\Controllers\Api\DocumentController::class, 'search']);
         Route::get('/delete/{id}', [\App\Http\Controllers\Api\DocumentController::class, 'destroy']);
+    });
+
+    Route::prefix('/imported-medicine')->group(function () {
+        Route::get('/index', [\App\Http\Controllers\Api\ImportedMedicineController::class, 'index']);
+        Route::get('/actives', [\App\Http\Controllers\Api\ImportedMedicineController::class, 'activeIndex']);
+        Route::get('/paginate/{count}', [\App\Http\Controllers\Api\ImportedMedicineController::class, 'getPaginate']);
+        Route::get('/orderBy/{column}/{type}', [\App\Http\Controllers\Api\ImportedMedicineController::class, 'orderBy']);
+        Route::get('/show/{id}', [\App\Http\Controllers\Api\ImportedMedicineController::class, 'show']);
+        Route::post('/create', [\App\Http\Controllers\Api\ImportedMedicineController::class, 'create']);
+        Route::post('/update/{id}', [\App\Http\Controllers\Api\ImportedMedicineController::class, 'update']);
+        Route::get('/search/{search}', [\App\Http\Controllers\Api\ImportedMedicineController::class, 'search']);
+        Route::get('/delete/{id}', [\App\Http\Controllers\Api\ImportedMedicineController::class, 'destroy']);
     });
 
 

@@ -36,6 +36,8 @@
         <script src="{{asset("")}}assets/libs/apexcharts/apexcharts.min.js"></script>
         <!-- dashboard init -->
         <script src="{{asset("")}}assets/js/pages/dashboard.init.js"></script>
+
+
         <!-- App js -->
         <script src="{{asset("")}}assets/js/app.js"></script>
     </body>

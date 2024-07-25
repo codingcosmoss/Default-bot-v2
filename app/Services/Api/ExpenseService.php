@@ -58,16 +58,28 @@ class ExpenseService extends AbstractService
                 ];
             }
 
-            $data = $this->model::where('clinic_id', auth()->user()->clinic_id )
+            $datas = $this->model::where('clinic_id', auth()->user()->clinic_id )
                 ->where('currency_id', $id)
                 ->orderBy('date', 'desc')
-                ->get();
+                ->paginate(100);
+
+            $data = [
+                'items' => $this->resource::collection($datas),
+                'pagination' => [
+                    'total' => $datas->total(),
+                    'per_page' => $datas->perPage(),
+                    'current_page' => $datas->currentPage(),
+                    'last_page' => $datas->lastPage(),
+                    'from' => $datas->firstItem(),
+                    'to' => $datas->lastItem(),
+                ],
+            ];
 
             return [
                 'status' => true,
                 'code' => 200,
                 'message' => 'Success',
-                'data' => $this->resource::collection($data)
+                'data' => $data
             ];
         }catch (Exception $e){
             return [

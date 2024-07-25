@@ -4,11 +4,8 @@
             <div class="d-flex">
                 <!-- LOGO -->
                 <div class="navbar-brand-box">
-                    <a href="index.html" class="logo logo-dark">
 
-                    </a>
-
-                    <a href="index.html" class="logo logo-light">
+                    <a :style="'background-image: url('+ counterStore.user.logo[0].url +');'" href="/" class="logo logo-light company_logo">
 
                     </a>
                 </div>
@@ -88,6 +85,7 @@ export default {
         },
         data(){return{
             locale: localStorage.getItem('locale'),
+            logo: '',
             locales:[
                 {
                     title: 'English',
@@ -184,6 +182,10 @@ export default {
                     })
                 }
             }
+        },
+
+        mounted() {
+
         }
-    }
+}
 </script>

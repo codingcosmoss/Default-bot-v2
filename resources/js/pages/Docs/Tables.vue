@@ -41,8 +41,8 @@
                     <td>{{ item.date }}</td>
                     <td>{{ item.total }}</td>
                     <td>
-                        <PrimaryIconBtn v-if="counterStore.hasRole('public')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="userUpdate"/>&nbsp;
-                        <PrimaryIconBtn  @click="this.$router.push({path:'path', query:{id: item.id}})" Icon="bx bx-show"/>&nbsp;
+                        <PrimaryIconBtn v-if="counterStore.hasRole('public')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="userUpdate"/>
+                        <PrimaryIconBtn  @click="this.$router.push({path:'path', query:{id: item.id}})" Icon="bx bx-show"/>
                         <PrimaryIconBtn v-if="counterStore.hasRole('public')" @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
                     </td>
                 </tr>

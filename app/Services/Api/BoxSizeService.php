@@ -24,6 +24,8 @@ class BoxSizeService extends AbstractService
     {
         return [
             TextField::make('clinic_id')->setRules('nullable'),
+            TextField::make('sign')->setRules('required'),
+            TextField::make('name')->setRules('required|string'),
             TextField::make('size')->setRules('required|numeric'),
             TextField::make('status')->setRules('required|integer'),
         ];
@@ -32,6 +34,8 @@ class BoxSizeService extends AbstractService
     {
         return [
             TextField::make('clinic_id')->setRules('nullable'),
+            TextField::make('sign')->setRules('required'),
+            TextField::make('name')->setRules('required|string'),
             TextField::make('size')->setRules('required|string'),
             TextField::make('status')->setRules('required|integer'),
         ];

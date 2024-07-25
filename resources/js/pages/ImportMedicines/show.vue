@@ -1,0 +1,239 @@
+<template>
+    <Page :Title="$t('RegistrationImportedDrugs')"
+          :Links="[
+                    {
+                        path: '/admin/documents',
+                        name: $t('ImportDocuments'),
+                        status: false
+                    },
+                     {
+                        path: '/',
+                        name: $t('RegistrationMedicines'),
+                        status: true
+                    },
+                ]">
+        <div class="row"  >
+            <Header :document="document" />
+            <BasicTable
+                :Th="[$t('No'),
+                    $t('Picture'),
+                    $t('ModalName'),
+                    $t('ExpiryDateFinished'),
+                    $t('BoxSize'),
+                    $t('BuyPrice'),
+                    $t('PurchasedAmount'),
+                    $t('CurrentAmount'),
+                    $t('Subtotal'),
+                    $t('Settings'),]"
+                Title=""
+                Col="col-lg-12"
+            >
+                <tr v-for="(item, index) in medicines" >
+                    <td>
+                        {{ index + 1 }}
+                    </td>
+                    <td>
+                        <div class="table_image"  :style="'background-image: url('+ item.medicine.image[0].url +')'"></div>
+                    </td>
+                    <td>
+                        {{ item.medicine.name }} {{item.id}}
+                    </td>
+                    <td>
+                        {{item.expiry_date_finished}}
+                    </td>
+                    <td>
+                        {{item.box_size.name}}
+                    </td>
+
+                    <td>
+                        {{counterStore.formatNumber(item.buy_price)}} {{item.currency.sign}}
+                    </td>
+                    <td>{{counterStore.formatNumber(item.amount)}}</td>
+                    <td>{{counterStore.formatNumber(item.current_amount)}}</td>
+                    <td>{{ counterStore.formatNumber(item.total_cost)}} {{item.currency.sign}}</td>
+                    <td>
+                        <PrimaryIconBtn
+                            :title="$t('UploadMedicine')"
+                            Icon="bx bx-upload"
+                        />
+                    </td>
+
+                </tr>
+                <GrowingLoader v-if="loader" Cols="9"/>
+
+            </BasicTable>
+            <div class=" w-100 d-flex justify-content-end">
+                <div class="col-xl-5">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-nowrap mb-0">
+                                    <tbody>
+                                    <tr>
+                                        <th scope="row">{{$t('Subtotal')}} :</th>
+                                        <td>{{counterStore.formatNumber(document.subtotal)}} {{counterStore.user.currency.sign}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">{{$t('AmountToPaid')}} :</th>
+                                        <td>{{counterStore.formatNumber(document.loan_amount)}} {{counterStore.user.currency.sign}}</td>
+                                    </tr>
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+                            <br>
+                            <BtnBox>
+                                <PrimaryBtn v-if="document.loan_amount > 0" :Loader="loader" >{{ $t('ToPay') }}</PrimaryBtn>
+                            </BtnBox>
+                        </div>
+                    </div>
+                    <!-- end card -->
+                </div>
+            </div>
+        </div>
+
+    </Page>
+</template>
+<script>
+    import Page from "@/components/layout/Page.vue";
+    import {ApiError} from "@/helpers/Config.js";
+    import {Alert} from "@/helpers/Config.js";
+    import {useConterStore} from "@/store/counter.js";
+    import BasicTable from "@/components/all/BasicTable.vue";
+    import {
+        box_sizeActives,
+        drug_companyActives,
+        size_typeActives,
+        medicine_categoryActives,
+        payment_types, documentShow, imported_medicineShow
+    } from "@/helpers/api.js";
+    import GrowingLoader from "@/components/all/GrowingLoader.vue";
+    import PrimaryButton from "@/components/all/PrimaryButton.vue";
+    import PrimaryIconBtn from "@/components/all/PrimaryIconBtn.vue";
+    import ModalCentered from "@/components/all/ModalCentered.vue";
+    import PrimaryBtn from "@/components/all/PrimaryBtn.vue";
+    import DefaultInput from "@/ui-components/Forms/DefaultInput.vue";
+    import Paginate from "@/components/all/Paginate.vue";
+    import DefaultSelect from "@/ui-components/Forms/DefaultSelect.vue";
+    import Header from './header.vue';
+    import Report from './report.vue';
+    import CreateMedicine from '../Medicines/create.vue';
+    import Create from "@/pages/Medicines/create.vue";
+    import Update from "@/pages/Medicines/update.vue";
+    import Search from "./search.vue";
+    import DefaultIconInput from "@/components/all/DefaultIconInput.vue";
+    import IconSelect from "@/components/all/IconSelect.vue";
+    import BasicInput from "@/components/all/BasicInput.vue";
+    import BasicSelect from "@/components/all/BasicSelect.vue";
+    export default {
+        components: {
+            BasicSelect,
+            BasicInput,
+            IconSelect,
+            DefaultIconInput,
+            Update,
+            Create,
+            DefaultSelect,
+            Paginate,
+            DefaultInput,
+            PrimaryBtn,
+            ModalCentered, PrimaryIconBtn, PrimaryButton, GrowingLoader, BasicTable, Page,Header, Report,Search, CreateMedicine},
+        setup(){
+            const counterStore = useConterStore();
+            return{counterStore}
+        },
+        data(){return{
+            change: false,
+            isChange: false,
+            items: [],
+            mloader: false,
+            item: [],
+            boxItem: [],
+            paginateCount: 10,
+            last_page: 1,
+            current_page: 1,
+            boxLast_page: 1,
+            boxCurrent_page: 1,
+            column: 'id',
+            type: 'desc',
+            loader: false,
+            boxLoader: false,
+            boxItems: [],
+            medicines: [],
+            document: [],
+            sortId: 1,
+
+        }},
+        methods:{
+            deleteError(id){
+                this.isChange = !this.isChange;
+                this.dataErrors = this.dataErrors.filter(number => (number != 'date'+id && number != 'buy_price'+id && number != 'bu_amount'+id ));
+            },
+            async show(){
+                try {
+                    const response = await imported_medicineShow(this.$route.query.id);
+                    this.medicines = response.data;
+                }catch(error){
+                    ApiError(this, error);
+                }
+            },
+            async showDocument(){
+                try {
+                    const response = await documentShow(this.$route.query.id);
+                    this.document = response.data;
+                }catch(error){
+                    ApiError(this, error);
+                }
+            },
+
+            async search(text = ''){
+                try {
+                    this.loader = true;
+                    if (text == ''){
+                        this.indexPaginates();
+                        return true;
+                    }
+                    const response = await documentSearch(text);
+                    this.items = response.data;
+                    this.loader = false;
+                    if (!response.status){
+                        Alert('error', this.$t('formError'));
+                        this.loader = false;
+                        return false;
+                    }
+                    this.loader = false;
+                    return true;
+                }catch(error){
+                    ApiError(this, error);
+                    this.loader = false;
+                    return false;
+                }
+            },
+            async delete(id){
+                try {
+                    if (!confirm(this.$t('DeleteAlert'))){
+                        return false;
+                    }
+                    const response = await documentDelete(id);
+                    if (response.status){
+                        this.indexPaginates(this.current_page)
+                        Alert('success', this.$t('delete'));
+                        return;
+                    }
+                    Alert('error', this.$t('formError'));
+                    return false;
+                }catch(error){
+                    ApiError(this, error);
+                    return false;
+                }
+            },
+
+        },
+        mounted() {
+            this.show();
+            this.showDocument();
+        }
+    }
+</script>
+<style></style>

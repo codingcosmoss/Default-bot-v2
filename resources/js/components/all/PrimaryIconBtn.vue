@@ -1,5 +1,5 @@
 <template>
-    <a class="btn btn-primary waves-effect waves-light" style="padding: 5px 10px" role="button" data-bs-toggle="modal" :data-bs-target="'#'+Modal">
+    <a class="btn btn-primary waves-effect waves-light"  style="padding: 5px 10px;" :style="Style" role="button" data-bs-toggle="modal" :data-bs-target="'#'+Modal">
         <i :class="Icon"></i>
     </a>
 
@@ -15,7 +15,11 @@ export default
         Modal:{
             type: String,
             default: 'modal'
-        }
+        },
+        Style:{
+            type: String,
+            default: 'margin-right: 6px'
+        },
     }
 }
 </script>

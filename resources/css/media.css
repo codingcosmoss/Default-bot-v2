@@ -13,3 +13,9 @@
     }
 
 }
+
+@media (max-width: 600px) {
+    .page-content{
+        padding: 43px 0px;
+    }
+}

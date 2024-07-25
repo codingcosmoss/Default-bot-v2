@@ -39,6 +39,88 @@ class RoleService extends AbstractService
         ];
     }
 
+    public function index()
+    {
+        try {
+            if (!$this->hasPermission('index')){
+                return [
+                    'status' => false,
+                    'code' => 403,
+                    'message' => 'Root access is not allowed ',
+                    'data' => null
+                ];
+            }
+
+            $data = $this->resource::collection(
+                $this->model::where('clinic_id', auth()->user()->clinic_id)
+                    ->where('private', Status::$status_inactive)
+                    ->get()
+            );
+
+            return [
+                'status' => true,
+                'code' => 200,
+                'message' => 'Success',
+                'data' => $data
+            ];
+
+        }catch (Exception $e){
+            return [
+                'status' => false,
+                'code' => $e->getCode(),
+                'message' => $e->getMessage(),
+                'data' => null
+            ];
+        }
+
+    }
+    public function getPaginate($count = 10)
+    {
+
+        try {
+
+            if (!$this->hasPermission('index')){
+                return [
+                    'status' => false,
+                    'code' => 403,
+                    'message' => 'Root access is not allowed ',
+                    'data' => null
+                ];
+            }
+
+            $models = $this->model::where('clinic_id', auth()->user()->clinic_id)
+                ->where('private', Status::$status_inactive)
+                ->orderBy('id', 'asc')
+                ->paginate($count);
+
+            $data = [
+                'items' => $this->resource::collection($models),
+                'pagination' => [
+                    'total' => $models->total(),
+                    'per_page' => $models->perPage(),
+                    'current_page' => $models->currentPage(),
+                    'last_page' => $models->lastPage(),
+                    'from' => $models->firstItem(),
+                    'to' => $models->lastItem(),
+                ],
+            ];
+
+            return [
+                'status' => true,
+                'code' => 200,
+                'message' => 'Success',
+                'data' => $data
+            ];
+        }catch (Exception $e){
+            return [
+                'status' => false,
+                'code' => $e->getCode(),
+                'message' => $e->getMessage(),
+                'data' => null
+            ];
+        }
+    }
+
     public function getRoleNotification($id)
     {
         try {
@@ -98,6 +180,14 @@ class RoleService extends AbstractService
             $object->clinic_id = auth()->user()->clinic_id;
             $object->save();
 
+            if ($object->private == Status::$status_active){
+                return [
+                    'status' => false,
+                    'message' => 'Private madel',
+                    'data' => null
+                ];
+            }
+
             $alert = new Notification();
             $alert->name = "Change role";
             $alert->desc = "The user role named ".$object->name." has been changed";
@@ -110,7 +200,7 @@ class RoleService extends AbstractService
             if (isset($data['permissions'])){
                 foreach ($data['permissions'] as $permission){
                     $modelPermission = Permission::find($permission);
-                    $menu = Menu::find($modelPermission->id);
+                    $menu = Menu::find($modelPermission->menu_id);
                     if ($menu){
                         $model = new RolePermission();
                         $model->role_id = $object->id;
@@ -222,7 +312,7 @@ class RoleService extends AbstractService
             }
 
             $item = $this->model::find($id);
-            if (count($item->users) > 0){
+            if (count($item->users) > 0 || $item->private == Status::$status_active){
                 return [
                     'status' => false,
                     'code' => 403,
@@ -245,6 +335,44 @@ class RoleService extends AbstractService
                 'data' => null
             ];
         }
+    }
+    public function search($search = '')
+    {
+        if (!$this->hasPermission('index')){
+            return [
+                'status' => false,
+                'code' => 403,
+                'message' => 'Root access is not allowed ',
+                'data' => null
+            ];
+        }
+
+        if ($this->isClinic){
+            $data = $this->model::where(function ($query) use ($search) {
+                foreach ($this->columns as $column) {
+                    $query->orWhere($column, 'like', '%' . $search . '%');
+                }
+            })
+                ->where('private', Status::$status_inactive)
+                ->where('clinic_id', auth()->user()->clinic_id)
+                ->limit(10)
+                ->get();
+        }else{
+            $data = $this->model::where(function ($query) use ($search) {
+                foreach ($this->columns as $column) {
+                    $query->orWhere($column, 'like', '%' . $search . '%');
+                }
+            })
+                ->limit(10)
+                ->get();
+        }
+
+        return [
+            'status' => true,
+            'message' => 'Success',
+            'statusCode' => 200,
+            'data' => $this->resource::collection($data)
+        ];
     }
 
 

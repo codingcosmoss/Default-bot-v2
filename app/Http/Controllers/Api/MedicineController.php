@@ -22,4 +22,11 @@ class MedicineController extends AbstractController
         return $this->sendResponse($data);
     }
 
+    public function activeSearch($search)
+    {
+        $data = $this->service->activeSearch($search);
+        return $this->sendResponse($data);
+    }
+
+
 }

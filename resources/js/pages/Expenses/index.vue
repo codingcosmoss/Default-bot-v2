@@ -39,7 +39,7 @@
 
             <BasicTable
                 :Th="[
-                $t('Id'),
+                $t('No'),
                 $t('Title'),
                 $t('Amount'),
                 $t('Date'),
@@ -84,10 +84,8 @@
                     <PrimaryBtn v-if="counterStore.hasRole('Expenses-create')" role="button" data-bs-toggle="modal" data-bs-target="#expenseCreate" >{{$t('Create')}}</PrimaryBtn>
                 </template>
 
-                <tr v-for="item in items" >
-                    <td>
-                        #{{ item.id }}
-                    </td>
+                <tr v-for="(item,i) in items" >
+                    <td>{{ ((current_page - 1) * paginateCount) +  i + 1 }}</td>
                     <td>
                         {{ item.title }}
                     </td>
@@ -95,17 +93,23 @@
                     <td>{{ item.date }}</td>
                     <td>{{ item.category }}</td>
                     <td>
-                        <PrimaryIconBtn v-if="counterStore.hasRole('Expenses-update')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="expenseUpdate"/>&nbsp;
-                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/expenses/show', query:{id: item.id}})" Icon="bx bx-show"/>&nbsp;
+                        <PrimaryIconBtn v-if="counterStore.hasRole('Expenses-update')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="expenseUpdate"/>
+                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/expenses/show', query:{id: item.id}})" Icon="bx bx-show"/>
                         <PrimaryIconBtn v-if="counterStore.hasRole('Expenses-delete')" @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
                     </td>
 
                 </tr>
                 <Paginate
-                    v-if="last_page != 1"
+                    v-if="last_page != 1 && indexModel == 'index'"
                     :currentPage="this.current_page"
                     :totalPages="this.last_page"
                     @changePage="indexPaginates($event)"
+                />
+                <Paginate
+                    v-if="last_page != 1 && indexModel != 'index' "
+                    :currentPage="this.current_page"
+                    :totalPages="this.last_page"
+                    @changePage="getCurrencies(this.currency_id, $event)"
                 />
 
                 <GrowingLoader v-if="loader" Cols="7"/>
@@ -179,7 +183,9 @@
             totals: [],
             categories: [],
             totalLoader: true,
-            totalId: 0
+            totalId: 0,
+            indexModel: 'index',
+            currency_id: 0
         }},
         methods:{
             async index(){
@@ -198,8 +204,11 @@
                     ApiError(this, error);
                 }
             },
-            async getCurrencies(id){
+            async getCurrencies(id, page = 1){
                 try {
+                    this.currency_id = id;
+                    this.paginateCount = 100;
+                    this.indexModel = 'currency';
                     this.totalId = id;
                     this.loader = true;
                     if (id == 0){
@@ -207,9 +216,12 @@
                         Alert('info', this.$t('currenciesAlert'))
                         return;
                     }
-                    const response = await expenseCurrencies(id);
+                    const response = await expenseCurrencies(id, page);
                     this.loader = false;
-                    this.items = response.data;
+                    this.current_page = response.data.pagination.current_page;
+                    this.last_page = response.data.pagination.last_page;
+                    this.items = response.data.items;
+                    this.item = response.data.items[0];
                     Alert('info', this.$t('currenciesAlert'))
                 }catch(error){
                     ApiError(this, error);
@@ -239,6 +251,7 @@
             },
             async indexPaginates(page=1){
                 try {
+                    this.indexModel = 'index';
                     this.loader = true;
                     const response = await expensePaginates(this.paginateCount, page);
                     this.current_page = response.data.pagination.current_page;
