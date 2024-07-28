@@ -16,7 +16,7 @@ class SettingsResources extends JsonResource
     {
         $defaultImage = [
             [
-                'url' => asset('').'Photos/file.png'
+                'url' => asset('').'Photos/company-logo.png'
             ]
         ];
         return [

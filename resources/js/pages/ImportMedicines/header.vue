@@ -28,7 +28,7 @@
                             <td>{{ document.date }}</td>
                             <td>{{ counterStore.formatNumber(document.subtotal)}} {{document.currency.sign}} </td>
                             <td>{{ counterStore.formatNumber(document.amount_paid)}} {{document.currency.sign}} </td>
-                            <td>{{ Number(document.subtotal) - Number(document.amount_paid) }}  {{document.currency.sign}}</td>
+                            <td>{{ counterStore.formatNumber(document.loan_amount)}} {{document.currency.sign}} </td>
                             <td>
                             <span :class="document.status == 5 ? 'badge-soft-success' : 'badge-soft-warning' "
                                   class="badge badge-pill  font-size-11">{{ document.status  == 5 ? $t('Saved') : $t('NotSaved') }}</span>

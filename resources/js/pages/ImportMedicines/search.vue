@@ -19,8 +19,11 @@
                         @click="addMedicines(item)"
                     >
                         <div class="table_image search_medicines_img"  :style="'background-image: url('+ item.image[0].url +')'"></div>
-                        {{ item.name }}
-                        ({{ item.drug_company }})
+                       <div class="d-flex justify-content-center flex-column search_item">
+                           <p class="search_p">{{ item.name }} ({{ item.drug_company }})</p>
+                           <p class="search_p_2">{{ item.generic_name }}</p>
+                       </div>
+
                     </a>
 
                     <a v-if="loader" class="dropdown-item d-flex justify-content-center"><GrowingLoader></GrowingLoader></a>

@@ -530,4 +530,19 @@ class AbstractService
         return $isPermission;
 
     }
+    function formatNumber($number) {
+        // Bo'sh joylarni olib tashlaymiz
+        $number = str_replace(' ', '', $number);
+        // Boshidagi 0larni olib tashlaymiz, lekin decimal nuqtadan oldingi barcha 0larni emas
+        $number = ltrim($number, '0');
+        // Agar decimal nuqta bo'lsa, va barcha 0lar olib tashlansa, boshiga 0 qo'shamiz
+        if (strpos($number, '.') === 0) {
+            $number = '0' . $number;
+        }
+        // Agar hammasi olib tashlansa va bo'sh bo'lib qolsa, 0 ga o'zgartiramiz
+        if ($number === '') {
+            $number = '0';
+        }
+        return $number;
+    }
 }

@@ -1,32 +1,32 @@
-// --------------------- imported_medicine started--------------------------------------------
+// --------------------- document_payment started--------------------------------------------
 
-export const imported_medicines = async () => {
-    return  GET('imported-medicine/index');
+export const document_payments = async () => {
+    return  GET('/document-payment/index');
 };
-export const imported_medicineActives = async () => {
-    return  GET('imported-medicine/actives');
+export const document_paymentActives = async () => {
+    return  GET('/document-payment/actives');
 };
-export const imported_medicinePaginates = async (count, page= 1) => {
-    return  GET('imported-medicine/paginate/' + count+'?page='+page);
+export const document_paymentPaginates = async (count, page= 1) => {
+    return  GET('/document-payment/paginate/' + count+'?page='+page);
 };
-export const imported_medicineOrderBys = async (column, type) => {
-    return  GET('imported-medicine/orderBy/' + column + '/' + type);
+export const document_paymentOrderBys = async (column, type) => {
+    return  GET('/document-payment/orderBy/' + column + '/' + type);
 };
-export const imported_medicineShow = async (id) => {
-    return  GET('imported-medicine/show/'+id);
+export const document_paymentShow = async (id) => {
+    return  GET('/document-payment/show/'+id);
 };
-export const imported_medicineCreate = async (data) => {
-    return  POST('imported-medicine/create', data );
+export const document_paymentCreate = async (data) => {
+    return  POST('/document-payment/create', data );
 };
-export const imported_medicineUpdate = async (id, data) => {
-    return  POST('imported-medicine/update/'+id, data );
+export const document_paymentUpdate = async (id, data) => {
+    return  POST('/document-payment/update/'+id, data );
 };
-export const imported_medicineSearch = async (text) => {
-    return  GET('imported-medicine/search/' + text );
+export const document_paymentSearch = async (text) => {
+    return  GET('/document-payment/search/' + text );
 };
-export const imported_medicineDelete = async (id) => {
-    return  GET('imported-medicine/delete/'+ id );
+export const document_paymentDelete = async (id) => {
+    return  GET('/document-payment/delete/'+ id );
 };
 
-// --------------------- imported_medicine finished --------------------------------------------
+// --------------------- document_payment finished --------------------------------------------
 

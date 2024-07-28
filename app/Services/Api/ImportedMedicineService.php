@@ -53,6 +53,8 @@ class ImportedMedicineService extends AbstractService
             TextField::make('medicines')->setRules('required'),
         ];
     }
+
+
     public function store(array $data)
     {
         try {
@@ -89,7 +91,7 @@ class ImportedMedicineService extends AbstractService
                     $box = BoxSize::find($medicine['box_size_id']);
                     $currency = Currency::find($data['currency_id']);
                     $newMedicine = $thisMedicine->replicate();
-                    $newMedicine->generic_name = $thisMedicine->generic_name. ' '.number_format($medicine['buy_price'] + $sumPrice, 0, '.', ' ').' '.$box->name;
+                    $newMedicine->generic_name = $thisMedicine->generic_name. ' '.$this->formatNumber($medicine['buy_price'] + $sumPrice).$currency->sign .' ('.$box->name.')';
                     $newMedicine->buy_price = $medicine['buy_price'];
                     $newMedicine->selling_price = $sumPrice;
                     $newMedicine->price = $medicine['buy_price'] + $sumPrice;

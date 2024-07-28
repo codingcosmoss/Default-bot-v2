@@ -226,6 +226,7 @@
             changePrice(price, index){
                 let newMedicine = { ...this.medicines[index] }; // Yangi nusxa yaratish
                 let amount = this.counterStore.inputNumberFormat('medicinePrice' + index, newMedicine['buy_price'], price);
+                console.log('Amount:',amount);
                 newMedicine['buy_price'] = amount;
                 this.medicines[index] = newMedicine; // Yangi nusxani yangilash
             },

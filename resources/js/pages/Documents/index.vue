@@ -1,6 +1,6 @@
 <template>
     <Page Title="">
-        <div class="row"  >
+        <div class="row">
             <BasicTable
                 :Th="[ $t('No'),$t('Warehouse'),$t('Supplier'),$t('ImportedDate'),$t('Subtotal'),$t('AmountPaid'),$t('Indebtedness'),$t('Status'),$t('Settings')]"
                 :Title="$t('ImportMedicines')"
@@ -40,7 +40,7 @@
                     <td>{{ item.date }}</td>
                     <td>{{ counterStore.formatNumber(item.subtotal)}} {{item.currency.sign}} </td>
                     <td>{{ counterStore.formatNumber(item.amount_paid)}} {{item.currency.sign}} </td>
-                    <td>{{ Number(item.subtotal) - Number(item.amount_paid) }}  {{item.currency.sign}}</td>
+                    <td>{{ counterStore.formatNumber(item.loan_amount)}} {{item.currency.sign}} </td>
 
                     <td>
                         <span :class="item.status == 5 ? 'badge-soft-success' : 'badge-soft-warning' "

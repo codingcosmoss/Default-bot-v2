@@ -107,14 +107,17 @@ export const useConterStore = defineStore({
         },
         inputNumberFormat(inputClass, defaultAmount, val ) {
             const format_input = document.querySelector('.'+inputClass);
-            let numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ', ''];
-            if (numbers.includes(val.slice(val.length - 1, val.length)) == true) {
-                format_input.value = this.formatNumber(val.replace(/\s+/g, ''));
-                return Number(val.replace(/\s+/g, ''))
+            let numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ', '', '.'];
+            if (numbers.includes(val.slice(val.length - 1, val.length)) == true && (this.countDots(val) < 2) ) {
+                return val.replace(/\s+/g, '').replace(/^0+/, '');
+                // return Number(val.replace(/\s+/g, ''))
             } else {
                 format_input.value = this.formatNumber(defaultAmount);
                 return defaultAmount;
             }
+        },
+        countDots(string) {
+            return (string.match(/\./g) || []).length;
         },
         currentDate(){
             const today = new Date();

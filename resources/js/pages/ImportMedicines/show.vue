@@ -53,15 +53,18 @@
                     <td>{{ counterStore.formatNumber(item.total_cost)}} {{item.currency.sign}}</td>
                     <td>
                         <PrimaryIconBtn
+                            Modal="documentToPayModal"
                             :title="$t('UploadMedicine')"
                             Icon="bx bx-upload"
                         />
                     </td>
 
                 </tr>
-                <GrowingLoader v-if="loader" Cols="9"/>
+                <GrowingLoader v-if="loader" Cols="10"/>
 
             </BasicTable>
+            <ToPay></ToPay>
+
             <div class=" w-100 d-flex justify-content-end">
                 <div class="col-xl-5">
                     <div class="card">
@@ -84,7 +87,7 @@
                             </div>
                             <br>
                             <BtnBox>
-                                <PrimaryBtn v-if="document.loan_amount > 0" :Loader="loader" >{{ $t('ToPay') }}</PrimaryBtn>
+                                <PrimaryModalBtn  Modal="documentToPayModal" v-if="document.loan_amount > 0" :Loader="loader" >{{ $t('ToPay') }}</PrimaryModalBtn>
                             </BtnBox>
                         </div>
                     </div>
@@ -92,7 +95,7 @@
                 </div>
             </div>
         </div>
-
+        <toPay :Item="document" @onPayment="showDocument()" :paymentTypes="paymentTypes" ></toPay>
     </Page>
 </template>
 <script>
@@ -126,8 +129,13 @@
     import IconSelect from "@/components/all/IconSelect.vue";
     import BasicInput from "@/components/all/BasicInput.vue";
     import BasicSelect from "@/components/all/BasicSelect.vue";
+    import PrimaryModalBtn from "@/components/all/PrimaryModalBtn.vue";
+    import paymentTypes from "@/pages/PaymentTypes/index.vue";
+    import toPay from "@/pages/Documents/toPay.vue";
     export default {
         components: {
+            toPay,
+            PrimaryModalBtn,
             BasicSelect,
             BasicInput,
             IconSelect,
@@ -163,7 +171,7 @@
             medicines: [],
             document: [],
             sortId: 1,
-
+            paymentTypes: []
         }},
         methods:{
             deleteError(id){
@@ -172,8 +180,10 @@
             },
             async show(){
                 try {
+                    this.loader = true;
                     const response = await imported_medicineShow(this.$route.query.id);
                     this.medicines = response.data;
+                    this.loader = false;
                 }catch(error){
                     ApiError(this, error);
                 }
@@ -182,6 +192,16 @@
                 try {
                     const response = await documentShow(this.$route.query.id);
                     this.document = response.data;
+                }catch(error){
+                    ApiError(this, error);
+                }
+            },
+            async indexPaymentTypes(){
+                try {
+                    this.loader = true;
+                    const response = await payment_types();
+                    this.paymentTypes = response.data;
+                    this.loader = false;
                 }catch(error){
                     ApiError(this, error);
                 }
@@ -233,6 +253,7 @@
         mounted() {
             this.show();
             this.showDocument();
+            this.indexPaymentTypes()
         }
     }
 </script>

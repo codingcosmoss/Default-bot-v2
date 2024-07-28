@@ -29,7 +29,7 @@ class ExpenseService extends AbstractService
             TextField::make('title')->setRules('required|string'),
             TextField::make('clinic_id')->setRules('nullable'),
             TextField::make('currency_id')->setRules('nullable'),
-            TextField::make('amount')->setRules('required|integer'),
+            TextField::make('amount')->setRules('required|numeric'),
             TextField::make('date')->setRules('required|date'),
             TextField::make('expense_category_id')->setRules('required|integer'),
         ];

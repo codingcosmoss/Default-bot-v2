@@ -69,8 +69,8 @@
                     <td>{{ item.date }}</td>
                     <td>{{ item.category }}</td>
                     <td>
-                        <PrimaryIconBtn v-if="counterStore.hasRole('Expenses-update')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="expenseUpdate"/>&nbsp;
-                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/expenses/show', query:{id: item.id}})" Icon="bx bx-show"/>&nbsp;
+                        <PrimaryIconBtn v-if="counterStore.hasRole('Expenses-update')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="expenseUpdate"/>
+                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/expenses/show', query:{id: item.id}})" Icon="bx bx-show"/>
                         <PrimaryIconBtn v-if="counterStore.hasRole('Expenses-delete')" @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
                     </td>
 
