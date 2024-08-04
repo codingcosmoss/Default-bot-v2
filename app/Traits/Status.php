@@ -24,6 +24,7 @@ trait Status
     public static int $saved = 5;
     public static int $notSaved = 6;
     public static int $import = 7;
+    public static int $returned = 8;
 
     /**
      * @return string[]
@@ -41,6 +42,8 @@ trait Status
             self::$import => "Olib kelingan",
             self::$admin => "Admin",
             self::$user => "User",
+            self::$returned => "Qaytarilgan dori",
+
         ];
     }
 

@@ -335,8 +335,9 @@ export default {
         calculatorPracent(pracent){
             this.percentage = pracent;
             let sum = (this.buy_price*pracent)/100;
-            this.addAmount(this.counterStore.formatNumber(sum));
-            this.price = this.buy_price + sum;
+            // this.addAmount(this.counterStore.formatNumber(sum));
+            this.selling_price = sum;
+            this.price = Number(this.buy_price) + Number(sum);
         },
         calculatorPrice(val){
             this.addAmount(val);

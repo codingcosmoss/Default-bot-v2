@@ -150,6 +150,18 @@
                         icon:'bx bx-import',
                         isPermission: this.counterStore.hasRole('ImportDocuments-index')
                     },
+                    {
+                        title: $t('ImportMedicines'),
+                        path: '/admin/import/medicines',
+                        icon:'bx bx-task',
+                        isPermission: this.counterStore.hasRole('ImportDocuments-index')
+                    },
+                    {
+                        title: $t('ReturnedMedicines'),
+                        path: '/admin/returned/medicines',
+                        icon:'bx bx-exit',
+                        isPermission: this.counterStore.hasRole('ImportDocuments-index')
+                    },
 
                 ]"
         />

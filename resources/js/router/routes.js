@@ -156,6 +156,16 @@ export default[
         permission: 'ImportDocuments-index',
         component: () => import('../pages/ImportMedicines/index.vue'),
     },
+    {
+        path: '/admin/import/medicines',
+        permission: 'ImportDocuments-index',
+        component: () => import('../pages/PurchasedMedicines/index.vue'),
+    },
+    {
+        path: '/admin/returned/medicines',
+        permission: 'ImportDocuments-index',
+        component: () => import('../pages/ReturnedMedicines/index.vue'),
+    },
 
 
 ]

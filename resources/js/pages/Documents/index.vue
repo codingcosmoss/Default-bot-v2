@@ -3,10 +3,11 @@
         <div class="row">
             <BasicTable
                 :Th="[ $t('No'),$t('Warehouse'),$t('Supplier'),$t('ImportedDate'),$t('Subtotal'),$t('AmountPaid'),$t('Indebtedness'),$t('Status'),$t('Settings')]"
-                :Title="$t('ImportMedicines')"
+                :Title="$t('ImportedDrugs')"
                 Col="col-lg-12"
             >
                 <template v-slot:inputs>
+
                     <DefaultInput
                         Class="col-lg-3 col-sm-2 search_input"
                         Label=""
@@ -40,7 +41,7 @@
                     <td>{{ item.date }}</td>
                     <td>{{ counterStore.formatNumber(item.subtotal)}} {{item.currency.sign}} </td>
                     <td>{{ counterStore.formatNumber(item.amount_paid)}} {{item.currency.sign}} </td>
-                    <td>{{ counterStore.formatNumber(item.loan_amount)}} {{item.currency.sign}} </td>
+                    <td :class="item.loan_amount > 0 ?  'text-danger' : '' ">{{ counterStore.formatNumber(item.loan_amount)}} {{item.currency.sign}} </td>
 
                     <td>
                         <span :class="item.status == 5 ? 'badge-soft-success' : 'badge-soft-warning' "
@@ -56,7 +57,15 @@
                         <PrimaryIconBtn v-if="counterStore.hasRole('Documents-update') && item.status == 5"
                                         @click="this.$router.push({path:'/admin/document/show', query:{id: item.id}})"
                                         Icon="bx bx-show"/>
+                        <PrimaryIconBtn
+                            v-if="counterStore.hasRole('Documents-update') && item.loan_amount > 0"
+                            Modal="documentToPayModal"
+                            @click="this.item = item"
+                            class="bg-info border-info"
+                            Icon="bx bx-money"
+                        />
                         <PrimaryIconBtn v-if="counterStore.hasRole('Documents-delete')" @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
+
                     </td>
 
                 </tr>
@@ -85,6 +94,7 @@
             :suppliers="suppliers"
             @onCreate="indexPaginates(this.current_page, false)"
         />
+        <ToPay :Item="item" @onPayment="indexPaginates(current_page, false)" :paymentTypes="paymentTypes"></ToPay>
 
     </Page>
 </template>
@@ -104,7 +114,7 @@
         documentPaginates,
         documentActives,
         documentOrderBys,
-        suppliers, warehouses
+        suppliers, warehouses, payment_types
     } from "@/helpers/api.js";
     import GrowingLoader from "@/components/all/GrowingLoader.vue";
     import PrimaryButton from "@/components/all/PrimaryButton.vue";
@@ -116,8 +126,10 @@
     import DefaultInput from "@/ui-components/Forms/DefaultInput.vue";
     import Paginate from "@/components/all/Paginate.vue";
     import DefaultSelect from "@/ui-components/Forms/DefaultSelect.vue";
+    import ToPay from "@/pages/Documents/toPay.vue";
     export default {
         components: {
+            ToPay,
             DefaultSelect,
             Paginate,
             DefaultInput,
@@ -144,8 +156,21 @@
             boxItems: [],
             warehouses: Object,
             suppliers: Object,
+            paymentTypes: Object,
         }},
         methods:{
+            async indexPaymentTypes(){
+                try {
+                    this.loader = true;
+                    const response = await payment_types();
+                    if (response.status){
+                        this.paymentTypes = response.data;
+                    }
+                    this.loader = false;
+                }catch(error){
+                    ApiError(this, error);
+                }
+            },
             async indexPaginates(page=1, islaoder = true){
                 try {
                     this.loader = islaoder;
@@ -226,6 +251,7 @@
             this.indexPaginates()
             this.indexWarehouses()
             this.indexSuppliers()
+            this.indexPaymentTypes()
         }
     }
 </script>

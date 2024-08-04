@@ -36,7 +36,8 @@
                         <div class="table_image"  :style="'background-image: url('+ item.medicine.image[0].url +')'"></div>
                     </td>
                     <td>
-                        {{ item.medicine.name }} {{item.id}}
+                        <p class="m-0">{{ item.medicine.name }}</p>
+                        <p class="font-size-10 m-0">{{ item.medicine.generic_name }}</p>
                     </td>
                     <td>
                         {{item.expiry_date_finished}}
@@ -53,7 +54,9 @@
                     <td>{{ counterStore.formatNumber(item.total_cost)}} {{item.currency.sign}}</td>
                     <td>
                         <PrimaryIconBtn
-                            Modal="documentToPayModal"
+                            v-if="item.amount != 0"
+                            Modal="returnedModal"
+                            @click="this.item = item"
                             :title="$t('UploadMedicine')"
                             Icon="bx bx-upload"
                         />
@@ -95,6 +98,33 @@
                 </div>
             </div>
         </div>
+        <ModalCentered
+            ModalName="returnedModal"
+            :Title="$t('UploadMedicine')"
+            @onModal="returnedMedicine()"
+        >
+            <DefaultInput
+                :Label="$t('ReturnedMedicineAmount') + ' (' +$t('Maximum') + ': ' + item.amount+')'"
+                Name="returned_amount"
+                Type="number"
+                :Max="item.current_amount"
+                :Validated="errors"
+                :Value="amount"
+                @onInput="amount = $event,  delete this.errors.returned_amount"
+            />
+
+            <DefaultInput
+                :Label="$t('Qancha pul qaytarib olindi') + ' ('+ $t('Maximum')+': ' +counterStore.formatNumber(document.amount_paid) +' '+ sign + ')'"
+                Name="returned_price"
+                Type="text"
+                :Validated="errors"
+                :Value="counterStore.formatNumber(this.returned_price)"
+                inputClass ='returned_price'
+                @onInput="addPrice($event),  delete this.errors.returned_price"
+
+            />
+
+        </ModalCentered>
         <toPay :Item="document" @onPayment="showDocument()" :paymentTypes="paymentTypes" ></toPay>
     </Page>
 </template>
@@ -109,7 +139,7 @@
         drug_companyActives,
         size_typeActives,
         medicine_categoryActives,
-        payment_types, documentShow, imported_medicineShow
+        payment_types, documentShow, imported_medicineShow, returned_medicineCreate
     } from "@/helpers/api.js";
     import GrowingLoader from "@/components/all/GrowingLoader.vue";
     import PrimaryButton from "@/components/all/PrimaryButton.vue";
@@ -171,9 +201,75 @@
             medicines: [],
             document: [],
             sortId: 1,
-            paymentTypes: []
+            paymentTypes: [],
+            paid: 0,
+            subtotal: 0,
+            payment_type_id: null,
+            dataErrors:[],
+            amount: 0,
+            errors: [],
+            returned_price: 0,
+            sign: ''
         }},
         methods:{
+            addPrice(val){
+                let formatAmount = this.counterStore.inputNumberFormat('returned_price', this.returned_price, val);
+                console.log('all', formatAmount);
+                this.returned_price = formatAmount;
+            },
+            async returnedMedicine(){
+                try {
+                    this.loader = true;
+                    if (this.amount == 0 && this.returned_price == 0){
+                        this.errors['returned_amount'] = ' ';
+                        this.errors['returned_price'] = ' ';
+                        this.loader = false;
+                        return true;
+                    }else if(this.item.amount < this.amount){
+                        Alert('error',  this.$t('ReturnedMaxError'));
+                        this.errors['returned_amount'] = this.$t('ReturnedMaxError');
+                        this.loader = false;
+                        return false;
+                    }else if(this.item.current_amount < this.amount){
+                        Alert('error',  this.$t('WarehouseNotLeft'));
+                        this.errors['returned_amount'] = this.$t('WarehouseNotLeft');
+                        this.loader = false;
+                        return false;
+                    }else if(this.document.amount_paid < this.returned_price){
+                        Alert('error',  this.$t('ReturnedAmountError'));
+                        this.errors['returned_price'] = this.$t('ReturnedAmountError');
+                        this.loader = false;
+                        return false;
+                    }
+                    this.errors = [];
+
+                    let data = {
+                        document_id: this.document.id,
+                        supplier_id: this.document.supplier_id,
+                        warehouse_id: this.document.warehouse_id,
+                        payment_type_id: this.payment_type_id,
+                        medicine: this.item,
+                        returned_amount: this.amount,
+                        returned_price: this.returned_price,
+                        currency_id: this.counterStore.user.currency.id,
+                    }
+                    const response = await returned_medicineCreate(data);
+                    if (response.status){
+                        this.amount = 0;
+                        this.show();
+                        this.showDocument();
+                        Alert('success', this.$t('ReturnedSuccess'));
+                        this.counterStore.hiddenModal('returnedModal');
+                        this.loader = false;
+                        return true;
+                    }
+                    this.errors = response.errors;
+                    Alert('error', this.$t('formError'));
+                    this.loader = false;
+                }catch(error){
+                    ApiError(this, error);
+                }
+            },
             deleteError(id){
                 this.isChange = !this.isChange;
                 this.dataErrors = this.dataErrors.filter(number => (number != 'date'+id && number != 'buy_price'+id && number != 'bu_amount'+id ));
@@ -192,6 +288,7 @@
                 try {
                     const response = await documentShow(this.$route.query.id);
                     this.document = response.data;
+                    this.sign = response.data.currency.sign
                 }catch(error){
                     ApiError(this, error);
                 }

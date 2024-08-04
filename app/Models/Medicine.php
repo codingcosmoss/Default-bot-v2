@@ -42,7 +42,22 @@ class Medicine extends Model
             $newMadel->amount = $realAmount + $data->amount;
             $newMadel->model_id = $data->id;
             $newMadel->type = Status::$import;
-            $newMadel->save();
+            return $newMadel->save();
+        }else if
+        ($type == Status::$returned){
+            $latestRemainingDrug = RemainingDrug::where('medicine_id', $this->id)->latest()->first();
+            $realAmount = isset($latestRemainingDrug) ? $latestRemainingDrug->amount : 0;
+            if ($realAmount < $data->amount){
+                return false;
+            }
+            $newMadel->medicine_id = $this->id;
+            $newMadel->clinic_id = $data->clinic_id;
+            $newMadel->amount = $realAmount - $data->amount;
+            $newMadel->model_id = $data->id;
+            $newMadel->type = Status::$returned;
+            return $newMadel->save();
         }
     }
+
+
 }

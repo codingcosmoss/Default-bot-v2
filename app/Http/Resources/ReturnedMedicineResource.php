@@ -7,7 +7,7 @@ use App\Models\RemainingDrug;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ImportedMedicineResource extends JsonResource
+class ReturnedMedicineResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,15 +16,7 @@ class ImportedMedicineResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $currentAmount = RemainingDrug::where('medicine_id', $this->medicine_id)
-            ->where('clinic_id', $this->clinic_id)
-            ->latest()->first();
 
-        if (!$currentAmount){
-            $currentAmount = 0;
-        }else{
-            $currentAmount = $currentAmount->amount;
-        }
         return [
             'id' => $this->id,
             'clinic_id' => $this->clinic_id,
@@ -36,13 +28,13 @@ class ImportedMedicineResource extends JsonResource
             'medicine_id' => $this->medicine_id,
             'box_size_id' => $this->box_size_id,
             'box_size' => $this->boxSize,
-            'current_amount' => $currentAmount,
             'medicine' => new MedicineResource($this->medicine),
             'amount' => $this->amount,
             'buy_price' => $this->buy_price,
             'total_cost' => $this->total_cost,
             'expiry_date_finished' => $this->expiry_date_finished,
             'currency_id' => $this->currency_id,
+            'updated_at' => $this->updated_at,
             'currency' => Currency::find($this->currency_id),
         ];
     }

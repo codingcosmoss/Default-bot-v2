@@ -2,7 +2,13 @@
     <Page Title="">
         <div class="row"  >
             <BasicTable
-                :Th="[ $t('No'),$t('Image'),$t('Name'),$t('Phone'),$t('Address'),$t('Settings')]"
+                :Th="[ $t('No'),$t('Image'),$t('Name'),
+                $t('Phone'),
+                $t('Address'),
+                $t('ImportedMedicines'),
+                $t('Paid'),
+                $t('Indebtedness'),
+                $t('Settings')]"
                 :Title="$t('Suppliers')"
                 Col="col-lg-12"
             >
@@ -42,6 +48,9 @@
                         {{ item.name }}
                     </td>
                     <td>{{ item.phone }}</td>
+                    <td>{{ item.address }}</td>
+                    <td>{{ item.paid }}</td>
+                    <td>{{ item.address }}</td>
                     <td>{{ item.address }}</td>
                     <td>
                         <PrimaryIconBtn v-if="counterStore.hasRole('Suppliers-update')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="supplierUpdate"/>

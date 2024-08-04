@@ -266,9 +266,9 @@ export default {
             this.repeatPassword = '';
             this.position = '';
             this.role = '';
+
         },
         async update() {
-
             try {
                 this.loader = true;
                 let data = {
@@ -285,10 +285,11 @@ export default {
                 const response = await userUpdate(this.item.id, data);
                 if (response.status) {
                     Alert('success', this.$t('update'));
-                    this.counterStore.hiddenModal('userUpdate');
-                    this.discharge()
-                    this.loader = false;
                     this.$emit('onUpdate', true)
+                    this.counterStore.hiddenModal('userUpdate');
+                    this.loader = false;
+                    this.discharge()
+                    this.show(response.data.id);
                     return true;
                 }
                 this.errors = response.errors;

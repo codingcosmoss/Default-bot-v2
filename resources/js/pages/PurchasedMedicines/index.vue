@@ -1,24 +1,27 @@
 <template>
     <Page Title="">
-        <div class="row"  >
+        <div class="row">
             <BasicTable
-                :Th="[ $t('No'),
-                $t('ModalName'),
-                $t('ImportMedicines'),
-                $t('CurrentMedicinesAmount'),
-                $t('Status'),$t('Settings')]"
-                :Title="$t('Warehouses')"
+                :Th="[ $t('No'),$t('MedicineName'),
+                $t('Supplier'),
+                $t('ImportedDate'),
+                $t('BoxSize'),
+                $t('Amount'),
+                $t('BuyPrice'),
+                $t('Subtotal'),
+                $t('ExpiryDateFinished'),$t('Settings')]"
+                :Title="$t('ImportMedicines')"
                 Col="col-lg-12"
             >
                 <template v-slot:inputs>
-                    <DefaultInput
-                        Class="col-lg-3 col-sm-2 search_input"
-                        Label=""
-                        Name="name"
-                        Type="text"
-                        Pholder="Search..."
-                        @onInput="search($event)"
-                    />
+<!--                    <DefaultInput-->
+<!--                        Class="col-lg-3 col-sm-2 search_input"-->
+<!--                        Label=""-->
+<!--                        Name="name"-->
+<!--                        Type="text"-->
+<!--                        Pholder="Search..."-->
+<!--                        @onInput="search($event)"-->
+<!--                    />-->
 
                     <DefaultSelect
                         Label=""
@@ -40,36 +43,34 @@
                 <tr v-for="(item, i) in items" >
                     <td>{{ ((current_page - 1) * paginateCount) +  i + 1 }}</td>
                     <td>
-                        {{ item.name }}
+                        <p class="m-0">{{ item.medicine.name }}</p>
+                        <p class="font-size-10 m-0" >{{ item.medicine.generic_name }}</p>
                     </td>
-                    <td>{{item.impoted_medicines_count}}</td>
-                    <td>{{item.current_medicines_count}}</td>
+                    <td>{{ item.supplier.name }}</td>
+                    <td>{{ item.document.date}}</td>
+                    <td>{{ item.box_size.name }}</td>
+                    <td>{{ counterStore.formatNumber(item.amount) }} </td>
+                    <td>{{ counterStore.formatNumber(item.buy_price) }} {{item.currency.sign}}</td>
+                    <td>{{ counterStore.formatNumber(item.total_cost) }} {{item.currency.sign}}</td>
+                    <td>{{ item.expiry_date_finished }}</td>
                     <td>
-                        <span :class="item.status == 1 ? 'badge-soft-success' : 'badge-soft-danger' "
-                              class="badge badge-pill badge-soft-success font-size-11">{{ item.status  == 1 ? $t('Active') : $t('InActive') }}</span>
-
-                    </td>
-                    <td>
-                        <PrimaryIconBtn v-if="counterStore.hasRole('MedicineCategories-update')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="warehouseUpdate"/>
-                        <!--                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/size-types/show', query:{id: item.id}})" Icon="bx bx-show"/>&nbsp;-->
+                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/document/show', query:{id: item.document_id}})" Icon="bx bx-show"/>
                         <PrimaryIconBtn v-if="counterStore.hasRole('MedicineCategories-delete')" @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
                     </td>
 
                 </tr>
                 <Paginate
-                    Cols="6"
+                    Cols="10"
                     v-if="last_page != 1"
                     :currentPage="this.current_page"
                     :totalPages="this.last_page"
                     @changePage="indexPaginates($event)"
                 />
 
-                <GrowingLoader v-if="loader" Cols="6"/>
+                <GrowingLoader v-if="loader" Cols="10"/>
 
             </BasicTable>
         </div>
-        <Update :Item="item" @onUpdate="indexPaginates(this.current_page, false)" />
-        <Create  @onCreate="indexPaginates(this.current_page, false)" />
 
     </Page>
 </template>
@@ -79,13 +80,14 @@
     import {Alert} from "@/helpers/Config.js";
     import {useConterStore} from "@/store/counter.js";
     import BasicTable from "@/components/all/BasicTable.vue";
-    import {warehouses, warehouseCreate, warehouseSearch, warehouseUpdate, warehouseShow, warehouseDelete, warehousePaginates, warehouseActives, warehouseOrderBys} from "@/helpers/api.js";
+    import {
+        imported_medicineDelete,
+        imported_medicines, imported_medicinePaginates, imported_medicineSearch
+    } from "@/helpers/api.js";
     import GrowingLoader from "@/components/all/GrowingLoader.vue";
     import PrimaryButton from "@/components/all/PrimaryButton.vue";
     import PrimaryIconBtn from "@/components/all/PrimaryIconBtn.vue";
     import ModalCentered from "@/components/all/ModalCentered.vue";
-    import Update from "./update.vue";
-    import Create from "./create.vue";
     import PrimaryBtn from "@/components/all/PrimaryBtn.vue";
     import DefaultInput from "@/ui-components/Forms/DefaultInput.vue";
     import Paginate from "@/components/all/Paginate.vue";
@@ -96,7 +98,7 @@
             Paginate,
             DefaultInput,
             PrimaryBtn,
-            ModalCentered, PrimaryIconBtn, PrimaryButton, GrowingLoader, BasicTable, Page, Update, Create},
+            ModalCentered, PrimaryIconBtn, PrimaryButton, GrowingLoader, BasicTable, Page},
         setup(){
             const counterStore = useConterStore();
             return{counterStore}
@@ -121,7 +123,7 @@
             async indexPaginates(page=1, islaoder = true){
                 try {
                     this.loader = islaoder;
-                    const response = await warehousePaginates(this.paginateCount, page);
+                    const response = await imported_medicinePaginates(this.paginateCount, page);
                     if (response.status){
                         this.current_page = response.data.pagination.current_page;
                         this.last_page = response.data.pagination.last_page;
@@ -139,7 +141,7 @@
                         this.indexPaginates();
                         return true;
                     }
-                    const response = await warehouseSearch(text);
+                    const response = await imported_medicineSearch(text);
                     this.items = response.data;
                     this.loader = false;
                     if (!response.status){
@@ -160,7 +162,7 @@
                     if (!confirm(this.$t('DeleteAlert'))){
                         return false;
                     }
-                    const response = await warehouseDelete(id);
+                    const response = await imported_medicineDelete(id);
                     if (response.status){
                         this.indexPaginates(this.current_page)
                         Alert('success', this.$t('delete'));

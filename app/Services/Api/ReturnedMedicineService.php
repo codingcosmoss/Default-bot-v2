@@ -5,6 +5,7 @@ namespace App\Services\Api;
 use App\Fields\Store\TextField;
 use App\Http\Resources\ClinicUserResource;
 use App\Http\Resources\ImportedMedicineResource;
+use App\Http\Resources\ReturnedMedicineResource;
 use App\Models\BoxSize;
 use App\Models\ClinicUser;
 use App\Models\Currency;
@@ -13,18 +14,19 @@ use App\Models\DocumentPayment;
 use App\Models\ImportedMedicine;
 use App\Models\Medicine;
 use App\Models\MedicineCategory;
+use App\Models\ReturnedMedicine;
 use App\Traits\Status;
 use Illuminate\Support\Facades\DB;
 use Mockery\Exception;
 use PhpOffice\PhpSpreadsheet\Calculation\Token\Stack;
 
 
-class ImportedMedicineService extends AbstractService
+class ReturnedMedicineService extends AbstractService
 {
-    protected $model = ImportedMedicine::class;
-    protected $resource = ImportedMedicineResource::class;
-    protected $columns = ['amount'];
-    protected $menu = 'ImportedMedicines';
+    protected $model = ReturnedMedicine::class;
+    protected $resource = ReturnedMedicineResource::class;
+    protected $columns = ['created_at'];
+    protected $menu = 'ReturnedMedicines';
     protected $isClinic = true; // Clinikalarga bog'liqmi yoki yo'qmi
 
 
@@ -33,12 +35,13 @@ class ImportedMedicineService extends AbstractService
         return [
             TextField::make('clinic_id')->setRules('nullable'),
             TextField::make('document_id')->setRules('required|integer'),
+            TextField::make('returned_amount')->setRules('required|numeric'),
             TextField::make('supplier_id')->setRules('required|integer'),
             TextField::make('warehouse_id')->setRules('required|integer'),
             TextField::make('payment_type_id')->setRules('nullable|integer'),
             TextField::make('currency_id')->setRules('required|integer'),
-            TextField::make('amount_paid')->setRules('required|numeric'),
-            TextField::make('medicines')->setRules('required'),
+            TextField::make('returned_price')->setRules('required|numeric'),
+            TextField::make('medicine')->setRules('required'),
         ];
     }
     public function updateFields()
@@ -49,8 +52,8 @@ class ImportedMedicineService extends AbstractService
             TextField::make('supplier_id')->setRules('required|integer'),
             TextField::make('warehouse_id')->setRules('required|integer'),
             TextField::make('currency_id')->setRules('required|integer'),
-            TextField::make('amount_paid')->setRlues('required|numeric'),
-            TextField::make('medicines')->setRules('required'),
+            TextField::make('returned_price')->setRules('required|numeric'),
+            TextField::make('medicine')->setRules('required'),
         ];
     }
 
@@ -83,77 +86,67 @@ class ImportedMedicineService extends AbstractService
             $isSaved = true;
             $document = Document::find($data['document_id']);
             $subtotal = 0;
-            foreach ($data['medicines'] as $medicine){
-                $thisMedicine = Medicine::find($medicine['id']);
+            $sum = 0;
+            $medicine = $data['medicine'];
+            $thisMedicine = Medicine::find($medicine['medicine_id']);
+            $newModel = new ReturnedMedicine();
+            $newModel->clinic_id = $data['clinic_id'];
+            $newModel->document_id = $data['document_id'];
+            $newModel->supplier_id = $data['supplier_id'];
+            $newModel->warehouse_id = $data['warehouse_id'];
+            $newModel->box_size_id = $medicine['box_size_id'];
+            $newModel->medicine_id = $medicine['medicine_id'];
+            $newModel->amount = $data['returned_amount'];
+            $newModel->buy_price = $medicine['buy_price'];
+            $newModel->total_cost = $medicine['buy_price'] * $data['returned_amount'];
+            $newModel->expiry_date_finished = $medicine['expiry_date_finished'];
+            $newModel->currency_id = $data['currency_id'];
+            $newModel->save() != true ? $isSaved = false : '';
 
-                if ($thisMedicine->buy_price != $medicine['buy_price'] || $thisMedicine->box_size_id != $medicine['box_size_id']){
-                    $sumPrice = ($medicine['buy_price']*$thisMedicine->percentage)/100;
-                    $box = BoxSize::find($medicine['box_size_id']);
-                    $currency = Currency::find($data['currency_id']);
-                    $newMedicine = $thisMedicine->replicate();
-                    $newMedicine->generic_name = $thisMedicine->generic_name. ' '.$this->formatNumber($medicine['buy_price'] + $sumPrice).$currency->sign .' ('.$box->name.')';
-                    $newMedicine->buy_price = $medicine['buy_price'];
-                    $newMedicine->selling_price = $sumPrice;
-                    $newMedicine->price = $medicine['buy_price'] + $sumPrice;
-                    $newMedicine->box_size_id = $medicine['box_size_id'];
-                    $newMedicine->parent_id = $thisMedicine->id;
-                    $newMedicine->save() != true ? $isSaved != false : '';
+            $importedMedicine = ImportedMedicine::find($medicine['id']);
+            $importedMedicine->amount = $importedMedicine->amount - $data['returned_amount'];
+            $importedMedicine->total_cost = $importedMedicine->total_cost - $newModel->total_cost;
+            $importedMedicine->save() != true ? $isSaved = false : '';
 
-                    // Eski medicine obyektining rasmlarini olamiz
-                    $existingImages = $thisMedicine->image;
-                    if ($existingImages != null){
-                        foreach ($existingImages as $image) {
-                            // Yangi rasm yaratamiz
-                            $newImage = $image->replicate();
-                            // Yangi medicine ob'ektiga bog'laymiz
-                            $newImage->imageable_id = $newMedicine->id;
-                            // Yangi rasmni saqlaymiz
-                            $newImage->save();
-                        }
-                    }
-                    $thisMedicine = $newMedicine;
+            $subtotal += $newModel->total_cost;
+            $thisMedicine->changeAmount(Status::$returned, $newModel) == false ? $isSaved = false : '';
 
-                }
-
-                $newModel = new ImportedMedicine();
-                $newModel->clinic_id = $data['clinic_id'];
-                $newModel->document_id = $data['document_id'];
-                $newModel->supplier_id = $data['supplier_id'];
-                $newModel->warehouse_id = $data['warehouse_id'];
-                $newModel->box_size_id = $medicine['box_size_id'];
-                $newModel->medicine_id = $medicine['id'];
-                $newModel->amount = $medicine['buy_amount'];
-                $newModel->buy_price = $medicine['buy_price'];
-                $newModel->total_cost = $medicine['buy_price'] * $medicine['buy_amount'];
-                $newModel->expiry_date_finished = $medicine['expiry_date_finished'];
-                $newModel->currency_id = $data['currency_id'];
-                if (!$newModel->save()){
-                    $isSaved = false;
-                    break;
-                }
-                $subtotal += $newModel->total_cost;
-
-                $thisMedicine->changeAmount(Status::$import, $newModel);
+            $document->subtotal -= $subtotal;
+            $document->amount_paid -= $data['returned_price'];
+            $document->loan_amount = $document->loan_amount - $subtotal + $data['returned_price'];
+            if ( $document->amount_paid <  0){
+                $document->amount_paid = 0;
             }
-
-            $document->subtotal = $subtotal;
-            $document->amount_paid = $data['amount_paid'];
-            $document->loan_amount = $subtotal - $data['amount_paid'];
+            if ( $document->loan_amount <  0){
+                $document->loan_amount = 0;
+            }
             $document->currency_id = $data['currency_id'];
-            $document->status = Status::$saved;
             $document->save() != true ? $isSaved = false : '';
 
-            if ($data['amount_paid'] > 0){
-                $payment = new DocumentPayment();
-                $payment->clinic_id = $data['clinic_id'];
-                $payment->document_id = $document->id;
-                $payment->supplier_id = $data['supplier_id'];
-                $payment->user_id = auth()->user()->id;
-                $payment->amount = $data['amount_paid'];
-                $payment->payment_type_id = $data['payment_type_id'];
-                $payment->currency_id = $data['currency_id'];
-                $payment->save() != true ? $isSaved = false : '';
+            if ($data['returned_price']>0)
+            {
+                $payments = DocumentPayment::where('document_id', $document->id)
+                    ->get();
+                $returnedPrice = $data['returned_price']; // 5000
+                foreach ($payments as $payment)
+                {
+                    if ($returnedPrice != 0){
+                        $thisPayment = DocumentPayment::find($payment->id);
+                        if ($thisPayment->amount - $returnedPrice <= 0){
+                            $returnedPrice -= $thisPayment->amount;
+                            $thisPayment->amount = 0;
+                            $thisPayment->save() != true ? $isSaved = false : '';
+                        }else{
+                            $thisPayment->amount -= $returnedPrice;
+                            $thisPayment->save() != true ? $isSaved = false : '';
+                            $returnedPrice = 0;
+                        }
+                    }else{
+                        break;
+                    }
+                }
             }
+
 
             if ($isSaved){
                 DB::commit();

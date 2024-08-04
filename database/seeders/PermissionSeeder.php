@@ -93,6 +93,10 @@ class PermissionSeeder extends Seeder
                 "name" => "DocumentPayments",
                 "desc" => "Document uchun tolovlar"
             ],
+            [
+                "name" => "ReturnedMedicines",
+                "desc" => "qaytarilgan dorilar"
+            ],
 
         ];
 

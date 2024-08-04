@@ -105,17 +105,44 @@ export const useConterStore = defineStore({
                 console.error('Modal element not found.');
             }
         },
+        // inputNumberFormat(inputClass, defaultAmount, val ) {
+        //     const format_input = document.querySelector('.'+inputClass);
+        //     let numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ', '', '.'];
+        //     if (numbers.includes(val.slice(val.length - 1, val.length)) == true && (this.countDots(val) < 2) ) {
+        //         return val.replace(/\s+/g, '').replace(/^0+/, '');
+        //         // return Number(val.replace(/\s+/g, ''))
+        //     } else {
+        //         format_input.value = this.formatNumber(defaultAmount);
+        //         return defaultAmount;
+        //     }
+        // },
         inputNumberFormat(inputClass, defaultAmount, val ) {
             const format_input = document.querySelector('.'+inputClass);
+
+            // Kursor pozitsiyasini olish
+            let cursorPosition = format_input.selectionStart;
+            let mainNumber = this.formatNumber(defaultAmount);
+
+            if (val.length < mainNumber.length){
+                if (mainNumber.length == 5){
+                    cursorPosition -=1;
+                }
+                setTimeout(() => {
+                    format_input.setSelectionRange(cursorPosition, cursorPosition);
+                    format_input.focus();
+                }, 0);
+            }
             let numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ', '', '.'];
+
             if (numbers.includes(val.slice(val.length - 1, val.length)) == true && (this.countDots(val) < 2) ) {
-                return val.replace(/\s+/g, '').replace(/^0+/, '');
-                // return Number(val.replace(/\s+/g, ''))
+                // return val.replace(/\s+/g, '').replace(/^0+/, '');
+                return Number(val.replace(/\s+/g, ''))
             } else {
                 format_input.value = this.formatNumber(defaultAmount);
                 return defaultAmount;
             }
         },
+
         countDots(string) {
             return (string.match(/\./g) || []).length;
         },
