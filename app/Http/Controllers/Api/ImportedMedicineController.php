@@ -11,4 +11,10 @@ class ImportedMedicineController extends AbstractController
         $this->service = $service;
     }
 
+    public function supplierMedicines($supplier_id)
+    {
+        $data = $this->service->supplierMedicines($supplier_id);
+        return $this->sendResponse($data);
+    }
+
 }

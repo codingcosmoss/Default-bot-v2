@@ -21,7 +21,7 @@
                         <div class="table_image search_medicines_img"  :style="'background-image: url('+ item.image[0].url +')'"></div>
                        <div class="d-flex justify-content-center flex-column search_item">
                            <p class="search_p">{{ item.name }} ({{ item.drug_company }})</p>
-                           <p class="search_p_2">{{ item.generic_name }}</p>
+                           <p class="search_p_2" style="text-wrap: wrap" >{{ item.generic_name }}</p>
                        </div>
 
                     </a>

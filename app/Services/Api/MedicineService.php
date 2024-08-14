@@ -108,7 +108,7 @@ class MedicineService extends AbstractService
             $data['qr_code'] = $data['qr_code'] ?? '';
             $data['hns_code'] = $data['hns_code'] ?? '';
             $data['desc'] = $data['desc'] ?? '';
-            $data['strength'] = $data['strength'] ?? '';
+            $data['strength'] = $data['strength'] ?? null;
             $data['shelf'] = $data['shelf'] ?? '';
             $data['vat'] = $data['vat'] ?? 0;
             $data['parent_id'] = 0;
@@ -174,7 +174,7 @@ class MedicineService extends AbstractService
             $data['qr_code'] = $data['qr_code'] ?? '';
             $data['hns_code'] = $data['hns_code'] ?? '';
             $data['desc'] = $data['desc'] ?? '';
-            $data['strength'] = $data['strength'] ?? '';
+            $data['strength'] = $data['strength'] ?? null;
             $data['shelf'] = $data['shelf'] ?? '';
             $data['vat'] = $data['vat'] ?? 0;
             $data['igta'] = $data['igta'] ?? 0;

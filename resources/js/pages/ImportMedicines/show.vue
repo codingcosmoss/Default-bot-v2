@@ -36,8 +36,8 @@
                         <div class="table_image"  :style="'background-image: url('+ item.medicine.image[0].url +')'"></div>
                     </td>
                     <td>
-                        <p class="m-0">{{ item.medicine.name }}</p>
-                        <p class="font-size-10 m-0">{{ item.medicine.generic_name }}</p>
+                        <p class="m-0" style=" text-wrap: wrap">{{ item.medicine.name }}</p>
+                        <p class="font-size-10 m-0" style="text-wrap: wrap">{{ item.medicine.generic_name }}</p>
                     </td>
                     <td>
                         {{item.expiry_date_finished}}

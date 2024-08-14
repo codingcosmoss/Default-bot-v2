@@ -166,6 +166,16 @@ export default[
         permission: 'ImportDocuments-index',
         component: () => import('../pages/ReturnedMedicines/index.vue'),
     },
+    {
+        path: '/admin/suppliers/show',
+        permission: 'Suppliers-index',
+        component: () => import('../pages/Suppliers/show.vue'),
+    },
+    {
+        path: '/selling',
+        permission: 'Selling-index',
+        component: () => import('../pages/Selling/index.vue'),
+    },
 
 
 ]

@@ -97,6 +97,10 @@ class PermissionSeeder extends Seeder
                 "name" => "ReturnedMedicines",
                 "desc" => "qaytarilgan dorilar"
             ],
+            [
+                "name" => "Selling",
+                "desc" => "Sotish"
+            ],
 
         ];
 

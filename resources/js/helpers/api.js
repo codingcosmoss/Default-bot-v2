@@ -612,6 +612,9 @@ export const imported_medicineOrderBys = async (column, type) => {
 export const imported_medicineShow = async (id) => {
     return  GET('imported-medicine/show/'+id);
 };
+export const imported_medicineSupplierMedicines = async (id, page) => {
+    return  GET('imported-medicine/supplier/medicines/' + id+'?page='+page);
+};
 export const imported_medicineCreate = async (data) => {
     return  POST('imported-medicine/create', data );
 };

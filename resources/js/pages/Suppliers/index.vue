@@ -1,6 +1,6 @@
 <template>
     <Page Title="">
-        <div class="row"  >
+        <div class="row">
             <BasicTable
                 :Th="[ $t('No'),$t('Image'),$t('Name'),
                 $t('Phone'),
@@ -49,9 +49,13 @@
                     </td>
                     <td>{{ item.phone }}</td>
                     <td>{{ item.address }}</td>
-                    <td>{{ item.paid }}</td>
-                    <td>{{ item.address }}</td>
-                    <td>{{ item.address }}</td>
+                    <td>{{ counterStore.formatNumber(item.imported_medicines) }}</td>
+                    <td>
+                        <p v-for="paid in item.paid" class="m-0">{{ counterStore.formatNumber(paid.total_amount) }} {{paid.sign}}</p>
+                    </td>
+                    <td>
+                        <p v-for="loan in item.loan" class="m-0">{{ counterStore.formatNumber(loan.total_amount) }} {{loan.sign}}</p>
+                    </td>
                     <td>
                         <PrimaryIconBtn v-if="counterStore.hasRole('Suppliers-update')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="supplierUpdate"/>
                         <PrimaryIconBtn  @click="this.$router.push({path:'/admin/suppliers/show', query:{id: item.id}})" Icon="bx bx-show"/>
@@ -60,13 +64,14 @@
 
                 </tr>
                 <Paginate
+                    Cols="10"
                     v-if="last_page != 1"
                     :currentPage="this.current_page"
                     :totalPages="this.last_page"
                     @changePage="indexPaginates($event)"
                 />
 
-                <GrowingLoader v-if="loader" Cols="6"/>
+                <GrowingLoader v-if="loader" Cols="10"/>
 
             </BasicTable>
 

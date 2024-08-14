@@ -166,6 +166,14 @@
                 ]"
         />
         <MenuButton
+            :Title="$t('Selling')"
+            Name="PaymentTypes"
+            Icon="bx bx-store-alt"
+            Path="/selling"
+            @click="onMenuMedia()"
+            v-if="counterStore.hasRole('PaymentTypes-index')"
+        />
+        <MenuButton
             :Title="$t('PaymentTypes')"
             Name="PaymentTypes"
             Icon="bx bx-credit-card"

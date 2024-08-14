@@ -38,15 +38,9 @@ class DocumentService extends AbstractService
     public function updateFields()
     {
         return [
-            TextField::make('clinic_id')->setRules('nullable'),
-            TextField::make('user_id')->setRules('nullable'),
-
             TextField::make('warehouse_id')->setRules('required|integer'),
             TextField::make('supplier_id')->setRules('required|integer'),
             TextField::make('date')->setRules('required|date'),
-            TextField::make('subtotal')->setRules('nullable'),
-            TextField::make('amount_paid')->setRules('nullable'),
-            TextField::make('currency_id')->setRules('nullable'),
         ];
     }
 

@@ -49,10 +49,10 @@
                     <td>
                         <div class="table_image"  :style="'background-image: url('+ item.image[0].url +')'"></div>
                     </td>
-                    <td>
+                    <td style=" text-wrap: wrap" >
                         {{ item.name }}
                     </td>
-                    <td>{{ item.generic_name }}</td>
+                    <td style=" text-wrap: wrap" >{{ item.generic_name }}</td>
                     <td>{{ item.amount }}</td>
                     <td>{{ counterStore.formatNumber(item.price)}} {{item.currency.sign}}</td>
                     <td>{{ counterStore.formatNumber(item.buy_price)}} {{item.currency.sign}}</td>

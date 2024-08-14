@@ -36,8 +36,8 @@
                         <div class="table_image"  :style="'background-image: url('+ item.image[0].url +')'"></div>
                     </td>
                     <td>
-                        <p class="m-0">{{ item.name }}</p>
-                        <p class="font-size-10 m-0">{{ item.generic_name }}</p>
+                        <p class="m-0" style=" text-wrap: wrap">{{ item.name }}</p>
+                        <p class="font-size-10 m-0" style="text-wrap: wrap" >{{ item.generic_name }}</p>
 
                     </td>
                     <td>

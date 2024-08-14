@@ -13,6 +13,21 @@
     }
 
 }
+/*.selling_md_flex*/
+@media (max-width: 767px) {
+    .selling_left_box{
+       width: 100% !important;
+    }
+
+    .selling_box{
+        overflow: auto;
+    }
+    .selling_search_box{
+        position: absolute;
+        width: 100%;
+    }
+
+}
 
 @media (max-width: 600px) {
     .page-content{

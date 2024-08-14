@@ -38,7 +38,7 @@
                 </template>
 
                 <template v-slot:buttons>
-                    <PrimaryBtn v-if="counterStore.hasRole('MedicineCategories-create')" role="button" data-bs-toggle="modal" data-bs-target="#warehouseCreate" >{{$t('Create')}}</PrimaryBtn>
+<!--                    <PrimaryBtn v-if="counterStore.hasRole('MedicineCategories-create')" role="button" data-bs-toggle="modal" data-bs-target="#warehouseCreate" >{{$t('Create')}}</PrimaryBtn>-->
                 </template>
 
                 <tr v-for="(item, i) in items" >

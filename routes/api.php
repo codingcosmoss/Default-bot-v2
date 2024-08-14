@@ -268,6 +268,7 @@ Route::middleware(['auth:sanctum', 'admin' ])->group(function () {
         Route::post('/update/{id}', [\App\Http\Controllers\Api\ImportedMedicineController::class, 'update']);
         Route::get('/search/{search}', [\App\Http\Controllers\Api\ImportedMedicineController::class, 'search']);
         Route::get('/delete/{id}', [\App\Http\Controllers\Api\ImportedMedicineController::class, 'destroy']);
+        Route::get('/supplier/medicines/{supplier_id}', [\App\Http\Controllers\Api\ImportedMedicineController::class, 'supplierMedicines']);
     });
 
     Route::prefix('/document-payment')->group(function () {

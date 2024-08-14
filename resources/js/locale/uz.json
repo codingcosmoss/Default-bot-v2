@@ -166,5 +166,13 @@
     "ReturnedAmount": "Qancha pul qaytarib olindi",
     "CurrentMedicinesAmount": "Hozirda mavjud dorilar",
     "ReturnedAmountError": "Qaytarib olingan pul miqdori to'langan pul miqdoridan ortib ketmasligi kerak",
-    "ReturnedMedicineAmount": "Qaytarib berilgan dori miqdori"
+    "ReturnedMedicineAmount": "Qaytarib berilgan dori miqdori",
+    "PersonalInformation": "Shaxsiy malumotlari",
+    "Selling": "Sotish",
+    "Price": "Narxi",
+    "MedicineNotAmount": "Dori qolmagan",
+    "GST/TaxAmount": "GST/Soliq summasi",
+    "FullPaid": "To'liq to'landi",
+    "MFSPayment": "MFS to'lovi",
+    "CashPayment": "Naqt to'lov"
 }

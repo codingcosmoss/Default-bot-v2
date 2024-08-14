@@ -217,8 +217,8 @@
 
                     <div class="col-lg-6 col-sm-12 d-flex flex-column">
                         <label class="form-label" >{{ $t('Status') }} </label>
-                        <input type="checkbox" id="medicine_category_create_status" switch="none"  @input="status = status == 1 ? 0 : 1" :checked="status == 1 ? true : false" >
-                        <label for="medicine_category_create_status" data-on-label="On" data-off-label="Off"></label>
+                        <input type="checkbox" id="medicine_category_update_status" switch="none"  @input="status = status == 1 ? 0 : 1" :checked="status == 1 ? true : false" >
+                        <label for="medicine_category_update_status" data-on-label="On" data-off-label="Off"></label>
                     </div>
 
                 </div>

@@ -1,7 +1,8 @@
 
-@import "media.css";
 @import "status.css";
+@import "selling.css";
 @import "global.css";
+@import "media.css";
 a{
     cursor: pointer;
 }

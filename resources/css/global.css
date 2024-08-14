@@ -74,3 +74,17 @@ html{
     margin: 0;
     font-size: 10px;
 }
+
+.selling_btn:nth-child(2){
+    color: white;
+    background-color: #e84c08;
+}
+.selling_btn:nth-child(3){
+    color: white;
+    background-color: #32b00e;
+    border-color: #32b00e;
+    outline: #32b00e;
+}
+.selling_btn:nth-child(2):hover{
+    background-color: #e84c08;
+}

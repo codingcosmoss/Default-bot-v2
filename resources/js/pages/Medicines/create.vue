@@ -44,7 +44,7 @@
                         @onInput="medicine_category_id = $event,  delete this.errors.medicine_category_id"
                         Class="col-lg-6 col-sm-12"
                     >
-                        <option selected>---</option>
+                        <option selected >---</option>
                         <option v-for="medicineCategory in medicineCategories" :value="medicineCategory.id" >{{medicineCategory.name}}</option>
                     </DefaultSelect>
 
@@ -327,7 +327,8 @@ export default {
             status: 1,
             currency:'',
             percentage: 0,
-            selling_price: 0
+            selling_price: 0,
+            isSaved: 0
         }
     },
 
@@ -359,10 +360,10 @@ export default {
         async save() {
             this.item = [];
             this.image = '';
-            this.medicine_category_id = null;
-            this.box_size_id = null;
-            this.size_type_id = null;
-            this.drug_company_id = null;
+            // this.medicine_category_id = null;
+            // this.box_size_id = null;
+            // this.size_type_id = null;
+            // this.drug_company_id = null;
             this.name = '';
             this.generic_name = '';
             this.buy_price = 0;
@@ -409,6 +410,7 @@ export default {
 
                 const response = await medicineCreate(data);
                 if (response.status) {
+                    this.isSaved = 0;
                     this.counterStore.hiddenModal('medicineCreate');
                     this.$emit('onCreate', true)
                     Alert('success', this.$t('create'));

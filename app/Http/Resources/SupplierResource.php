@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Document;
 use App\Models\DocumentPayment;
 use App\Models\Expense;
 use App\Models\ImportedMedicine;
@@ -24,9 +25,15 @@ class SupplierResource extends JsonResource
             ]
         ];
 
-        $paidGroupedByCurrency = DocumentPayment::where('clinic_id', auth()->user()->clinic_id )
+        $paidGroupedByCurrency = Document::where('clinic_id', auth()->user()->clinic_id )
             ->where('supplier_id', $this->id)
-            ->select('currency_id', DB::raw('SUM(amount) as total_amount'))
+            ->select('currency_id', DB::raw('SUM(	amount_paid	) as total_amount'))
+            ->groupBy('currency_id')
+            ->get();
+
+        $loanGroupedByCurrency = Document::where('clinic_id', auth()->user()->clinic_id )
+            ->where('supplier_id', $this->id)
+            ->select('currency_id', DB::raw('SUM(	loan_amount	) as total_amount'))
             ->groupBy('currency_id')
             ->get();
 
@@ -37,7 +44,8 @@ class SupplierResource extends JsonResource
             'address' => $this->address,
             'phone' => $this->phone,
             'imported_medicines' => ImportedMedicine::where('supplier_id', $this->id)->sum('amount'),
-            'paid' =>  ExpenceTotalResource::collection($paidGroupedByCurrency)
+            'paid' =>  ExpenceTotalResource::collection($paidGroupedByCurrency), // Tolandi
+            'loan' =>  ExpenceTotalResource::collection($loanGroupedByCurrency) // Qarzdorlik
         ];
     }
 }
