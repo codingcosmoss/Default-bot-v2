@@ -5,12 +5,12 @@
             <label class="form-label" v-if="Label != '' ">{{Label}}</label>
             <div class="input-group bootstrap-touchspin bootstrap-touchspin-injected">
               <span class="input-group-btn input-group-prepend">
-                <button @click="this.$emit('onMinus', true)" class="btn btn-primary bootstrap-touchspin-down" type="button">−</button>
+                <button :class="isError ? 'border-danger ' : '' "  @click="this.$emit('onMinus', true)" class="btn btn-primary bootstrap-touchspin-down" type="button">−</button>
               </span>
-                <input class="form-control " :class="Validated[Name] ? 'border-danger ' + inputClass : inputClass " :type="Type" :value="Value" :placeholder="Pholder" @input="this.$emit('onInput', $event.target.value)"    >
+                <input class="form-control " :class="isError ? 'border-danger ' + inputClass : inputClass " :type="Type" :value="Value" :placeholder="Pholder" @input="this.$emit('onInput', $event.target.value)"    >
 
                 <span class="input-group-btn input-group-append">
-                <button @click="this.$emit('onPlus', true)" class="btn btn-primary bootstrap-touchspin-up" type="button">+</button>
+                <button :class="isError ? 'border-danger ' : '' " @click="this.$emit('onPlus', true)" class="btn btn-primary bootstrap-touchspin-up" type="button">+</button>
               </span>
             </div>
         </div>
@@ -49,9 +49,9 @@ export default{
             type: [String, Number],
             default: ''
         },
-        Validated:{
-            type: [Array, Object, String],
-            default: []
+        isError:{
+            type: Boolean,
+            default: false
         }
     },
 }

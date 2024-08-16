@@ -12,12 +12,15 @@
                                         Label=""
                                         class="selling_input"
                                         inputClass="p-2"
+                                        Class="col-lg-6 col-md-6 col-xl-12 col-sm-12"
+
                                         @onInput="this.$emit('onSearch', $event)"
                                     >
                                         <i class="bx bx-search-alt-2"></i>
                                     </DefaultIconInput>
                                     <DefaultSelect
                                         Label=""
+                                        Class="col-lg-6 col-md-6 col-xl-12 col-sm-12"
                                     >
                                         <option>---</option>
                                         <option>---</option>

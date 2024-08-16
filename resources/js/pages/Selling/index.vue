@@ -2,9 +2,9 @@
     <Layout @onSearch="search($event)">
         <template v-slot:main>
                 <ul class="main_list" >
-                    <li class="font-size-15" >{{$t('Subtotal')}}: <span class="font-size-20 fw-bold">1000</span></li>
+                    <li class="font-size-15" >{{$t('Subtotal')}}: <span class="font-size-20 fw-bold">{{counterStore.formatNumber(subtotal + igta + gstResult)}} {{sign}}</span></li>
                     <li class="font-size-15" >{{$t('Subtotal')}}: <input value="0" class="selling_amount " /></li>
-                    <li class="font-size-15" >{{$t('AmountToPaid')}}: <span class="font-size-20 fw-bold">1000</span></li>
+                    <li class="font-size-15" >{{$t('AmountToPaid')}}: <span class="font-size-20 fw-bold">1000 000</span></li>
                 </ul>
             <button type="button" class="selling_btn btn bg_color_yello waves-effect waves-light">
                 {{$t('FullPaid')}}
@@ -29,11 +29,12 @@
                             <AmountInput
                                 Label=""
                                 inputClass="selling_amount_input"
-                                :Name="medicine.sortId"
+                                :Name="medicine.id"
+                                Pholder=""
                                 Type="number"
-                                :Validated="errors"
+                                :isError="inputErrors.includes(medicine.id)"
                                 :Value="sellingMedicines[index]['selling_amount']"
-                                @onInput="$event,  delete this.errors.medicine.sortId"
+                                @onInput="changeItemAmount(index, $event)"
                                 @onPlus="changeAmount('plus', index)"
                                 @onMinus="changeAmount('minus', index)"
                             />
@@ -41,27 +42,28 @@
                         <td>{{counterStore.formatNumber(medicine.price)}} {{medicine.currency.sign}} </td>
                         <td>{{counterStore.formatNumber(medicine.price * medicine.selling_amount)}} {{medicine.currency.sign}}</td>
                         <td>
-                            <PrimaryIconBtn  @click="onDelete(medicine.sortId)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
+                            <PrimaryIconBtn  @click="onDelete(medicine.sortId), gstCalculator()" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
                         </td>
                     </tr>
                 </BasicTable>
 
             <div class="row p-4 pt-0 w-100">
                 <div class="col-xl-6 col-lg-6">
-                    <h4 class="card-title mb-4">{{$t('PersonalInformation')}}</h4>
+                    <h4 class="card-title mb-4">{{$t('GeneralCalculation')}} :</h4>
                     <div class="table-responsive">
                         <table class="table table-nowrap mb-0">
                             <tbody>
                             <tr>
                                 <th scope="row">{{$t('Total')}} :</th>
-                                <td>1000</td>
+                                <td>{{counterStore.formatNumber(sumAmount())}} {{sign}}</td>
                             </tr>
                             <tr>
                                 <th scope="row" class="pt-3">{{$t('GST/TaxAmount')}} % :</th>
                                 <td >
                                     <DefaultIconInput
                                         Label=""
-                                        Value="0"
+                                        :Value="gst"
+                                        @onInput="gst = $event, gstCalculator()"
                                     >
                                         %
                                     </DefaultIconInput>
@@ -69,11 +71,11 @@
                             </tr>
                             <tr>
                                 <th scope="row">{{$t('IGTA')}} :</th>
-                                <td>1000</td>
+                                <td>{{counterStore.formatNumber(sumIgta())}} {{sign}}</td>
                             </tr>
                             <tr>
                                 <th scope="row">{{$t('Subtotal')}} :</th>
-                                <td>1000</td>
+                                <td>{{counterStore.formatNumber(subtotal + igta + gstResult)}} {{sign}}</td>
                             </tr>
                             <tr>
                                 <th scope="row">{{$t('AmountPaid')}} :</th>
@@ -148,11 +150,47 @@
             sortId: 0,
             loader: false,
             // __________
-            subtotal: 0
+            sign: '',
+            subtotal: 0,
+            gst: 0,
+            igta: 0,
+            inputErrors:[],
+            gstResult: 0
         }},
         methods:{
+            gstCalculator(){
+                this.gstResult = (this.subtotal * this.gst)/100
+            },
+            changeItemAmount(index, amount){
+                let medicine = this.sellingMedicines[index];
+                if (medicine['amount'] < amount){
+                    Alert('error', this.$t('MedicineNotAmount'));
+                    this.inputErrors.push(medicine['id']);
+                }else {
+                    this.inputErrors = this.inputErrors.filter(e=> e != medicine['id'])
+                    this.sellingMedicines[index]['selling_amount'] = amount;
+                }
+            },
+            sumAmount(){
+                let sum = 0;
+                this.sellingMedicines.forEach(e=>{
+                    sum+= e.price * e.selling_amount;
+                })
+                this.subtotal = sum;
+                this.gstCalculator();
+                return Number(sum);
+            },
+            sumIgta(){
+                let sum = 0;
+                this.sellingMedicines.forEach(e=>{
+                    sum+= e.igta;
+                })
+                this.igta = sum;
+                return Number(sum);
+            },
             onDelete(id){
                 this.sellingMedicines = this.sellingMedicines.filter(e=>e.sortId != id);
+                this.sumAmount();
             },
             changeAmount(type, index, amount=1){
                 let medicine = this.sellingMedicines[index];
@@ -164,12 +202,15 @@
                         this.sellingMedicines[index]['selling_amount'] +=amount;
 
                     }
+                    this.inputErrors = this.inputErrors.filter(e=> e != medicine['sortId'])
                 }else {
                     if ( 0 > medicine.selling_amount - amount){
                         return false
                     }else {
                         this.sellingMedicines[index]['selling_amount'] -=amount;
+                        this.inputErrors = this.inputErrors.filter(e=> e != medicine['id'])
                     }
+
                 }
             },
             addMedicines(item){
@@ -180,6 +221,7 @@
                 let index = this.sellingMedicines.findIndex(i => i.id == item.id);
                 if (index != -1){
                     this.sellingMedicines[index]['selling_amount'] +=1;
+                    this.sumAmount();
                     return true;
                 }
 
@@ -190,6 +232,7 @@
                 this.sortId = id;
 
                 this.sellingMedicines.push(newMedicine);
+                this.sumAmount();
             },
             realAmount(val){
                 let medicine = this.sellingMedicines.find(item => item.id == val.id);
@@ -224,6 +267,7 @@
             },
             async indexPaginates(page=1){
                 try {
+                    this.sign = this.counterStore.user.currency.sign;
                     this.loader = true;
                     const response = await medicinePaginates(10, page);
                     this.searchMedicines = response.data.items;

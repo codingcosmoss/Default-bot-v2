@@ -174,5 +174,6 @@
     "GST/TaxAmount": "GST/Soliq summasi",
     "FullPaid": "To'liq to'landi",
     "MFSPayment": "MFS to'lovi",
-    "CashPayment": "Naqt to'lov"
+    "CashPayment": "Naqt to'lov",
+    "GeneralCalculation": "Umumiy hisob-kitob"
 }

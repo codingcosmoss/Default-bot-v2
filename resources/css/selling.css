@@ -61,7 +61,7 @@
     cursor:not-allowed;
 }
 .selling_amount_input{
-    width: 30px !important;
+    width: 50px !important;
 }
 
 .selling_left_table{
@@ -82,6 +82,8 @@
     align-items: center;
     justify-content: center;
     gap: 20px;
+    opacity: 1 !important;
+    z-index: 999;
 }
 .main_list{
     display: flex;
