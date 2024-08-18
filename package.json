@@ -23,6 +23,7 @@
         "apexcharts": "^3.48.0",
         "chart.js": "^4.4.2",
         "pinia": "^2.0.0-rc.10",
+        "sweetalert2": "^11.12.4",
         "vue-awesome-paginate": "^1.1.46",
         "vue-chartjs": "^5.3.1",
         "vue-i18n": "^9.13.1",

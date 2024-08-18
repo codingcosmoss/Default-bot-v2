@@ -26,6 +26,7 @@
     >
        <AlertContainer/>
     </ModalCentered>
+<!--    this.counterStore.hiddenModal('customerCreate');-->
 
 </template>
 <script >

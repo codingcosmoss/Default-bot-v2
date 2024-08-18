@@ -12,6 +12,7 @@ use App\Models\Setting;
 use App\Models\SizeType;
 use App\Models\Supplier;
 use App\Models\Warehouse;
+use App\Traits\Status;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -54,13 +55,15 @@ class DefaultDataSeeder extends Seeder
                 'clinic_id' => $clinic->id,
             ]);
             PaymentType::create([
+                'name' => 'Cash payment',
+                'clinic_id' => $clinic->id,
+                'status' => Status::$default
+            ]);
+            PaymentType::create([
                 'name' => 'Paypal',
                 'clinic_id' => $clinic->id,
             ]);
-            PaymentType::create([
-                'name' => 'Cash money',
-                'clinic_id' => $clinic->id,
-            ]);
+
 
             Setting::create([
                 'name' => 'Coding Cosmos',

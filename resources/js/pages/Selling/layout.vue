@@ -13,6 +13,7 @@
                                         class="selling_input"
                                         inputClass="p-2"
                                         Class="col-lg-6 col-md-6 col-xl-12 col-sm-12"
+                                        :Pholder="$t('SearchMedicines')+'...'"
 
                                         @onInput="this.$emit('onSearch', $event)"
                                     >
@@ -41,17 +42,21 @@
                     <div class="card-body p-0" >
                         <div class="row p-3">
                             <div class="col-xl-6 col-sm-6">
-                                <DefaultSelect
-                                    Label=""
-                                ></DefaultSelect>
+                                <slot name="customers" >
+
+                                </slot>
                             </div>
                             <div class="col-xl-6 col-sm-6 d-flex gap-2">
-                                <button type="button" class="selling_btn btn btn-primary waves-effect waves-light">
-                                    <i class="bx bx-smile font-size-16 align-middle me-2"></i> Primary
-                                </button>
-                                <button type="button" class=" btn btn-primary waves-effect waves-light">
-                                    <i class="bx bx-smile font-size-16 align-middle me-2"></i> Primary
-                                </button>
+                                <BtnBox>
+                                    <PrimaryIconBtn
+                                        @click="this.$router.push('/')"
+                                        Icon="bx bx-log-in-circle font-size-20"
+                                        :title="$t('Home')"
+                                    />
+<!--                                    <PrimaryBtn class="d-flex align-items-center justify-content-center gap-1 p-0">-->
+<!--                                        <i class=""></i>-->
+<!--                                    </PrimaryBtn>-->
+                                </BtnBox>
                             </div>
                         </div>
                         <div class="selling_left_table" >
@@ -80,9 +85,11 @@ import {defineComponent} from "vue";
 import DefaultSelect from "@/ui-components/Forms/DefaultSelect.vue";
 import PrimaryIconBtn from "@/components/all/PrimaryIconBtn.vue";
 import DefaultIconInput from "@/components/all/DefaultIconInput.vue";
+import PrimaryBtn from "@/components/all/PrimaryBtn.vue";
+import BtnBox from "@/components/all/BtnBox.vue";
 
 export default {
-    components: {DefaultIconInput, PrimaryIconBtn, DefaultSelect},
+    components: {BtnBox, PrimaryBtn, DefaultIconInput, PrimaryIconBtn, DefaultSelect},
     data(){return{
         searchMedicines:[],
         loader: false

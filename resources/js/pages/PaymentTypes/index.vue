@@ -39,14 +39,14 @@
                         {{ item.name }}
                     </td>
                     <td>
-                        <span :class="item.status == 1 ? 'badge-soft-success' : 'badge-soft-danger' "
-                              class="badge badge-pill badge-soft-success font-size-11">{{ item.status  == 1 ? $t('Active') : $t('InActive') }}</span>
+                        <span :class="item.status == 1 || item.status == 9  ? 'badge-soft-success' : 'badge-soft-danger' "
+                              class="badge badge-pill badge-soft-success font-size-11">{{ item.status  == 1 || item.status == 9 ? $t('Active') : $t('InActive') }}</span>
 
                     </td>
                     <td>
                         <PrimaryIconBtn v-if="counterStore.hasRole('PaymentTypes-update')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="payment_typeUpdate"/>
 <!--                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/size-types/show', query:{id: item.id}})" Icon="bx bx-show"/>&nbsp;-->
-                        <PrimaryIconBtn v-if="counterStore.hasRole('PaymentTypes-delete')" @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
+                        <PrimaryIconBtn v-if="counterStore.hasRole('PaymentTypes-delete') && item.status != 9" @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
                     </td>
 
                 </tr>

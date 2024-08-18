@@ -1,18 +1,39 @@
 <template>
     <Layout @onSearch="search($event)">
+        <template v-slot:customers>
+            <DefaultSelect
+                Label=""
+                Name="customer"
+                :Validated="errors"
+                @onInput="customer = JSON.parse($event),  delete this.errors.customer"
+            >
+                <option selected :value="JSON.stringify({name:'---', id: 0})">{{$t('Customers')}}</option>
+                <option v-for="customer in customers" :value="JSON.stringify(customer)" >{{customer.name}}</option>
+
+            </DefaultSelect>
+        </template>
         <template v-slot:main>
                 <ul class="main_list" >
-                    <li class="font-size-15" >{{$t('Subtotal')}}: <span class="font-size-20 fw-bold">{{counterStore.formatNumber(subtotal + igta + gstResult)}} {{sign}}</span></li>
-                    <li class="font-size-15" >{{$t('Subtotal')}}: <input value="0" class="selling_amount " /></li>
-                    <li class="font-size-15" >{{$t('AmountToPaid')}}: <span class="font-size-20 fw-bold">1000 000</span></li>
+                    <li class="font-size-15" >{{$t('Subtotal')}}: <span class="font-size-20 fw-bold">{{counterStore.formatNumber(resultSum())}} {{sign}}</span></li>
+                    <li class="font-size-15" >{{$t('PaidAmount')}}:
+                        <input
+                            type="text"
+                            :value="counterStore.formatNumber(amount_due)"
+                            class="amount_due selling_amount"
+                            @input="sellingAmount($event.target.value)"
+                        />
+                    </li>
+                    <li class="font-size-15 " >{{$t('AmountToPaid')}}: <span :class="resultSum() - amount_due < 0 ? 'text-bg-danger' : '' " class=" font-size-20 fw-bold">{{counterStore.formatNumber(resultSum() - amount_due)}} {{sign}}</span></li>
                 </ul>
-            <button type="button" class="selling_btn btn bg_color_yello waves-effect waves-light">
+            <button @click="amount_due = resultSum()" type="button" class="selling_btn btn bg_color_yello waves-effect waves-light">
                 {{$t('FullPaid')}}
             </button>
-            <button type="button" class="selling_btn btn btn-success waves-effect waves-light">
-                {{$t('CashPayment')}}
+            <button @click="cashPayment()" type="button" class="selling_btn btn btn-success waves-effect waves-light">
+                <p v-if="!cashPaymentLoader" class="m-0">{{$t('CashPayment')}}</p>
+                <div v-if="cashPaymentLoader" class="spinner-border text-success spinner-grow-sm m-4 mt-0 mb-0"  role="status">
+                </div>
             </button>
-            <button type="button" class="selling_btn btn btn-success waves-effect waves-light">
+            <button type="button" data-bs-toggle="modal" data-bs-target="#changePayment" class="selling_btn btn btn-success waves-effect waves-light">
                 {{$t('MFSPayment')}}
             </button>
         </template>
@@ -49,7 +70,7 @@
 
             <div class="row p-4 pt-0 w-100">
                 <div class="col-xl-6 col-lg-6">
-                    <h4 class="card-title mb-4">{{$t('GeneralCalculation')}} :</h4>
+                    <h4 class="card-title mb-4">{{$t('Customer')}} : <span class="text-bg-primary p-1" >{{customer.name}}</span></h4>
                     <div class="table-responsive">
                         <table class="table table-nowrap mb-0">
                             <tbody>
@@ -79,7 +100,7 @@
                             </tr>
                             <tr>
                                 <th scope="row">{{$t('AmountPaid')}} :</th>
-                                <td>1000</td>
+                                <td>{{counterStore.formatNumber(amount_due)}} {{sign}}</td>
                             </tr>
 
                             </tbody>
@@ -99,15 +120,31 @@
                     :Image="medicine.image[0].url"
                     @click="addMedicines(medicine)"
                 />
+
+                <div v-if="!loader && searchMedicines.length == 0" class="text-center p-3">
+                    <p>{{$t('MedicinesNotFount')}}</p>
+                </div>
+
                 <div v-if="loader" class="selling_loader_box" >
                     <div class="spinner-border text-primary m-1" role="status">
                         <span class="sr-only">Loading...</span>
                     </div>
                 </div>
+
+
             </div>
 
 
+        <audio class="onClickSong" :src=" counterStore.baseUrl + '/Songs/click.mp3' "  ></audio>
+        <audio class="onErrorSong" :src=" counterStore.baseUrl + '/Songs/error.mp3' "  ></audio>
+        <audio class="onSuccessSong" :src=" counterStore.baseUrl + '/Songs/success.mp3' "  ></audio>
+        <ModalCentered
+            ModalName="changePayment"
+            :isModalFooter="false"
+            :Title="$t('MFSPayments')"
+        >
 
+        </ModalCentered>
         </Layout>
 </template>
 <script>
@@ -116,7 +153,7 @@
     import Layout from './layout.vue';
     import SellingCard from "@/components/all/SellingCard.vue";
     import BasicTable from "@/components/all/BasicTable.vue";
-    import {medicineActiveSearch, medicinePaginates} from "@/helpers/api.js";
+    import {medicineActiveSearch, medicinePaginates, customerActives, customers, invoiceCreate, payment_types} from "@/helpers/api.js";
     import {ApiError, Alert} from "@/helpers/Config.js";
     import DefaultInput from "@/ui-components/Forms/DefaultInput.vue";
     import BasicInput from "@/components/all/BasicInput.vue";
@@ -124,9 +161,14 @@
     import PrimaryIconBtn from "@/components/all/PrimaryIconBtn.vue";
     import DefaultIconInput from "@/components/all/DefaultIconInput.vue";
     import PrimaryBtn from "@/components/all/PrimaryBtn.vue";
+    import DefaultSelect from "@/ui-components/Forms/DefaultSelect.vue";
+    import Swal from 'sweetalert2'
+    import ModalCentered from "@/components/all/ModalCentered.vue";
 
     export default {
         components: {
+            ModalCentered,
+            DefaultSelect,
             PrimaryBtn,
             DefaultIconInput,
             PrimaryIconBtn, AmountInput, BasicInput, DefaultInput, BasicTable, SellingCard, Layout},
@@ -155,15 +197,135 @@
             gst: 0,
             igta: 0,
             inputErrors:[],
-            gstResult: 0
+            gstResult: 0,
+            customer: {
+                id:0,
+                name: '---'
+            },
+            customers:[],
+            amount_due: 0,
+            cashPaymentLoader: false,
+            paymentTypesArr: []
         }},
+
         methods:{
+            onClickSong(){
+                let song = document.querySelector('.onClickSong');
+                // Agar audio ijro etilayotgan bo'lsa
+                if (!song.paused) {
+                    song.pause();            // Avval audio to'xtatiladi
+                    song.currentTime = 0;    // Audio joriy o'rni boshiga qaytariladi
+                }
+
+                song.play();  // Audio qayta ijro etiladi
+            },
+            onErrorSong(){
+                let song = document.querySelector('.onErrorSong');
+                // Agar audio ijro etilayotgan bo'lsa
+                if (!song.paused) {
+                    song.pause();            // Avval audio to'xtatiladi
+                    song.currentTime = 0;    // Audio joriy o'rni boshiga qaytariladi
+                }
+
+                song.play();  // Audio qayta ijro etiladi
+            },
+            onSuccessSong(){
+                Swal.fire({
+                    title: this.$t('Successfully'),
+                    text: "",
+                    icon: "success"
+                });
+                let song = document.querySelector('.onSuccessSong');
+                // Agar audio ijro etilayotgan bo'lsa
+                if (!song.paused) {
+                    song.pause();            // Avval audio to'xtatiladi
+                    song.currentTime = 0;    // Audio joriy o'rni boshiga qaytariladi
+                }
+
+                song.play();  // Audio qayta ijro etiladi
+            },
+            dataRefresh(){
+                this.sellingMedicines = [];
+                this.subtotal = 0;
+                this.igta = 0;
+                this.gst = 0;
+                this.amount_due = 0;
+            },
+            async cashPayment(){
+                try {
+                    this.cashPaymentLoader = true;
+
+                    if (this.customer.id == 0){
+                        this.onErrorSong();
+                        this.errors['customer'] = this.$t('CustomerValidated');
+                        Alert('error', this.$t('CustomerValidated'))
+                        this.cashPaymentLoader = false;
+                        return false;
+                    }
+                    if (this.amount_due > this.resultSum()){
+                        this.onErrorSong();
+                        Alert('error', this.$t('PaymentMaxError'))
+                        this.cashPaymentLoader = false;
+                        return false;
+                    }
+                    if (this.sellingMedicines.length == 0){
+                        this.onErrorSong();
+                        Alert('error', this.$t('MedicinesValidated'))
+                        this.cashPaymentLoader = false;
+                        return false;
+                    }
+
+                    let amount = 0;
+                    this.sellingMedicines.forEach(e=>{
+                        amount+=e.selling_amount;
+                    })
+                    let paymentType = this.paymentTypesArr.find(e=> e.status == 9);
+                    let data = {
+                        customer_id: this.customer.id,
+                        amount: amount,
+                        amount_paid: this.amount_due,
+                        must_paid: this.resultSum() - this.amount_due,
+                        subtotal: this.resultSum(),
+                        igta: this.igta,
+                        gst: this.gst,
+                        medicines: this.sellingMedicines,
+                        currency_id: this.counterStore.user.currency.id,
+                        payment_type_id: paymentType.id
+                    }
+                    const response = await invoiceCreate(data);
+                    if (response.status){
+                        this.dataRefresh()
+                        this.onSuccessSong();
+                        Alert('success', this.$t('save'));
+                        this.indexPaginates();
+                        this.cashPaymentLoader = false;
+                        return true;
+                    }
+                    this.errors = response.errors;
+                    Alert('error', this.$t('formError'));
+                    this.cashPaymentLoader = false;
+                    return false;
+                }catch(error){
+                    ApiError(this, error);
+                    this.cashPaymentLoader = false;
+                    return false;
+                }
+            },
+
+            resultSum(){
+                return this.subtotal + this.igta + this.gstResult;
+            },
+            sellingAmount(val){
+                let formatAmount = this.counterStore.inputNumberFormat('amount_due', this.amount_due, val);
+                this.amount_due = formatAmount;
+            },
             gstCalculator(){
                 this.gstResult = (this.subtotal * this.gst)/100
             },
             changeItemAmount(index, amount){
                 let medicine = this.sellingMedicines[index];
                 if (medicine['amount'] < amount){
+                    this.onErrorSong();
                     Alert('error', this.$t('MedicineNotAmount'));
                     this.inputErrors.push(medicine['id']);
                 }else {
@@ -192,10 +354,27 @@
                 this.sellingMedicines = this.sellingMedicines.filter(e=>e.sortId != id);
                 this.sumAmount();
             },
+            async indexCustomers(){
+                try {
+                    const response = await customers();
+                    this.customers = response.data;
+                }catch(error){
+                    ApiError(this, error);
+                }
+            },
+            async indexPaymentTypes(){
+                try {
+                    const response = await payment_types();
+                    this.paymentTypesArr = response.data;
+                }catch(error){
+                    ApiError(this, error);
+                }
+            },
             changeAmount(type, index, amount=1){
                 let medicine = this.sellingMedicines[index];
                 if (type == 'plus'){
                     if (medicine.amount < medicine.selling_amount + amount){
+                        this.onErrorSong();
                         Alert('error', this.$t('MedicineNotAmount'))
                         return false
                     }else {
@@ -205,6 +384,7 @@
                     this.inputErrors = this.inputErrors.filter(e=> e != medicine['sortId'])
                 }else {
                     if ( 0 > medicine.selling_amount - amount){
+                        this.onErrorSong();
                         return false
                     }else {
                         this.sellingMedicines[index]['selling_amount'] -=amount;
@@ -214,6 +394,7 @@
                 }
             },
             addMedicines(item){
+                this.onClickSong();
                 if (this.realAmount(item) <= 0){
                     Alert('error', this.$t('MedicineNotAmount'))
                     return false
@@ -245,6 +426,7 @@
             async search(text = ''){
                 try {
                     this.loader = true;
+                    this.searchMedicines = [];
                     if (text == ''){
                         this.indexPaginates();
                         return true;
@@ -280,6 +462,8 @@
 
         mounted() {
             this.indexPaginates()
+            this.indexCustomers()
+            this.indexPaymentTypes()
         }
     }
 </script>

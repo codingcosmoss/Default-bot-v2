@@ -13,7 +13,7 @@
                         :Value="name"
                         @onInput="name = $event,  delete this.errors.name"
                     />
-                    <div class="col-12 d-flex flex-column">
+                    <div class="col-12 d-flex flex-column" v-if="status != 9">
                         <label class="form-label" >{{ $t('Status') }}</label>
                         <input type="checkbox" id="payment_type_update" switch="none" @input="status = status == 1 ? 0 : 1" :checked="status == 1 ? true : false" >
                         <label for="payment_type_update" data-on-label="On" data-off-label="Off"></label>

@@ -1,4 +1,5 @@
 {
+    "Home": "Boshqaruv paneli",
     "home": "Bosh sahifa",
     "English": "Inglizcha",
     "Uzbek": "Uzbekcha",
@@ -132,7 +133,7 @@
     "SearchMedicines": "Dorilarni izlash...",
     "CreateMedicine": "Yangi dori qo'shish",
     "Discount": "Chegirma",
-    "AmountToPaid": "To'lanishi kerak bo'lgan summa",
+    "AmountToPaid": "To'lanishi kerak",
     "Paid": "To'landi",
     "PoweredByCodingCosmos": "CodingCosmos tomondan ishlab chiqarilgan",
     "EnterLogin": "Login parolingizni kiriting",
@@ -174,6 +175,16 @@
     "GST/TaxAmount": "GST/Soliq summasi",
     "FullPaid": "To'liq to'landi",
     "MFSPayment": "MFS to'lovi",
+    "MFSPayments": "MFS to'lovlar",
     "CashPayment": "Naqt to'lov",
-    "GeneralCalculation": "Umumiy hisob-kitob"
+    "GeneralCalculation": "Umumiy hisob-kitob",
+    "NotSpecified": "Belgilanmagan",
+    "Customer": "Xaridor",
+    "SearchMedicines": "Dori qidirish",
+    "CustomerValidated": "Iltimos xaridorni tanlang",
+    "PaymentMaxError": "Tolanishi kerak bo'lgan narxdan oshib ketmoqda",
+    "PaidAmount": "To'langan miqdor",
+    "MedicinesNotFount": "Dori topilmadi",
+    "MedicinesValidated": "Dorilar belgilanmagan",
+    "Successfully": "Muvoffaqiyatli bajarildi !"
 }
