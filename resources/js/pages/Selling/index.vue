@@ -143,7 +143,12 @@
             :isModalFooter="false"
             :Title="$t('MFSPayments')"
         >
-
+            <button
+                type="button" class="btn btn-secondary btn-rounded waves-effect waves-light"
+                style="margin-right: 10px"
+                v-for="paymentType in paymentTypesArr"
+                @click="cashPayment(paymentType.id)"
+            >{{paymentType.name}}</button>
         </ModalCentered>
         </Layout>
 </template>
@@ -251,7 +256,7 @@
                 this.gst = 0;
                 this.amount_due = 0;
             },
-            async cashPayment(){
+            async cashPayment(type=null){
                 try {
                     this.cashPaymentLoader = true;
 
@@ -279,7 +284,12 @@
                     this.sellingMedicines.forEach(e=>{
                         amount+=e.selling_amount;
                     })
-                    let paymentType = this.paymentTypesArr.find(e=> e.status == 9);
+                    let paymentType = null;
+                    if (type == null){
+                        paymentType = this.paymentTypesArr.find(e=> e.status == 9).id;
+                    }else {
+                        paymentType = type;
+                    }
                     let data = {
                         customer_id: this.customer.id,
                         amount: amount,
@@ -290,10 +300,11 @@
                         gst: this.gst,
                         medicines: this.sellingMedicines,
                         currency_id: this.counterStore.user.currency.id,
-                        payment_type_id: paymentType.id
+                        payment_type_id: paymentType
                     }
                     const response = await invoiceCreate(data);
                     if (response.status){
+                        this.counterStore.hiddenModal('changePayment');
                         this.dataRefresh()
                         this.onSuccessSong();
                         Alert('success', this.$t('save'));
