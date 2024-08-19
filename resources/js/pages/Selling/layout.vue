@@ -49,7 +49,7 @@
                             <div class="col-xl-6 col-sm-6 d-flex gap-2">
                                 <BtnBox>
                                     <PrimaryIconBtn
-                                        @click="this.$router.push('/')"
+                                        @click="this.$router.push('/admin/archive/invoices')"
                                         Icon="bx bx-log-in-circle font-size-20"
                                         :title="$t('Home')"
                                     />

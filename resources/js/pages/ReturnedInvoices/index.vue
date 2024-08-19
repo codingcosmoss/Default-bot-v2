@@ -1,27 +1,12 @@
 <template>
     <Page Title="">
-        <div class="row"  >
-            <BasicTable
-                :Th="[
-                $t('No'),
-                $t('ModalName'),
-                $t('Desc'),
-                $t('Expenses'),
-                $t('Settings'),
-            ]"
-                :Title="$t('ExpenseCategories')"
+        <div class="row">
+        <BasicTable
+                :Th="[ $t('No'),$t('Date'),$t('Identifikator'),$t('Customer'),$t('Seller'),$t('Amount'),$t('Subtotal'),$t('Indebtedness'),$t('Settings')]"
+                :Title="$t('ReturnHistory')"
                 Col="col-lg-12"
             >
                 <template v-slot:inputs>
-                    <DefaultInput
-                        Class="col-lg-3 col-sm-2 search_input"
-                        Label=""
-                        Name="name"
-                        Type="text"
-                        Pholder="Search..."
-                        @onInput="search($event)"
-                    />
-
                     <DefaultSelect
                         Label=""
                         Class="col-lg-2 col-sm-2"
@@ -32,36 +17,58 @@
                         <option value="20" >20</option>
                         <option value="50" >50</option>
                         <option value="100" >100</option>
-                    </DefaultSelect>
+                    </DefaultSelect>&nbsp;&nbsp;
+                    <DefaultInput
+                        Class="col-lg-3 col-sm-2 search_input"
+                        Label=""
+                        Name="start"
+                        Type="date"
+                        @onInput="startDate = $event, search()"
+                    />
+                    <DefaultInput
+                        Class="col-lg-3 col-sm-2 search_input"
+                        Label=""
+                        Name="finish"
+                        Type="date"
+                        @onInput="finishDate = $event, search()"
+                    />
                 </template>
 
                 <template v-slot:buttons>
-                    <PrimaryBtn v-if="counterStore.hasRole('ExpenseCategories-create')" role="button" data-bs-toggle="modal" data-bs-target="#expense_categoryCreate" >{{$t('Create')}}</PrimaryBtn>
+                    <PrimaryBtn v-if="counterStore.hasRole('invoices-create')" role="button" data-bs-toggle="modal" data-bs-target="#invoiceCreate" >{{$t('Create')}}</PrimaryBtn>
                 </template>
 
-                <tr v-for="(item,i) in items" >
+                <tr v-for="(item, i) in items" >
                     <td>{{ ((current_page - 1) * paginateCount) +  i + 1 }}</td>
+                    <td>{{ item.date }}</td>
+                    <td>#{{item.id }}</td>
+                    <td>{{ item.customer.name }}</td>
+                    <td>{{ item.user.name }}</td>
+                    <td>{{ counterStore.formatNumber(item.amount) }}</td>
+                    <td>{{ counterStore.formatNumber(item.subtotal) }} {{item.currency.sign}}</td>
+                    <td :class="item.must_paid > 0 ? 'text-danger' : '' " >{{ counterStore.formatNumber(item.must_paid) }} {{item.currency.sign}}</td>
                     <td>
-                        {{ item.name }}
-                    </td>
-                    <td>{{ item.description }}</td>
-                    <td @click="this.$router.push({path:'/admin/expense/categories/show', query:{id: item.id}})" :class="item.expenses_count > 0 ? 'cursor-pointer text-info' : '' ">{{ item.expenses_count }}</td>
-                    <td>
-                        <PrimaryIconBtn v-if="counterStore.hasRole('ExpenseCategories-update')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="expense_categoryUpdate"/>
-                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/expense/categories/show', query:{id: item.id}})" Icon="bx bx-show"/>
-                        <PrimaryIconBtn  v-if="counterStore.hasRole('ExpenseCategories-delete') && item.expenses_count == 0 && item.type != 9" @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
+                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/invoices/show', query:{id: item.id}})" Icon="bx bx-show"/>
+                        <PrimaryIconBtn v-if="counterStore.hasRole('invoices-delete')" @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
                     </td>
 
                 </tr>
                 <Paginate
-                    v-if="last_page != 1"
-                    Cols="5"
+                    Cols="9"
+                    v-if="last_page != 1 && !isSearch"
                     :currentPage="this.current_page"
                     :totalPages="this.last_page"
                     @changePage="indexPaginates($event)"
                 />
+                <Paginate
+                    Cols="9"
+                    v-if="last_page != 1 && isSearch"
+                    :currentPage="this.current_page"
+                    :totalPages="this.last_page"
+                    @changePage="search($event)"
+                />
 
-                <GrowingLoader v-if="loader" Cols="5"/>
+                <GrowingLoader v-if="loader" Cols="9"/>
 
             </BasicTable>
 
@@ -77,7 +84,7 @@
     import {Alert} from "@/helpers/Config.js";
     import {useConterStore} from "@/store/counter.js";
     import BasicTable from "@/components/all/BasicTable.vue";
-    import {expense_categorys, expense_categoryCreate, expense_categorySearch, expense_categoryUpdate, expense_categoryShow, expense_categoryDelete, expense_categoryPaginates, expense_categoryActives, expense_categoryOrderBys} from "@/helpers/api.js";
+    import {invoices, invoiceCreate, invoiceSearch, invoiceUpdate, invoiceShow, invoiceDelete, invoicePaginates, invoiceActives, invoiceOrderBys} from "@/helpers/api.js";
     import GrowingLoader from "@/components/all/GrowingLoader.vue";
     import PrimaryButton from "@/components/all/PrimaryButton.vue";
     import PrimaryIconBtn from "@/components/all/PrimaryIconBtn.vue";
@@ -109,12 +116,14 @@
             type: 'desc',
             errors: [],
             loader: false,
-            headers: [1,2,3,4]
+            startDate: null,
+            finishDate: null,
+            isSearch: false
         }},
         methods:{
             async index(){
                 try {
-                    const response = await expense_categorys();
+                    const response = await invoices();
                     this.items = response.data;
                 }catch(error){
                     ApiError(this, error);
@@ -122,7 +131,7 @@
             },
             async indexActives(){
                 try {
-                    const response = await expense_categoryActives(this.paginateCount);
+                    const response = await invoiceActives(this.paginateCount);
                     this.items = response.data;
                 }catch(error){
                     ApiError(this, error);
@@ -131,7 +140,8 @@
             async indexPaginates(page=1){
                 try {
                     this.loader = true;
-                    const response = await expense_categoryPaginates(this.paginateCount, page);
+                    this.isSearch = false;
+                    const response = await invoicePaginates(this.paginateCount, page);
                     this.current_page = response.data.pagination.current_page;
                     this.last_page = response.data.pagination.last_page;
                     this.items = response.data.items;
@@ -142,7 +152,7 @@
             },
             async orderBys(){
                 try {
-                    const response = await expense_categoryOrderBys(this.column, this.type);
+                    const response = await invoiceOrderBys(this.column, this.type);
                     this.items = response.data;
                 }catch(error){
                     ApiError(this, error);
@@ -150,7 +160,7 @@
             },
             async show(id){
                 try {
-                    const response = await expense_categoryShow(id);
+                    const response = await invoiceShow(id);
                     this.item = response.data;
                 }catch(error){
                     ApiError(this, error);
@@ -161,7 +171,7 @@
                     let data = {
                         // ...
                     }
-                    const response = await expense_categoryCreate(data);
+                    const response = await invoiceCreate(data);
                     if (response.status){
                         Alert('success', this.$t('create'));
                         return true;
@@ -179,7 +189,7 @@
                     let data = {
                         // ...
                     }
-                    const response = await expense_categoryUpdate(data);
+                    const response = await invoiceUpdate(data);
                     if (response.status){
                         Alert('success', this.$t('update'));
                         return true;
@@ -192,15 +202,19 @@
                     return false;
                 }
             },
-            async search(text = ''){
+            async search(page=1){
                 try {
                     this.loader = true;
-                    if (text == ''){
-                        this.indexPaginates();
-                        return true;
+
+                    let data = {
+                        start: this.startDate,
+                        finish: this.finishDate
                     }
-                    const response = await expense_categorySearch(text);
-                    this.items = response.data;
+                    this.isSearch = true;
+                    const response = await invoiceSearch(data, page);
+                    this.items = response.data.items;
+                    this.current_page = response.data.pagination.current_page;
+                    this.last_page = response.data.pagination.last_page;
                     this.loader = false;
                     if (!response.status){
                         Alert('error', this.$t('formError'));
@@ -220,11 +234,11 @@
                     if (!confirm(this.$t('DeleteAlert'))){
                         return false;
                     }
-                    const response = await expense_categoryDelete(id);
+                    const response = await invoiceDelete(id);
+                    this.items = response.data;
                     if (response.status){
                         this.indexPaginates(this.current_page)
                         Alert('success', this.$t('delete'));
-                        return true;
                     }
                     Alert('error', this.$t('formError'));
                     return false;

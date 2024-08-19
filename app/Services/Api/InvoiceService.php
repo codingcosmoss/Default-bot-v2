@@ -4,11 +4,16 @@ namespace App\Services\Api;
 
 use App\Fields\Store\TextField;
 use App\Http\Resources\ClinicUserResource;
+use App\Http\Resources\InvoiceShowResource;
 use App\Http\Resources\InvoicesResource;
 use App\Models\ClinicUser;
+use App\Models\Expense;
+use App\Models\ExpenseCategory;
 use App\Models\Invoice;
 use App\Models\Medicine;
+use App\Models\ReturnedMedicine;
 use App\Models\SellingPayment;
+use App\Models\SellingReturnedMedicine;
 use App\Models\SoldMedicine;
 use App\Traits\Status;
 use Illuminate\Support\Facades\DB;
@@ -43,13 +48,64 @@ class InvoiceService extends AbstractService
             TextField::make('medicines')->setRules('required|array')
         ];
     }
-    public function updateFields()
+    public function returnMedicineFields()
     {
         return [
             TextField::make('clinic_id')->setRules('nullable'),
+            TextField::make('sold_medicine_id')->setRules('required|integer'),
+            TextField::make('invoice_id')->setRules('required|integer'),
+            TextField::make('customer_id')->setRules('required|integer'),
+            TextField::make('return_amount')->setRules('required|integer'),
+            TextField::make('return_price')->setRules('required|numeric'),
         ];
     }
 
+    public function getPaginate($count = 10)
+    {
+
+        try {
+
+            if (!$this->hasPermission('index')){
+                return [
+                    'status' => false,
+                    'code' => 403,
+                    'message' => 'Root access is not allowed ',
+                    'data' => null
+                ];
+            }
+
+            $models = $this->model::where('clinic_id', auth()->user()->clinic_id)
+                ->orderBy('created_at', 'desc')
+                ->paginate($count);
+
+
+            $data = [
+                'items' => $this->resource::collection($models),
+                'pagination' => [
+                    'total' => $models->total(),
+                    'per_page' => $models->perPage(),
+                    'current_page' => $models->currentPage(),
+                    'last_page' => $models->lastPage(),
+                    'from' => $models->firstItem(),
+                    'to' => $models->lastItem(),
+                ],
+            ];
+
+            return [
+                'status' => true,
+                'code' => 200,
+                'message' => 'Success',
+                'data' => $data
+            ];
+        }catch (Exception $e){
+            return [
+                'status' => false,
+                'code' => $e->getCode(),
+                'message' => $e->getMessage(),
+                'data' => null
+            ];
+        }
+    }
     public function store(array $data)
     {
         try {
@@ -155,5 +211,188 @@ class InvoiceService extends AbstractService
         }
 
     }
+
+    public function searchDate($data)
+    {
+        $startDate = isset($data['start']) ? $data['start'] : null ; // Boshlanish sanasi, null bo'lishi mumkin
+        $endDate = isset($data['end']) ? $data['end'] : null ; // Tugash sanasi, null bo'lishi mumkin
+
+        $query = $this->model::query();
+        $query->where('clinic_id', auth()->user()->clinic_id);
+        if ($startDate && $endDate) {
+            // Ikkala sana mavjud bo'lsa
+            $query->whereBetween('date', [$startDate, $endDate]);
+        } elseif ($startDate) {
+            // Faqat startDate mavjud bo'lsa
+            $query->where('date', '>=', $startDate);
+        } elseif ($endDate) {
+            // Faqat endDate mavjud bo'lsa
+            $query->where('date', '<=', $endDate);
+        }
+
+        $models = $query->paginate(100);
+
+        $data = [
+            'items' => $this->resource::collection($models),
+            'pagination' => [
+                'total' => $models->total(),
+                'per_page' => $models->perPage(),
+                'current_page' => $models->currentPage(),
+                'last_page' => $models->lastPage(),
+                'from' => $models->firstItem(),
+                'to' => $models->lastItem(),
+            ],
+        ];
+        return [
+            'status' => true,
+            'message' => 'Success',
+            'statusCode' => 200,
+            'data' => $data
+        ];
+
+    }
+    public function show($id)
+    {
+        try {
+            if (!$this->hasPermission('index')){
+                return [
+                    'status' => false,
+                    'code' => 403,
+                    'message' => 'Root access is not allowed ',
+                    'data' => null
+                ];
+            }
+            $data = $this->model::where('clinic_id', auth()->user()->clinic_id)
+                ->where('id', $id)
+                ->first();
+            return [
+                'status' => true,
+                'code' => 200,
+                'message' => 'Success',
+                'data' => new InvoiceShowResource($data)
+            ];
+        }catch (Exception $e){
+            return [
+                'status' => false,
+                'code' => $e->getCode(),
+                'message' => $e->getMessage(),
+                'data' => null
+            ];
+        }
+    }
+
+    public function returnMedicine(array $data)
+    {
+        try {
+            if (!$this->hasPermission('create')){
+                return [
+                    'status' => false,
+                    'code' => 403,
+                    'message' => 'Root access is not allowed ',
+                    'data' => null
+                ];
+            }
+            $validator = $this->dataValidator($data, $this->returnMedicineFields());
+
+            if ($validator['status']) {
+                return [
+                    'status' => false,
+                    'code' => 422,
+                    'message' => 'Validator error',
+                    'errors' => $validator['validator']
+                ];
+            }
+
+            $data = $validator['data'];
+            $data['clinic_id'] = auth()->user()->clinic_id;
+            $data['user_id'] = auth()->user()->id;
+            DB::beginTransaction();
+            $isSaved = true;
+            // Qaytarilgan dori
+            $soldMedicine = SoldMedicine::find($data['sold_medicine_id']);
+            $soldMedicine->amount -= $data['return_amount'];
+            $soldMedicine->subtotal -= $data['return_amount'] *  $soldMedicine->price;
+            $soldMedicine->save() != true ? $isSaved = false : '';
+
+
+            $parentMedicine = Medicine::find($soldMedicine->medicine_id);
+            $returnMedicine = new SellingReturnedMedicine();
+            $returnMedicine->clinic_id = auth()->user()->clinic_id;
+            $returnMedicine->user_id = auth()->user()->id;
+            $returnMedicine->invoice_id = $data['invoice_id'];
+            $returnMedicine->customer_id = $data['customer_id'];
+            $returnMedicine->name = $soldMedicine->name;
+            $returnMedicine->amount = $data['return_amount'];
+            $returnMedicine->price = $soldMedicine->price;
+            $returnMedicine->subtotal = $data['return_amount'] *  $soldMedicine->price;
+            $returnMedicine->currency_id = $soldMedicine->currency_id;
+            $returnMedicine->save() != true ? $isSaved = false : '';
+
+            $parentMedicine->changeAmount(Status::$invoiceReturned, $returnMedicine) == false ? $isSaved = false : '';
+
+            $invoice = Invoice::find($data['invoice_id']);
+            $invoice->amount -= $data['return_amount'];
+            $invoice->amount_paid -= $data['return_price'];
+            if ($invoice->amount_paid < $data['return_price']){
+                $invoice->amount_paid = 0;
+            }else{
+                $invoice->amount_paid -= $data['return_price'];
+            }
+            if ($invoice->must_paid < $data['return_price']){
+                $invoice->must_paid = 0;
+            }else{
+                $invoice->must_paid -= $data['return_price'];
+            }
+
+            if ($invoice->subtotal < $returnMedicine->subtotal){
+                $invoice->subtotal = 0;
+            }else{
+                $invoice->subtotal -= $returnMedicine->subtotal;
+            }
+            $invoice->save() != true ? $isSaved = false : '';
+
+            if ($data['return_price'] > 0){
+                $category = ExpenseCategory::where('type', Status::$default)->first();
+                $newExpenses = new Expense();
+                $newExpenses->title = 'The drug was returned to the customer. Invoice ID: '. $invoice->id;
+                $newExpenses->expense_category_id  = $category->id;
+                $newExpenses->date  = date("Y-m-d");
+                $newExpenses->clinic_id  = auth()->user()->clinic_id;
+                $newExpenses->currency_id  = $invoice->currency_id;
+                $newExpenses->amount  = $data['return_price'];
+                $newExpenses->save() != true ? $isSaved = false : '';
+            }
+
+            if ($isSaved){
+                DB::commit();
+                return [
+                    'status' => true,
+                    'code' => 200,
+                    'message' => 'Success',
+                    'data' => new $this->resource($invoice)
+                ];
+            }else{
+                DB::rollBack();
+                return [
+                    'status' => false,
+                    'code' => 403,
+                    'message' => 'Server error',
+                    'data' => null
+                ];
+            }
+
+
+
+        }catch (Exception $e){
+            return [
+                'status' => false,
+                'code' => $e->getCode(),
+                'message' => $e->getMessage(),
+                'data' => null
+            ];
+        }
+
+    }
+
 
 }

@@ -27,6 +27,8 @@ trait Status
     public static int $returned = 8;
     public static int $default = 9;
     public static int $selling = 10;
+    public static int $invoiceReturned = 11;
+
 
     /**
      * @return string[]

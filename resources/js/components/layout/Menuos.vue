@@ -38,25 +38,21 @@
             v-if="counterStore.hasRole('Dashboard-index')"
         />
 
-        <MenuListButton
+        <MenuButton
             :Title="$t('Employees')"
             Name="Employees"
             Icon="bx bxs-user-detail"
+            Path="/admin/users"
+            @click="onMenuMedia()"
             v-if="counterStore.hasRole('Employees-index')"
-            :ChildLinks="[
-                    {
-                        title: $t('AllEmployees'),
-                        path: '/admin/users',
-                        icon:'bx bxs-contact',
-                        isPermission: this.counterStore.hasRole('Employees-index')
-                    },
-                     {
-                        title: $t('Role&Permission'),
-                        path: '/admin/roles',
-                        icon:'bx bxs-check-shield',
-                        isPermission: this.counterStore.hasRole('Role&Permissions-index')
-                    },
-                ]"
+        />
+        <MenuButton
+            :Title="$t('Role&Permission')"
+            Name="Role&Permission"
+            Icon="bx bxs-check-shield"
+            Path="/admin/roles"
+            @click="onMenuMedia()"
+            v-if="counterStore.hasRole('Role&Permissions-index')"
         />
 
         <MenuButton
@@ -165,13 +161,33 @@
 
                 ]"
         />
-        <MenuButton
+        <MenuListButton
             :Title="$t('Selling')"
             Name="PaymentTypes"
             Icon="bx bx-store-alt"
-            Path="/selling"
             @click="onMenuMedia()"
-            v-if="counterStore.hasRole('PaymentTypes-index')"
+            v-if="counterStore.hasRole('Selling-index')"
+            :ChildLinks="[
+                    {
+                        title: $t('SellingPage'),
+                        path: '/selling',
+                        icon:'bx bx-desktop',
+                        isPermission: this.counterStore.hasRole('Selling-create')
+                    },
+                    {
+                        title: $t('SellingArxive'),
+                        path: '/admin/archive/invoices',
+                        icon:'bx bx-archive',
+                        isPermission: this.counterStore.hasRole('Selling-index')
+                    },
+                     {
+                        title: $t('SellingArxive'),
+                        path: '/admin/returned/invoices',
+                        icon:'bx bx-left-down-arrow-circle',
+                        isPermission: this.counterStore.hasRole('Selling-index')
+                    },
+
+                ]"
         />
         <MenuButton
             :Title="$t('PaymentTypes')"
@@ -181,6 +197,7 @@
             @click="onMenuMedia()"
             v-if="counterStore.hasRole('PaymentTypes-index')"
         />
+
     </MenuBox>
 
 </template>

@@ -9,14 +9,14 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="staticBackdropLabel">{{Title}}</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <slot></slot>
                         </div>
                         <div class="modal-footer" v-if="isModalFooter">
                             <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{ $t('Close') }}</button>
-                            <button @click="this.$emit('onModal', true)" type="button" class="btn btn-primary">{{ $t('Submit') }}</button>
+                            <button :disabled="isDisabled" @click="this.$emit('onModal', true)" type="button" class="btn btn-primary">{{ $t('Submit') }}</button>
                         </div>
                     </div>
                 </div>
@@ -28,7 +28,10 @@
 </template>
 
 <script>
+    import {isDisabled} from "@coreui/coreui/js/src/util/index.js";
+
     export default {
+        methods: {isDisabled},
         props:{
             Title: {
                 type: [String, Number],
@@ -49,8 +52,11 @@
             ModalTypes: {
                 type: String,
                 default: ''
+            },
+            isDisabled: {
+                type: Boolean,
+                default: false
             }
-
         }
     }
 </script>

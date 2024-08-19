@@ -2,13 +2,16 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Clinic;
 use App\Models\Currency;
 use App\Models\Customer;
+use App\Models\Setting;
+use App\Models\SoldMedicine;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class InvoicesResource extends JsonResource
+class InvoiceShowResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -19,6 +22,8 @@ class InvoicesResource extends JsonResource
     {
         $customer = Customer::find($this->customer_id);
         $user = User::find($this->user_id);
+        $soldMedicines = SoldMedicine::where('invoice_id', $this->id)->get();
+        $company = Setting::where('clinic_id', $this->clinic_id)->first();
         return [
             'id' => $this->id,
             'clinic_id' => $this->clinic_id,
@@ -35,6 +40,8 @@ class InvoicesResource extends JsonResource
             'gst' => $this->gst,
             'currency_id' => $this->currency_id,
             'currency' => Currency::find($this->currency_id),
+            'sold_medicines' => $soldMedicines,
+            'company' => new SettingsResources($company)
         ];
     }
 }

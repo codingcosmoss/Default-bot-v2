@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Clinic;
 use App\Models\ExpenseCategory;
+use App\Traits\Status;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -21,6 +22,7 @@ class ExpenseCategorySeeder extends Seeder
                 ExpenseCategory::create([
                     'clinic_id' => $clinic->id,
                     'name' => 'General',
+                    'type' => Status::$default,
                     'description' => 'General expenses are in this category',
                 ]);
             }

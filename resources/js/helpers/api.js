@@ -714,11 +714,15 @@ export const invoiceShow = async (id) => {
 export const invoiceCreate = async (data) => {
     return  POST('/invoice/create', data );
 };
+
+export const invoiceReturnMedicine = async (data) => {
+    return  POST('/invoice/return-medicine', data );
+};
 export const invoiceUpdate = async (id, data) => {
     return  POST('/invoice/update/'+id, data );
 };
-export const invoiceSearch = async (text) => {
-    return  GET('/invoice/search/' + text );
+export const invoiceSearch = async (data, page) => {
+    return  POST('/invoice/search/'+'?page='+page, data );
 };
 export const invoiceDelete = async (id) => {
     return  GET('/invoice/delete/'+ id );

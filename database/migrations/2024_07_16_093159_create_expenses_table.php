@@ -16,9 +16,10 @@ return new class extends Migration
             $table->integer('clinic_id');
             $table->foreignId('expense_category_id')->constrained();
             $table->date('date')->nullable();
-            $table->string('title')->nullable();
+            $table->string('title', 1000)->nullable();
             $table->integer('currency_id')->default(1);
             $table->double('amount', 20, 2)->nullable();
+            $table->integer('type')->nullable();
             $table->timestamps();
         });
     }

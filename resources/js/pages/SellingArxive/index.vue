@@ -1,0 +1,381 @@
+<template>
+    <Page Title="">
+        <div class="row">
+            <BasicTable
+                :Th="[ $t('No'),$t('Date'),$t('Identifikator'),$t('Customer'),$t('Seller'),$t('Amount'),$t('Subtotal'),$t('Paid'),$t('Indebtedness'),$t('Settings')]"
+                :Title="$t('SellingArxive')"
+                Col="col-lg-12"
+            >
+                <template v-slot:inputs>
+                    <DefaultSelect
+                        Label=""
+                        Class="col-lg-2 col-sm-2"
+                        @onInput="this.paginateCount = $event, this.indexPaginates()"
+                    >
+                        <option value="10" selected >{{$t('NumberDownloads')}}</option>
+                        <option value="10" >10</option>
+                        <option value="20" >20</option>
+                        <option value="50" >50</option>
+                        <option value="100" >100</option>
+                    </DefaultSelect>&nbsp;&nbsp;
+                    <DefaultInput
+                        Class="col-lg-3 col-sm-2 search_input"
+                        Label=""
+                        Name="start"
+                        Type="date"
+                        @onInput="startDate = $event, search()"
+                    />
+                    <DefaultInput
+                        Class="col-lg-3 col-sm-2 search_input"
+                        Label=""
+                        Name="finish"
+                        Type="date"
+                        @onInput="finishDate = $event, search()"
+                    />
+                </template>
+
+                <template v-slot:buttons>
+                    <PrimaryBtn v-if="counterStore.hasRole('invoices-create')" role="button" data-bs-toggle="modal" data-bs-target="#invoiceCreate" >{{$t('Create')}}</PrimaryBtn>
+                </template>
+
+                <tr v-for="(item, i) in items" >
+                    <td>{{ ((current_page - 1) * paginateCount) +  i + 1 }}</td>
+                    <td>{{ item.date }}</td>
+                    <td>#{{item.id }}</td>
+                    <td>{{ item.customer.name }}</td>
+                    <td>{{ item.user.name }}</td>
+                    <td>{{ counterStore.formatNumber(item.amount) }}</td>
+                    <td>{{ counterStore.formatNumber(item.subtotal) }} {{item.currency.sign}}</td>
+                    <td>{{ counterStore.formatNumber(item.amount_paid) }} {{item.currency.sign}}</td>
+                    <td :class="item.must_paid > 0 ? 'text-danger' : '' " >{{ counterStore.formatNumber(item.must_paid) }} {{item.currency.sign}}</td>
+                    <td>
+                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/invoices/show', query:{id: item.id}})" Icon="bx bx-show"/>
+                        <PrimaryIconBtn @click="show(item.id)" Modal="returnMedicine" v-if="counterStore.hasRole('Selling-update')" class="bg-info border-info" Icon="bx bx-rotate-left" :title="$t('ReturnMedicines')"/>
+                    </td>
+
+                </tr>
+                <Paginate
+                    Cols="10"
+                    v-if="last_page != 1 && !isSearch"
+                    :currentPage="this.current_page"
+                    :totalPages="this.last_page"
+                    @changePage="indexPaginates($event)"
+                />
+                <Paginate
+                    Cols="10"
+                    v-if="last_page != 1 && isSearch"
+                    :currentPage="this.current_page"
+                    :totalPages="this.last_page"
+                    @changePage="search($event)"
+                />
+
+                <GrowingLoader v-if="loader" Cols="9"/>
+
+            </BasicTable>
+
+        </div>
+
+        <Update :Item="item" @onUpdate="indexPaginates(this.current_page)" />
+        <Create  @onCreate="indexPaginates(this.current_page)" />
+
+        <ModalCentered
+            ModalName="returnMedicine"
+            :Title="$t('MedicineReturn')"
+            @onModal="returnMedicine()"
+            :isDisabled="returnLoader"
+        >
+            <DefaultSelect
+                :Label="$t('Medicine')"
+                Name="medicine_id"
+                :Validated="errors"
+                @onInput="max_amount = JSON.parse($event).amount, medicine_id = JSON.parse($event).id, delete this.errors.medicine_id"
+            >
+                <option v-for="medicine in medicines" :value="JSON.stringify(medicine)" >{{medicine.name}} ( {{$t('PC')}}: {{medicine.amount}} ) {{counterStore.formatNumber(medicine.price)}} {{sign}}</option>
+            </DefaultSelect>&nbsp;&nbsp;
+
+            <DefaultInput
+                :Label="$t('Amount') + ' ('+$t('Total')+': ' + max_amount + ' )'"
+                Name="return_amount"
+                Type="number"
+                inputClass="returnAmount"
+                :Value="return_amount"
+                :Validated="errors"
+                @onInput="returnAmount($event), delete this.errors.return_amount"
+            />
+            <DefaultInput
+                :Label="$t('ReturnPriceValidator') + ' ('+$t('Maximum')+': ' + counterStore.formatNumber(max_price) +' '+ sign+ ' )'"
+                Name="return_price"
+                Type="text"
+                inputClass ='returnPrice'
+                :Value="counterStore.formatNumber(this.return_price)"
+                :Validated="errors"
+                @onInput="returnPrice($event), delete this.errors.return_price"
+            />
+
+        </ModalCentered>
+
+    </Page>
+</template>
+<script>
+    import Page from "@/components/layout/Page.vue";
+    import {ApiError} from "@/helpers/Config.js";
+    import {Alert} from "@/helpers/Config.js";
+    import {useConterStore} from "@/store/counter.js";
+    import BasicTable from "@/components/all/BasicTable.vue";
+    import {
+        invoices,
+        invoiceCreate,
+        invoiceSearch,
+        invoiceUpdate,
+        invoiceShow,
+        invoiceDelete,
+        invoicePaginates,
+        invoiceActives,
+        invoiceOrderBys,
+        invoiceReturnMedicine
+    } from "@/helpers/api.js";
+    import GrowingLoader from "@/components/all/GrowingLoader.vue";
+    import PrimaryButton from "@/components/all/PrimaryButton.vue";
+    import PrimaryIconBtn from "@/components/all/PrimaryIconBtn.vue";
+    import ModalCentered from "@/components/all/ModalCentered.vue";
+    import Update from "./update.vue";
+    import Create from "./create.vue";
+    import PrimaryBtn from "@/components/all/PrimaryBtn.vue";
+    import DefaultInput from "@/ui-components/Forms/DefaultInput.vue";
+    import Paginate from "@/components/all/Paginate.vue";
+    import DefaultSelect from "@/ui-components/Forms/DefaultSelect.vue";
+    export default {
+        components: {
+            DefaultSelect,
+            Paginate,
+            DefaultInput,
+            PrimaryBtn,
+            ModalCentered, PrimaryIconBtn, PrimaryButton, GrowingLoader, BasicTable, Page, Update, Create},
+        setup(){
+            const counterStore = useConterStore();
+            return{counterStore}
+        },
+        data(){return{
+            items: [],
+            item: [],
+            paginateCount: 10,
+            last_page: 1,
+            current_page: 1,
+            column: 'id',
+            type: 'desc',
+            errors: [],
+            loader: false,
+            startDate: null,
+            finishDate: null,
+            isSearch: false,
+            medicines:[],
+            return_amount: 0,
+            max_amount: 0,
+            sign: "",
+            returnLoader: false,
+            medicine_id: 0,
+            return_price: 0,
+            max_price: 0
+        }},
+        methods:{
+            returnPrice(val){
+                let formatAmount = this.counterStore.inputNumberFormat('returnPrice', this.return_price, val);
+                this.return_price = formatAmount;
+            },
+            returnAmount(val){
+                let amount = val;
+                let input = document.querySelector('.returnAmount');
+                if (val > this.max_amount){
+                    amount = this.return_amount;
+                }
+                input.value = amount;
+                this.return_amount = amount;
+            },
+            refreshData(){
+                this.medicine_id = null;
+                this.invoice_id = null;
+                this.customer_id = null;
+                this.return_amount = 0;
+                this.return_price = 0;
+                this.max_price = 0;
+                this.max_amount = 0;
+            },
+            async returnMedicine(){
+                try {
+                    this.returnLoader = true;
+                    if (this.medicine_id == 0){
+                        this.errors['medicine_id'] = this.$t('MedicineRequired')
+                        return;
+                    }else if (this.return_amount < 1){
+                        this.errors['return_amount'] = this.$t('AmountRequired')
+                        return;
+                    }else if (this.return_price > this.max_price){
+                        this.errors['return_price'] = this.$t('ReturnedMaxError2')
+                        return;
+                    }
+
+                    let data = {
+                        sold_medicine_id: this.medicine_id,
+                        invoice_id: this.item.id,
+                        customer_id: this.item.customer_id,
+                        return_amount: this.return_amount,
+                        return_price: this.return_price
+                    }
+
+                    const response = await invoiceReturnMedicine(data);
+                    if (response.status){
+                        this.counterStore.hiddenModal('returnMedicine');
+                        Alert('success', this.$t('create'));
+                        this.returnLoader = false;
+                        return true;
+                    }
+                    this.errors = response.errors;
+                    Alert('error', this.$t('formError'));
+                    this.returnLoader = false;
+                    return false;
+
+                }catch(error){
+                    ApiError(this, error);
+                    return false;
+                }
+            },
+            async index(){
+                try {
+                    const response = await invoices();
+                    this.items = response.data;
+                }catch(error){
+                    ApiError(this, error);
+                }
+            },
+            async indexActives(){
+                try {
+                    const response = await invoiceActives(this.paginateCount);
+                    this.items = response.data;
+                }catch(error){
+                    ApiError(this, error);
+                }
+            },
+            async indexPaginates(page=1){
+                try {
+                    this.loader = true;
+                    this.isSearch = false;
+                    const response = await invoicePaginates(this.paginateCount, page);
+                    this.current_page = response.data.pagination.current_page;
+                    this.last_page = response.data.pagination.last_page;
+                    this.items = response.data.items;
+                    this.loader = false;
+                }catch(error){
+                    ApiError(this, error);
+                }
+            },
+            async orderBys(){
+                try {
+                    const response = await invoiceOrderBys(this.column, this.type);
+                    this.items = response.data;
+                }catch(error){
+                    ApiError(this, error);
+                }
+            },
+            async show(id){
+                try {
+                    this.returnLoader = true;
+                    const response = await invoiceShow(id);
+                    this.item = response.data;
+                    this.medicines = response.data.sold_medicines
+                    this.max_amount = this.medicines[0].amount;
+                    this.max_price = response.data.amount_paid;
+                    this.medicine_id = this.medicines[0].id;
+                    this.sign = response.data.currency.sign
+                    this.returnLoader = false;
+                }catch(error){
+                    ApiError(this, error);
+                }
+            },
+            async create(){
+                try {
+                    let data = {
+                        // ...
+                    }
+                    const response = await invoiceCreate(data);
+                    if (response.status){
+                        Alert('success', this.$t('create'));
+                        return true;
+                    }
+                    this.errors = response.errors;
+                    Alert('error', this.$t('formError'));
+                    return false;
+                }catch(error){
+                    ApiError(this, error);
+                    return false;
+                }
+            },
+            async update(){
+                try {
+                    let data = {
+                        // ...
+                    }
+                    const response = await invoiceUpdate(data);
+                    if (response.status){
+                        Alert('success', this.$t('update'));
+                        return true;
+                    }
+                    this.errors = response.errors;
+                    Alert('error', this.$t('formError'));
+                    return false;
+                }catch(error){
+                    ApiError(this, error);
+                    return false;
+                }
+            },
+            async search(page=1){
+                try {
+                    this.loader = true;
+
+                    let data = {
+                        start: this.startDate,
+                        finish: this.finishDate
+                    }
+                    this.isSearch = true;
+                    const response = await invoiceSearch(data, page);
+                    this.items = response.data.items;
+                    this.current_page = response.data.pagination.current_page;
+                    this.last_page = response.data.pagination.last_page;
+                    this.loader = false;
+                    if (!response.status){
+                        Alert('error', this.$t('formError'));
+                        this.loader = false;
+                        return false;
+                    }
+                    this.loader = false;
+                    return true;
+                }catch(error){
+                    ApiError(this, error);
+                    this.loader = false;
+                    return false;
+                }
+            },
+            async delete(id){
+                try {
+                    if (!confirm(this.$t('DeleteAlert'))){
+                        return false;
+                    }
+                    const response = await invoiceDelete(id);
+                    this.items = response.data;
+                    if (response.status){
+                        this.indexPaginates(this.current_page)
+                        Alert('success', this.$t('delete'));
+                    }
+                    Alert('error', this.$t('formError'));
+                    return false;
+                }catch(error){
+                    ApiError(this, error);
+                    return false;
+                }
+            },
+        },
+        mounted() {
+            this.indexPaginates()
+        }
+    }
+</script>
+<style></style>

@@ -17,6 +17,7 @@ class ExpenseCategoryResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'type' => $this->type,
             'description' =>  $this->description,
             'expenses_count' =>  count($this->expenses),
         ];

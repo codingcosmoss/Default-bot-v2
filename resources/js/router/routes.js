@@ -176,6 +176,22 @@ export default[
         permission: 'Selling-index',
         component: () => import('../pages/Selling/index.vue'),
     },
+    {
+        path: '/admin/returned/invoices',
+        permission: 'Selling-index',
+        component: () => import('../pages/ReturnedInvoices/index.vue'),
+    },
+    {
+        path: '/admin/archive/invoices',
+        permission: 'Selling-index',
+        component: () => import('../pages/SellingArxive/index.vue'),
+    },
+    {
+        path: '/admin/invoices/show',
+        permission: 'Selling-index',
+        component: () => import('../pages/SellingArxive/show.vue'),
+    },
+
 
 
 ]

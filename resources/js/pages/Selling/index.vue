@@ -307,7 +307,7 @@
                         this.counterStore.hiddenModal('changePayment');
                         this.dataRefresh()
                         this.onSuccessSong();
-                        Alert('success', this.$t('save'));
+                        // Alert('success', this.$t('save'));
                         this.indexPaginates();
                         this.cashPaymentLoader = false;
                         return true;
