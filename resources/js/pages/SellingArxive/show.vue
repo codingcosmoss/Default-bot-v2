@@ -89,8 +89,16 @@
                                <tr>
                                    <td colspan="5" class="border-0">
                                        <div class="d-flex w-100 justify-content-end gap-2">
-                                           <p colspan="4" class="text-end">{{$t('Subtotal')}}:</p>
-                                           <p  class="text-end">{{counterStore.formatNumber(invoice.subtotal)}} {{sign}}</p>
+                                           <p colspan="4" class="text-end m-0">{{$t('Igta')}}:</p>
+                                           <p  class="text-end m-0 fw-bold">{{counterStore.formatNumber(igta)}} {{sign}}</p>
+                                       </div>
+                                       <div class="d-flex w-100 justify-content-end gap-2">
+                                           <p colspan="4" class="text-end m-0">{{$t('GST/TaxAmount')}}:</p>
+                                           <p  class="text-end m-0 fw-bold">{{counterStore.formatNumber(gst)}} {{sign}}</p>
+                                       </div>
+                                       <div class="d-flex w-100 justify-content-end gap-2">
+                                           <p colspan="4" class="text-end m-0">{{$t('Subtotal')}}:</p>
+                                           <p  class="text-end m-0 fw-bold">{{counterStore.formatNumber(invoice.subtotal)}} {{sign}}</p>
                                        </div>
                                    </td>
                                </tr>
@@ -102,7 +110,7 @@
                         </div>
                         <div class="d-print-none">
                             <div class="float-end">
-                                <a href="javascript:window.print()" class="btn btn-success waves-effect waves-light me-1"><i class="fa fa-print"></i></a>
+                                <a @click="printPage()" class="btn btn-success waves-effect waves-light me-1"><i class="fa fa-print"></i></a>
                             </div>
                         </div>
                     </div>
@@ -134,10 +142,12 @@ export default
         customer: [],
         seller: [],
         sign: [],
-        logo:[]
+        logo:[],
+        gst: 0,
+        igta: 0,
     }},
     methods:{
-        isFon(){
+        printPage(){
             if (localStorage.getItem('fon') == 'dark'){
                 Swal.fire({
                     title: this.$t('PrintFon'),
@@ -152,7 +162,10 @@ export default
                         document.documentElement.removeAttribute("dir")
                     }
                 });
+            }else {
+                window.print();
             }
+
         },
         async show(){
             try {
@@ -165,6 +178,8 @@ export default
                 this.sign = response.data.currency.sign;
                 this.logo = response.data.company.logo[0].url;
                 this.medicines = response.data.sold_medicines;
+                this.igta = response.data.igta;
+                this.gst = response.data.gst;
                 this.loader = false;
             }catch(error){
                 ApiError(this, error);
@@ -172,7 +187,6 @@ export default
         },
     },
     mounted() {
-        this.isFon()
         this.show()
     }
 

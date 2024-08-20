@@ -147,10 +147,10 @@ class InvoiceService extends AbstractService
             $object->must_paid = $data['must_paid']; // must_paid $data dan olinadi
             $object->subtotal = $data['subtotal']; // subtotal $data dan olinadi
             $object->igta = $data['igta']; // igta $data dan olinadi
-            $object->gst = $data['gst']; // gst $data dan olinadi
             $object->date = $data['date']; // date $data dan olinadi
+            $object->gst = 0; // gst $data dan olinadi
             $object->save() != true ? $isSaved = false : '';
-
+            $sum = 0;
             // Sotilgan dorilar
             foreach ($medicines as $medicine){
                 $parentMedicine = Medicine::find($medicine['id']);
@@ -163,13 +163,18 @@ class InvoiceService extends AbstractService
                 $soldMedicine->name = $medicine['name'];
                 $soldMedicine->amount = $medicine['selling_amount'];
                 $soldMedicine->price = $medicine['price'];
+                $soldMedicine->igta = $medicine['igta'];
                 $soldMedicine->subtotal = $medicine['selling_amount'] *  $medicine['price'];
+                $soldMedicine->gst = ($soldMedicine->subtotal * $data['gst'])/100;
                 $soldMedicine->currency_id = $data['currency_id'];
                 $soldMedicine->save() != true ? $isSaved = false : '';
-
+                $sum += $soldMedicine->subtotal;
                 $parentMedicine->changeAmount(Status::$selling, $soldMedicine) == false ? $isSaved = false : '';
 
             }
+            $object->gst = ($sum * $data['gst'])/100; // gst $data dan olinadi
+            $object->gst_percentage = $data['gst']; // gst $data dan olinadi
+            $object->save() != true ? $isSaved = false : '';
 
             $sellingPayment = new SellingPayment();
             $sellingPayment->clinic_id = auth()->user()->clinic_id;
@@ -281,6 +286,83 @@ class InvoiceService extends AbstractService
         }
     }
 
+    public function returnPrice($data)
+    {
+        try {
+            if (!$this->hasPermission('create')){
+                return [
+                    'status' => false,
+                    'code' => 403,
+                    'message' => 'Root access is not allowed ',
+                    'data' => null
+                ];
+            }
+            $validator = $this->dataValidator($data, $this->returnPriceFields());
+
+            if ($validator['status']) {
+                return [
+                    'status' => false,
+                    'code' => 422,
+                    'message' => 'Validator error',
+                    'errors' => $validator['validator']
+                ];
+            }
+
+            $data = $validator['data'];
+            DB::beginTransaction();
+            $isSaved = true;
+            // Qaytarilgan dori
+
+            $invoice = Invoice::find($data['invoice_id']);
+            if ($invoice->amount_paid < $data['return_price']){
+                $invoice->amount_paid = 0;
+            }else{
+                $invoice->amount_paid -= $data['return_price'];
+            }
+
+            $invoice->save() != true ? $isSaved = false : '';
+
+            if ($data['return_price'] > 0){
+                $category = ExpenseCategory::where('type', Status::$default)->first();
+                $newExpenses = new Expense();
+                $newExpenses->title = 'The drug was returned to the customer. Invoice ID: '. $invoice->id;
+                $newExpenses->expense_category_id  = $category->id;
+                $newExpenses->date  = date("Y-m-d");
+                $newExpenses->clinic_id  = auth()->user()->clinic_id;
+                $newExpenses->currency_id  = $invoice->currency_id;
+                $newExpenses->amount  = $data['return_price'];
+                $newExpenses->save() != true ? $isSaved = false : '';
+            }
+
+            if ($isSaved){
+                DB::commit();
+                return [
+                    'status' => true,
+                    'code' => 200,
+                    'message' => 'Success',
+                    'data' => new $this->resource($invoice)
+                ];
+            }else{
+                DB::rollBack();
+                return [
+                    'status' => false,
+                    'code' => 403,
+                    'message' => 'Server error',
+                    'data' => null
+                ];
+            }
+
+
+
+        }catch (Exception $e){
+            return [
+                'status' => false,
+                'code' => $e->getCode(),
+                'message' => $e->getMessage(),
+                'data' => null
+            ];
+        }
+    }
     public function returnMedicine(array $data)
     {
         try {
@@ -308,47 +390,63 @@ class InvoiceService extends AbstractService
             $data['user_id'] = auth()->user()->id;
             DB::beginTransaction();
             $isSaved = true;
-            // Qaytarilgan dori
-            $soldMedicine = SoldMedicine::find($data['sold_medicine_id']);
-            $soldMedicine->amount -= $data['return_amount'];
-            $soldMedicine->subtotal -= $data['return_amount'] *  $soldMedicine->price;
-            $soldMedicine->save() != true ? $isSaved = false : '';
 
 
-            $parentMedicine = Medicine::find($soldMedicine->medicine_id);
-            $returnMedicine = new SellingReturnedMedicine();
-            $returnMedicine->clinic_id = auth()->user()->clinic_id;
-            $returnMedicine->user_id = auth()->user()->id;
-            $returnMedicine->invoice_id = $data['invoice_id'];
-            $returnMedicine->customer_id = $data['customer_id'];
-            $returnMedicine->name = $soldMedicine->name;
-            $returnMedicine->amount = $data['return_amount'];
-            $returnMedicine->price = $soldMedicine->price;
-            $returnMedicine->subtotal = $data['return_amount'] *  $soldMedicine->price;
-            $returnMedicine->currency_id = $soldMedicine->currency_id;
-            $returnMedicine->save() != true ? $isSaved = false : '';
+            $sum = 0;
+           if ($data['return_amount'] > 0){
+               // Qaytarilgan dori
+               $soldMedicine = SoldMedicine::find($data['sold_medicine_id']);
+               $soldMedicine->amount -= $data['return_amount'];
+               $soldMedicine->subtotal -= $data['return_amount'] *  $soldMedicine->price;
+               $soldMedicine->save() != true ? $isSaved = false : '';
 
-            $parentMedicine->changeAmount(Status::$invoiceReturned, $returnMedicine) == false ? $isSaved = false : '';
+               $parentMedicine = Medicine::find($soldMedicine->medicine_id);
+               $returnMedicine = new SellingReturnedMedicine();
+               $returnMedicine->clinic_id = auth()->user()->clinic_id;
+               $returnMedicine->user_id = auth()->user()->id;
+               $returnMedicine->invoice_id = $data['invoice_id'];
+               $returnMedicine->customer_id = $data['customer_id'];
+               $returnMedicine->name = $soldMedicine->name;
+               $returnMedicine->amount = $data['return_amount'];
+               $returnMedicine->price = $soldMedicine->price;
+               $returnMedicine->subtotal = $data['return_amount'] *  $soldMedicine->price;
+               $returnMedicine->currency_id = $soldMedicine->currency_id;
+               $returnMedicine->save() != true ? $isSaved = false : '';
+
+               $parentMedicine->changeAmount(Status::$invoiceReturned, $returnMedicine) == false ? $isSaved = false : '';
+
+               $sum = $returnMedicine->subtotal + $soldMedicine->igta + $soldMedicine->gst;
+           }
 
             $invoice = Invoice::find($data['invoice_id']);
-            $invoice->amount -= $data['return_amount'];
-            $invoice->amount_paid -= $data['return_price'];
+            if ($data['return_amount'] > 0){
+                $invoice->amount -= $data['return_amount'];
+                $invoice->igta -= $soldMedicine->igta;
+                $invoice->gst -= $soldMedicine->gst;
+            }
+
             if ($invoice->amount_paid < $data['return_price']){
                 $invoice->amount_paid = 0;
             }else{
                 $invoice->amount_paid -= $data['return_price'];
             }
-            if ($invoice->must_paid < $data['return_price']){
-                $invoice->must_paid = 0;
-            }else{
-                $invoice->must_paid -= $data['return_price'];
+
+            $amountPaid =  $invoice->amount_paid;
+
+            if ($data['return_amount'] > 0){
+                if ($invoice->subtotal < $sum){
+                    $invoice->subtotal = 0;
+                }else{
+                    $invoice->subtotal -= $sum;
+                }
+                $subtotal =  $invoice->subtotal;
+                if ($subtotal - $amountPaid < 0){
+                    $invoice->must_paid = 0;
+                }else{
+                    $invoice->must_paid = $subtotal - $amountPaid;
+                }
             }
 
-            if ($invoice->subtotal < $returnMedicine->subtotal){
-                $invoice->subtotal = 0;
-            }else{
-                $invoice->subtotal -= $returnMedicine->subtotal;
-            }
             $invoice->save() != true ? $isSaved = false : '';
 
             if ($data['return_price'] > 0){

@@ -109,6 +109,7 @@
     "Strengths": "Dorining kuchlari (Strengths)",
     "Shelf": "Dori qayerda turishi",
     "Vat": "Mahsulot yoki xizmat soligi (Vat)",
+    "VatSign": "Vat",
     "Igta": "Import bojlari yoki soliqlari (Igta)",
     "Photo": "Rasm",
     "SizeType": "O'lchov birligi",
@@ -205,5 +206,6 @@
     "MedicineRequired": "Iltimos dorini tanlang",
     "AmountRequired": "Iltimos miqdorni kiriting",
     "PrintFon": "Chop etish sifatini yaxshilash uchun dasturni oq fonga o'tkazing !",
-    "ReturnPriceValidator": "Qancha pul mijozga qaytarib berildi"
+    "ReturnPriceValidator": "Qancha pul mijozga qaytarib berildi",
+    "ReturnAllValidator": "Barchasi qaytarib berilgan"
 }

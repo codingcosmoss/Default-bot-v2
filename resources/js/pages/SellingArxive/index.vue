@@ -2,7 +2,7 @@
     <Page Title="">
         <div class="row">
             <BasicTable
-                :Th="[ $t('No'),$t('Date'),$t('Identifikator'),$t('Customer'),$t('Seller'),$t('Amount'),$t('Subtotal'),$t('Paid'),$t('Indebtedness'),$t('Settings')]"
+                :Th="[ $t('No'),$t('Date'),$t('Identifikator'),$t('Customer'),$t('Seller'),$t('Amount'),$t('Subtotal')+'+'+$t('VatSign'),$t('Paid'),$t('Indebtedness'),$t('Settings')]"
                 :Title="$t('SellingArxive')"
                 Col="col-lg-12"
             >
@@ -50,7 +50,7 @@
                     <td :class="item.must_paid > 0 ? 'text-danger' : '' " >{{ counterStore.formatNumber(item.must_paid) }} {{item.currency.sign}}</td>
                     <td>
                         <PrimaryIconBtn  @click="this.$router.push({path:'/admin/invoices/show', query:{id: item.id}})" Icon="bx bx-show"/>
-                        <PrimaryIconBtn @click="show(item.id)" Modal="returnMedicine" v-if="counterStore.hasRole('Selling-update')" class="bg-info border-info" Icon="bx bx-rotate-left" :title="$t('ReturnMedicines')"/>
+                        <PrimaryIconBtn @click="show(item.id)" Modal="returnMedicine" v-if="counterStore.hasRole('Selling-update') && (item.subtotal > 0 || item.amount_paid > 0)" class="bg-info border-info" Icon="bx bx-rotate-left" :title="$t('ReturnMedicines')"/>
                     </td>
 
                 </tr>
@@ -90,7 +90,7 @@
                 :Validated="errors"
                 @onInput="max_amount = JSON.parse($event).amount, medicine_id = JSON.parse($event).id, delete this.errors.medicine_id"
             >
-                <option v-for="medicine in medicines" :value="JSON.stringify(medicine)" >{{medicine.name}} ( {{$t('PC')}}: {{medicine.amount}} ) {{counterStore.formatNumber(medicine.price)}} {{sign}}</option>
+                <option v-for="medicine in medicines" :value="JSON.stringify(medicine)" >{{medicine.name}} ( {{$t('PC')}}: {{medicine.amount}} ) {{counterStore.formatNumber(medicine.price * medicine.amount)}} {{sign}}</option>
             </DefaultSelect>&nbsp;&nbsp;
 
             <DefaultInput
@@ -187,6 +187,7 @@
                 let input = document.querySelector('.returnAmount');
                 if (val > this.max_amount){
                     amount = this.return_amount;
+                    Alert('error', this.$t('ReturnAllValidator'));
                 }
                 input.value = amount;
                 this.return_amount = amount;
@@ -202,17 +203,18 @@
             },
             async returnMedicine(){
                 try {
-                    this.returnLoader = true;
                     if (this.medicine_id == 0){
                         this.errors['medicine_id'] = this.$t('MedicineRequired')
                         return;
-                    }else if (this.return_amount < 1){
-                        this.errors['return_amount'] = this.$t('AmountRequired')
-                        return;
-                    }else if (this.return_price > this.max_price){
+                    }
+                    if (this.return_amount < 0 || this.return_amount < 1){
+                        this.return_amount = 0;
+                    }
+                    if (this.return_price > this.max_price){
                         this.errors['return_price'] = this.$t('ReturnedMaxError2')
                         return;
                     }
+                    this.returnLoader = true;
 
                     let data = {
                         sold_medicine_id: this.medicine_id,
@@ -226,6 +228,8 @@
                     if (response.status){
                         this.counterStore.hiddenModal('returnMedicine');
                         Alert('success', this.$t('create'));
+                        this.indexPaginates();
+                        this.refreshData();
                         this.returnLoader = false;
                         return true;
                     }
