@@ -101,7 +101,6 @@
             @click="onMenuMedia()"
             v-if="counterStore.hasRole('Suppliers-index')"
         />
-
         <MenuListButton
             :Title="$t('Medicines')"
             Name="Medicines"
@@ -163,9 +162,8 @@
         />
         <MenuListButton
             :Title="$t('Selling')"
-            Name="PaymentTypes"
+            Name="Selling"
             Icon="bx bx-store-alt"
-            @click="onMenuMedia()"
             v-if="counterStore.hasRole('Selling-index')"
             :ChildLinks="[
                     {
@@ -181,7 +179,7 @@
                         isPermission: this.counterStore.hasRole('Selling-index')
                     },
                      {
-                        title: $t('SellingArxive'),
+                        title: $t('ReturnHistory'),
                         path: '/admin/returned/invoices',
                         icon:'bx bx-left-down-arrow-circle',
                         isPermission: this.counterStore.hasRole('Selling-index')

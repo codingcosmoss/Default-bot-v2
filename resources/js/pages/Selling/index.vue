@@ -356,7 +356,7 @@
             sumIgta(){
                 let sum = 0;
                 this.sellingMedicines.forEach(e=>{
-                    sum+= e.igta;
+                    sum+= e.igta * e.selling_amount;
                 })
                 this.igta = sum;
                 return Number(sum);

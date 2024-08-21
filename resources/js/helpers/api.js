@@ -705,6 +705,9 @@ export const invoiceActives = async () => {
 export const invoicePaginates = async (count, page= 1) => {
     return  GET('/invoice/paginate/' + count+'?page='+page);
 };
+export const invoiceReturns = async (count, page= 1) => {
+    return  GET('/invoice/returns/' + count+'?page='+page);
+};
 export const invoiceOrderBys = async (column, type) => {
     return  GET('/invoice/orderBy/' + column + '/' + type);
 };
@@ -724,6 +727,10 @@ export const invoiceUpdate = async (id, data) => {
 export const invoiceSearch = async (data, page) => {
     return  POST('/invoice/search/'+'?page='+page, data );
 };
+export const invoiceReturnSearch = async (data, page) => {
+    return  POST('/invoice/return-search/'+'?page='+page, data );
+};
+
 export const invoiceDelete = async (id) => {
     return  GET('/invoice/delete/'+ id );
 };

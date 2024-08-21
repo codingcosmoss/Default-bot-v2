@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('sold_medicines', function (Blueprint $table) {
-            $table->double('igta', 20, 2)->nullable()->comment('bir donasiga nisbatan');
-            $table->double('gst', 20, 2)->nullable()->comment('bir donasiga nisbatan');
+            $table->double('one_sum', 20, 2)->default(0)->comment('bitta dorining vat + gst + price narxi');
+            $table->double('result_sum', 20, 2)->default(0)->comment('Barcha dorining vat + gst + price narxi');
         });
     }
 
@@ -23,8 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('sold_medicines', function (Blueprint $table) {
-            $table->dropColumn('igta');
-            $table->dropColumn('gst');
+            $table->dropColumn('one_sum');
+            $table->dropColumn('result_sum');
         });
     }
 };

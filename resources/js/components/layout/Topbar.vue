@@ -16,14 +16,10 @@
                 <button @click="onMenuMedia()" type="button" class="btn btn-sm px-3 font-size-16 header-item waves-effect" id="menu_btn2">
                     <i class="fa fa-fw fa-bars"></i>
                 </button>
+                <button @click="onMenuMedia()" type="button" class="btn btn-sm px-3 font-size-16 header-item waves-effect" >
+                    <i class="bx bx-desktop menu_icon"></i>
+                </button>
 
-                <!-- App Search-->
-                <form class="app-search d-none d-lg-block">
-                    <div class="position-relative">
-                        <input type="text" class="form-control" placeholder="Search...">
-                        <span class="bx bx-search-alt"></span>
-                    </div>
-                </form>
 
             </div>
 

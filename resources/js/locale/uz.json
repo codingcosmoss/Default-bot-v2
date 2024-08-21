@@ -207,5 +207,6 @@
     "AmountRequired": "Iltimos miqdorni kiriting",
     "PrintFon": "Chop etish sifatini yaxshilash uchun dasturni oq fonga o'tkazing !",
     "ReturnPriceValidator": "Qancha pul mijozga qaytarib berildi",
-    "ReturnAllValidator": "Barchasi qaytarib berilgan"
+    "ReturnAllValidator": "Barchasi qaytarib berilgan",
+    "ReturnAllMedicines": "Qaytarib berilgan dorilar"
 }

@@ -7,25 +7,19 @@
                     <div class="card">
                         <div class="card-body selling_item_list position-relative">
                             <div class="p-3 pt-2 pb-0 bg-primary selling_search_box">
-                                <div class=" d-flex flex-row ">
+                                <div class=" d-flex flex-row col-12">
                                     <DefaultIconInput
                                         Label=""
                                         class="selling_input"
                                         inputClass="p-2"
-                                        Class="col-lg-6 col-md-6 col-xl-12 col-sm-12"
+                                        Class="col-lg-6 col-md-12 col-xl-8 col-sm-12"
                                         :Pholder="$t('SearchMedicines')+'...'"
 
                                         @onInput="this.$emit('onSearch', $event)"
                                     >
                                         <i class="bx bx-search-alt-2"></i>
                                     </DefaultIconInput>
-                                    <DefaultSelect
-                                        Label=""
-                                        Class="col-lg-6 col-md-6 col-xl-12 col-sm-12"
-                                    >
-                                        <option>---</option>
-                                        <option>---</option>
-                                    </DefaultSelect>
+
 
                                 </div>
                             </div>

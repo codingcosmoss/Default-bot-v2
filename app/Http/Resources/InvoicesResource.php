@@ -17,8 +17,8 @@ class InvoicesResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $customer = Customer::find($this->customer_id);
-        $user = User::find($this->user_id);
+        $customer = Customer::withTrashed()->find($this->customer_id);
+        $user = User::withTrashed()->find($this->user_id);
         return [
             'id' => $this->id,
             'clinic_id' => $this->clinic_id,
@@ -27,6 +27,7 @@ class InvoicesResource extends JsonResource
             'customer' => $customer,
             'user' => $user,
             'date' => $this->date,
+            'name' => $this->name,
             'amount' => $this->amount,
             'amount_paid' => $this->amount_paid,
             'must_paid' => $this->must_paid,
@@ -35,6 +36,7 @@ class InvoicesResource extends JsonResource
             'gst' => $this->gst,
             'currency_id' => $this->currency_id,
             'currency' => Currency::find($this->currency_id),
+            'created_at' => $this->created_at,
         ];
     }
 }

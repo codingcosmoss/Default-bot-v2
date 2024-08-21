@@ -297,6 +297,7 @@ Route::middleware(['auth:sanctum', 'admin' ])->group(function () {
 
     Route::prefix('/invoice')->group(function () {
         Route::get('/index', [\App\Http\Controllers\Api\InvoiceController::class, 'index']);
+        Route::get('/returns/{count}', [\App\Http\Controllers\Api\InvoiceController::class, 'returns']);
         Route::get('/actives', [\App\Http\Controllers\Api\InvoiceController::class, 'activeIndex']);
         Route::get('/paginate/{count}', [\App\Http\Controllers\Api\InvoiceController::class, 'getPaginate']);
         Route::get('/orderBy/{column}/{type}', [\App\Http\Controllers\Api\InvoiceController::class, 'orderBy']);
@@ -305,6 +306,7 @@ Route::middleware(['auth:sanctum', 'admin' ])->group(function () {
         Route::post('/return-medicine', [\App\Http\Controllers\Api\InvoiceController::class, 'returnMedicine']);
         Route::post('/update/{id}', [\App\Http\Controllers\Api\InvoiceController::class, 'update']);
         Route::post('/search', [\App\Http\Controllers\Api\InvoiceController::class, 'searchDate']);
+        Route::post('/return-search', [\App\Http\Controllers\Api\InvoiceController::class, 'returnSearchDate']);
         Route::get('/delete/{id}', [\App\Http\Controllers\Api\InvoiceController::class, 'destroy']);
     });
 

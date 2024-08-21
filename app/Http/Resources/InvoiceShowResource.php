@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use App\Models\Clinic;
 use App\Models\Currency;
 use App\Models\Customer;
+use App\Models\SellingReturnedMedicine;
 use App\Models\Setting;
 use App\Models\SoldMedicine;
 use App\Models\User;
@@ -23,6 +24,7 @@ class InvoiceShowResource extends JsonResource
         $customer = Customer::find($this->customer_id);
         $user = User::find($this->user_id);
         $soldMedicines = SoldMedicine::where('invoice_id', $this->id)->get();
+        $returnMedicines = SellingReturnedMedicine::where('invoice_id', $this->id)->get();
         $company = Setting::where('clinic_id', $this->clinic_id)->first();
         return [
             'id' => $this->id,
@@ -41,6 +43,7 @@ class InvoiceShowResource extends JsonResource
             'currency_id' => $this->currency_id,
             'currency' => Currency::find($this->currency_id),
             'sold_medicines' => $soldMedicines,
+            'return_medicines' => $returnMedicines,
             'company' => new SettingsResources($company)
         ];
     }

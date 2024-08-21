@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('sold_medicines', function (Blueprint $table) {
-            $table->double('igta', 20, 2)->nullable()->comment('bir donasiga nisbatan');
-            $table->double('gst', 20, 2)->nullable()->comment('bir donasiga nisbatan');
+        Schema::table('selling_returned_medicines', function (Blueprint $table) {
+            $table->double('igta', 20, 2)->nullable();
+            $table->double('gst', 20, 2)->nullable();
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('sold_medicines', function (Blueprint $table) {
+        Schema::table('selling_returned_medicines', function (Blueprint $table) {
             $table->dropColumn('igta');
             $table->dropColumn('gst');
         });

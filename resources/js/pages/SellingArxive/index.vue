@@ -69,7 +69,7 @@
                     @changePage="search($event)"
                 />
 
-                <GrowingLoader v-if="loader" Cols="9"/>
+                <GrowingLoader v-if="loader" Cols="10"/>
 
             </BasicTable>
 
@@ -85,12 +85,12 @@
             :isDisabled="returnLoader"
         >
             <DefaultSelect
-                :Label="$t('Medicine')"
+                :Label="$t('Medicine') + ' (' + $t('Price')+ '+'+ $t('VatSign')+ '+' + $t('Gst')+')'"
                 Name="medicine_id"
                 :Validated="errors"
-                @onInput="max_amount = JSON.parse($event).amount, medicine_id = JSON.parse($event).id, delete this.errors.medicine_id"
+                @onInput="return_medicine = JSON.parse($event), max_amount = JSON.parse($event).amount, medicine_id = JSON.parse($event).id, delete this.errors.medicine_id"
             >
-                <option v-for="medicine in medicines" :value="JSON.stringify(medicine)" >{{medicine.name}} ( {{$t('PC')}}: {{medicine.amount}} ) {{counterStore.formatNumber(medicine.price * medicine.amount)}} {{sign}}</option>
+                <option v-for="medicine in medicines" :value="JSON.stringify(medicine)" >{{medicine.name}} ( {{$t('PC')}}: {{medicine.amount}} ) {{counterStore.formatNumber(medicine.one_sum * medicine.amount)}} {{sign}}</option>
             </DefaultSelect>&nbsp;&nbsp;
 
             <DefaultInput
@@ -175,9 +175,18 @@
             returnLoader: false,
             medicine_id: 0,
             return_price: 0,
-            max_price: 0
+            max_price: 0,
+            return_medicine: []
         }},
         methods:{
+            calculatePrice(){
+                let price = this.return_medicine.one_sum * this.return_amount;
+                if (this.max_price >= price){
+                    this.return_price = price;
+                }else {
+                    this.return_price = this.max_price ;
+                }
+            },
             returnPrice(val){
                 let formatAmount = this.counterStore.inputNumberFormat('returnPrice', this.return_price, val);
                 this.return_price = formatAmount;
@@ -191,6 +200,7 @@
                 }
                 input.value = amount;
                 this.return_amount = amount;
+                this.calculatePrice()
             },
             refreshData(){
                 this.medicine_id = null;
@@ -198,6 +208,7 @@
                 this.customer_id = null;
                 this.return_amount = 0;
                 this.return_price = 0;
+                this.return_medicine = [];
                 this.max_price = 0;
                 this.max_amount = 0;
             },
@@ -289,6 +300,7 @@
                     this.max_amount = this.medicines[0].amount;
                     this.max_price = response.data.amount_paid;
                     this.medicine_id = this.medicines[0].id;
+                    this.return_medicine = this.medicines[0];
                     this.sign = response.data.currency.sign
                     this.returnLoader = false;
                 }catch(error){

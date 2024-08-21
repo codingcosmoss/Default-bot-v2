@@ -106,6 +106,52 @@ class InvoiceService extends AbstractService
             ];
         }
     }
+    public function returns($count = 10)
+    {
+
+        try {
+
+            if (!$this->hasPermission('index')){
+                return [
+                    'status' => false,
+                    'code' => 403,
+                    'message' => 'Root access is not allowed ',
+                    'data' => null
+                ];
+            }
+
+            $models = SellingReturnedMedicine::where('clinic_id', auth()->user()->clinic_id)
+                ->orderBy('created_at', 'desc')
+                ->paginate($count);
+
+
+            $data = [
+                'items' => $this->resource::collection($models),
+                'pagination' => [
+                    'total' => $models->total(),
+                    'per_page' => $models->perPage(),
+                    'current_page' => $models->currentPage(),
+                    'last_page' => $models->lastPage(),
+                    'from' => $models->firstItem(),
+                    'to' => $models->lastItem(),
+                ],
+            ];
+
+            return [
+                'status' => true,
+                'code' => 200,
+                'message' => 'Success',
+                'data' => $data
+            ];
+        }catch (Exception $e){
+            return [
+                'status' => false,
+                'code' => $e->getCode(),
+                'message' => $e->getMessage(),
+                'data' => null
+            ];
+        }
+    }
     public function store(array $data)
     {
         try {
@@ -150,7 +196,6 @@ class InvoiceService extends AbstractService
             $object->date = $data['date']; // date $data dan olinadi
             $object->gst = 0; // gst $data dan olinadi
             $object->save() != true ? $isSaved = false : '';
-            $sum = 0;
             // Sotilgan dorilar
             foreach ($medicines as $medicine){
                 $parentMedicine = Medicine::find($medicine['id']);
@@ -165,14 +210,17 @@ class InvoiceService extends AbstractService
                 $soldMedicine->price = $medicine['price'];
                 $soldMedicine->igta = $medicine['igta'];
                 $soldMedicine->subtotal = $medicine['selling_amount'] *  $medicine['price'];
-                $soldMedicine->gst = ($soldMedicine->subtotal * $data['gst'])/100;
+                $soldMedicine->gst = ($soldMedicine->price * $data['gst'])/100;
                 $soldMedicine->currency_id = $data['currency_id'];
+                $soldMedicine->one_sum = $soldMedicine->igta + $soldMedicine->gst + $soldMedicine->price;
+                $soldMedicine->result_sum = $soldMedicine->one_sum *  $soldMedicine->amount;
                 $soldMedicine->save() != true ? $isSaved = false : '';
-                $sum += $soldMedicine->subtotal;
                 $parentMedicine->changeAmount(Status::$selling, $soldMedicine) == false ? $isSaved = false : '';
 
             }
-            $object->gst = ($sum * $data['gst'])/100; // gst $data dan olinadi
+            $sum = $data['subtotal'] - $object->igta;
+            $gst = 100+$data['gst'];
+            $object->gst = ($sum * $data['gst'])/$gst; // gst $data dan olinadi
             $object->gst_percentage = $data['gst']; // gst $data dan olinadi
             $object->save() != true ? $isSaved = false : '';
 
@@ -256,6 +304,45 @@ class InvoiceService extends AbstractService
         ];
 
     }
+    public function returnSearchDate($data)
+    {
+        $startDate = isset($data['start']) ? $data['start'] : null ; // Boshlanish sanasi, null bo'lishi mumkin
+        $endDate = isset($data['end']) ? $data['end'] : null ; // Tugash sanasi, null bo'lishi mumkin
+
+        $query = SellingReturnedMedicine::query();
+        $query->where('clinic_id', auth()->user()->clinic_id);
+        if ($startDate && $endDate) {
+            // Ikkala sana mavjud bo'lsa
+            $query->whereBetween('created_at', [$startDate, $endDate]);
+        } elseif ($startDate) {
+            // Faqat startDate mavjud bo'lsa
+            $query->where('created_at', '>=', $startDate);
+        } elseif ($endDate) {
+            // Faqat endDate mavjud bo'lsa
+            $query->where('created_at', '<=', $endDate);
+        }
+
+        $models = $query->paginate(100);
+
+        $data = [
+            'items' => $this->resource::collection($models),
+            'pagination' => [
+                'total' => $models->total(),
+                'per_page' => $models->perPage(),
+                'current_page' => $models->currentPage(),
+                'last_page' => $models->lastPage(),
+                'from' => $models->firstItem(),
+                'to' => $models->lastItem(),
+            ],
+        ];
+        return [
+            'status' => true,
+            'message' => 'Success',
+            'statusCode' => 200,
+            'data' => $data
+        ];
+
+    }
     public function show($id)
     {
         try {
@@ -286,83 +373,6 @@ class InvoiceService extends AbstractService
         }
     }
 
-    public function returnPrice($data)
-    {
-        try {
-            if (!$this->hasPermission('create')){
-                return [
-                    'status' => false,
-                    'code' => 403,
-                    'message' => 'Root access is not allowed ',
-                    'data' => null
-                ];
-            }
-            $validator = $this->dataValidator($data, $this->returnPriceFields());
-
-            if ($validator['status']) {
-                return [
-                    'status' => false,
-                    'code' => 422,
-                    'message' => 'Validator error',
-                    'errors' => $validator['validator']
-                ];
-            }
-
-            $data = $validator['data'];
-            DB::beginTransaction();
-            $isSaved = true;
-            // Qaytarilgan dori
-
-            $invoice = Invoice::find($data['invoice_id']);
-            if ($invoice->amount_paid < $data['return_price']){
-                $invoice->amount_paid = 0;
-            }else{
-                $invoice->amount_paid -= $data['return_price'];
-            }
-
-            $invoice->save() != true ? $isSaved = false : '';
-
-            if ($data['return_price'] > 0){
-                $category = ExpenseCategory::where('type', Status::$default)->first();
-                $newExpenses = new Expense();
-                $newExpenses->title = 'The drug was returned to the customer. Invoice ID: '. $invoice->id;
-                $newExpenses->expense_category_id  = $category->id;
-                $newExpenses->date  = date("Y-m-d");
-                $newExpenses->clinic_id  = auth()->user()->clinic_id;
-                $newExpenses->currency_id  = $invoice->currency_id;
-                $newExpenses->amount  = $data['return_price'];
-                $newExpenses->save() != true ? $isSaved = false : '';
-            }
-
-            if ($isSaved){
-                DB::commit();
-                return [
-                    'status' => true,
-                    'code' => 200,
-                    'message' => 'Success',
-                    'data' => new $this->resource($invoice)
-                ];
-            }else{
-                DB::rollBack();
-                return [
-                    'status' => false,
-                    'code' => 403,
-                    'message' => 'Server error',
-                    'data' => null
-                ];
-            }
-
-
-
-        }catch (Exception $e){
-            return [
-                'status' => false,
-                'code' => $e->getCode(),
-                'message' => $e->getMessage(),
-                'data' => null
-            ];
-        }
-    }
     public function returnMedicine(array $data)
     {
         try {
@@ -391,13 +401,14 @@ class InvoiceService extends AbstractService
             DB::beginTransaction();
             $isSaved = true;
 
-
+            $invoice = Invoice::find($data['invoice_id']);
             $sum = 0;
            if ($data['return_amount'] > 0){
                // Qaytarilgan dori
                $soldMedicine = SoldMedicine::find($data['sold_medicine_id']);
                $soldMedicine->amount -= $data['return_amount'];
                $soldMedicine->subtotal -= $data['return_amount'] *  $soldMedicine->price;
+               $soldMedicine->result_sum -= $data['return_amount'] *  $soldMedicine->one_sum;
                $soldMedicine->save() != true ? $isSaved = false : '';
 
                $parentMedicine = Medicine::find($soldMedicine->medicine_id);
@@ -407,22 +418,23 @@ class InvoiceService extends AbstractService
                $returnMedicine->invoice_id = $data['invoice_id'];
                $returnMedicine->customer_id = $data['customer_id'];
                $returnMedicine->name = $soldMedicine->name;
+               $returnMedicine->igta = $soldMedicine->igta;
                $returnMedicine->amount = $data['return_amount'];
                $returnMedicine->price = $soldMedicine->price;
                $returnMedicine->subtotal = $data['return_amount'] *  $soldMedicine->price;
+               $returnMedicine->gst = $soldMedicine->gst;
                $returnMedicine->currency_id = $soldMedicine->currency_id;
                $returnMedicine->save() != true ? $isSaved = false : '';
 
                $parentMedicine->changeAmount(Status::$invoiceReturned, $returnMedicine) == false ? $isSaved = false : '';
 
-               $sum = $returnMedicine->subtotal + $soldMedicine->igta + $soldMedicine->gst;
+               $sum = $data['return_amount'] * $soldMedicine->one_sum;
            }
 
-            $invoice = Invoice::find($data['invoice_id']);
             if ($data['return_amount'] > 0){
                 $invoice->amount -= $data['return_amount'];
-                $invoice->igta -= $soldMedicine->igta;
-                $invoice->gst -= $soldMedicine->gst;
+                $invoice->igta -= $soldMedicine->igta * $data['return_amount'];
+                $invoice->gst -= $soldMedicine->gst * $data['return_amount'];
             }
 
             if ($invoice->amount_paid < $data['return_price']){

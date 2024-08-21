@@ -2,7 +2,7 @@
     <Page Title="">
         <div class="row">
         <BasicTable
-                :Th="[ $t('No'),$t('Date'),$t('Identifikator'),$t('Customer'),$t('Seller'),$t('Amount'),$t('Subtotal'),$t('Indebtedness'),$t('Settings')]"
+                :Th="[ $t('No'),$t('MedicineName'),$t('Date'),$t('Identifikator'),$t('Customer'),$t('Seller'),$t('Amount'),$t('Subtotal'),$t('Settings')]"
                 :Title="$t('ReturnHistory')"
                 Col="col-lg-12"
             >
@@ -40,15 +40,16 @@
 
                 <tr v-for="(item, i) in items" >
                     <td>{{ ((current_page - 1) * paginateCount) +  i + 1 }}</td>
-                    <td>{{ item.date }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ counterStore.formatDate(item.created_at) }}</td>
                     <td>#{{item.id }}</td>
                     <td>{{ item.customer.name }}</td>
                     <td>{{ item.user.name }}</td>
                     <td>{{ counterStore.formatNumber(item.amount) }}</td>
                     <td>{{ counterStore.formatNumber(item.subtotal) }} {{item.currency.sign}}</td>
-                    <td :class="item.must_paid > 0 ? 'text-danger' : '' " >{{ counterStore.formatNumber(item.must_paid) }} {{item.currency.sign}}</td>
+
                     <td>
-                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/invoices/show', query:{id: item.id}})" Icon="bx bx-show"/>
+                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/returned/invoices/show', query:{id: item.id}})" Icon="bx bx-show"/>
                         <PrimaryIconBtn v-if="counterStore.hasRole('invoices-delete')" @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
                     </td>
 
@@ -84,7 +85,7 @@
     import {Alert} from "@/helpers/Config.js";
     import {useConterStore} from "@/store/counter.js";
     import BasicTable from "@/components/all/BasicTable.vue";
-    import {invoices, invoiceCreate, invoiceSearch, invoiceUpdate, invoiceShow, invoiceDelete, invoicePaginates, invoiceActives, invoiceOrderBys} from "@/helpers/api.js";
+    import {invoiceReturns, invoiceCreate, invoiceReturnSearch, invoiceUpdate, invoiceShow, invoiceDelete, invoicePaginates, invoiceActives, invoiceOrderBys} from "@/helpers/api.js";
     import GrowingLoader from "@/components/all/GrowingLoader.vue";
     import PrimaryButton from "@/components/all/PrimaryButton.vue";
     import PrimaryIconBtn from "@/components/all/PrimaryIconBtn.vue";
@@ -141,7 +142,7 @@
                 try {
                     this.loader = true;
                     this.isSearch = false;
-                    const response = await invoicePaginates(this.paginateCount, page);
+                    const response = await invoiceReturns(this.paginateCount, page);
                     this.current_page = response.data.pagination.current_page;
                     this.last_page = response.data.pagination.last_page;
                     this.items = response.data.items;
@@ -211,7 +212,7 @@
                         finish: this.finishDate
                     }
                     this.isSearch = true;
-                    const response = await invoiceSearch(data, page);
+                    const response = await invoiceReturnSearch(data, page);
                     this.items = response.data.items;
                     this.current_page = response.data.pagination.current_page;
                     this.last_page = response.data.pagination.last_page;
