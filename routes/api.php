@@ -303,6 +303,7 @@ Route::middleware(['auth:sanctum', 'admin' ])->group(function () {
         Route::get('/orderBy/{column}/{type}', [\App\Http\Controllers\Api\InvoiceController::class, 'orderBy']);
         Route::get('/show/{id}', [\App\Http\Controllers\Api\InvoiceController::class, 'show']);
         Route::post('/create', [\App\Http\Controllers\Api\InvoiceController::class, 'create']);
+        Route::post('/to-pay', [\App\Http\Controllers\Api\InvoiceController::class, 'toPay']);
         Route::post('/return-medicine', [\App\Http\Controllers\Api\InvoiceController::class, 'returnMedicine']);
         Route::post('/update/{id}', [\App\Http\Controllers\Api\InvoiceController::class, 'update']);
         Route::post('/search', [\App\Http\Controllers\Api\InvoiceController::class, 'searchDate']);

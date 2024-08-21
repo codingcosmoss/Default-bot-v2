@@ -35,12 +35,12 @@
                 <div class="card w-100  me-md-3 " >
                     <div class="card-body p-0" >
                         <div class="row p-3">
-                            <div class="col-xl-6 col-sm-6">
+                            <div class="col-xl-8  col-lg-8 col-md-10 col-sm-8 d-flex align-items-start gap-3">
                                 <slot name="customers" >
 
                                 </slot>
                             </div>
-                            <div class="col-xl-6 col-sm-6 d-flex gap-2">
+                            <div class="col-xl-4  col-lg-4 col-md-2 col-sm-4 d-flex gap-2">
                                 <BtnBox>
                                     <PrimaryIconBtn
                                         @click="this.$router.push('/admin/archive/invoices')"
@@ -73,7 +73,10 @@
         </div>
 
     </div>
+
+
 </template>
+
 <script>
 import {defineComponent} from "vue";
 import DefaultSelect from "@/ui-components/Forms/DefaultSelect.vue";

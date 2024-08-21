@@ -14,8 +14,8 @@ class ClinicSeeder extends Seeder
     public function run(): void
     {
         Clinic::create([
-            'name' => 'Clinic pro',
-            'address' => 'Fergana',
+            'name' => 'Pharma plus',
+            'address' => 'Uzbekistan Ferghana',
             'phone' => '+998951112233',
             'email' => 'example@email.com',
         ]);

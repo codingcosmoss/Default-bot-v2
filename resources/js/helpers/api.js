@@ -717,6 +717,9 @@ export const invoiceShow = async (id) => {
 export const invoiceCreate = async (data) => {
     return  POST('/invoice/create', data );
 };
+export const invoiceToPay = async (data) => {
+    return  POST('/invoice/to-pay', data );
+};
 
 export const invoiceReturnMedicine = async (data) => {
     return  POST('/invoice/return-medicine', data );

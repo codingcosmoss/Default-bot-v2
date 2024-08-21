@@ -92,10 +92,10 @@
                         </table>
                     </div>
 
-                    <div class="py-2 mt-3 text-center">
+                    <div class="py-2 mt-3 text-center"  v-if="isReturn">
                         <h3 class="font-size-15 fw-bold">{{$t('ReturnAllMedicines')}}</h3>
                     </div>
-                    <div class="table-responsive">
+                    <div class="table-responsive"  v-if="isReturn">
                         <table class="table table-nowrap">
                             <thead>
                             <tr>
@@ -130,11 +130,12 @@
                                     </div>
                                 </td>
                             </tr>
-                            <tr>
-                                <td colspan="5" class="border-0 text-center"><h4 class="m-0">{{$t('Paid')}}: {{counterStore.formatNumber(invoice.amount_paid)}} {{sign}}</h4></td>
-                            </tr>
+
                             </tbody>
                         </table>
+                    </div>
+                    <div class="d-flex justify-content-center p-2">
+                        <h4 class="m-0">{{$t('Paid')}}: {{counterStore.formatNumber(invoice.amount_paid)}} {{sign}}</h4>
                     </div>
                 </div>
             </div>

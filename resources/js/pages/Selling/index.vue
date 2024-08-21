@@ -4,6 +4,7 @@
             <DefaultSelect
                 Label=""
                 Name="customer"
+                Class="col-6"
                 :Validated="errors"
                 @onInput="customer = JSON.parse($event),  delete this.errors.customer"
             >
@@ -11,6 +12,7 @@
                 <option v-for="customer in customers" :value="JSON.stringify(customer)" >{{customer.name}}</option>
 
             </DefaultSelect>
+            <button type="button"  v-if="counterStore.hasRole('Customers-create')" role="button" data-bs-toggle="modal" data-bs-target="#customerCreate"  class="btn btn-primary waves-effect waves-light">{{$t('CreateCustomer')}}</button>
         </template>
         <template v-slot:main>
                 <ul class="main_list" >
@@ -151,6 +153,8 @@
             >{{paymentType.name}}</button>
         </ModalCentered>
         </Layout>
+    <CustomerCreate  @onCreate="indexCustomers" />
+
 </template>
 <script>
     import Page from "@/components/layout/Page.vue";
@@ -169,6 +173,7 @@
     import DefaultSelect from "@/ui-components/Forms/DefaultSelect.vue";
     import Swal from 'sweetalert2'
     import ModalCentered from "@/components/all/ModalCentered.vue";
+    import CustomerCreate from "../Customers/create.vue"
 
     export default {
         components: {
@@ -176,7 +181,7 @@
             DefaultSelect,
             PrimaryBtn,
             DefaultIconInput,
-            PrimaryIconBtn, AmountInput, BasicInput, DefaultInput, BasicTable, SellingCard, Layout},
+            PrimaryIconBtn, AmountInput, BasicInput, DefaultInput, BasicTable, SellingCard, Layout, CustomerCreate},
         setup(){
             const counterStore = useConterStore();
             return{counterStore}

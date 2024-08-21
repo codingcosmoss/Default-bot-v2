@@ -15,6 +15,11 @@ class InvoiceController extends AbstractController
         $data = $this->service->returns($count);
         return $this->sendResponse($data);
     }
+    public function toPay()
+    {
+        $data = $this->service->toPay(request()->all());
+        return $this->sendResponse($data);
+    }
     public function searchDate()
     {
         $data = $this->service->searchDate(request()->all());

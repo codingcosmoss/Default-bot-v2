@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('clinic_id');
             $table->string('name');
+            $table->integer('type')->nullable();
             $table->string('description')->nullable();
             $table->timestamps();
         });

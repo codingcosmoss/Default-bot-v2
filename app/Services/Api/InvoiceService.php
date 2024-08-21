@@ -59,6 +59,14 @@ class InvoiceService extends AbstractService
             TextField::make('return_price')->setRules('required|numeric'),
         ];
     }
+    public function returnTopayFields()
+    {
+        return [
+            TextField::make('invoice_id')->setRules('required|integer'),
+            TextField::make('amount')->setRules('required|numeric'),
+            TextField::make('payment_type_id')->setRules('required|integer'),
+        ];
+    }
 
     public function getPaginate($count = 10)
     {
@@ -406,6 +414,16 @@ class InvoiceService extends AbstractService
            if ($data['return_amount'] > 0){
                // Qaytarilgan dori
                $soldMedicine = SoldMedicine::find($data['sold_medicine_id']);
+
+               if ($data['return_amount'] > $soldMedicine->amount ){
+                   return [
+                       'status' => false,
+                       'code' => 403,
+                       'message' => 'Quantity not available',
+                       'data' => null
+                   ];
+               }
+
                $soldMedicine->amount -= $data['return_amount'];
                $soldMedicine->subtotal -= $data['return_amount'] *  $soldMedicine->price;
                $soldMedicine->result_sum -= $data['return_amount'] *  $soldMedicine->one_sum;
@@ -472,6 +490,86 @@ class InvoiceService extends AbstractService
                 $newExpenses->amount  = $data['return_price'];
                 $newExpenses->save() != true ? $isSaved = false : '';
             }
+
+            if ($isSaved){
+                DB::commit();
+                return [
+                    'status' => true,
+                    'code' => 200,
+                    'message' => 'Success',
+                    'data' => new $this->resource($invoice)
+                ];
+            }else{
+                DB::rollBack();
+                return [
+                    'status' => false,
+                    'code' => 403,
+                    'message' => 'Server error',
+                    'data' => null
+                ];
+            }
+
+
+
+        }catch (Exception $e){
+            return [
+                'status' => false,
+                'code' => $e->getCode(),
+                'message' => $e->getMessage(),
+                'data' => null
+            ];
+        }
+
+    }
+
+    public function toPay(array $data)
+    {
+        try {
+            if (!$this->hasPermission('create')){
+                return [
+                    'status' => false,
+                    'code' => 403,
+                    'message' => 'Root access is not allowed ',
+                    'data' => null
+                ];
+            }
+            $validator = $this->dataValidator($data, $this->returnTopayFields());
+
+            if ($validator['status']) {
+                return [
+                    'status' => false,
+                    'code' => 422,
+                    'message' => 'Validator error',
+                    'errors' => $validator['validator']
+                ];
+            }
+
+            $data = $validator['data'];
+            DB::beginTransaction();
+            $isSaved = true;
+
+            $invoice = Invoice::find($data['invoice_id']);
+            if ($data['amount'] > $invoice->subtotal){
+                return [
+                    'status' => false,
+                    'code' => 403,
+                    'message' => 'Quantity not available',
+                    'data' => null
+                ];
+            }
+            $invoice->amount_paid += $data['amount'];
+            $invoice->must_paid = $invoice->subtotal - $invoice->amount_paid;
+            $invoice->save() != true ? $isSaved = false : '';
+
+            $sellingPayment = new SellingPayment();
+            $sellingPayment->clinic_id = auth()->user()->clinic_id;
+            $sellingPayment->user_id = $invoice->user_id;
+            $sellingPayment->invoice_id = $invoice->id;
+            $sellingPayment->customer_id = $invoice->customer_id;
+            $sellingPayment->amount = $data['amount'];
+            $sellingPayment->payment_type_id = $data['payment_type_id'];
+            $sellingPayment->currency_id = $invoice->currency_id;
+            $sellingPayment->save() != true ? $isSaved = false : '';
 
             if ($isSaved){
                 DB::commit();

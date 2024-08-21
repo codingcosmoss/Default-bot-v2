@@ -51,6 +51,7 @@
                     <td>
                         <PrimaryIconBtn  @click="this.$router.push({path:'/admin/invoices/show', query:{id: item.id}})" Icon="bx bx-show"/>
                         <PrimaryIconBtn @click="show(item.id)" Modal="returnMedicine" v-if="counterStore.hasRole('Selling-update') && (item.subtotal > 0 || item.amount_paid > 0)" class="bg-info border-info" Icon="bx bx-rotate-left" :title="$t('ReturnMedicines')"/>
+                        <PrimaryIconBtn @click="this.item = item, max_price = item.must_paid" Modal="paymentInvoice" v-if="counterStore.hasRole('Selling-update') && (item.subtotal > item.amount_paid )" class="bg-success border-success" Icon="bx bx-money" :title="$t('ToPay')"/>
                     </td>
 
                 </tr>
@@ -113,6 +114,33 @@
             />
 
         </ModalCentered>
+        <ModalCentered
+            ModalName="paymentInvoice"
+            :Title="$t('ToPay')"
+            @onModal="toPay()"
+            :isDisabled="paymentLoader"
+        >
+            <DefaultInput
+                :Label="$t('EnterPaymentAmount') + ' ('+$t('Indebtedness')+': ' + counterStore.formatNumber(max_price) +' '+ sign+ ' )'"
+                Name="return_price"
+                Type="text"
+                inputClass ='returnPrice'
+                :Value="counterStore.formatNumber(this.return_price)"
+                :Validated="errors"
+                @onInput="returnPrice($event), delete this.errors.return_price"
+            />
+
+            <DefaultSelect
+                :Label="$t('PaymentType')"
+                Name="payment_type_id"
+                :Validated="errors"
+                @onInput="payment_type_id = $event , delete this.errors.payment_type_id"
+            >
+                <option value="" >---</option>
+                <option v-for="paymentType in paymentTypes" :value="paymentType.id" >{{paymentType.name}}</option>
+            </DefaultSelect>&nbsp;&nbsp;
+
+        </ModalCentered>
 
     </Page>
 </template>
@@ -131,8 +159,9 @@
         invoiceDelete,
         invoicePaginates,
         invoiceActives,
+        payment_types,
         invoiceOrderBys,
-        invoiceReturnMedicine
+        invoiceReturnMedicine, invoiceToPay
     } from "@/helpers/api.js";
     import GrowingLoader from "@/components/all/GrowingLoader.vue";
     import PrimaryButton from "@/components/all/PrimaryButton.vue";
@@ -176,9 +205,20 @@
             medicine_id: 0,
             return_price: 0,
             max_price: 0,
-            return_medicine: []
+            return_medicine: [],
+            payment_type_id: null,
+            paymentTypes: [],
+            paymentLoader: false
         }},
         methods:{
+            async indexPaymentTypes(){
+                try {
+                    const response = await payment_types();
+                    this.paymentTypes = response.data;
+                }catch(error){
+                    ApiError(this, error);
+                }
+            },
             calculatePrice(){
                 let price = this.return_medicine.one_sum * this.return_amount;
                 if (this.max_price >= price){
@@ -211,6 +251,45 @@
                 this.return_medicine = [];
                 this.max_price = 0;
                 this.max_amount = 0;
+            },
+            async toPay(){
+                try {
+
+                    if (this.return_price < 0 || this.return_price > this.item.subtotal){
+                        this.errors['return_price'] = this.$t('ReturnedMaxError2')
+                        this.return_price = this.item.subtotal;
+                        return;
+                    }
+
+                    this.paymentLoader = true;
+
+                    let data = {
+                        payment_type_id: this.payment_type_id,
+                        invoice_id: this.item.id,
+                        amount: this.return_price,
+                    }
+
+                    const response = await invoiceToPay(data);
+                    if (response.status){
+                        this.counterStore.hiddenModal('paymentInvoice');
+                        Alert('success', this.$t('create'));
+                        this.indexPaginates();
+                        this.item = [];
+                        this.errors = [];
+                        this.return_price = 0;
+                        this.invoice_id = null;
+                        this.paymentLoader = false;
+                        return true;
+                    }
+                    this.errors = response.errors;
+                    Alert('error', this.$t('formError'));
+                    this.paymentLoader = false;
+                    return false;
+
+                }catch(error){
+                    ApiError(this, error);
+                    return false;
+                }
             },
             async returnMedicine(){
                 try {
@@ -390,7 +469,8 @@
             },
         },
         mounted() {
-            this.indexPaginates()
+            this.indexPaginates();
+            this.indexPaymentTypes()
         }
     }
 </script>
