@@ -209,5 +209,6 @@
     "ReturnPriceValidator": "Qancha pul mijozga qaytarib berildi",
     "ReturnAllValidator": "Barchasi qaytarib berilgan",
     "ReturnAllMedicines": "Qaytarib berilgan dorilar",
-    "CreateCustomer": "Xaridor qo'shish"
+    "CreateCustomer": "Xaridor qo'shish",
+    "Payments": "To'lovlor"
 }

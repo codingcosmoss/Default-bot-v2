@@ -187,13 +187,21 @@
 
                 ]"
         />
-        <MenuButton
-            :Title="$t('PaymentTypes')"
+
+        <MenuListButton
+            :Title="$t('Payments')"
             Name="PaymentTypes"
             Icon="bx bx-credit-card"
             Path="/admin/payment-types"
-            @click="onMenuMedia()"
-            v-if="counterStore.hasRole('PaymentTypes-index')"
+            v-if="counterStore.hasRole('Payments-index')"
+            :ChildLinks="[
+                    {
+                        title: $t('PaymentTypes'),
+                        path: '/admin/payment-types',
+                        icon:'bx bx-desktop',
+                        isPermission: this.counterStore.hasRole('PaymentTypes-index')
+                    },
+                ]"
         />
 
     </MenuBox>
