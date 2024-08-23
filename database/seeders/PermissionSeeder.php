@@ -105,6 +105,10 @@ class PermissionSeeder extends Seeder
                 "name" => "Payments",
                 "desc" => "To'ovlar"
             ],
+            [
+                "name" => "Reports",
+                "desc" => "Hisobotlar"
+            ],
 
         ];
 
@@ -128,7 +132,8 @@ class PermissionSeeder extends Seeder
                 'desc' => "Asosiy menuni korish",
             ]);
 
-            if ($menu['name'] != 'Dashboard' && $menu['name'] != 'Payments'){
+            $arr1 = ['Dashboard', 'Payments', 'Reports'];
+            if (!in_array($menu['name'], $arr1)){
                 // Create
                 Permission::create([
                     'name' => 'create',

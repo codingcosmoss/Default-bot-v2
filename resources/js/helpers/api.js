@@ -542,6 +542,12 @@ export const payment_typeActives = async () => {
 export const payment_typePaginates = async (count, page= 1) => {
     return  GET('/payment-type/paginate/' + count+'?page='+page);
 };
+export const payment_typeCustomers = async (count, page= 1) => {
+    return  GET('/payment-type/customers/' + count+'?page='+page);
+};
+export const payment_typeSupplier = async (count, page= 1) => {
+    return  GET('/payment-type/suppliers/' + count+'?page='+page);
+};
 export const payment_typeOrderBys = async (column, type) => {
     return  GET('/payment-type/orderBy/' + column + '/' + type);
 };
@@ -554,6 +560,13 @@ export const payment_typeCreate = async (data) => {
 export const payment_typeUpdate = async (id, data) => {
     return  POST('/payment-type/update/'+id, data );
 };
+export const payment_typeSearchCustomers = async (text) => {
+    return  GET('/payment-type/search/customer/' + text );
+};
+export const payment_typeSearchSuppliers = async (text) => {
+    return  GET('/payment-type/search/supplier/' + text );
+};
+
 export const payment_typeSearch = async (text) => {
     return  GET('/payment-type/search/' + text );
 };

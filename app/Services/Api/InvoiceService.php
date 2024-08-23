@@ -232,15 +232,17 @@ class InvoiceService extends AbstractService
             $object->gst_percentage = $data['gst']; // gst $data dan olinadi
             $object->save() != true ? $isSaved = false : '';
 
-            $sellingPayment = new SellingPayment();
-            $sellingPayment->clinic_id = auth()->user()->clinic_id;
-            $sellingPayment->user_id = $object->user_id;
-            $sellingPayment->invoice_id = $object->id;
-            $sellingPayment->customer_id = $data['customer_id'];
-            $sellingPayment->amount = $object->amount_paid;
-            $sellingPayment->payment_type_id = $paymentType;
-            $sellingPayment->currency_id = $data['currency_id'];
-            $sellingPayment->save() != true ? $isSaved = false : '';
+            if ($object->amount_paid > 0){
+                $sellingPayment = new SellingPayment();
+                $sellingPayment->clinic_id = auth()->user()->clinic_id;
+                $sellingPayment->user_id = $object->user_id;
+                $sellingPayment->invoice_id = $object->id;
+                $sellingPayment->customer_id = $data['customer_id'];
+                $sellingPayment->amount = $object->amount_paid;
+                $sellingPayment->payment_type_id = $paymentType;
+                $sellingPayment->currency_id = $data['currency_id'];
+                $sellingPayment->save() != true ? $isSaved = false : '';
+            }
 
             if ($isSaved){
                 DB::commit();

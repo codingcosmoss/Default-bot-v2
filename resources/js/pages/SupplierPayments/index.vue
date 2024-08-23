@@ -1,9 +1,9 @@
 <template>
     <Page Title="">
-        <div class="row"  >
-            <BasicTable
-                :Th="[ $t('No'),$t('ModalName'),$t('TotalRemittances'),$t('Status'),$t('Settings')]"
-                :Title="$t('PaymentTypes')"
+        <div class="row">
+        <BasicTable
+                :Th="[ $t('No'),$t('Supplier'),$t('Employee'),$t('Invoice'),$t('AmountPaid'),$t('PaymentType'), $t('PaidDate')]"
+                :Title="$t('SupplierPayments')"
                 Col="col-lg-12"
             >
                 <template v-slot:inputs>
@@ -29,44 +29,28 @@
                     </DefaultSelect>&nbsp;&nbsp;
                 </template>
 
-                <template v-slot:buttons>
-                    <PrimaryBtn v-if="counterStore.hasRole('PaymentTypes-create')" role="button" data-bs-toggle="modal" data-bs-target="#payment_typeCreate" >{{$t('Create')}}</PrimaryBtn>
-                </template>
 
                 <tr v-for="(item,i) in items" >
                     <td>{{ ((current_page - 1) * paginateCount) +  i + 1 }}</td>
-                    <td>
-                        {{ item.name }}
-                    </td>
-                    <td>
-                        <p v-for="paid in item.payments" class="m-0">{{ counterStore.formatNumber(paid.total_amount) }} {{paid.sign}}</p>
-                    </td>
-                    <td>
-                        <span :class="item.status == 1 || item.status == 9  ? 'badge-soft-success' : 'badge-soft-danger' "
-                              class="badge badge-pill badge-soft-success font-size-11">{{ item.status  == 1 || item.status == 9 ? $t('Active') : $t('InActive') }}</span>
-
-                    </td>
-                    <td>
-                        <PrimaryIconBtn v-if="counterStore.hasRole('PaymentTypes-update')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="payment_typeUpdate"/>
-<!--                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/size-types/show', query:{id: item.id}})" Icon="bx bx-show"/>&nbsp;-->
-                        <PrimaryIconBtn v-if="counterStore.hasRole('PaymentTypes-delete') && item.status != 9 && item.is_delete != 1" @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
-                    </td>
-
+                    <td>{{ item.supplier.name }}</td>
+                    <td>{{ item.user.name }}</td>
+                    <td class="text-success cursor-pointer"  @click="this.$router.push({path:'/admin/document/show', query:{id: item.document_id}})" >{{ item.document_id }}</td>
+                    <td>{{ counterStore.formatNumber(item.amount) }} {{item.currency.sign}}</td>
+                    <td>{{ item.payment_type.name }}</td>
+                    <td>{{ counterStore.formatDate(item.created_at) }}</td>
                 </tr>
                 <Paginate
-                    Cols="5"
+                    Cols="7"
                     v-if="last_page != 1"
                     :currentPage="this.current_page"
                     :totalPages="this.last_page"
                     @changePage="indexPaginates($event)"
                 />
 
-                <GrowingLoader v-if="loader" Cols="5"/>
+                <GrowingLoader v-if="loader" Cols="7"/>
 
             </BasicTable>
         </div>
-        <Update :Item="item" @onUpdate="indexPaginates(this.current_page, false)" />
-        <Create  @onCreate="indexPaginates(this.current_page, false)" />
 
     </Page>
 </template>
@@ -76,13 +60,20 @@
     import {Alert} from "@/helpers/Config.js";
     import {useConterStore} from "@/store/counter.js";
     import BasicTable from "@/components/all/BasicTable.vue";
-    import {payment_types, payment_typeCreate, payment_typeSearch, payment_typeUpdate, payment_typeShow, payment_typeDelete, payment_typePaginates, payment_typeActives, payment_typeOrderBys} from "@/helpers/api.js";
+    import {
+        payment_types,
+        payment_typeSearchSuppliers,
+        payment_typeSearchCustomers,
+        payment_typeDelete,
+        payment_typePaginates,
+        payment_typeActives,
+        payment_typeCustomers,
+        payment_typeSupplier
+    } from "@/helpers/api.js";
     import GrowingLoader from "@/components/all/GrowingLoader.vue";
     import PrimaryButton from "@/components/all/PrimaryButton.vue";
     import PrimaryIconBtn from "@/components/all/PrimaryIconBtn.vue";
     import ModalCentered from "@/components/all/ModalCentered.vue";
-    import Update from "./update.vue";
-    import Create from "./create.vue";
     import PrimaryBtn from "@/components/all/PrimaryBtn.vue";
     import DefaultInput from "@/ui-components/Forms/DefaultInput.vue";
     import Paginate from "@/components/all/Paginate.vue";
@@ -93,7 +84,7 @@
             Paginate,
             DefaultInput,
             PrimaryBtn,
-            ModalCentered, PrimaryIconBtn, PrimaryButton, GrowingLoader, BasicTable, Page, Update, Create},
+            ModalCentered, PrimaryIconBtn, PrimaryButton, GrowingLoader, BasicTable, Page},
         setup(){
             const counterStore = useConterStore();
             return{counterStore}
@@ -118,7 +109,7 @@
             async indexPaginates(page=1, islaoder = true){
                 try {
                     this.loader = islaoder;
-                    const response = await payment_typePaginates(50, page);
+                    const response = await payment_typeSupplier(50, page);
                     if (response.status){
                         this.current_page = response.data.pagination.current_page;
                         this.last_page = response.data.pagination.last_page;
@@ -136,7 +127,7 @@
                         this.indexPaginates();
                         return true;
                     }
-                    const response = await payment_typeSearch(text);
+                    const response = await payment_typeSearchSuppliers(text);
                     this.items = response.data;
                     this.loader = false;
                     if (!response.status){

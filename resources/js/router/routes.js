@@ -201,6 +201,16 @@ export default[
         permission: 'Selling-index',
         component: () => import('../pages/SellingArxive/print.vue'),
     },
+    {
+        path: '/admin/customer/payments',
+        permission: 'Payments-index',
+        component: () => import('../pages/CustomerPayments/index.vue'),
+    },
+    {
+        path: '/admin/supplier/payments',
+        permission: 'Payments-index',
+        component: () => import('../pages/SupplierPayments/index.vue'),
+    },
 
 
 

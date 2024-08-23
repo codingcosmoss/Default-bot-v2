@@ -195,12 +195,58 @@
             Path="/admin/payment-types"
             v-if="counterStore.hasRole('Payments-index')"
             :ChildLinks="[
-                    {
+                   {
                         title: $t('PaymentTypes'),
                         path: '/admin/payment-types',
-                        icon:'bx bx-desktop',
+                        icon:'bx bxl-paypal',
                         isPermission: this.counterStore.hasRole('PaymentTypes-index')
                     },
+                    {
+                        title: $t('CustomerPayments'),
+                        path: '/admin/customer/payments',
+                        icon:'bx bx-user-pin',
+                        isPermission: this.counterStore.hasRole('Payments-index')
+                    },
+                     {
+                        title: $t('SupplierPayments'),
+                        path: '/admin/supplier/payments',
+                        icon:'bx bx-user-pin',
+                        isPermission: this.counterStore.hasRole('Payments-index')
+                    },
+                ]"
+        />
+        <MenuListButton
+            :Title="$t('Reports')"
+            Name="Reports"
+            Icon="bx bx-credit-card"
+            Path="/admin/payment-types"
+            v-if="counterStore.hasRole('Reports-index')"
+            :ChildLinks="[
+                     {
+                        title: $t('SellingAndBuying'),
+                        path: '/admin/payment-types',
+                        icon:'bx bx-user-pin',
+                        isPermission: this.counterStore.hasRole('Reports-index')
+                    },
+                      {
+                        title: $t('MostSolds'),
+                        path: '/admin/payment-types',
+                        icon:'bx bx-user-pin',
+                        isPermission: this.counterStore.hasRole('Reports-index')
+                    },
+                    {
+                        title: $t('ProfitAndLoss'),
+                        path: '/admin/payment-types',
+                        icon:'bx bx-user-pin',
+                        isPermission: this.counterStore.hasRole('Reports-index')
+                    },
+                     {
+                        title: $t('BusinessProfitandloss'),
+                        path: '/admin/payment-types',
+                        icon:'bx bx-user-pin',
+                        isPermission: this.counterStore.hasRole('Reports-index')
+                    },
+
                 ]"
         />
 

@@ -238,11 +238,15 @@ Route::middleware(['auth:sanctum', 'admin' ])->group(function () {
         Route::get('/index', [\App\Http\Controllers\Api\PaymentTypeController::class, 'index']);
         Route::get('/actives', [\App\Http\Controllers\Api\PaymentTypeController::class, 'activeIndex']);
         Route::get('/paginate/{count}', [\App\Http\Controllers\Api\PaymentTypeController::class, 'getPaginate']);
+        Route::get('/customers/{count}', [\App\Http\Controllers\Api\PaymentTypeController::class, 'getCustomerPaginate']);
+        Route::get('/suppliers/{count}', [\App\Http\Controllers\Api\PaymentTypeController::class, 'getSupplierPaginate']);
         Route::get('/orderBy/{column}/{type}', [\App\Http\Controllers\Api\PaymentTypeController::class, 'orderBy']);
         Route::get('/show/{id}', [\App\Http\Controllers\Api\PaymentTypeController::class, 'show']);
         Route::post('/create', [\App\Http\Controllers\Api\PaymentTypeController::class, 'create']);
         Route::post('/update/{id}', [\App\Http\Controllers\Api\PaymentTypeController::class, 'update']);
         Route::get('/search/{search}', [\App\Http\Controllers\Api\PaymentTypeController::class, 'search']);
+        Route::get('/search/customer/{search}', [\App\Http\Controllers\Api\PaymentTypeController::class, 'searchCustomers']);
+        Route::get('/search/supplier/{search}', [\App\Http\Controllers\Api\PaymentTypeController::class, 'searchSuppliers']);
         Route::get('/delete/{id}', [\App\Http\Controllers\Api\PaymentTypeController::class, 'destroy']);
     });
 
