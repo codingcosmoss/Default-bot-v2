@@ -41,26 +41,41 @@
         </template>
         <template v-slot:left>
             <BasicTable Title=""
-                        :Th="[ $t('No'), $t('MedicineName'),$t('Amount'),$t('Price'),$t('Total'), ''] "
+                        :Th="[ $t('MedicineName'),$t('Batch'),$t('ExpiryDateFinished'),$t('Amount'),$t('Price'),$t('Total'), ''] "
                             Col="col-lg-12"
-
                 >
-                    <tr v-for="(medicine, index) in sellingMedicines">
-                        <td>{{index + 1}}</td>
-                        <td>{{medicine.name}}</td>
+                    <tr v-for="(medicine, index) in sellingMedicines" >
+                        <td class="text-wrap font-size-10" >{{medicine.name}}</td>
                         <td>
-                            <AmountInput
+                            <BasicSelect2
+                                style="min-width: 100px"
                                 Label=""
-                                inputClass="selling_amount_input"
-                                :Name="medicine.id"
-                                Pholder=""
-                                Type="number"
-                                :isError="inputErrors.includes(medicine.id)"
-                                :Value="sellingMedicines[index]['selling_amount']"
-                                @onInput="changeItemAmount(index, $event)"
-                                @onPlus="changeAmount('plus', index)"
-                                @onMinus="changeAmount('minus', index)"
-                            />
+                                :isButton="true"
+                                :Name="'batch_id'+medicine.id"
+                                :Validated="errors"
+                                @onInput="onBatch(index, $event)"
+                            >
+                                <option v-for="batch in medicine.batches" :selected="sellingMedicines[index]['batch_id'] == batch.id" :value="JSON.stringify(batch)" >{{batch.name}}  ({{batch.amount}})
+                                </option>
+                            </BasicSelect2>
+                        </td>
+                        <td>{{sellingMedicines[index]['expiration_date']}}</td>
+                        <td>
+                            <div style="min-width: 130px">
+                                <AmountInput
+                                    Label=""
+                                    inputClass="selling_amount_input "
+                                    :Name="medicine.id"
+                                    Pholder=""
+                                    Type="number"
+                                    :isError="inputErrors.includes(medicine.id)"
+                                    :Value="sellingMedicines[index]['selling_amount']"
+                                    @onInput="changeItemAmount(index, $event)"
+                                    @onPlus="changeAmount('plus', index)"
+                                    @onMinus="changeAmount('minus', index)"
+                                />
+                            </div>
+
                         </td>
                         <td>{{counterStore.formatNumber(medicine.price)}} {{medicine.currency.sign}} </td>
                         <td>{{counterStore.formatNumber(medicine.price * medicine.selling_amount)}} {{medicine.currency.sign}}</td>
@@ -162,7 +177,15 @@
     import Layout from './layout.vue';
     import SellingCard from "@/components/all/SellingCard.vue";
     import BasicTable from "@/components/all/BasicTable.vue";
-    import {medicineActiveSearch, medicinePaginates, customerActives, customers, invoiceCreate, payment_types} from "@/helpers/api.js";
+    import {
+        medicineActiveSearch,
+        medicinePaginates,
+        customerActives,
+        customers,
+        invoiceCreate,
+        payment_typeActives,
+        quantityVerification
+    } from "@/helpers/api.js";
     import {ApiError, Alert} from "@/helpers/Config.js";
     import DefaultInput from "@/ui-components/Forms/DefaultInput.vue";
     import BasicInput from "@/components/all/BasicInput.vue";
@@ -174,9 +197,13 @@
     import Swal from 'sweetalert2'
     import ModalCentered from "@/components/all/ModalCentered.vue";
     import CustomerCreate from "../Customers/create.vue"
+    import BasicSelect from "@/components/all/BasicSelect.vue";
+    import BasicSelect2 from "@/components/all/BasicSelect2.vue";
 
     export default {
         components: {
+            BasicSelect2,
+            BasicSelect,
             ModalCentered,
             DefaultSelect,
             PrimaryBtn,
@@ -189,6 +216,7 @@
         data(){return{
             items: [],
             item: [],
+            searchText: '',
             paginateCount: 10,
             last_page: 1,
             current_page: 1,
@@ -219,6 +247,22 @@
         }},
 
         methods:{
+            onBatch(index, batch){
+                if (!batch){
+                    this.sellingMedicines[index]['batch_id'] = null;
+                    this.sellingMedicines[index]['amount'] = 0;
+                    this.sellingMedicines[index]['selling_amount'] = 0;
+                    this.sellingMedicines[index]['expiration_date'] = '---';
+                }else {
+                    batch = JSON.parse(batch);
+                    this.sellingMedicines[index]['batch_id'] = batch.id;
+                    this.sellingMedicines[index]['amount'] = batch.amount;
+                    this.sellingMedicines[index]['selling_amount'] = 0;
+                    this.sellingMedicines[index]['expiration_date'] = batch.expiry_date_finished;
+                    this.changeAmount('plus', index);
+                }
+
+            },
             onClickSong(){
                 let song = document.querySelector('.onClickSong');
                 // Agar audio ijro etilayotgan bo'lsa
@@ -287,7 +331,7 @@
 
                     let amount = 0;
                     this.sellingMedicines.forEach(e=>{
-                        amount+=e.selling_amount;
+                        amount+= Number(e.selling_amount);
                     })
                     let paymentType = null;
                     if (type == null){
@@ -313,21 +357,47 @@
                         this.dataRefresh()
                         this.onSuccessSong();
                         // Alert('success', this.$t('save'));
-                        this.indexPaginates();
+                        this.search();
                         this.cashPaymentLoader = false;
                         return true;
+                    }else{
+                        this.onErrorSong();
+                        if (response.medicines.length > 0){
+                            this.amountErrorFix(response.medicines);
+                            return false;
+                        }else {
+                            this.errors = response.errors;
+                            this.cashPaymentLoader = false;
+                            return false;
+                        }
                     }
-                    this.errors = response.errors;
-                    Alert('error', this.$t('formError'));
-                    this.cashPaymentLoader = false;
-                    return false;
+
                 }catch(error){
                     ApiError(this, error);
                     this.cashPaymentLoader = false;
                     return false;
                 }
             },
-
+            async amountErrorFix(medicines){
+                medicines.forEach((e) =>{
+                    let index = this.sellingMedicines.findIndex(i=> i.id == e.id );
+                    this.sellingMedicines[index]['selling_amount'] = e.amount;
+                    this.sellingMedicines[index]['amount'] = e.amount;
+                    this.sellingMedicines[index]['batches'] = e.batches;
+                    if (e.amount > 0){
+                        this.sellingMedicines[index]['batch_id'] = e.batches[0]['id'];
+                    }
+                    this.inputErrors.push(e.id);
+                });
+                this.amount_due = 0;
+                Swal.fire({
+                    title: this.$t('SellingError'),
+                    text: "",
+                    icon: "info"
+                });
+                this.search(this.searchText);
+                this.cashPaymentLoader = false;
+            },
             resultSum(){
                 return this.subtotal + this.igta + this.gstResult;
             },
@@ -379,8 +449,9 @@
                 }
             },
             async indexPaymentTypes(){
+                this.sign = this.counterStore.user.currency.sign;
                 try {
-                    const response = await payment_types();
+                    const response = await payment_typeActives();
                     this.paymentTypesArr = response.data;
                 }catch(error){
                     ApiError(this, error);
@@ -388,6 +459,11 @@
             },
             changeAmount(type, index, amount=1){
                 let medicine = this.sellingMedicines[index];
+                if (medicine['batch_id'] == null || medicine['batch_id'] < 1){
+                    this.errors['batch_id'+medicine.id] = 'error';
+                    Alert('error', this.$t('BatchValidated2'));
+                    return;
+                }
                 if (type == 'plus'){
                     if (medicine.amount < medicine.selling_amount + amount){
                         this.onErrorSong();
@@ -399,7 +475,7 @@
                     }
                     this.inputErrors = this.inputErrors.filter(e=> e != medicine['sortId'])
                 }else {
-                    if ( 0 > medicine.selling_amount - amount){
+                    if ( 0 >= medicine.selling_amount - amount){
                         this.onErrorSong();
                         return false
                     }else {
@@ -417,8 +493,7 @@
                 }
                 let index = this.sellingMedicines.findIndex(i => i.id == item.id);
                 if (index != -1){
-                    this.sellingMedicines[index]['selling_amount'] +=1;
-                    this.sumAmount();
+                    this.changeAmount('plus', index)
                     return true;
                 }
 
@@ -426,6 +501,10 @@
                 let newMedicine = { ...item };
                 newMedicine['sortId'] = id;
                 newMedicine['selling_amount'] = 1;
+                newMedicine['expiration_date'] = item.batches[0]['expiry_date_finished'];
+                newMedicine['batch_id'] = item.batches[0]['id'];
+                newMedicine['amount'] = item.batches[0]['amount'];
+                newMedicine['is_error'] = 0;
                 this.sortId = id;
 
                 this.sellingMedicines.push(newMedicine);
@@ -439,15 +518,15 @@
                     return val.amount;
                 }
             },
-            async search(text = ''){
+            async search(val = ''){
                 try {
+                    this.searchText = val;
                     this.loader = true;
                     this.searchMedicines = [];
-                    if (text == ''){
-                        this.indexPaginates();
-                        return true;
+                    if (this.searchText == ''){
+                        this.searchText = 'all';
                     }
-                    const response = await medicineActiveSearch(text);
+                    const response = await medicineActiveSearch(this.searchText);
                     this.searchMedicines = response.data;
                     this.loader = false;
                     if (!response.status){
@@ -474,10 +553,22 @@
                     ApiError(this, error);
                 }
             },
+            async quantityVerification(){
+                try {
+                    this.loader = true;
+                    const response = await quantityVerification();
+                    if (response.status){
+                        await this.search()
+                    }
+                    this.loader = false;
+                }catch(error){
+                    ApiError(this, error);
+                }
+            },
         },
 
         mounted() {
-            this.indexPaginates()
+            this.quantityVerification()
             this.indexCustomers()
             this.indexPaymentTypes()
         }

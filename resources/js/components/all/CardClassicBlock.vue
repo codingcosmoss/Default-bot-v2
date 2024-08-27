@@ -1,6 +1,6 @@
 <template>
 
-    <div class="col-sm-4">
+    <div class="col-sm-3">
         <div class="card">
             <div class="card-body">
                 <div class="d-flex align-items-center mb-3">
@@ -13,7 +13,10 @@
                     <h5 class="font-size-14 mb-0">{{ Title }}</h5>
                 </div>
                 <div class="text-muted mt-4">
-                    <h4>{{Number}} <i class="mdi mdi-chevron-up ms-1 text-success"></i></h4>
+                    <h4 class="d-flex  flex-wrap flex-column">
+                        <p v-for="(currency, index) in Currencies" class="m-0 text-success" >
+                           <span>{{ counterStore.formatNumber(currency.total_amount) }}</span> {{currency.sign}} </p>
+                    </h4>
                     <div class="d-flex">
                         <span class="badge badge-soft-success font-size-12"> {{Share}} </span> <span
                         class="ms-2 text-truncate">{{Text}}</span>
@@ -26,11 +29,21 @@
 </template>
 
 <script>
+import {useConterStore} from "@/store/counter.js";
 export default {
     props: {
         Title: {
             type: [String, Number],
             default: 'Title'
+        },
+        Currencies: {
+            type: [Array, Object],
+            default: [
+                {
+                    total_amount: 1000,
+                    sign: '$',
+                },
+            ]
         },
         Text: {
             type: [String, Number],
@@ -47,8 +60,12 @@ export default {
         Icon: {
             type: String,
             default: 'bx bx-copy-alt'
-        }
+        },
 
-    }
+    },
+    setup(){
+        const counterStore = useConterStore();
+        return{counterStore}
+    },
 }
 </script>

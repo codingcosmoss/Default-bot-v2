@@ -6,6 +6,7 @@ use App\Fields\Store\TextField;
 use App\Http\Resources\ClinicUserResource;
 use App\Http\Resources\ImportedMedicineResource;
 use App\Http\Resources\ReturnedMedicineResource;
+use App\Models\Batch;
 use App\Models\BoxSize;
 use App\Models\ClinicUser;
 use App\Models\Currency;
@@ -107,6 +108,11 @@ class ReturnedMedicineService extends AbstractService
             $importedMedicine->amount = $importedMedicine->amount - $data['returned_amount'];
             $importedMedicine->total_cost = $importedMedicine->total_cost - $newModel->total_cost;
             $importedMedicine->save() != true ? $isSaved = false : '';
+
+            $batch = Batch::where('imported_medicine_id', $importedMedicine->id)
+                ->first();
+            $batch->amount -= $data['returned_amount'];
+            $batch->save() != true ? $isSaved = false : '';
 
             $subtotal += $newModel->total_cost;
             $thisMedicine->changeAmount(Status::$returned, $newModel) == false ? $isSaved = false : '';

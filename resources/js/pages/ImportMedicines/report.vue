@@ -100,6 +100,12 @@ export default
         validator(){
             let dataErrors = [];
             this.medicines.forEach((medicine, index) => {
+
+                if (medicine.batch_name == null || medicine.batch_name.length == 0)
+                {
+                    dataErrors.push('batch'+medicine.sortId);
+                }
+
                 if (medicine.expiry_date_finished == null || this.isDateBeforeToday(medicine.expiry_date_finished))
                 {
                     dataErrors.push('date'+medicine.sortId);
@@ -146,7 +152,7 @@ export default
             inputDate.setHours(0, 0, 0, 0);
 
             // Input sanani hozirgi sanadan oldin yoki yo'qligini tekshiring
-            return inputDate < today;
+            return inputDate <= today;
         },
         async save(){
             try {

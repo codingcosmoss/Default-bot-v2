@@ -224,14 +224,14 @@
             :ChildLinks="[
                      {
                         title: $t('SellingAndBuying'),
-                        path: '/admin/payment-types',
-                        icon:'bx bx-user-pin',
+                        path: '/admin/sale-purchases',
+                        icon:'bx bx-bar-chart-alt',
                         isPermission: this.counterStore.hasRole('Reports-index')
                     },
                       {
                         title: $t('MostSolds'),
-                        path: '/admin/payment-types',
-                        icon:'bx bx-user-pin',
+                        path: '/admin/best-seller',
+                        icon:'bx bx-layer',
                         isPermission: this.counterStore.hasRole('Reports-index')
                     },
                     {

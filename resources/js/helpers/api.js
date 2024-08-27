@@ -496,6 +496,13 @@ export const medicineActiveSearch = async (text) => {
 export const medicineDelete = async (id) => {
     return  GET('/medicine/delete/'+ id );
 };
+export const updateCurrency = async (data) => {
+    return  POST('/update-currency/', data );
+};
+
+export const quantityVerification = async () => {
+    return  POST('/medicine/quantity-verification', null);
+};
 
 // --------------------- medicine finished --------------------------------------------
 
@@ -753,3 +760,12 @@ export const invoiceDelete = async (id) => {
 
 // --------------------- invoice finished --------------------------------------------
 
+export const reportSellings = async (count, page= 1) => {
+    return  GET('/report/sellings/' + count+'?page='+page);
+};
+export const reportPurchases = async (count, page= 1) => {
+    return  GET('/report/purchases/' + count+'?page='+page);
+};
+export const reportBestSellers = async (count, page= 1) => {
+    return  GET('/report/best-sellers/' + count+'?page='+page);
+};

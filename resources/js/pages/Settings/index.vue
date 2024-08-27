@@ -53,15 +53,42 @@
                 <DefaultSelect
                     :Label="$t('Currency')"
                     Name="currency_id"
-                    @onInput="currency_id = $event,  delete this.errors.currency_id"
+                    @onInput="currency_id = JSON.parse($event).id, sign = JSON.parse($event).sign ,  openModal()"
                     :Validated="errors"
                 >
-                    <option v-for="currency in currencies" :selected="currency.id == currency_id" :value="currency.id" >{{currency.title}} ({{currency.sign}})</option>
+                    <option v-for="currency in currencies" :selected="currency.id == currency_id" :value="JSON.stringify(currency)" >{{currency.title}} ({{currency.sign}})</option>
                 </DefaultSelect>
 
-                <PrimaryButton :Loader="loader" @onButton="update">{{$t('Save')}}</PrimaryButton>
 
             </BaseBox>
+            <ModalCentered
+                :Title="$t('NewCurrencyTitle')"
+                ModalName="Currency"
+            >
+                <div class="col-12 mt-3">
+                    <div class="card border border-primary">
+                        <div class="card-body">
+                            <h5 class="card-title">{{$t('Info')}}</h5>
+                            <p class="card-text">{{$t('NewCurrencyInfo')}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-100 d-flex justify-content-center align-items-center gap-3">
+                    <p class="m-0 font-size-20">1{{counterStore.user.currency.sign}}</p>
+                    <p class="m-0 font-size-20">=</p>
+                    <DefaultIconInput
+                        Label=""
+                        Class="col-lg-6 col-sm-6 currency_input"
+                        :Value="counterStore.formatNumber(amount)"
+                        @onInput="onCurrency($event)"
+                    >
+                        {{sign}}
+                    </DefaultIconInput>
+
+                </div>
+
+
+            </ModalCentered>
         </div>
     </Page>
 </template>
@@ -82,12 +109,16 @@
         settingShow,
         settingUpdate,
         settingPaginates,
-        currencys
+        currencys, updateCurrency
     } from "../../helpers/api.js";
     import DefaultSelect from "@/ui-components/Forms/DefaultSelect.vue";
+    import ModalCentered from "@/components/all/ModalCentered.vue";
+    import DefaultIconInput from "@/components/all/DefaultIconInput.vue";
 
     export default {
-        components: {DefaultSelect, PrimaryButton, PrimaryBtn, DefaultInput, ImageInput, Page},
+        components: {
+            DefaultIconInput,
+            ModalCentered, DefaultSelect, PrimaryButton, PrimaryBtn, DefaultInput, ImageInput, Page},
         setup(){
             const counterStore = useConterStore();
             return{counterStore}
@@ -110,9 +141,15 @@
             email:'',
             address: '',
             currency_id: '',
-            currencies: []
+            currencies: [],
+            amount: 0,
+            sign: '',
         }},
         methods:{
+            onCurrency(val){
+                let formatAmount = this.counterStore.inputNumberFormat('currency_input', this.amount, val);
+                this.amount = formatAmount;
+            },
             async index(){
                 try {
                     this.loader = true;
@@ -122,6 +159,10 @@
                 }catch(error){
                     ApiError(this, error);
                 }
+            },
+            openModal(){
+                const myModal = new bootstrap.Modal(document.getElementById('Currency'));
+                myModal.show();
             },
             async getCurrencies(){
                 try {
@@ -215,10 +256,35 @@
                         address: this.address,
                         email: this.email,
                         phone: this.phone,
-                        currency_id: this.currency_id,
                         image: this.image
                     }
                     const response = await settingUpdate(null, data);
+                    if (response.status){
+                        Alert('success', this.$t('update'));
+                        this.counterStore.updateCurrency(response.data.currency)
+                        this.show(response.data.clinic_id);
+                        this.loader = false;
+                        return true;
+                    }
+                    this.errors = response.errors;
+                    Alert('error', this.$t('formError'));
+                    this.loader = false;
+                    return false;
+                }catch(error){
+                    ApiError(this, error);
+                    this.loader = false;
+                    return false;
+                }
+            },
+            async updateCurrency(){
+                try {
+                    this.loader = true;
+                    let data = {
+                        currency_id: this.currency_id,
+                        amount: this.amount,
+                        is_change_medicine: this.is_change_medicine,
+                    }
+                    const response = await updateCurrency( data);
                     if (response.status){
                         Alert('success', this.$t('update'));
                         this.counterStore.updateCurrency(response.data.currency)

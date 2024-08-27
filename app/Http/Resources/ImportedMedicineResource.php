@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Batch;
 use App\Models\Currency;
 use App\Models\RemainingDrug;
 use Illuminate\Http\Request;
@@ -16,20 +17,20 @@ class ImportedMedicineResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $currentAmount = RemainingDrug::where('medicine_id', $this->medicine_id)
-            ->where('clinic_id', $this->clinic_id)
-            ->latest()->first();
-
-        if (!$currentAmount){
+        $batch = Batch::where('imported_medicine_id', $this->id)
+            ->first();
+        $currentAmount = 0;
+        if (!$batch){
             $currentAmount = 0;
         }else{
-            $currentAmount = $currentAmount->amount;
+            $currentAmount = $batch->amount;
         }
         return [
             'id' => $this->id,
             'clinic_id' => $this->clinic_id,
             'document_id' => $this->document_id,
             'document' => $this->document,
+            'batch_name' => $batch->name,
             'supplier_id' => $this->supplier_id,
             'supplier' => $this->supplier,
             'warehouse_id' => $this->warehouse_id,

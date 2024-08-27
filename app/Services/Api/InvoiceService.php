@@ -6,6 +6,10 @@ use App\Fields\Store\TextField;
 use App\Http\Resources\ClinicUserResource;
 use App\Http\Resources\InvoiceShowResource;
 use App\Http\Resources\InvoicesResource;
+use App\Http\Resources\MedicineActivesResource;
+use App\Http\Resources\MedicineResource;
+use App\Http\Resources\SellingReturnedMedicinesResource;
+use App\Models\Batch;
 use App\Models\ClinicUser;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
@@ -134,7 +138,7 @@ class InvoiceService extends AbstractService
 
 
             $data = [
-                'items' => $this->resource::collection($models),
+                'items' => SellingReturnedMedicinesResource::collection($models),
                 'pagination' => [
                     'total' => $models->total(),
                     'per_page' => $models->perPage(),
@@ -191,6 +195,7 @@ class InvoiceService extends AbstractService
 
             DB::beginTransaction();
             $isSaved = true;
+            $errors = [];
             $object = new $this->model;
             $object->clinic_id = $data['clinic_id'];
             $object->user_id = $data['user_id'];
@@ -217,13 +222,22 @@ class InvoiceService extends AbstractService
                 $soldMedicine->amount = $medicine['selling_amount'];
                 $soldMedicine->price = $medicine['price'];
                 $soldMedicine->igta = $medicine['igta'];
+                $soldMedicine->batch_id = $medicine['batch_id'];
                 $soldMedicine->subtotal = $medicine['selling_amount'] *  $medicine['price'];
                 $soldMedicine->gst = ($soldMedicine->price * $data['gst'])/100;
                 $soldMedicine->currency_id = $data['currency_id'];
                 $soldMedicine->one_sum = $soldMedicine->igta + $soldMedicine->gst + $soldMedicine->price;
                 $soldMedicine->result_sum = $soldMedicine->one_sum *  $soldMedicine->amount;
                 $soldMedicine->save() != true ? $isSaved = false : '';
-                $parentMedicine->changeAmount(Status::$selling, $soldMedicine) == false ? $isSaved = false : '';
+
+                $batch = Batch::find($medicine['batch_id']);
+                $batch->amount -= $medicine['selling_amount'];
+                $batch->save() != true ? $isSaved = false : '';
+
+                if ($parentMedicine->changeAmount(Status::$selling, $soldMedicine) == false){
+                    array_push($errors, $medicine['id']);
+                    $isSaved = false;
+                }
 
             }
             $sum = $data['subtotal'] - $object->igta;
@@ -254,11 +268,16 @@ class InvoiceService extends AbstractService
                 ];
             }else{
                 DB::rollBack();
+                if (count($errors) > 0){
+                    $errors = Medicine::whereIn('id', $errors)->get();
+                    $errors = MedicineActivesResource::collection($errors);
+                }
                 return [
                     'status' => false,
                     'code' => 403,
                     'message' => 'Server error',
-                    'data' => null
+                    'data' => null,
+                    'medicines' => $errors
                 ];
             }
 
@@ -383,6 +402,9 @@ class InvoiceService extends AbstractService
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     public function returnMedicine(array $data)
     {
         try {
@@ -432,6 +454,8 @@ class InvoiceService extends AbstractService
                $soldMedicine->save() != true ? $isSaved = false : '';
 
                $parentMedicine = Medicine::find($soldMedicine->medicine_id);
+
+
                $returnMedicine = new SellingReturnedMedicine();
                $returnMedicine->clinic_id = auth()->user()->clinic_id;
                $returnMedicine->user_id = auth()->user()->id;
@@ -446,8 +470,11 @@ class InvoiceService extends AbstractService
                $returnMedicine->currency_id = $soldMedicine->currency_id;
                $returnMedicine->save() != true ? $isSaved = false : '';
 
-               $parentMedicine->changeAmount(Status::$invoiceReturned, $returnMedicine) == false ? $isSaved = false : '';
+               $batch = Batch::find($soldMedicine->batch_id);
+               $batch->amount += $data['return_amount'];
+               $batch->save() != true ? $isSaved = false : '';
 
+               $parentMedicine->changeAmount(Status::$invoiceReturned, $returnMedicine) == false ? $isSaved = false : '';
                $sum = $data['return_amount'] * $soldMedicine->one_sum;
            }
 
@@ -478,7 +505,6 @@ class InvoiceService extends AbstractService
                     $invoice->must_paid = $subtotal - $amountPaid;
                 }
             }
-
             $invoice->save() != true ? $isSaved = false : '';
 
             if ($data['return_price'] > 0){

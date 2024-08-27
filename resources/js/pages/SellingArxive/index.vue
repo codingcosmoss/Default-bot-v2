@@ -304,7 +304,7 @@
                         this.errors['return_price'] = this.$t('ReturnedMaxError2')
                         return;
                     }
-                    this.returnLoader = true;
+                    // this.returnLoader = true;
 
                     let data = {
                         sold_medicine_id: this.medicine_id,
@@ -315,6 +315,7 @@
                     }
 
                     const response = await invoiceReturnMedicine(data);
+                    console.log(data)
                     if (response.status){
                         this.counterStore.hiddenModal('returnMedicine');
                         Alert('success', this.$t('create'));

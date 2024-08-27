@@ -6,7 +6,9 @@ use App\Fields\Store\TextField;
 use App\Http\Resources\ClinicUserResource;
 use App\Http\Resources\SettingsResources;
 use App\Models\ClinicUser;
+use App\Models\Medicine;
 use App\Models\Setting;
+use Illuminate\Support\Facades\DB;
 use Mockery\Exception;
 
 
@@ -37,7 +39,14 @@ class SettingService extends AbstractService
             TextField::make('email')->setRules('nullable|string'),
             TextField::make('address')->setRules('nullable|string'),
             TextField::make('clinic_id')->setRules('nullable|integer'),
-            TextField::make('currency_id')->setRules('nullable|string'),
+        ];
+    }
+    public function updateCurrencyFields()
+    {
+        return [
+            TextField::make('currency_id')->setRules('required|integer'),
+            TextField::make('amount')->setRules('required|numeric'),
+            TextField::make('is_change_medicine')->setRules('required|integer'),
         ];
     }
     public function show($id)
@@ -85,7 +94,6 @@ class SettingService extends AbstractService
                     'data' => null
                 ];
             }
-            $item = $this->model::where('clinic_id', auth()->user()->clinic_id)->first();
             $validator = $this->dataValidator($data, $this->updateFields());
             $imageValidator = $this->dataValidator($data, $this->imageFields());
 
@@ -97,18 +105,74 @@ class SettingService extends AbstractService
                     'errors' => $validator['validator']
                 ];
             }
+            $item = $this->model::where('clinic_id', auth()->user()->clinic_id)->first();
             $data = $validator['data'];
             $data['phone'] = isset($data['phone']) ? $data['phone'] : '+(998)';
             $data['email'] = isset($data['email']) ? $data['email'] : 'example@email.com';
             $data['address'] = isset($data['address']) ? $data['address'] : '';
             $data['clinic_id'] = auth()->user()->clinic_id;
-            $data['currency_id'] = isset($data['currency_id']) ? $data['currency_id'] : 1;
             foreach ($this->updateFields() as $field) {
                 $field->fill($item, $data);
             }
             $item->save();
             if (!$imageValidator['status']) {
                 $this->uploadImagesOne($item, $image);
+            }
+
+            return [
+                'status' => true,
+                'code' => 200,
+                'message' => 'Success',
+                'data' => new $this->resource($item)
+            ];
+
+        }catch (Exception $e){
+            return [
+                'status' => false,
+                'code' => $e->getCode(),
+                'message' => $e->getMessage(),
+                'data' => null
+            ];
+        }
+    }
+    public function updateCurrency(array $data)
+    {
+        try {
+            if (!$this->hasPermission('update')){
+                return [
+                    'status' => false,
+                    'code' => 403,
+                    'message' => 'Root access is not allowed ',
+                    'data' => null
+                ];
+            }
+
+            $validator = $this->dataValidator($data, $this->updateFields());
+
+            if ($validator['status']) {
+                return [
+                    'status' => false,
+                    'code' => 422,
+                    'message' => 'Validator error',
+                    'errors' => $validator['validator']
+                ];
+            }
+
+            $data = $validator['data'];
+            $item = $this->model::where('clinic_id', auth()->user()->clinic_id)->first();
+            $item->currency_id = $data['currency_id'];
+            $item->save();
+
+            if ($data['is_change_medicine'] == 1){
+                Medicine::withoutTrashed()->each(function ($medicine) use ($data) {
+                    $medicine->update([
+                        'price' => $medicine->price * $data['amount'],
+                        'buy_price' => $medicine->buy_price * $data['amount'],
+                        'selling_price' => $medicine->selling_price * $data['amount'],
+                        'vat' => $medicine->vat * $data['amount'],
+                        'igta' => $medicine->igta * $data['amount'],
+                    ]);
+                });
             }
 
             return [

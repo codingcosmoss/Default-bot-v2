@@ -77,3 +77,6 @@ a{
 .table_image{
     cursor: pointer ;
 }
+.selling_error{
+    background-color: #f46a6a !important;
+}

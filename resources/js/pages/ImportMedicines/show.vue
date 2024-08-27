@@ -18,6 +18,7 @@
                 :Th="[$t('No'),
                     $t('Picture'),
                     $t('ModalName'),
+                    $t('Batch'),
                     $t('ExpiryDateFinished'),
                     $t('BoxSize'),
                     $t('BuyPrice'),
@@ -38,6 +39,9 @@
                     <td>
                         <p class="m-0" style=" text-wrap: wrap">{{ item.medicine.name }}</p>
                         <p class="font-size-10 m-0" style="text-wrap: wrap">{{ item.medicine.generic_name }}</p>
+                    </td>
+                    <td>
+                        {{item.batch_name}}
                     </td>
                     <td>
                         {{item.expiry_date_finished}}
@@ -63,7 +67,7 @@
                     </td>
 
                 </tr>
-                <GrowingLoader v-if="loader" Cols="10"/>
+                <GrowingLoader v-if="loader" Cols="11"/>
 
             </BasicTable>
             <ToPay></ToPay>

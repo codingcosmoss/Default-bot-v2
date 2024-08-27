@@ -66,7 +66,7 @@ class DefaultDataSeeder extends Seeder
 
 
             Setting::create([
-                'name' => 'Coding Cosmos',
+                'name' => 'Pharma plus',
                 'address' => 'Uzbekistan',
                 'phone' => '+(998) 993645621',
                 'currency_id' => Currency::first()->id,

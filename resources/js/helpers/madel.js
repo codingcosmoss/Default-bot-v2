@@ -1,32 +1,32 @@
-// --------------------- invoice started--------------------------------------------
+// --------------------- report started--------------------------------------------
 
-export const invoices = async () => {
-    return  GET('/invoice/index');
+export const reports = async () => {
+    return  GET('/report/index');
 };
-export const invoiceActives = async () => {
-    return  GET('/invoice/actives');
+export const reportActives = async () => {
+    return  GET('/report/actives');
 };
-export const invoicePaginates = async (count, page= 1) => {
-    return  GET('/invoice/paginate/' + count+'?page='+page);
+export const reportPaginates = async (count, page= 1) => {
+    return  GET('/report/paginate/' + count+'?page='+page);
 };
-export const invoiceOrderBys = async (column, type) => {
-    return  GET('/invoice/orderBy/' + column + '/' + type);
+export const reportOrderBys = async (column, type) => {
+    return  GET('/report/orderBy/' + column + '/' + type);
 };
-export const invoiceShow = async (id) => {
-    return  GET('/invoice/show/'+id);
+export const reportShow = async (id) => {
+    return  GET('/report/show/'+id);
 };
-export const invoiceCreate = async (data) => {
-    return  POST('/invoice/create', data );
+export const reportCreate = async (data) => {
+    return  POST('/report/create', data );
 };
-export const invoiceUpdate = async (id, data) => {
-    return  POST('/invoice/update/'+id, data );
+export const reportUpdate = async (id, data) => {
+    return  POST('/report/update/'+id, data );
 };
-export const invoiceSearch = async (text) => {
-    return  GET('/invoice/search/' + text );
+export const reportSearch = async (text) => {
+    return  GET('/report/search/' + text );
 };
-export const invoiceDelete = async (id) => {
-    return  GET('/invoice/delete/'+ id );
+export const reportDelete = async (id) => {
+    return  GET('/report/delete/'+ id );
 };
 
-// --------------------- invoice finished --------------------------------------------
+// --------------------- report finished --------------------------------------------
 

@@ -19,6 +19,7 @@
                 :Th="[$t('No'),
                     $t('Picture'),
                     $t('ModalName'),
+                    $t('Batch'),
                     $t('ExpiryDateFinished'),
                     $t('BoxSize'),
                     $t('BuyPrice'),
@@ -36,9 +37,21 @@
                         <div class="table_image"  :style="'background-image: url('+ item.image[0].url +')'"></div>
                     </td>
                     <td>
-                        <p class="m-0" style=" text-wrap: wrap">{{ item.name }}</p>
+                        <p class="m-0" style=" text-wrap: wrap; min-width: 150px">{{ item.name }}</p>
                         <p class="font-size-10 m-0" style="text-wrap: wrap" >{{ item.generic_name }}</p>
 
+                    </td>
+                    <td>
+                        <BasicInput
+                            Label=""
+                            style="max-width: 150px"
+                            Name="batch_name"
+                            :Pholder="$t('Batch')"
+                            Type="text"
+                            :Value="medicines[index]['batch_name']"
+                            :Validated="this.dataErrors.includes('batch'+item.sortId) ? errors : '' "
+                            @onInput="medicines[index]['batch_name'] = $event, validator(item, index)"
+                        />
                     </td>
                     <td>
                         <BasicInput
@@ -47,7 +60,7 @@
                             Type="date"
                             :Value="medicines[index]['expiry_date_finished']"
                             :Validated="this.dataErrors.includes('date'+item.sortId) ? errors : '' "
-                            @onInput="medicines[index]['expiry_date_finished'] = $event"
+                            @onInput="medicines[index]['expiry_date_finished'] = $event, validator(item, index)"
                         />
                     </td>
                     <td>
@@ -75,7 +88,9 @@
                     </td>
                     <td>
                         <BasicInput
+                            style="max-width: 120px"
                             Label=""
+                            :Pholder="$t('Amount')"
                             Name="buy_amount"
                             :Validated="this.dataErrors.includes('buy_amount'+item.sortId) ? errors : '' "
                             Type="number"
@@ -186,6 +201,7 @@
             type: 'desc',
             errors: {
                 date: this.$t('dateRequired'),
+                batch_name: this.$t('BatchValidated'),
                 buy_amount: this.$t('buyAmountError'),
                 buy_price: this.$t('buyPriceError')
             },
@@ -207,6 +223,60 @@
 
         }},
         methods:{
+            validator(medicine, index){
+                let listErrors = [];
+                if (medicine.batch_name == null || medicine.batch_name.length == 0)
+                {
+                    listErrors.push('batch'+medicine.sortId);
+                }
+
+                if (medicine.expiry_date_finished == null || this.isDateBeforeToday(medicine.expiry_date_finished))
+                {
+                    listErrors.push('date'+medicine.sortId);
+                }
+                if (!this.isNumber(medicine.buy_price))
+                {
+                    listErrors.push('buy_price'+medicine.sortId);
+                }
+                if (!this.isNumber(medicine.buy_amount) || medicine.buy_amount <= 0)
+                {
+                    listErrors.push('buy_amount'+medicine.sortId);
+                }
+                this.dataErrors = listErrors;
+                if (dataErrors.length > 0 || this.medicines == []){
+                    Alert('error', this.$t('formError'))
+                    return false;
+                }else if(this.paid > this.subtotal){
+                    Alert('error', this.$t('TheIncreased'))
+                    return false;
+                }else if(this.paid > 0 && this.payment_type_id < 1){
+                    Alert('error', this.$t('PaymentTyperequired'))
+                    return false;
+                }
+                return true;
+            },
+            isNumber(value) {
+                // Agar value string bo'lsa, raqamga aylantirishga harakat qilish
+                const number = parseFloat(value);
+                // NaN yoki typeof tekshirish orqali raqam ekanligini aniqlash
+                return !isNaN(number) && typeof number === 'number';
+            },
+            isDateBeforeToday(dateString) {
+                // Parametr sifatida kelgan sana satrini Date obyektiga o'girib oling
+                const inputDate = new Date(dateString);
+
+                // Hozirgi sanani Date obyektiga o'girib oling
+                const today = new Date();
+
+                // Hozirgi sananing vaqtini nolga qaytarib oling (faqat sanani hisobga olish uchun)
+                today.setHours(0, 0, 0, 0);
+
+                // Input sanani vaqtini ham nolga qaytarib oling (faqat sanani hisobga olish uchun)
+                inputDate.setHours(0, 0, 0, 0);
+
+                // Input sanani hozirgi sanadan oldin yoki yo'qligini tekshiring
+                return inputDate <= today;
+            },
             deleteError(id){
                 this.isChange = !this.isChange;
                 this.dataErrors = this.dataErrors.filter(number => (number != 'date'+id && number != 'buy_price'+id && number != 'bu_amount'+id ));
@@ -228,8 +298,8 @@
             changePrice(price, index){
                 let newMedicine = { ...this.medicines[index] }; // Yangi nusxa yaratish
                 let amount = this.counterStore.inputNumberFormat('medicinePrice' + index, newMedicine['buy_price'], price);
-                console.log('Amount:',amount);
                 newMedicine['buy_price'] = amount;
+                newMedicine['batch_name'] = '';
                 this.medicines[index] = newMedicine; // Yangi nusxani yangilash
             },
             addItem(item) {

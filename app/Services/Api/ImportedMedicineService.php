@@ -5,6 +5,7 @@ namespace App\Services\Api;
 use App\Fields\Store\TextField;
 use App\Http\Resources\ClinicUserResource;
 use App\Http\Resources\ImportedMedicineResource;
+use App\Models\Batch;
 use App\Models\BoxSize;
 use App\Models\ClinicUser;
 use App\Models\Currency;
@@ -115,6 +116,15 @@ class ImportedMedicineService extends AbstractService
 
                 }
 
+                $newBatch = new Batch();
+                $newBatch->name = $medicine['batch_name'];
+                $newBatch->clinic_id = $document->clinic_id;
+                $newBatch->medicine_id = $medicine['id'];
+                $newBatch->document_id = $document->id;
+                $newBatch->amount = $medicine['buy_amount'];
+                $newBatch->expiry_date_finished = $medicine['expiry_date_finished'];
+                $newBatch->save() != true ? $isSaved = false : '';
+
                 $newModel = new ImportedMedicine();
                 $newModel->clinic_id = $data['clinic_id'];
                 $newModel->document_id = $data['document_id'];
@@ -131,6 +141,9 @@ class ImportedMedicineService extends AbstractService
                     $isSaved = false;
                     break;
                 }
+                $newBatch->imported_medicine_id = $newModel->id;
+                $newBatch->save() != true ? $isSaved = false : '';
+
                 $subtotal += $newModel->total_cost;
 
                 $thisMedicine->changeAmount(Status::$import, $newModel);

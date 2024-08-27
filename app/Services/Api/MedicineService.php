@@ -4,11 +4,15 @@ namespace App\Services\Api;
 
 use App\Fields\Store\TextField;
 use App\Http\Resources\ClinicUserResource;
+use App\Http\Resources\MedicineActivesResource;
 use App\Http\Resources\MedicineResource;
+use App\Models\Batch;
 use App\Models\ClinicUser;
 use App\Models\Medicine;
 use App\Models\Setting;
 use App\Traits\Status;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Mockery\Exception;
 
 
@@ -76,7 +80,26 @@ class MedicineService extends AbstractService
             TextField::make('status')->setRules('nullable|integer'),
         ];
     }
+    public function getMedicinesCollection(array $data)
+    {
+        if (!$this->hasPermission('index')){
+            return [
+                'status' => false,
+                'code' => 403,
+                'message' => 'Root access is not allowed ',
+                'data' => null
+            ];
+        }
 
+        $data = $this->model::whereIn('id', $data['medicines'])->get();
+
+        return [
+            'status' => true,
+            'message' => 'Success',
+            'statusCode' => 200,
+            'data' => MedicineActivesResource::collection($data)
+        ];
+    }
     public function store(array $data, $image = null)
     {
         try {
@@ -217,7 +240,7 @@ class MedicineService extends AbstractService
             ];
         }
 
-        if ($this->isClinic){
+        if ($search != 'all'){
             $data = $this->model::where(function ($query) use ($search) {
                 foreach ($this->columns as $column) {
                     $query->orWhere($column, 'like', '%' . $search . '%');
@@ -228,21 +251,66 @@ class MedicineService extends AbstractService
                 ->limit(10)
                 ->get();
         }else{
-            $data = $this->model::where(function ($query) use ($search) {
-                foreach ($this->columns as $column) {
-                    $query->orWhere($column, 'like', '%' . $search . '%');
-                }
-            })
+            $data = $this->model::where('clinic_id', auth()->user()->clinic_id)
                 ->where('status', Status::$status_active)
                 ->limit(10)
                 ->get();
         }
 
+
         return [
             'status' => true,
             'message' => 'Success',
             'statusCode' => 200,
-            'data' => $this->resource::collection($data)
+            'data' => MedicineActivesResource::collection($data)
         ];
+    }
+    public function quantityVerification()
+    {
+        try {
+            DB::beginTransaction();
+            $isSaved = true;
+            $batches = Batch::where('is_expiration', Status::$status_active)
+                ->where('amount','>', 0)
+                ->where('expiry_date_finished', '<=', Carbon::now())
+                ->get();
+
+            foreach ($batches as $batch){
+                $batchModel = Batch::find($batch->id);
+                $batchModel->is_expiration = Status::$status_inactive;
+                $batchModel->save() != true ? $isSaved = false : '';
+
+                $medicine = Medicine::find($batch->medicine_id);
+                $medicine->changeAmount(Status::$returned, $batchModel) != true ? $isSaved = false : '';
+
+            }
+
+            if ($isSaved){
+                DB::commit();
+                return [
+                    'status' => true,
+                    'code' => 200,
+                    'message' => 'Success',
+                    'data' => null
+                ];
+            }else{
+                DB::rollBack();
+                return [
+                    'status' => false,
+                    'code' => 200,
+                    'message' => 'Server error',
+                    'data' => null
+                ];
+            }
+
+
+        }catch (Exception $e){
+            return [
+                'status' => false,
+                'code' => $e->getCode(),
+                'message' => $e->getMessage(),
+                'data' => null
+            ];
+        }
     }
 }

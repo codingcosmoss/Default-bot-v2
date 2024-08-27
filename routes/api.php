@@ -90,6 +90,7 @@ Route::middleware(['auth:sanctum', 'admin' ])->group(function () {
         Route::get('/orderBy/{column}/{type}', [\App\Http\Controllers\Api\SettingController::class, 'orderBy']);
         Route::get('/show/{id}', [\App\Http\Controllers\Api\SettingController::class, 'show']);
         Route::post('/create', [\App\Http\Controllers\Api\SettingController::class, 'create']);
+        Route::post('/update-currency', [\App\Http\Controllers\Api\SettingController::class, 'updateCurrency']);
         Route::post('/update/{id}', [\App\Http\Controllers\Api\SettingController::class, 'update']);
         Route::get('/search/{search}', [\App\Http\Controllers\Api\SettingController::class, 'search']);
         Route::get('/delete/{id}', [\App\Http\Controllers\Api\SettingController::class, 'destroy']);
@@ -219,6 +220,8 @@ Route::middleware(['auth:sanctum', 'admin' ])->group(function () {
         Route::get('/active-search/{search}', [\App\Http\Controllers\Api\MedicineController::class, 'activeSearch']);
         Route::get('/search/{search}', [\App\Http\Controllers\Api\MedicineController::class, 'search']);
         Route::get('/delete/{id}', [\App\Http\Controllers\Api\MedicineController::class, 'destroy']);
+
+        Route::post('/quantity-verification', [\App\Http\Controllers\Api\MedicineController::class, 'quantityVerification']);
     });
 
 
@@ -313,6 +316,12 @@ Route::middleware(['auth:sanctum', 'admin' ])->group(function () {
         Route::post('/search', [\App\Http\Controllers\Api\InvoiceController::class, 'searchDate']);
         Route::post('/return-search', [\App\Http\Controllers\Api\InvoiceController::class, 'returnSearchDate']);
         Route::get('/delete/{id}', [\App\Http\Controllers\Api\InvoiceController::class, 'destroy']);
+    });
+
+    Route::prefix('/report')->group(function () {
+        Route::get('/sellings/{count}', [\App\Http\Controllers\Api\ReportController::class, 'getSallings']);
+        Route::get('/purchases/{count}', [\App\Http\Controllers\Api\ReportController::class, 'getPurchases']);
+        Route::get('/best-sellers/{count}', [\App\Http\Controllers\Api\ReportController::class, 'getBestSellers']);
     });
 
 

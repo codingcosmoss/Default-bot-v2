@@ -19,6 +19,7 @@ use App\Models\SellingPayment;
 use App\Models\SizeType;
 use App\Models\Warehouse;
 use App\Models\WarehouseCategory;
+use App\Traits\Status;
 use Mockery\Exception;
 
 
@@ -199,6 +200,39 @@ class PaymentTypeService extends AbstractService
             'statusCode' => 200,
             'data' => SupplierPaymentsResource::collection($data)
         ];
+    }
+
+    public function activeIndex()
+    {
+        try {
+            if (!$this->hasPermission('index')){
+                return [
+                    'status' => false,
+                    'code' => 403,
+                    'message' => 'Root access is not allowed ',
+                    'data' => null
+                ];
+            }
+
+            $data = $this->model::where('clinic_id', auth()->user()->clinic_id)
+                ->where('status', Status::$status_active)
+                ->orWhere('status', Status::$default)
+                ->get();
+
+            return [
+                'status' => true,
+                'code' => 200,
+                'message' => 'Success',
+                'data' => $data
+            ];
+        }catch (Exception $e){
+            return [
+                'status' => false,
+                'code' => $e->getCode(),
+                'message' => $e->getMessage(),
+                'data' => null
+            ];
+        }
     }
 
 }

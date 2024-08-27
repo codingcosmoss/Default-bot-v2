@@ -211,7 +211,14 @@ export default[
         permission: 'Payments-index',
         component: () => import('../pages/SupplierPayments/index.vue'),
     },
-
-
-
+    {
+        path: '/admin/sale-purchases',
+        permission: 'Reports-index',
+        component: () => import('../pages/SalePurchases/index.vue'),
+    },
+    {
+        path: '/admin/best-seller',
+        permission: 'Reports-index',
+        component: () => import('../pages/BestSellers/index.vue'),
+    },
 ]

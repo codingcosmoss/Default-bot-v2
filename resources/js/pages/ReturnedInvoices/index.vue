@@ -42,14 +42,14 @@
                     <td>{{ ((current_page - 1) * paginateCount) +  i + 1 }}</td>
                     <td>{{ item.name }}</td>
                     <td>{{ counterStore.formatDate(item.created_at) }}</td>
-                    <td>#{{item.id }}</td>
+                    <td>#{{item.invoice_id }}</td>
                     <td>{{ item.customer.name }}</td>
                     <td>{{ item.user.name }}</td>
                     <td>{{ counterStore.formatNumber(item.amount) }}</td>
                     <td>{{ counterStore.formatNumber(item.subtotal) }} {{item.currency.sign}}</td>
 
                     <td>
-                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/returned/invoices/show', query:{id: item.id}})" Icon="bx bx-show"/>
+                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/returned/invoices/show', query:{id: item.invoice_id}})" Icon="bx bx-show"/>
                         <PrimaryIconBtn v-if="counterStore.hasRole('invoices-delete')" @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
                     </td>
 
