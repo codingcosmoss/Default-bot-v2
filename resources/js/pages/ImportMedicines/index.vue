@@ -98,7 +98,7 @@
                             @onInput="medicines[index]['buy_amount'] = $event, isChange = !isChange"
                         />
                     </td>
-                    <td>{{ counterStore.formatNumber(Number(item.buy_price) * Number(item.buy_amount))}} {{item.currency.sign}}</td>
+                    <td>{{ counterStore.formatNumber( (Number(item.buy_price) * Number(item.buy_amount)).toFixed(2) )}} {{item.currency.sign}}</td>
 
                     <td>
                         <PrimaryIconBtn v-if="counterStore.hasRole('Documents-update')" @click="change = item.id, medicines.splice(index, 1), deleteError(item.sortId)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>

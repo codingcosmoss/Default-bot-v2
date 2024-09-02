@@ -15,6 +15,16 @@ class ReportController extends AbstractController
         $data = $this->service->getSallings($count);
         return $this->sendResponse($data);
     }
+    public function dashboardCart1()
+    {
+        $data = $this->service->dashboardCart1();
+        return $this->sendResponse($data);
+    }
+    public function dashboardCart2()
+    {
+        $data = $this->service->dashboardCart2();
+        return $this->sendResponse($data);
+    }
 
     public function getPurchases($count)
     {

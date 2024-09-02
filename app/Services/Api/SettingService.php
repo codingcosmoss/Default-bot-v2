@@ -46,7 +46,6 @@ class SettingService extends AbstractService
         return [
             TextField::make('currency_id')->setRules('required|integer'),
             TextField::make('amount')->setRules('required|numeric'),
-            TextField::make('is_change_medicine')->setRules('required|integer'),
         ];
     }
     public function show($id)
@@ -147,7 +146,7 @@ class SettingService extends AbstractService
                 ];
             }
 
-            $validator = $this->dataValidator($data, $this->updateFields());
+            $validator = $this->dataValidator($data, $this->updateCurrencyFields());
 
             if ($validator['status']) {
                 return [
@@ -163,17 +162,28 @@ class SettingService extends AbstractService
             $item->currency_id = $data['currency_id'];
             $item->save();
 
-            if ($data['is_change_medicine'] == 1){
-                Medicine::withoutTrashed()->each(function ($medicine) use ($data) {
-                    $medicine->update([
-                        'price' => $medicine->price * $data['amount'],
-                        'buy_price' => $medicine->buy_price * $data['amount'],
-                        'selling_price' => $medicine->selling_price * $data['amount'],
-                        'vat' => $medicine->vat * $data['amount'],
-                        'igta' => $medicine->igta * $data['amount'],
-                    ]);
-                });
-            }
+//            Medicine::withoutTrashed()->each(function ($medicine) use ($data) {
+//                $medicine->update([
+//                    'price' => $medicine->price * $data['amount'],
+//                    'buy_price' => $medicine->buy_price * $data['amount'],
+//                    'selling_price' => $medicine->selling_price * $data['amount'],
+//                    'vat' => $medicine->vat * $data['amount'],
+//                    'igta' => $medicine->igta * $data['amount'],
+//                    'currency_id' => $data['currency_id'],
+//                ]);
+//            });
+
+            Medicine::withoutTrashed()->each(function ($medicine) use ($data) {
+                $medicine->update([
+                    'price' => round($medicine->price * $data['amount'], 2),
+                    'buy_price' => round($medicine->buy_price * $data['amount'], 2),
+                    'selling_price' => round($medicine->selling_price * $data['amount'], 2),
+                    'vat' => round($medicine->vat * $data['amount'], 2),
+                    'igta' => round($medicine->igta * $data['amount'], 2),
+                    'currency_id' => $data['currency_id'],
+                ]);
+            });
+
 
             return [
                 'status' => true,

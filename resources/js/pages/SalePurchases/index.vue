@@ -27,8 +27,8 @@
                     <td>{{ ((selling_current_page - 1) * paginateCount) +  i + 1 }}</td>
                     <td>{{ item.date }}</td>
                     <td>{{ counterStore.formatNumber(item.total_amount) }}</td>
-                    <td>{{ counterStore.formatNumber(item.total_subtotal) }} {{item.currency.sign}}</td>
-                    <td>{{ counterStore.formatNumber(item.must_paid) }} {{item.currency.sign}}</td>
+                    <td>{{ counterStore.formatNumber(item.total_subtotal.toFixed(2)) }} {{item.currency.sign}}</td>
+                    <td>{{ counterStore.formatNumber(item.must_paid.toFixed(2)) }} {{item.currency.sign}}</td>
                 </tr>
                 <Paginate
                     Cols="7"
@@ -65,8 +65,8 @@
                 <tr v-for="(item,i) in purchasesItems" >
                     <td>{{ ((current_page - 1) * paginateCount) +  i + 1 }}</td>
                     <td>{{ item.date }}</td>
-                    <td>{{ counterStore.formatNumber(item.total_subtotal) }} {{item.currency.sign}}</td>
-                    <td>{{ counterStore.formatNumber(item.must_paid) }} {{item.currency.sign}}</td>
+                    <td>{{ counterStore.formatNumber(item.total_subtotal.toFixed(2)) }} {{item.currency.sign}}</td>
+                    <td>{{ counterStore.formatNumber(item.must_paid.toFixed(2)) }} {{item.currency.sign}}</td>
                 </tr>
                 <Paginate
                     Cols="7"
@@ -175,7 +175,7 @@
                         this.sellingItems.forEach(e=>{
                             this.sellings.push({
                                 x: e.date.split('-')[1] +'-'+e.date.split('-')[2]+'-'+e.date.split('-')[0] + " GMT",
-                                y: e.total_subtotal
+                                y: e.total_subtotal.toFixed(2)
                             });
                         })
                         if (islaoder){
@@ -198,7 +198,7 @@
                         this.purchasesItems.forEach(e=>{
                             this.purchases.push({
                                 x: e.date.split('-')[1] +'-'+e.date.split('-')[2]+'-'+e.date.split('-')[0] + " GMT",
-                                y: e.total_subtotal
+                                y: e.total_subtotal.toFixed(2)
                             });
                         })
                         if (islaoder){

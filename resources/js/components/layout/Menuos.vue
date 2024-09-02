@@ -234,18 +234,18 @@
                         icon:'bx bx-layer',
                         isPermission: this.counterStore.hasRole('Reports-index')
                     },
-                    {
-                        title: $t('ProfitAndLoss'),
-                        path: '/admin/payment-types',
-                        icon:'bx bx-user-pin',
-                        isPermission: this.counterStore.hasRole('Reports-index')
-                    },
-                     {
-                        title: $t('BusinessProfitandloss'),
-                        path: '/admin/payment-types',
-                        icon:'bx bx-user-pin',
-                        isPermission: this.counterStore.hasRole('Reports-index')
-                    },
+                    // {
+                    //     title: $t('ProfitAndLoss'),
+                    //     path: '/admin/payment-types',
+                    //     icon:'bx bx-user-pin',
+                    //     isPermission: this.counterStore.hasRole('Reports-index')
+                    // },
+                    //  {
+                    //     title: $t('BusinessProfitandloss'),
+                    //     path: '/admin/payment-types',
+                    //     icon:'bx bx-user-pin',
+                    //     isPermission: this.counterStore.hasRole('Reports-index')
+                    // },
 
                 ]"
         />

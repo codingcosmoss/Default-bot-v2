@@ -44,7 +44,7 @@
                                                 <p class="text-muted mb-0">{{$t('ImportedMedicines')}}</p>
                                             </div>
                                             <div class="col-6">
-                                                <h5 class="font-size-15" v-for="paid in supplier.paid" >{{paid.total_amount}} {{paid.sign}}</h5>
+                                                <h5 class="font-size-15" v-for="paid in supplier.paid" >{{paid.total_amount.toFixed(2)}} {{paid.sign}}</h5>
                                                 <p class="text-muted mb-0">{{ $t('Paid') }}</p>
                                             </div>
                                         </div>
@@ -79,13 +79,13 @@
                                     <tr>
                                         <th scope="row">{{$t('Paid')}} :</th>
                                         <td>
-                                            <p class="m-0" v-for="paid in supplier.paid">{{paid.total_amount}} {{paid.sign}}</p>
+                                            <p class="m-0" v-for="paid in supplier.paid">{{paid.total_amount.toFixed(2)}} {{paid.sign}}</p>
                                         </td>
                                     </tr>
                                     <tr>
                                         <th scope="row">{{$t('Loan')}} :</th>
                                         <td>
-                                            <p class="m-0" v-for="loan in supplier.loan">{{loan.total_amount}} {{loan.sign}}</p>
+                                            <p class="m-0" v-for="loan in supplier.loan">{{loan.total_amount.toFixed(2)}} {{loan.sign}}</p>
                                         </td>
                                     </tr>
 

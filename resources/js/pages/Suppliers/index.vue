@@ -51,10 +51,10 @@
                     <td>{{ item.address }}</td>
                     <td>{{ counterStore.formatNumber(item.imported_medicines) }}</td>
                     <td>
-                        <p v-for="paid in item.paid" class="m-0">{{ counterStore.formatNumber(paid.total_amount) }} {{paid.sign}}</p>
+                        <p v-for="paid in item.paid" class="m-0">{{ counterStore.formatNumber(paid.total_amount.toFixed(2)) }} {{paid.sign}}</p>
                     </td>
                     <td>
-                        <p v-for="loan in item.loan" class="m-0">{{ counterStore.formatNumber(loan.total_amount) }} {{loan.sign}}</p>
+                        <p v-for="loan in item.loan" class="m-0">{{ counterStore.formatNumber(loan.total_amount.toFixed(2)) }} {{loan.sign}}</p>
                     </td>
                     <td>
                         <PrimaryIconBtn v-if="counterStore.hasRole('Suppliers-update')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="supplierUpdate"/>

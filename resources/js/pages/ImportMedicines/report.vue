@@ -8,11 +8,11 @@
                            <tbody>
                            <tr>
                                <th scope="row">{{$t('Subtotal')}} :</th>
-                               <td>{{counterStore.formatNumber(subtotal)}} {{counterStore.user.currency.sign}}</td>
+                               <td>{{counterStore.formatNumber(subtotal.toFixed(2))}} {{counterStore.user.currency.sign}}</td>
                            </tr>
                            <tr>
                                <th scope="row">{{$t('AmountToPaid')}} :</th>
-                               <td>{{counterStore.formatNumber(subtotal)}} {{counterStore.user.currency.sign}}</td>
+                               <td>{{counterStore.formatNumber(subtotal.toFixed(2))}} {{counterStore.user.currency.sign}}</td>
                            </tr>
                            <tr>
                                <th scope="row">{{$t('Paid')}} :</th>

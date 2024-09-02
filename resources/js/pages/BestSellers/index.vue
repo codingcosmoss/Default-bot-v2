@@ -41,7 +41,7 @@
                         <p class="m-0 font-size-12">{{ item.medicine.generic_name }}</p>
                     </td>
                     <td>{{ counterStore.formatNumber(item.total_amount) }} </td>
-                    <td>{{ counterStore.formatNumber(item.total_subtotal) }} {{item.medicine.currency.sign}}</td>
+                    <td>{{ counterStore.formatNumber(item.total_subtotal.toFixed(2)) }} {{item.medicine.currency.sign}}</td>
                 </tr>
                 <Paginate
                     Cols="7"

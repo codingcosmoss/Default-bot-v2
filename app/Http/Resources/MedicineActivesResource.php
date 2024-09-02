@@ -64,8 +64,8 @@ class MedicineActivesResource extends JsonResource
             'status' => $this->status,
             // Logical
             'amount' => $realAmount,
-            'percentage' => intval($this->percentage),
-            'selling_price' => intval($this->selling_price),
+            'percentage' => $this->percentage,
+            'selling_price' => $this->selling_price,
             'currency' => $currency,
             'batches' => $batches
         ];

@@ -497,7 +497,7 @@ export const medicineDelete = async (id) => {
     return  GET('/medicine/delete/'+ id );
 };
 export const updateCurrency = async (data) => {
-    return  POST('/update-currency/', data );
+    return  POST('/setting/update-currency', data );
 };
 
 export const quantityVerification = async () => {
@@ -768,4 +768,11 @@ export const reportPurchases = async (count, page= 1) => {
 };
 export const reportBestSellers = async (count, page= 1) => {
     return  GET('/report/best-sellers/' + count+'?page='+page);
+};
+export const dashboardCart1 = async () => {
+    return  GET('/report/dashboard-cart1');
+};
+
+export const dashboardCart2 = async () => {
+    return  GET('/report/dashboard-cart2');
 };

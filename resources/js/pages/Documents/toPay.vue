@@ -131,8 +131,8 @@ export default {
             return true;
         },
         async save() {
-            this.sign = this.counterStore.user.currency.sign
-            this.currency_id = this.counterStore.user.currency.id
+            this.sign = this.Item.currency.sign
+            this.currency_id = this.Item.currency.id
             this.item = this.Item;
             this.document_id = this.Item.id;
         },

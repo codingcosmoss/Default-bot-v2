@@ -322,6 +322,9 @@ Route::middleware(['auth:sanctum', 'admin' ])->group(function () {
         Route::get('/sellings/{count}', [\App\Http\Controllers\Api\ReportController::class, 'getSallings']);
         Route::get('/purchases/{count}', [\App\Http\Controllers\Api\ReportController::class, 'getPurchases']);
         Route::get('/best-sellers/{count}', [\App\Http\Controllers\Api\ReportController::class, 'getBestSellers']);
+        Route::get('/dashboard-cart1', [\App\Http\Controllers\Api\ReportController::class, 'dashboardCart1']);
+        Route::get('/dashboard-cart2', [\App\Http\Controllers\Api\ReportController::class, 'dashboardCart2']);
+
     });
 
 

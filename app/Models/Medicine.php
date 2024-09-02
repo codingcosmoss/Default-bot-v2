@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Medicine extends Model
 {
     use HasFactory, SoftDeletes;
-
+    protected $guarded = ['id'];
     public function image()
     {
         return $this->morphMany(Image::class, 'imageable');

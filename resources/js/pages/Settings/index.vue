@@ -64,6 +64,7 @@
             <ModalCentered
                 :Title="$t('NewCurrencyTitle')"
                 ModalName="Currency"
+                @onModal="onUpdate()"
             >
                 <div class="col-12 mt-3">
                     <div class="card border border-primary">
@@ -74,13 +75,15 @@
                     </div>
                 </div>
                 <div class="w-100 d-flex justify-content-center align-items-center gap-3">
-                    <p class="m-0 font-size-20">1{{counterStore.user.currency.sign}}</p>
-                    <p class="m-0 font-size-20">=</p>
+                    <p class="m-0 font-size-20 text-success fw-bold">1 {{oldSign}}</p>
+                    <p class="m-0 font-size-20 text-success fw-bold">=</p>
                     <DefaultIconInput
                         Label=""
                         Class="col-lg-6 col-sm-6 currency_input"
                         :Value="counterStore.formatNumber(amount)"
-                        @onInput="onCurrency($event)"
+                        :Validated="errors"
+                        @onInput="onCurrency($event),  delete this.errors.amount"
+
                     >
                         {{sign}}
                     </DefaultIconInput>
@@ -114,6 +117,7 @@
     import DefaultSelect from "@/ui-components/Forms/DefaultSelect.vue";
     import ModalCentered from "@/components/all/ModalCentered.vue";
     import DefaultIconInput from "@/components/all/DefaultIconInput.vue";
+    import Swal from "sweetalert2";
 
     export default {
         components: {
@@ -144,6 +148,7 @@
             currencies: [],
             amount: 0,
             sign: '',
+            oldSign: '',
         }},
         methods:{
             onCurrency(val){
@@ -206,7 +211,7 @@
                     ApiError(this, error);
                 }
             },
-            async show(id){
+            async show(id = null){
                 try {
                     this.loader = true;
                     const response = await settingShow(this.counterStore.user.clinic_id);
@@ -216,10 +221,13 @@
                     this.email = response.data.email;
                     this.phone = response.data.phone;
                     this.currency_id = response.data.currency_id;
+                    this.oldSign = response.data.currency.sign;
                     this.image = response.data.logo[0].url;
                     this.loader = false;
                     let user = this.counterStore.user;
                     user['logo'] = response.data.logo;
+                    user['currency'] = response.data.currency;
+                    user['currency_id'] = response.data.currency_id;
                     localStorage.setItem('user', JSON.stringify(user));
                     this.counterStore.updateUser(user);
                 }catch(error){
@@ -276,19 +284,42 @@
                     return false;
                 }
             },
+            onUpdate(){
+                Swal.fire({
+                    title: this.$t('CurrencyInfo'),
+                    text: "",
+                    icon: "info"
+                }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+                        this.updateCurrency();
+                    }
+                });
+            },
             async updateCurrency(){
                 try {
+
+                    if (this.amount <= 0){
+                        this.errors['amount'] = this.$t('CurrencyRequired');
+                        Alert('error', this.$t('CurrencyRequired'));
+                        return;
+                    }
+
                     this.loader = true;
                     let data = {
                         currency_id: this.currency_id,
                         amount: this.amount,
-                        is_change_medicine: this.is_change_medicine,
                     }
-                    const response = await updateCurrency( data);
+                    const response = await updateCurrency(data);
                     if (response.status){
-                        Alert('success', this.$t('update'));
                         this.counterStore.updateCurrency(response.data.currency)
-                        this.show(response.data.clinic_id);
+                        this.show();
+                        this.counterStore.hiddenModal('Currency');
+                        Swal.fire({
+                            title: this.$t('update'),
+                            text: "",
+                            icon: "success"
+                        })
                         this.loader = false;
                         return true;
                     }

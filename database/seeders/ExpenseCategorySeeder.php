@@ -21,9 +21,9 @@ class ExpenseCategorySeeder extends Seeder
             if (!$isCategory){
                 ExpenseCategory::create([
                     'clinic_id' => $clinic->id,
-                    'name' => 'General',
+                    'name' => 'Refunds',
                     'type' => Status::$default,
-                    'description' => 'General expenses are in this category',
+                    'description' => 'Money returned to the customer',
                 ]);
             }
         }

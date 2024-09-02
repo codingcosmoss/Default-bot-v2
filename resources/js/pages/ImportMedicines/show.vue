@@ -255,7 +255,7 @@
                         medicine: this.item,
                         returned_amount: this.amount,
                         returned_price: this.returned_price,
-                        currency_id: this.counterStore.user.currency.id,
+                        currency_id: this.document.currency.id,
                     }
                     const response = await returned_medicineCreate(data);
                     if (response.status){

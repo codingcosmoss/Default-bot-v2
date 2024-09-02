@@ -15,11 +15,11 @@
                 <div class="text-muted mt-4">
                     <h4 class="d-flex  flex-wrap flex-column">
                         <p v-for="(currency, index) in Currencies" class="m-0 text-success" >
-                           <span>{{ counterStore.formatNumber(currency.total_amount) }}</span> {{currency.sign}} </p>
+                           <span>{{ counterStore.formatNumber(currency.total_cost.toFixed(2)) }}</span> {{currency.sign}} </p>
                     </h4>
-                    <div class="d-flex">
-                        <span class="badge badge-soft-success font-size-12"> {{Share}} </span> <span
-                        class="ms-2 text-truncate">{{Text}}</span>
+                    <div class="d-flex flex-wrap">
+                         <span class="mr-3 text-truncate text-wrap">{{Text}} &nbsp;</span>
+                        <span class="badge badge-soft-success font-size-12"> {{Share}} </span>
                     </div>
                 </div>
             </div>

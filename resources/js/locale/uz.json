@@ -124,9 +124,11 @@
     "ImportMedicines": "Sotib olingan dorilar",
     "NewImportMedicines": "Yangi dorilar sotib olish",    "ImportedDate": "Sotib olingan sana",
     "Subtotal": "Jami summa",
+    "SubtotalAmount": "Jami miqdori",
     "AmountPaid": "Jami to'langan",
     "Indebtedness": "Qarzdorlik",
     "Saved": "Saqlangan",
+    "CustomerReturnedInfo": "Mijozlarga qaytarib berilgan pullarni ham o'z ichiga oladi",
     "NotSaved": "Saqlanmagan",
     "SketchFile": "Eskiz fayl",
     "DateSearch": "Sana orqali qidiring",
@@ -240,6 +242,9 @@
     "BatchValidated": "Dori partiyasini kiriting",
     "BatchValidated2": "Iltimos to'plamni tanlang",
     "NewCurrencyTitle": "Valyutani yangilash",
-    "NewCurrencyInfo": "Valyutani yangilasangiz tizimda ro'yxatga volingan barcha dorilarni narxlari yangi valyutaning qiymatiga yangilanadi. Sotish va sotib olish, hisobotlar, hisob fakturlari va qarzdorliklar eski valyutada qoladi. Barcha qarzdorliklarni , to'liq to'lanmagan savdolarni o'sha vaqtdagi valyuta bilan yopishingiz mumkun.",
-    "SellingError": "Sizdagi bazi dorilar hozr sotib bo'lindi, iltimos qaytadan miqdorlarini tekshirib chiqing !"
+    "NewCurrencyInfo": "Valyutani yangilasangiz tizimda ro'yxatga olingan barcha dorilarni narxlari yangi valyutaning qiymatiga yangilanadi. Sotish va sotib olish, hisobotlar, hisob fakturlari va qarzdorliklar eski valyutada qoladi. Barcha qarzdorliklarni , to'liq to'lanmagan savdolarni o'sha vaqtdagi valyuta bilan yopishingiz mumkun.",
+    "SellingError": "Sizdagi bazi dorilar hozr sotib bo'lindi, iltimos qaytadan miqdorlarini tekshirib chiqing !",
+    "Info": "Malumot",
+    "CurrencyInfo": "Valyuta qiymatini to'g'ri kiritganingizga ishonchingiz komilmi?",
+    "CurrencyRequired": "Iltimos valyutani qiymatini kiriting"
 }

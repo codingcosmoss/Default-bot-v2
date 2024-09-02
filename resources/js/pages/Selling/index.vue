@@ -16,7 +16,7 @@
         </template>
         <template v-slot:main>
                 <ul class="main_list" >
-                    <li class="font-size-15" >{{$t('Subtotal')}}: <span class="font-size-20 fw-bold">{{counterStore.formatNumber(resultSum())}} {{sign}}</span></li>
+                    <li class="font-size-15" >{{$t('Subtotal')}}: <span class="font-size-20 fw-bold">{{counterStore.formatNumber(resultSum().toFixed(2))}} {{sign}}</span></li>
                     <li class="font-size-15" >{{$t('PaidAmount')}}:
                         <input
                             type="text"
@@ -25,7 +25,7 @@
                             @input="sellingAmount($event.target.value)"
                         />
                     </li>
-                    <li class="font-size-15 " >{{$t('AmountToPaid')}}: <span :class="resultSum() - amount_due < 0 ? 'text-bg-danger' : '' " class=" font-size-20 fw-bold">{{counterStore.formatNumber(resultSum() - amount_due)}} {{sign}}</span></li>
+                    <li class="font-size-15 " >{{$t('AmountToPaid')}}: <span :class="resultSum() - amount_due < 0 ? 'text-bg-danger' : '' " class=" font-size-20 fw-bold">{{counterStore.formatNumber( (resultSum() - amount_due).toFixed(2) )}} {{sign}}</span></li>
                 </ul>
             <button @click="amount_due = resultSum()" type="button" class="selling_btn btn bg_color_yello waves-effect waves-light">
                 {{$t('FullPaid')}}
@@ -78,7 +78,7 @@
 
                         </td>
                         <td>{{counterStore.formatNumber(medicine.price)}} {{medicine.currency.sign}} </td>
-                        <td>{{counterStore.formatNumber(medicine.price * medicine.selling_amount)}} {{medicine.currency.sign}}</td>
+                        <td>{{counterStore.formatNumber( (medicine.price * medicine.selling_amount).toFixed(2) )}} {{medicine.currency.sign}}</td>
                         <td>
                             <PrimaryIconBtn  @click="onDelete(medicine.sortId), gstCalculator()" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
                         </td>
@@ -93,7 +93,7 @@
                             <tbody>
                             <tr>
                                 <th scope="row">{{$t('Total')}} :</th>
-                                <td>{{counterStore.formatNumber(sumAmount())}} {{sign}}</td>
+                                <td>{{counterStore.formatNumber(sumAmount().toFixed(2))}} {{sign}}</td>
                             </tr>
                             <tr>
                                 <th scope="row" class="pt-3">{{$t('GST/TaxAmount')}} % :</th>
@@ -109,15 +109,15 @@
                             </tr>
                             <tr>
                                 <th scope="row">{{$t('IGTA')}} :</th>
-                                <td>{{counterStore.formatNumber(sumIgta())}} {{sign}}</td>
+                                <td>{{counterStore.formatNumber(sumIgta().toFixed(2))}} {{sign}}</td>
                             </tr>
                             <tr>
                                 <th scope="row">{{$t('Subtotal')}} :</th>
-                                <td>{{counterStore.formatNumber(subtotal + igta + gstResult)}} {{sign}}</td>
+                                <td>{{counterStore.formatNumber((subtotal + igta + gstResult).toFixed(2))}} {{sign}}</td>
                             </tr>
                             <tr>
                                 <th scope="row">{{$t('AmountPaid')}} :</th>
-                                <td>{{counterStore.formatNumber(amount_due)}} {{sign}}</td>
+                                <td>{{counterStore.formatNumber(amount_due.toFixed(2))}} {{sign}}</td>
                             </tr>
 
                             </tbody>
@@ -399,7 +399,8 @@
                 this.cashPaymentLoader = false;
             },
             resultSum(){
-                return this.subtotal + this.igta + this.gstResult;
+                let sum = this.subtotal + this.igta + this.gstResult;
+                return Math.round(sum * 100) / 100;
             },
             sellingAmount(val){
                 let formatAmount = this.counterStore.inputNumberFormat('amount_due', this.amount_due, val);

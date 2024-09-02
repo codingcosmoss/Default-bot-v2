@@ -1,85 +1,90 @@
 <template>
     <Page Title="">
         <div class="row">
-
             <div v-for="i in 4" v-if="cardLoader"  class="col-lg-3 cursor-pointer">
                 <div class="card mini-stats-wid">
                     <div  class="card-body">
                         <div  class="d-flex flex-wrap">
                             <div class="me-3">
-                                <p class=" mb-2 placeholder">Uzbekistani</p><br>
+                                <p class=" mb-2 placeholder">Uzbekistani Uzbekistani</p><br>
                                 <h5 class="mb-0 placeholder ">201 000 сўм</h5>
                             </div>
                             <div class="avatar-sm ms-auto">
                                 <div class="avatar-title bg-light rounded-circle text-primary font-size-20">
-                                    <i class="bx bx-money"></i>
+                                    <i class="bx bx-money placeholder"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
+        </div>
+        <div class="row " v-if="!cardLoader">
             <div class="col-md-3 cursor-pointer" @click="this.$router.push('/')">
                 <CardBlock
                     :Title="$t('RegisteredMedicines')"
-                    :Number="1200"
+                    :Number="counterStore.formatNumber(registeredMedicines)"
                     Icon="bx bx-copy-alt font-size-24"
                 />
             </div>
             <div class="col-md-3 cursor-pointer" @click="this.$router.push('/')">
                 <CardBlock
                     :Title="$t('ExpiredMedicines')"
-                    :Number="1200"
+                    :Number="counterStore.formatNumber(expiredMedicinesCount)"
                     Icon="bx bx-time font-size-24"
                 />
             </div>
             <div class="col-md-3 cursor-pointer" @click="this.$router.push('/')">
                 <CardBlock
                     :Title="$t('ImportedDrugs')"
-                    :Number="1200"
+                    :Number="counterStore.formatNumber(importedMedicines)"
                     Icon="bx bx-import font-size-24"
                 />
             </div>
             <div class="col-md-3 cursor-pointer" @click="this.$router.push('/')">
                 <CardBlock
                     :Title="$t('WarehouseAvailableMedicines')"
-                    :Number="1200"
+                    :Number="counterStore.formatNumber(realMedicines)"
                     Icon="bx bx-pie-chart-alt-2 font-size-24"
                 />
             </div>
+        </div>
 
+        <div class="row" v-if="cardClassicLoader">
+            <CardClassicBlockLoader v-for="i in 4" />
+        </div>
+        <div class="row" v-if="!cardClassicLoader">
             <CardClassicBlock
                 Icon="bx bx-export"
                 :Title="$t('TotalPaid')"
-                :Currencies="[]"
-                Share="12.3 %"
-                Text="Skote Saas Dashboard"
+                :Currencies="medicinesSoldCustomers"
+                :Share="medicinesSoldCustomersAmount"
+                :Text="$t('SubtotalAmount') + ':'"
             />
             <CardClassicBlock
                 Icon="bx bx-import"
                 :Title="$t('ImportPaid')"
-                :Currencies="[]"
-                Share="12.3 %"
-                Text="Skote Saas Dashboard"
+                :Currencies="importedSubtotalMedicines"
+                :Share="importedSubtotalMedicinesAmount"
+                :Text="$t('SubtotalAmount') + ':'"
             />
             <CardClassicBlock
                 Icon="bx bx-collection"
                 :Title="$t('TotalCosts')"
-                :Currencies="[]"
-                Share="12.3 %"
-                Text="Skote Saas Dashboard"
+                :Currencies="expenses"
+                Share=""
+                :Text="$t('CustomerReturnedInfo')"
             />
             <CardClassicBlock
                 Icon="bx bx-collection"
                 :Title="$t('TotalNetProfit')"
-                :Currencies="[]"
-                Share="12.3 %"
-                Text="Skote Saas Dashboard"
+                :Currencies="totalNetProfit"
+                Share=""
+                Text=""
             />
+        </div>
 
-
-
+        <div class="row">
 
             <BaseBox :Title="$t('SalesandPurchasestatistics')">
                 <div id="dashboardChart1">
@@ -111,9 +116,11 @@ import ApexCharts from "apexcharts";
 import BaseBox from "@/components/global/BaseBox.vue";
 import CardBlock from "@/components/all/CardBlock.vue";
 import CardClassicBlock from "@/components/all/CardClassicBlock.vue";
-import {quantityVerification} from "@/helpers/api.js";
+import {dashboardCart1, dashboardCart2, quantityVerification} from "@/helpers/api.js";
+import {registry} from "chart.js";
+import CardClassicBlockLoader from "@/components/all/CardClassicBlockLoader.vue";
 export default {
-    components: {CardClassicBlock, CardBlock, BaseBox, Page},
+    components: {CardClassicBlockLoader, CardClassicBlock, CardBlock, BaseBox, Page},
     setup() {
         const counterStore = useConterStore();
         return {counterStore}
@@ -123,6 +130,7 @@ export default {
             items: [],
             item: [],
             paginateCount: 10,
+            cardClassicLoader: false,
             column: 'id',
             type: 'desc',
             errors: [],
@@ -140,6 +148,22 @@ export default {
                 }
             ],
             purchases: [],
+
+            // cart 1
+            registeredMedicines: 0,
+            expiredMedicines: [],
+            importedMedicines: 0,
+            realMedicines: 0,
+            expiredMedicinesCount: 0,
+            // cart 2
+            medicinesSoldCustomers: [],
+            medicinesSoldCustomersAmount: 0,
+            importedSubtotalMedicines: [],
+            importedSubtotalMedicinesAmount: 0,
+            expenses: [],
+            netProfit: [],
+            totalNetProfit: []
+
         }
     },
     methods: {
@@ -269,17 +293,100 @@ export default {
             try {
                 this.loader = true;
                 const response = await quantityVerification();
-                if (response.status){
-                    await this.search()
-                }
                 this.loader = false;
             }catch(error){
                 ApiError(this, error);
             }
         },
+        async dashboardCart1(){
+            try {
+                this.cardLoader = true;
+                const response = await dashboardCart1();
+                let data = response.data;
+                if (response.status){
+                    this.realMedicines = data.realMedicinesCount;
+                    this.registeredMedicines = data.medicines_count;
+                    this.expiredMedicinesCount = 0;
+                    data.expiredMedicines.forEach(e=>{
+                        this.expiredMedicinesCount += e.amount;
+                    })
+                    data.importedMedicines.forEach(e=>{
+                        this.importedMedicines += e.amount;
+
+                    })
+
+                    this.expiredMedicines = data.expiredMedicines;
+                }
+                this.cardLoader = false;
+            }catch(error){
+                ApiError(this, error);
+            }
+        },
+        async dashboardCart2(){
+            try {
+                this.cardClassicLoader = true;
+                const response = await dashboardCart2();
+                let data = response.data;
+                if (response.status){
+                    this.medicinesSoldCustomers = data.medicinesSoldCustomers;
+                    this.importedSubtotalMedicines = data.importedSubtotalMedicines;
+                    this.expenses = data.expenses;
+                    data.medicinesSoldCustomers.forEach(e => {
+                        this.medicinesSoldCustomersAmount+= Number(e.total_amount);
+                    });
+                    data.importedSubtotalMedicines.forEach(e => {
+                        this.importedSubtotalMedicinesAmount+=  Number(e.amount);
+                    });
+                    data.sellings.forEach(e => {
+                        this.sellings.push({
+                            x: e.date.split('-')[1] +'-'+e.date.split('-')[2]+'-'+e.date.split('-')[0] +' GMT',
+                            y: e.subtotal.toFixed(2)
+                        });
+                    });
+                    data.purchases.forEach(e => {
+                        this.purchases.push({
+                            x: e.date.split('-')[1] +'-'+e.date.split('-')[2]+'-'+e.date.split('-')[0] +' GMT',
+                            y: e.subtotal.toFixed(2)
+                        });
+                    });
+                    this.medicinesSoldCustomers.forEach((n, index)=>{
+                        let sum = 0;
+                        data.importedSubtotalMedicines.forEach(e => {
+                            if (e.currency_id == n.currency_id){
+                                sum+= Number(e.total_cost);
+                            }
+                        });
+                        data.expenses.forEach(e => {
+                            if (e.currency_id == n.currency_id){
+                                sum+= Number(e.total_cost);
+                            }
+                        });
+
+                        let total_cost = 0;
+                        if (n.total_cost - sum > 0){
+                            total_cost = n.total_cost - sum;
+                        }
+                        this.totalNetProfit.push({
+                            total_cost: total_cost,
+                            sign: n.sign
+                        });
+
+
+                    })
+                    this.cardClassicLoader = false;
+                }
+                this.cardClassicLoader = false;
+                this.chart1();
+            }catch(error){
+                ApiError(this, error);
+            }
+        },
+
     },
     mounted() {
-        this.chart1()
+        this.dashboardCart1();
+        this.dashboardCart2();
+
         this.chart2()
         this.chart3()
         this.chart4()
