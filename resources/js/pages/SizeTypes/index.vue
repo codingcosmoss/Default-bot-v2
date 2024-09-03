@@ -108,7 +108,7 @@
                     <td>
                         <PrimaryIconBtn v-if="counterStore.hasRole('BoxSizes-update')" @click="boxItem = item" Icon="bx bx-edit-alt" Modal="boxSizeUpdate"/>
 <!--                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/size-types/show', query:{id: item.id}})" Icon="bx bx-show"/>&nbsp;-->
-                        <PrimaryIconBtn v-if="counterStore.hasRole('BoxSizes-delete')" @click="this.boxDelete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
+                        <PrimaryIconBtn v-if="counterStore.hasRole('BoxSizes-delete') && item.is_delete == 0" @click="this.boxDelete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
                     </td>
 
                 </tr>

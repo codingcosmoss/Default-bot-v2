@@ -94,8 +94,8 @@
                     <td>{{ item.category }}</td>
                     <td>
                         <PrimaryIconBtn v-if="counterStore.hasRole('Expenses-update')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="expenseUpdate"/>
-                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/expenses/show', query:{id: item.id}})" Icon="bx bx-show"/>
-                        <PrimaryIconBtn v-if="counterStore.hasRole('Expenses-delete')" @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
+<!--                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/expenses/show', query:{id: item.id}})" Icon="bx bx-show"/>-->
+                        <PrimaryIconBtn v-if="counterStore.hasRole('Expenses-delete')" @click="deleteData(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
                     </td>
 
                 </tr>
@@ -338,7 +338,7 @@
                     return false;
                 }
             },
-            async delete(id){
+            async deleteData(id){
                 try {
                     if (!confirm(this.$t('DeleteAlert'))){
                         return false;

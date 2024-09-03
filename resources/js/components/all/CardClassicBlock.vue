@@ -17,7 +17,7 @@
                         <p v-for="(currency, index) in Currencies" class="m-0 text-success" >
                            <span>{{ counterStore.formatNumber(currency.total_cost.toFixed(2)) }}</span> {{currency.sign}} </p>
                     </h4>
-                    <div class="d-flex flex-wrap">
+                    <div class="d-flex flex-wrap" v-if="Text.length > 0 ">
                          <span class="mr-3 text-truncate text-wrap">{{Text}} &nbsp;</span>
                         <span class="badge badge-soft-success font-size-12"> {{Share}} </span>
                     </div>

@@ -327,6 +327,13 @@ Route::middleware(['auth:sanctum', 'admin' ])->group(function () {
 
     });
 
+    Route::prefix('/expired')->group(function () {
+        Route::get('/index', [\App\Http\Controllers\Api\ExpiredMedicineController::class, 'index']);
+        Route::get('/paginate/{count}', [\App\Http\Controllers\Api\ExpiredMedicineController::class, 'getPaginate']);
+        Route::get('/delete/{id}', [\App\Http\Controllers\Api\ExpiredMedicineController::class, 'destroy']);
+    });
+
+
 
 });
 

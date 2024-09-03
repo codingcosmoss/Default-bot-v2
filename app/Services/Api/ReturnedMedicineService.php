@@ -109,7 +109,7 @@ class ReturnedMedicineService extends AbstractService
             $importedMedicine->total_cost = $importedMedicine->total_cost - $newModel->total_cost;
             $importedMedicine->save() != true ? $isSaved = false : '';
 
-            $batch = Batch::where('imported_medicine_id', $importedMedicine->id)
+            $batch = Batch::withTrashed()->where('imported_medicine_id', $importedMedicine->id)
                 ->first();
             $batch->amount -= $data['returned_amount'];
             $batch->save() != true ? $isSaved = false : '';

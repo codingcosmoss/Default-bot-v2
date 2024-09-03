@@ -176,7 +176,7 @@ class ReportService extends AbstractService
 
 
             foreach ($models as $key => $value) {
-                $models[$key]->medicine = new MedicineResource(Medicine::withoutTrashed()->find($value->medicine_id));
+                $models[$key]->medicine = new MedicineResource(Medicine::withTrashed()->find($value->medicine_id));
             }
 
             $data = [
@@ -252,7 +252,7 @@ class ReportService extends AbstractService
                 ->get();
 
             foreach ($bestSellers as $key => $value) {
-                $bestSellers[$key]->name = Medicine::withoutTrashed()->find($value->medicine_id)->name;
+                $bestSellers[$key]->name = Medicine::withTrashed()->find($value->medicine_id)->name;
             }
 
 

@@ -20,9 +20,9 @@ class SupplierPaymentsResource extends JsonResource
     public function toArray(Request $request): array
     {
         $arr = parent::toArray($request);
-        $arr['user'] = User::withoutTrashed()->find($this->user_id);
-        $arr['supplier'] = Supplier::withoutTrashed()->find($this->supplier_id);
-        $arr['payment_type'] = PaymentType::withoutTrashed()->find($this->payment_type_id);
+        $arr['user'] = User::withTrashed()->find($this->user_id);
+        $arr['supplier'] = Supplier::withTrashed()->find($this->supplier_id);
+        $arr['payment_type'] = PaymentType::withTrashed()->find($this->payment_type_id);
         $arr['currency'] = Currency::find($this->currency_id);
         return $arr;
     }

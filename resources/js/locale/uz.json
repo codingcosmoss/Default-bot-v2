@@ -97,6 +97,7 @@
     "MedicineCategories": "Dori kategoriyalari",
     "DrugSizeTypes": "Dori o'lchov birliklari",
     "AllMedicines": "Barcha dorilar",
+
     "GenericName": "Umumiy nomi",
     "SellingPrice": "Sotish narxi",
     "BuyPrice": "Sotib olish narxi",
@@ -122,6 +123,7 @@
     "PaymentType": "To'lov turi",
     "ImportDocuments": "Dori sotib olish",
     "ImportMedicines": "Sotib olingan dorilar",
+    "ImportMedicinesAmount": "Sotib olingan dorilar miqdori",
     "NewImportMedicines": "Yangi dorilar sotib olish",    "ImportedDate": "Sotib olingan sana",
     "Subtotal": "Jami summa",
     "SubtotalAmount": "Jami miqdori",
@@ -145,6 +147,7 @@
     "PriceSale": "Sotishga qo'yiladigan narx",
     "ExpiryDateFinished": "Yaroqlilik muddati",
     "ImportedMedicines": "Olib kelingan dorilar",
+
     "ImportedMedicinesDate": "Olib kelingan sana",
     "dateRequired": "Yaroqlilik muddati xato",
     "buyAmountError": "Dori miqdori xato",
@@ -194,6 +197,7 @@
     "SellingPage": "Sotish oynasi",
     "SellingArxive": "Sotish tarixi",
     "InvoiceId": "Hisob-faktura identifikatori",
+
     "Invoice": "Hisob-faktura",
     "Seller": "Sotuvchi",
     "Identifikator": "Identifikator",
@@ -249,5 +253,9 @@
     "CurrencyRequired": "Iltimos valyutani qiymatini kiriting",
     "ExpirationDate": "Eskirgan muddati",
     "Collection": "To'plam",
-    "WarehouseNotAmount": "Omborda qolmagan dorilar"
+    "WarehouseNotAmount": "Omborda qolmagan dorilar",
+    "Loan": "Qarz",
+    "CreateYourProgram": "Dasturingizni yarating !",
+    "Soon": "Tez orada"
+
 }

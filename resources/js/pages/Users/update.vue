@@ -244,7 +244,11 @@ export default {
                 this.position = this.Item.position;
                 this.payable = this.Item.payable;
                 this.due = this.Item.due;
-                this.image = this.Item.image[0].url;
+
+                if (this.Item.image && this.Item.image.length > 0) {
+                    this.image =  this.Item.image[0].url;
+                }
+
                 if (this.item.id == this.counterStore.user.id){
                     localStorage.setItem('user', JSON.stringify(response.data))
                     this.counterStore.updateUser(response.data)

@@ -363,7 +363,7 @@ export default {
                 this.qr_code = response.data.qr_code;
                 this.hns_code = response.data.hns_code;
                 this.desc = response.data.desc;
-                this.strength = response.data.strength;
+                // this.strength = response.data.strength;
                 this.shelf = response.data.shelf;
                 this.vat = response.data.vat;
                 this.igta = response.data.igta;
@@ -389,7 +389,7 @@ export default {
             this.qr_code = this.Item.qr_code;
             this.hns_code = this.Item.hns_code;
             this.desc = this.Item.desc;
-            this.strength = this.Item.strength;
+            // this.strength = this.Item.strength;
             this.shelf = this.Item.shelf;
             this.vat = this.Item.vat;
             this.igta = this.Item.igta;
@@ -411,7 +411,7 @@ export default {
             this.qr_code = '';
             this.hns_code = '';
             this.desc = '';
-            this.strength = null;
+            // this.strength = null;
             this.shelf = '';
             this.vat = 0;
             this.igta = 0;
@@ -435,7 +435,7 @@ export default {
                     qr_code: this.qr_code,
                     hns_code: this.hns_code,
                     desc: this.desc,
-                    strength: this.strength,
+                    // strength: this.strength,
                     shelf: this.shelf,
                     vat: this.vat,
                     igta: this.igta,

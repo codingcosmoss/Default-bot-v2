@@ -16,9 +16,30 @@
                 <button @click="onMenuMedia()" type="button" class="btn btn-sm px-3 font-size-16 header-item waves-effect" id="menu_btn2">
                     <i class="fa fa-fw fa-bars"></i>
                 </button>
-                <button @click="onMenuMedia()" type="button" class="btn btn-sm px-3 font-size-16 header-item waves-effect" >
-                    <i class="bx bx-desktop menu_icon"></i>
-                </button>
+
+                <!--        Qo'shimcha qisimlar        -->
+                <div class="align-items-center flex-wrap gap-3 d-sm-flex d-none" style="margin-right: 20px" >
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <button type="button" class="btn btn-primary waves-effect waves-light">
+                            <i class="mdi mdi-gift-outline font-size-15"></i> {{$t('CreateYourProgram')}}
+                        </button>
+                    </div>
+                </div>
+                <!-- end -->
+
+                <div class="align-items-center flex-wrap gap-3 d-sm-flex d-none " >
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <button @click="this.$router.push('/admin/documents')" type="button" class="btn btn-outline-primary">{{$t('ImportDocuments')}}</button>
+                        <button @click="this.$router.push('/selling')" type="button" class="btn btn-outline-primary">{{$t('Selling')}}</button>
+                        <button @click="this.$router.push('/admin/medicines')" type="button" class="btn btn-outline-primary">{{$t('AllMedicines')}}</button>
+                    </div>
+                </div>
+
+                <div class="align-items-center flex-wrap gap-3 d-sm-flex d-none " style="margin-left: 20px" >
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <button @click="this.$router.push('/admin/documents')" type="button" class="btn btn-outline-success">{{$t('Soon')}}</button>
+                    </div>
+                </div>
 
 
             </div>

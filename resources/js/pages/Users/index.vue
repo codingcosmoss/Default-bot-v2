@@ -48,7 +48,7 @@
                     <td>{{ item.phone }}</td>
                     <td>
                         <PrimaryIconBtn v-if="counterStore.hasRole('Employees-update') && item.private != 1" @click="this.item = item" Icon="bx bx-edit-alt" Modal="userUpdate"/>
-                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/users/show', query:{id: item.id}})" Icon="bx bx-show"/>
+<!--                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/users/show', query:{id: item.id}})" Icon="bx bx-show"/>-->
                         <PrimaryIconBtn v-if="counterStore.hasRole('Employees-delete') && item.private != 1 " @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
                     </td>
 

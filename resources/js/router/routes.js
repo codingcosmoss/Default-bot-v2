@@ -221,4 +221,9 @@ export default[
         permission: 'Reports-index',
         component: () => import('../pages/BestSellers/index.vue'),
     },
+    {
+        path: '/admin/expired-medicines',
+        permission: 'ExpiredMedicines-index',
+        component: () => import('../pages/ExpiredMedicines/index.vue'),
+    },
 ]

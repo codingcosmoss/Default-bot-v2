@@ -17,7 +17,7 @@ class ImportedMedicineResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $batch = Batch::where('imported_medicine_id', $this->id)
+        $batch = Batch::withTrashed()->where('imported_medicine_id', $this->id)
             ->first();
         $currentAmount = 0;
         if (!$batch){

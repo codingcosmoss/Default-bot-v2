@@ -27,7 +27,7 @@
                     Icon="bx bx-copy-alt font-size-24"
                 />
             </div>
-            <div class="col-md-3 cursor-pointer" @click="this.$router.push('/admin/import/medicines')">
+            <div class="col-md-3 cursor-pointer" @click="this.$router.push('/admin/expired-medicines')">
                 <CardBlock
                     :Title="$t('ExpiredMedicines')"
                     :Number="counterStore.formatNumber(expiredMedicinesCount)"
@@ -41,7 +41,7 @@
                     Icon="bx bx-import font-size-24"
                 />
             </div>
-            <div class="col-md-3 cursor-pointer" @click="this.$router.push('/')">
+            <div class="col-md-3 cursor-pointer" @click="this.$router.push('/admin/medicines')">
                 <CardBlock
                     :Title="$t('WarehouseAvailableMedicines')"
                     :Number="counterStore.formatNumber(realMedicines)"
@@ -73,7 +73,7 @@
                 :Title="$t('TotalCosts')"
                 :Currencies="expenses"
                 Share=""
-                :Text="$t('CustomerReturnedInfo')"
+                Text=""
             />
             <CardClassicBlock
                 Icon="bx bx-collection"
@@ -119,8 +119,8 @@
         >
             <div class="col-xl-12">
                 <div class="card">
-                    <div class="card-body p-0">
-                        <h4 class="card-title">{{$t('ExpiredMedicines')}}</h4>
+                    <div class="card-body p-0 ">
+                        <h4 class="card-title text-center">{{$t('ExpiredMedicines')}}</h4>
                         <div class="table-responsive">
                             <table class="table mb-0">
 
@@ -150,7 +150,7 @@
             </div>
             <div class="col-xl-12">
                 <div class="card">
-                    <div class="card-body p-0">
+                    <div class="card-body p-0 text-center">
                         <h4 class="card-title">{{$t('WarehouseNotAmount')}}</h4>
                         <div class="table-responsive">
                             <table class="table mb-0">
@@ -212,16 +212,7 @@ export default {
             loader: false,
             cardLoader: false,
             // sharts
-            sellings: [
-                {
-                    x: '2024-08-20 GMT',
-                    y: 10
-                },
-                {
-                    x: '2024-08-23 GMT',
-                    y: 20
-                }
-            ],
+            sellings: [],
             purchases: [],
 
             // cart 1
@@ -386,6 +377,7 @@ export default {
                             this.realMedicineNumbers.push(e.amount);
                             this.realMedicineArr.push(e.name);
                         }else{
+                            e.amount = 0;
                             this.outdatedDrugs.push(e);
                         }
                     })
@@ -396,10 +388,13 @@ export default {
                         this.expiredDrugs.push(e);
                     })
 
-                    // Alert info
-                    const myModal = new bootstrap.Modal(document.getElementById('dashboardAlert'));
-                    myModal.show();
-                    // --------
+                    if (this.outdatedDrugs.length > 0 || this.expiredDrugs.length){
+                        // Alert info
+                        const myModal = new bootstrap.Modal(document.getElementById('dashboardAlert'));
+                        myModal.show();
+                        // --------
+                    }
+
 
                     this.chart3()
 

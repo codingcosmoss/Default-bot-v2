@@ -776,3 +776,17 @@ export const dashboardCart1 = async () => {
 export const dashboardCart2 = async () => {
     return  GET('/report/dashboard-cart2');
 };
+// --------------------- expired started--------------------------------------------
+
+export const expireds = async () => {
+    return  GET('/expired/index');
+};
+export const expiredPaginates = async (count, page= 1) => {
+    return  GET('/expired/paginate/' + count+'?page='+page);
+};
+export const expiredDelete = async (id) => {
+    return  GET('/expired/delete/'+ id );
+};
+
+// --------------------- expired finished --------------------------------------------
+

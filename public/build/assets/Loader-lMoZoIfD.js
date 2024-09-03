@@ -1,1 +1,0 @@
-import{_ as s,o as t,c as o,a as e}from"./app--lA0zENz.js";const n={},a={style:{width:"100%","text-align":"center","margin-top":"15px"}},r=e("div",{class:"spinner-border text-info m-1",role:"status"},[e("span",{class:"sr-only"},"Loading...")],-1),c=[r];function i(_,d,p,l,f,m){return t(),o("div",a,c)}const h=s(n,[["render",i]]);export{h as L};

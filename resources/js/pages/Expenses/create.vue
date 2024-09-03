@@ -108,7 +108,7 @@ export default {
             categories: [],
             // forms
             title: '',
-            date: this.counterStore.currentDate(),
+            date: '',
             amount: '',
             expense_category_id: '',
             currencies: [],
@@ -198,7 +198,7 @@ export default {
         }
     },
     mounted() {
-        // this.save()
+        this.save()
         this.getCategories()
         this.getCurrencies()
     },

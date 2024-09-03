@@ -16,21 +16,17 @@ class WarehouseResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $latestEntries = DB::table('remaining_drugs')
-            ->select('id', 'medicine_id', 'amount')
-            ->whereIn('id', function($query) {
-                $query->select(DB::raw('MAX(id)'))
-                    ->from('remaining_drugs')
-                    ->groupBy('medicine_id');
-            })
+        $importMedicinePrices = ImportedMedicine::where('clinic_id', $this->clinic_id)
+            ->where('warehouse_id', $this->id)
+            ->select('currency_id', DB::raw('SUM(total_cost) as total_amount'))
+            ->groupBy('currency_id')
             ->get();
 
-        $totalAmount = $latestEntries->sum('amount');
         return [
             'id' => $this->id,
             'name' => $this->name,
             'impoted_medicines_count' => ImportedMedicine::where('warehouse_id', $this->id)->sum('amount'),
-            'current_medicines_count' => $totalAmount,
+            'importMedicinePrices' => ExpenceTotalResource::collection($importMedicinePrices),
             'status' => $this->status,
         ];
     }

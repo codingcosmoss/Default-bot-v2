@@ -202,7 +202,7 @@
                             });
                         })
                         if (islaoder){
-                            this.renderChart()
+                            // this.renderChart()
                         }
                     }
                     this.loader = false;

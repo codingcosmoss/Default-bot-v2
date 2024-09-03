@@ -46,7 +46,7 @@
                     <td>{{ item.address }}</td>
                     <td>
                         <PrimaryIconBtn v-if="counterStore.hasRole('Customers-update')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="customerUpdate"/>
-                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/customers/show', query:{id: item.id}})" Icon="bx bx-show"/>
+<!--                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/customers/show', query:{id: item.id}})" Icon="bx bx-show"/>-->
                         <PrimaryIconBtn v-if="counterStore.hasRole('Customers-delete')" @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
                     </td>
 

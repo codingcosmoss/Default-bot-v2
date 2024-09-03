@@ -2,32 +2,32 @@
 
     <MenuBox>
 
-        <MenuListButton
-            Title="Documentation"
-            Name="Documentation"
-            Icon="bx bxs-copy-alt"
-            :ChildLinks="[
-                    {
-                        title: 'Dashboard',
-                        path: '/admin/docs/dashboard',
-                        icon:'bx bx-home-circle',
-                        isPermission: true
-                    },
-                     {
-                        title: 'Tables',
-                        path: '/admin/docs/tables',
-                        icon:'bx bx-list-ul',
-                        isPermission: true
-                    },
-                        {
-                        title: 'Forms',
-                        path: '/admin/docs/forms',
-                        icon:'bx bx-file',
-                        isPermission: true
-                    },
+<!--        <MenuListButton-->
+<!--            Title="Documentation"-->
+<!--            Name="Documentation"-->
+<!--            Icon="bx bxs-copy-alt"-->
+<!--            :ChildLinks="[-->
+<!--                    {-->
+<!--                        title: 'Dashboard',-->
+<!--                        path: '/admin/docs/dashboard',-->
+<!--                        icon:'bx bx-home-circle',-->
+<!--                        isPermission: true-->
+<!--                    },-->
+<!--                     {-->
+<!--                        title: 'Tables',-->
+<!--                        path: '/admin/docs/tables',-->
+<!--                        icon:'bx bx-list-ul',-->
+<!--                        isPermission: true-->
+<!--                    },-->
+<!--                        {-->
+<!--                        title: 'Forms',-->
+<!--                        path: '/admin/docs/forms',-->
+<!--                        icon:'bx bx-file',-->
+<!--                        isPermission: true-->
+<!--                    },-->
 
-                ]"
-        />
+<!--                ]"-->
+<!--        />-->
 
         <MenuButton
             :Title="$t('Dashboard')"
@@ -218,7 +218,7 @@
         <MenuListButton
             :Title="$t('Reports')"
             Name="Reports"
-            Icon="bx bx-credit-card"
+            Icon="bx bx-receipt"
             Path="/admin/payment-types"
             v-if="counterStore.hasRole('Reports-index')"
             :ChildLinks="[

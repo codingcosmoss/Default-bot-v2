@@ -64,7 +64,7 @@
                     </td>
                     <td>
                         <PrimaryIconBtn v-if="counterStore.hasRole('Medicines-update')" @click="this.item = item, crud='update'" Icon="bx bx-edit-alt" Modal="medicineUpdate"/>
-                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/medicines/show', query:{id: item.id}})" Icon="bx bx-show"/>
+<!--                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/medicines/show', query:{id: item.id}})" Icon="bx bx-show"/>-->
                         <PrimaryIconBtn v-if="counterStore.hasRole('Medicines-delete')" @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
                     </td>
 

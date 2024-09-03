@@ -162,7 +162,7 @@ class SettingService extends AbstractService
             $item->currency_id = $data['currency_id'];
             $item->save();
 
-//            Medicine::withoutTrashed()->each(function ($medicine) use ($data) {
+//            Medicine::withTrashed()->each(function ($medicine) use ($data) {
 //                $medicine->update([
 //                    'price' => $medicine->price * $data['amount'],
 //                    'buy_price' => $medicine->buy_price * $data['amount'],
@@ -173,7 +173,7 @@ class SettingService extends AbstractService
 //                ]);
 //            });
 
-            Medicine::withoutTrashed()->each(function ($medicine) use ($data) {
+            Medicine::withTrashed()->each(function ($medicine) use ($data) {
                 $medicine->update([
                     'price' => round($medicine->price * $data['amount'], 2),
                     'buy_price' => round($medicine->buy_price * $data['amount'], 2),

@@ -4,8 +4,8 @@
             <BasicTable
                 :Th="[ $t('No'),
                 $t('ModalName'),
+                $t('ImportMedicinesAmount'),
                 $t('ImportMedicines'),
-                $t('CurrentMedicinesAmount'),
                 $t('Status'),$t('Settings')]"
                 :Title="$t('Warehouses')"
                 Col="col-lg-12"
@@ -43,7 +43,9 @@
                         {{ item.name }}
                     </td>
                     <td>{{item.impoted_medicines_count}}</td>
-                    <td>{{item.current_medicines_count}}</td>
+                    <td>
+                        <p v-for="paid in item.importMedicinePrices" class="m-0">{{ counterStore.formatNumber(paid.total_amount) }} {{paid.sign}}</p>
+                    </td>
                     <td>
                         <span :class="item.status == 1 ? 'badge-soft-success' : 'badge-soft-danger' "
                               class="badge badge-pill badge-soft-success font-size-11">{{ item.status  == 1 ? $t('Active') : $t('InActive') }}</span>
@@ -52,7 +54,7 @@
                     <td>
                         <PrimaryIconBtn v-if="counterStore.hasRole('MedicineCategories-update')" @click="this.item = item" Icon="bx bx-edit-alt" Modal="warehouseUpdate"/>
                         <!--                        <PrimaryIconBtn  @click="this.$router.push({path:'/admin/size-types/show', query:{id: item.id}})" Icon="bx bx-show"/>&nbsp;-->
-                        <PrimaryIconBtn v-if="counterStore.hasRole('MedicineCategories-delete')" @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
+                        <PrimaryIconBtn v-if="counterStore.hasRole('MedicineCategories-delete') && item.impoted_medicines_count == 0" @click="this.delete(item.id)" class="bg-danger border-danger" Icon="bx bx-trash-alt"/>
                     </td>
 
                 </tr>

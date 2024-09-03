@@ -129,7 +129,10 @@ export default {
                 ApiError(this, error);
             }
         },
-        async show(id) {
+        async show(id = null) {
+            if (id == null){
+                return;
+            }
             try {
                 this.item = this.Item;
                 this.date = this.Item.date;

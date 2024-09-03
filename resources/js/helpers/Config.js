@@ -93,6 +93,7 @@ export const Alert = ( status, message) => {
 }
 
 export const ApiError = (model, error) => {
+
     console.log('!! Error !! ',error)
 
     // if (!getUser()){

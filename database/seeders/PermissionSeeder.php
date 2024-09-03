@@ -109,6 +109,10 @@ class PermissionSeeder extends Seeder
                 "name" => "Reports",
                 "desc" => "Hisobotlar"
             ],
+            [
+                "name" => "ExpiredMedicines",
+                "desc" => "Muddati tugagan dorilar"
+            ],
 
         ];
 
@@ -132,7 +136,8 @@ class PermissionSeeder extends Seeder
                 'desc' => "Asosiy menuni korish",
             ]);
 
-            $arr1 = ['Dashboard', 'Payments', 'Reports'];
+            $arr1 = ['Dashboard', 'Payments', 'Reports', 'ExpiredMedicines'];
+            $arr2 = ['ExpiredMedicines'];
             if (!in_array($menu['name'], $arr1)){
                 // Create
                 Permission::create([
@@ -146,6 +151,15 @@ class PermissionSeeder extends Seeder
                     'menu_id' => $menu['id'],
                     'desc' => "Malumotlarni tahrirlash",
                 ]);
+                // Delete
+                Permission::create([
+                    'name' => 'delete',
+                    'menu_id' => $menu['id'],
+                    'desc' => "Malumotlarni o'chirish",
+                ]);
+            }
+
+            if (in_array($menu['name'], $arr2)){
                 // Delete
                 Permission::create([
                     'name' => 'delete',

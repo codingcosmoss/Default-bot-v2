@@ -21,7 +21,7 @@ class InvoiceShowResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $customer = Customer::find($this->customer_id);
+        $customer = Customer::withTrashed()->find($this->customer_id);
         $user = User::find($this->user_id);
         $soldMedicines = SoldMedicine::where('invoice_id', $this->id)->get();
         $returnMedicines = SellingReturnedMedicine::where('invoice_id', $this->id)->get();
