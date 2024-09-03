@@ -92,6 +92,12 @@
             </BaseBox>
             <BaseBox :Title="$t('MostSoldMedicines')">
                 <div id="dashboardChart2">
+                    <apexchart
+                        type="bar"
+                        height="350"
+                        :options="chartOptions"
+                        :series="series"
+                    ></apexchart>
                 </div>
             </BaseBox>
             <BaseBox :Title="$t('CurrentMedicinesAmount')">
@@ -113,6 +119,7 @@ import {Alert} from "@/helpers/Config.js";
 import {useConterStore} from "@/store/counter.js";
 import page from "@/components/layout/Page.vue";
 import ApexCharts from "apexcharts";
+import VueApexCharts from "vue3-apexcharts";
 import BaseBox from "@/components/global/BaseBox.vue";
 import CardBlock from "@/components/all/CardBlock.vue";
 import CardClassicBlock from "@/components/all/CardClassicBlock.vue";
@@ -120,7 +127,7 @@ import {dashboardCart1, dashboardCart2, quantityVerification} from "@/helpers/ap
 import {registry} from "chart.js";
 import CardClassicBlockLoader from "@/components/all/CardClassicBlockLoader.vue";
 export default {
-    components: {CardClassicBlockLoader, CardClassicBlock, CardBlock, BaseBox, Page},
+    components: {CardClassicBlockLoader,  apexchart: VueApexCharts, CardClassicBlock, CardBlock, BaseBox, Page},
     setup() {
         const counterStore = useConterStore();
         return {counterStore}
@@ -162,7 +169,84 @@ export default {
             importedSubtotalMedicinesAmount: 0,
             expenses: [],
             netProfit: [],
-            totalNetProfit: []
+            totalNetProfit: [],
+
+            series: [
+                {
+                    name: "Fruits",
+                    data: [20, 15, 25], // Mevalar miqdorini bu yerda qo'shasiz
+                },
+            ],
+            chartOptions: {
+                chart: {
+                    height: 350,
+                    type: "bar",
+                },
+                plotOptions: {
+                    bar: {
+                        borderRadius: 10,
+                        dataLabels: {
+                            position: "top", // top, center, bottom
+                        },
+                    },
+                },
+                dataLabels: {
+                    enabled: true,
+                    formatter: function (val) {
+                        return val + "ta";
+                    },
+                    offsetY: -20,
+                    style: {
+                        fontSize: "12px",
+                        colors: ["#304758"],
+                    },
+                },
+                xaxis: {
+                    categories: ["Apple", "Banana", "Orange"], // Mevalar nomini bu yerda qo'shasiz
+                    position: "top",
+                    axisBorder: {
+                        show: false,
+                    },
+                    axisTicks: {
+                        show: false,
+                    },
+                    crosshairs: {
+                        fill: {
+                            type: "gradient",
+                            gradient: {
+                                colorFrom: "#D8E3F0",
+                                colorTo: "#BED1E6",
+                                stops: [0, 100],
+                                opacityFrom: 0.4,
+                                opacityTo: 0.5,
+                            },
+                        },
+                    },
+                    tooltip: {
+                        enabled: true,
+                    },
+                },
+                yaxis: {
+                    axisBorder: {
+                        show: false,
+                    },
+                    axisTicks: {
+                        show: false,
+                    },
+                    labels: {
+                        show: false,
+                    },
+                },
+                title: {
+                    text: "Fruit Count",
+                    floating: true,
+                    offsetY: 330,
+                    align: "center",
+                    style: {
+                        color: "#444",
+                    },
+                },
+            },
 
         }
     },
@@ -203,25 +287,31 @@ export default {
                     height: 380,
                     width: "100%",
                     type: "bar",
-                    animations: {
-                        initialAnimation: {
-                            enabled: false
+                },
+                series: [{
+                    data: [400, 430, 448, 470, 540, 580, 690, 1100, 1200, 1380]
+                }],
+                chartOptions: {
+                    chart: {
+                        type: 'bar',
+                        height: 350
+                    },
+                    plotOptions: {
+                        bar: {
+                            borderRadius: 4,
+                            borderRadiusApplication: 'end',
+                            horizontal: true,
                         }
+                    },
+                    dataLabels: {
+                        enabled: false
+                    },
+                    xaxis: {
+                        categories: ['South Korea', 'Canada', 'United Kingdom', 'Netherlands', 'Italy', 'France', 'Japan',
+                            'United States', 'China', 'Germany'
+                        ],
                     }
                 },
-                series: [
-                    {
-                        name: this.$t('Selling'),
-                        data: this.sellings
-                    },
-                    {
-                        name: this.$t('Purchase'),
-                        data: this.purchases
-                    }
-                ],
-                xaxis: {
-                    type: "datetime"
-                }
             };
             var chart = new ApexCharts(document.querySelector("#dashboardChart2"), options);
             chart.render();
@@ -304,8 +394,12 @@ export default {
                 const response = await dashboardCart1();
                 let data = response.data;
                 if (response.status){
-                    this.realMedicines = data.realMedicinesCount;
                     this.registeredMedicines = data.medicines_count;
+                    this.realMedicinesArr = data.realMedicinesCount;
+                    this.realMedicines = 0;
+                    data.realMedicinesCount.forEach(e =>{
+                        this.realMedicines += e.amount;
+                    })
                     this.expiredMedicinesCount = 0;
                     data.expiredMedicines.forEach(e=>{
                         this.expiredMedicinesCount += e.amount;

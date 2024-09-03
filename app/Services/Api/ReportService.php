@@ -235,15 +235,28 @@ class ReportService extends AbstractService
              )');
                 })
                 ->select('medicines.*', 'remaining_drugs.*') // Agar kerak bo'lsa, tanlashni sozlashingiz mumkin
-                ->sum('amount');
+                ->get();
 
+            // Eng kop sotilgan dorilar
+            $bestSellers = DB::table('sold_medicines')
+                ->select(
+                    'medicine_id',
+                    'currency_id',
+                    DB::raw('SUM(result_sum) as total_subtotal'),
+                    DB::raw('SUM(amount) as total_amount')
+                )
+                ->where('clinic_id', auth()->user()->clinic_id)
+                ->groupBy('medicine_id', 'currency_id')
+                ->orderBy('total_amount', 'desc') // amount bo'yicha o'sish tartibida tartiblash
+                ->limit(20);
 
 
             $data = [
                 'medicines_count' => $medicinesCount, // barcha dorilar soni
                 'expiredMedicines' => BatchResource::collection($expiredMedicines),
                 'importedMedicines' => ImportedMedicineResource::collection($importedMedicines),
-                'realMedicinesCount' => $realMedicines
+                'realMedicinesCount' => $realMedicines,
+                'bestSellers' => $bestSellers
             ];
 
             return [
@@ -351,5 +364,7 @@ class ReportService extends AbstractService
         }
 
     }
+
+
 
 }
