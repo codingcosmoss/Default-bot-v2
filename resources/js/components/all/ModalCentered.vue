@@ -16,7 +16,7 @@
                         </div>
                         <div class="modal-footer" v-if="isModalFooter">
                             <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{ $t('Close') }}</button>
-                            <button :disabled="isDisabled" @click="this.$emit('onModal', true)" type="button" class="btn btn-primary">{{ $t('Submit') }}</button>
+                            <button v-if="isSubmit" :disabled="isDisabled" @click="this.$emit('onModal', true)" type="button" class="btn btn-primary">{{ $t('Submit') }}</button>
                         </div>
                     </div>
                 </div>
@@ -38,6 +38,10 @@
                 default: 'Title'
             },
             isModalFooter: {
+                type: Boolean,
+                default: true
+            },
+            isSubmit: {
                 type: Boolean,
                 default: true
             },

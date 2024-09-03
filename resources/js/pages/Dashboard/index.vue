@@ -20,21 +20,21 @@
             </div>
         </div>
         <div class="row " v-if="!cardLoader">
-            <div class="col-md-3 cursor-pointer" @click="this.$router.push('/')">
+            <div class="col-md-3 cursor-pointer" @click="this.$router.push('/admin/medicines')">
                 <CardBlock
                     :Title="$t('RegisteredMedicines')"
                     :Number="counterStore.formatNumber(registeredMedicines)"
                     Icon="bx bx-copy-alt font-size-24"
                 />
             </div>
-            <div class="col-md-3 cursor-pointer" @click="this.$router.push('/')">
+            <div class="col-md-3 cursor-pointer" @click="this.$router.push('/admin/import/medicines')">
                 <CardBlock
                     :Title="$t('ExpiredMedicines')"
                     :Number="counterStore.formatNumber(expiredMedicinesCount)"
                     Icon="bx bx-time font-size-24"
                 />
             </div>
-            <div class="col-md-3 cursor-pointer" @click="this.$router.push('/')">
+            <div class="col-md-3 cursor-pointer" @click="this.$router.push('/admin/import/medicines')">
                 <CardBlock
                     :Title="$t('ImportedDrugs')"
                     :Number="counterStore.formatNumber(importedMedicines)"
@@ -86,17 +86,17 @@
 
         <div class="row">
 
-            <BaseBox :Title="$t('SalesandPurchasestatistics')">
+            <BaseBox Col="col-xl-12" :Title="$t('SalesandPurchasestatistics')">
                 <div id="dashboardChart1">
                 </div>
             </BaseBox>
             <BaseBox :Title="$t('MostSoldMedicines')">
-                <div id="dashboardChart2">
+                <div id="dashboardChart2" v-if="isChart2">
                     <apexchart
                         type="bar"
-                        height="350"
-                        :options="chartOptions"
-                        :series="series"
+                        height="345"
+                        :options="chart2Data.chartOptions"
+                        :series="chart2Data.series"
                     ></apexchart>
                 </div>
             </BaseBox>
@@ -104,12 +104,77 @@
                 <div id="dashboardChart3">
                 </div>
             </BaseBox>
-            <BaseBox :Title="$t('Expenses')">
-                <div id="dashboardChart4">
-                </div>
-            </BaseBox>
+<!--            <BaseBox :Title="$t('Expenses')">-->
+<!--                <div id="dashboardChart4">-->
+<!--                </div>-->
+<!--            </BaseBox>-->
+
 
         </div>
+
+        <ModalCentered
+            :isSubmit="false"
+            ModalName="dashboardAlert"
+            :Title="$t('Info')"
+        >
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body p-0">
+                        <h4 class="card-title">{{$t('ExpiredMedicines')}}</h4>
+                        <div class="table-responsive">
+                            <table class="table mb-0">
+
+                                <thead class="table-light">
+                                <tr>
+                                    <th>{{$t('MedicineName')}}</th>
+                                    <th>{{$t('Collection')}}</th>
+                                    <th>{{$t('Amount')}}</th>
+                                    <th>{{$t('ExpirationDate')}}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="batch in expiredDrugs">
+                                    <td>
+                                        <p class="font-size-12 text-wrap" >{{batch.medicine.name}}</p>
+                                    </td>
+                                    <td>{{batch.name}}</td>
+                                    <td>{{batch.amount}}</td>
+                                    <td>{{batch.expiry_date_finished}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body p-0">
+                        <h4 class="card-title">{{$t('WarehouseNotAmount')}}</h4>
+                        <div class="table-responsive">
+                            <table class="table mb-0">
+
+                                <thead class="table-light">
+                                <tr>
+                                    <th>{{$t('MedicineName')}}</th>
+                                    <th>{{$t('Amount')}}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="medicine in outdatedDrugs">
+                                    <td>{{medicine.name}}</td>
+                                    <td>{{medicine.amount}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </ModalCentered>
+
     </Page>
 </template>
 <script>
@@ -126,8 +191,11 @@ import CardClassicBlock from "@/components/all/CardClassicBlock.vue";
 import {dashboardCart1, dashboardCart2, quantityVerification} from "@/helpers/api.js";
 import {registry} from "chart.js";
 import CardClassicBlockLoader from "@/components/all/CardClassicBlockLoader.vue";
+import ModalCentered from "@/components/all/ModalCentered.vue";
 export default {
-    components: {CardClassicBlockLoader,  apexchart: VueApexCharts, CardClassicBlock, CardBlock, BaseBox, Page},
+    components: {
+        ModalCentered,
+        CardClassicBlockLoader,  apexchart: VueApexCharts, CardClassicBlock, CardBlock, BaseBox, Page},
     setup() {
         const counterStore = useConterStore();
         return {counterStore}
@@ -170,83 +238,37 @@ export default {
             expenses: [],
             netProfit: [],
             totalNetProfit: [],
+            isChart2: false,
+            chart2Data: {
+                series: [{
+                    data: []
+                }],
+                chartOptions: {
+                    chart: {
+                        type: 'bar',
+                        height: 380,
+                    },
+                    plotOptions: {
+                        bar: {
+                            borderRadius: 4,
+                            borderRadiusApplication: 'end',
+                            horizontal: true,
+                        }
+                    },
+                    dataLabels: {
+                        enabled: false
+                    },
+                    xaxis: {
+                        categories: [],
+                    }
+                },
 
-            series: [
-                {
-                    name: "Fruits",
-                    data: [20, 15, 25], // Mevalar miqdorini bu yerda qo'shasiz
-                },
-            ],
-            chartOptions: {
-                chart: {
-                    height: 350,
-                    type: "bar",
-                },
-                plotOptions: {
-                    bar: {
-                        borderRadius: 10,
-                        dataLabels: {
-                            position: "top", // top, center, bottom
-                        },
-                    },
-                },
-                dataLabels: {
-                    enabled: true,
-                    formatter: function (val) {
-                        return val + "ta";
-                    },
-                    offsetY: -20,
-                    style: {
-                        fontSize: "12px",
-                        colors: ["#304758"],
-                    },
-                },
-                xaxis: {
-                    categories: ["Apple", "Banana", "Orange"], // Mevalar nomini bu yerda qo'shasiz
-                    position: "top",
-                    axisBorder: {
-                        show: false,
-                    },
-                    axisTicks: {
-                        show: false,
-                    },
-                    crosshairs: {
-                        fill: {
-                            type: "gradient",
-                            gradient: {
-                                colorFrom: "#D8E3F0",
-                                colorTo: "#BED1E6",
-                                stops: [0, 100],
-                                opacityFrom: 0.4,
-                                opacityTo: 0.5,
-                            },
-                        },
-                    },
-                    tooltip: {
-                        enabled: true,
-                    },
-                },
-                yaxis: {
-                    axisBorder: {
-                        show: false,
-                    },
-                    axisTicks: {
-                        show: false,
-                    },
-                    labels: {
-                        show: false,
-                    },
-                },
-                title: {
-                    text: "Fruit Count",
-                    floating: true,
-                    offsetY: 330,
-                    align: "center",
-                    style: {
-                        color: "#444",
-                    },
-                },
+
             },
+            realMedicineNumbers: [],
+            realMedicineArr: [],
+            outdatedDrugs: [], // eskirgan dorilar
+            expiredDrugs: [] // miqdori qolmagan dorilar
 
         }
     },
@@ -258,8 +280,10 @@ export default {
                     width: "100%",
                     type: "area",
                     animations: {
+                        zoom: false,
                         initialAnimation: {
                             enabled: false
+
                         }
                     }
                 },
@@ -281,42 +305,6 @@ export default {
             chart.render();
 
         },
-        chart2(){
-            var options = {
-                chart: {
-                    height: 380,
-                    width: "100%",
-                    type: "bar",
-                },
-                series: [{
-                    data: [400, 430, 448, 470, 540, 580, 690, 1100, 1200, 1380]
-                }],
-                chartOptions: {
-                    chart: {
-                        type: 'bar',
-                        height: 350
-                    },
-                    plotOptions: {
-                        bar: {
-                            borderRadius: 4,
-                            borderRadiusApplication: 'end',
-                            horizontal: true,
-                        }
-                    },
-                    dataLabels: {
-                        enabled: false
-                    },
-                    xaxis: {
-                        categories: ['South Korea', 'Canada', 'United Kingdom', 'Netherlands', 'Italy', 'France', 'Japan',
-                            'United States', 'China', 'Germany'
-                        ],
-                    }
-                },
-            };
-            var chart = new ApexCharts(document.querySelector("#dashboardChart2"), options);
-            chart.render();
-
-        },
         chart3(){
             var options = {
                 chart: {
@@ -329,15 +317,8 @@ export default {
                         }
                     }
                 },
-                series:[25, 15, 44, 55, 41, 17],
-                labels: [
-                    'Monday',
-                    'Tuesday',
-                    'Wednesday',
-                    'Thursday',
-                    'Friday',
-                    'Saturday',
-                ],
+                series: this.realMedicineNumbers,
+                labels: this.realMedicineArr,
 
             };
             var chart = new ApexCharts(document.querySelector("#dashboardChart3"), options);
@@ -354,7 +335,7 @@ export default {
                         }
                     },
                 series: [{
-                    name: "Desktops",
+                    name: this.$t('Amount'),
                     data: [10, 41, 35, 51, 49, 62, 69, 91, 148]
                 }],
                 dataLabels: {
@@ -394,21 +375,48 @@ export default {
                 const response = await dashboardCart1();
                 let data = response.data;
                 if (response.status){
+
+
                     this.registeredMedicines = data.medicines_count;
                     this.realMedicinesArr = data.realMedicinesCount;
                     this.realMedicines = 0;
                     data.realMedicinesCount.forEach(e =>{
                         this.realMedicines += e.amount;
+                        if (e.amount > 0){
+                            this.realMedicineNumbers.push(e.amount);
+                            this.realMedicineArr.push(e.name);
+                        }else{
+                            this.outdatedDrugs.push(e);
+                        }
                     })
+
                     this.expiredMedicinesCount = 0;
                     data.expiredMedicines.forEach(e=>{
                         this.expiredMedicinesCount += e.amount;
+                        this.expiredDrugs.push(e);
                     })
+
+                    // Alert info
+                    const myModal = new bootstrap.Modal(document.getElementById('dashboardAlert'));
+                    myModal.show();
+                    // --------
+
+                    this.chart3()
+
                     data.importedMedicines.forEach(e=>{
                         this.importedMedicines += e.amount;
 
                     })
+                    let bestSellerArr = [];
+                    let bestSellerNumbers = [];
+                    data.bestSellers.forEach(e =>{
+                        bestSellerArr.push(e.name);
+                        bestSellerNumbers.push(e.total_amount)
+                    })
 
+                    this.chart2Data.chartOptions.xaxis.categories = bestSellerArr;
+                    this.chart2Data.series[0].data = bestSellerNumbers;
+                    this.isChart2 = true;
                     this.expiredMedicines = data.expiredMedicines;
                 }
                 this.cardLoader = false;
@@ -480,10 +488,6 @@ export default {
     mounted() {
         this.dashboardCart1();
         this.dashboardCart2();
-
-        this.chart2()
-        this.chart3()
-        this.chart4()
         this.quantityVerification()
         // this.indexPaginates()
     }

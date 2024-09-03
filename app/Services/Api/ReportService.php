@@ -248,7 +248,13 @@ class ReportService extends AbstractService
                 ->where('clinic_id', auth()->user()->clinic_id)
                 ->groupBy('medicine_id', 'currency_id')
                 ->orderBy('total_amount', 'desc') // amount bo'yicha o'sish tartibida tartiblash
-                ->limit(20);
+                ->limit(20)
+                ->get();
+
+            foreach ($bestSellers as $key => $value) {
+                $bestSellers[$key]->name = Medicine::withoutTrashed()->find($value->medicine_id)->name;
+            }
+
 
 
             $data = [
@@ -325,7 +331,7 @@ class ReportService extends AbstractService
                 )
                 ->where('clinic_id', auth()->user()->clinic_id)
                 ->groupBy('date') // currency_id va sign bo'yicha guruhlash
-                ->orderBy('date', 'desc')
+                ->orderBy('date', 'asc')
                 ->get();
 
             $purchases = DB::table('documents')
@@ -335,7 +341,7 @@ class ReportService extends AbstractService
                 )
                 ->where('clinic_id', auth()->user()->clinic_id)
                 ->groupBy('date') // currency_id va sign bo'yicha guruhlash
-                ->orderBy('date', 'desc')
+                ->orderBy('date', 'asc')
                 ->get();
 
 

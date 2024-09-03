@@ -246,5 +246,8 @@
     "SellingError": "Sizdagi bazi dorilar hozr sotib bo'lindi, iltimos qaytadan miqdorlarini tekshirib chiqing !",
     "Info": "Malumot",
     "CurrencyInfo": "Valyuta qiymatini to'g'ri kiritganingizga ishonchingiz komilmi?",
-    "CurrencyRequired": "Iltimos valyutani qiymatini kiriting"
+    "CurrencyRequired": "Iltimos valyutani qiymatini kiriting",
+    "ExpirationDate": "Eskirgan muddati",
+    "Collection": "To'plam",
+    "WarehouseNotAmount": "Omborda qolmagan dorilar"
 }
