@@ -256,6 +256,20 @@
     "WarehouseNotAmount": "Omborda qolmagan dorilar",
     "Loan": "Qarz",
     "CreateYourProgram": "Dasturingizni yarating !",
-    "Soon": "Tez orada"
+    "Soon": "Tez orada",
+
+    "NewVersionComingSoon": "Tez kunda yagi versiya",
+    "NewVersion": "Yangi versiya",
+    "YouAreWelcome": "Hush kelibsiz",
+    "CreateyourownPharmacy": "Shaxsiy dorixonangizni oching",
+    "PharmacyName": "Dorixona nomi",
+    "enter": "kiriting",
+    "Username": "Foydalanuvchi nomi",
+    "ReturnedPassword": "Parolni takrorlang",
+    "PasswordError": "Parolni kiritishda xatolik bor, parol eng kami 5ta harfdan iboratbolishi kerak",
+    "PasswordError2": "Parol bir xil emas",
+    "UsernameError": "Foydalanuvchi nomi eng kami 5ta harfdan iboratbolishi kerak",
+    "UsernameError2": "Foydalanuvchi nomi band",
+    "AccauntCreated": "Akkaunt yaratildi"
 
 }

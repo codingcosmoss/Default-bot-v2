@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             ClinicSeeder::class,
             ClinicUserSeeder::class,
             UserSeeder::class,
+
             PermissionSeeder::class,
             RoleSeeder::class,
             ExpenseCategorySeeder::class,

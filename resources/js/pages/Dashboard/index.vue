@@ -269,7 +269,7 @@ export default {
                 chart: {
                     height: 380,
                     width: "100%",
-                    type: "area",
+                    type: "bar",
                     animations: {
                         zoom: false,
                         initialAnimation: {

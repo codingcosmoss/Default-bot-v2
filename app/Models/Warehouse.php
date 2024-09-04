@@ -9,4 +9,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Warehouse extends Model
 {
     use HasFactory, SoftDeletes;
+    protected $guarded = ['id'];
+
 }
