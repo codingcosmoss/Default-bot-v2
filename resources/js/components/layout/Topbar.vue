@@ -17,17 +17,7 @@
                     <i class="fa fa-fw fa-bars"></i>
                 </button>
 
-                <!--        Qo'shimcha qisimlar        -->
-                <div class="align-items-center flex-wrap gap-3 d-sm-flex d-none" style="margin-right: 20px" >
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                        <button type="button" class="btn btn-primary waves-effect waves-light">
-                            <i class="mdi mdi-gift-outline font-size-15"></i> {{$t('CreateYourProgram')}}
-                        </button>
-                    </div>
-                </div>
-                <!-- end -->
-
-                <div class="align-items-center flex-wrap gap-3 d-sm-flex d-none " >
+                <div class="align-items-center flex-wrap gap-3 d-sm-flex d-none " style="margin-right: 20px">
                     <div class="btn-group" role="group" aria-label="Basic example">
                         <button @click="this.$router.push('/admin/documents')" type="button" class="btn btn-outline-primary">{{$t('ImportDocuments')}}</button>
                         <button @click="this.$router.push('/selling')" type="button" class="btn btn-outline-primary">{{$t('Selling')}}</button>
@@ -35,9 +25,25 @@
                     </div>
                 </div>
 
+
+                <!--        Qo'shimcha qisimlar        -->
+                <div class="align-items-center flex-wrap gap-3 d-sm-flex d-none " >
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <button @click="this.$router.push('/admin/documents')" type="button" class="btn btn-primary">
+                            <i class="mdi mdi-gift-outline "></i>
+                            {{$t('CreateYourProgram')}}
+                        </button>
+                    </div>
+                </div>
+                <!-- end -->
+
+
                 <div class="align-items-center flex-wrap gap-3 d-sm-flex d-none " style="margin-left: 20px" >
                     <div class="btn-group" role="group" aria-label="Basic example">
-                        <button @click="this.$router.push('/admin/documents')" type="button" class="btn btn-outline-success">{{$t('Soon')}}</button>
+                        <button data-bs-toggle="modal" data-bs-target="#newVersionModal" type="button" class="btn btn-success">
+                            <i class="mdi mdi-new-box"></i>
+                            {{$t('NewVersion')}}
+                        </button>
                     </div>
                 </div>
 
@@ -87,15 +93,16 @@
             </div>
         </div>
     </header>
-
+    <NewVersion></NewVersion>
 </template>
 <script>
 import NotificationBtn from "@/ui-components/Items/AnimationButtons/NotificationBtn.vue";
 import {Logout} from "../../helpers/api.js";
 import {useConterStore} from "@/store/counter.js";
+import NewVersion from "@/pages/NewVersion/newVersion.vue";
 
 export default {
-        components:{NotificationBtn},
+        components:{NewVersion, NotificationBtn},
         setup(){
             const counterStore = useConterStore();
             return{counterStore}

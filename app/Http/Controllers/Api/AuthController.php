@@ -9,10 +9,12 @@ use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\AuthUserResource;
 use App\Http\Resources\OneUserResource;
 use App\Http\Resources\UserResources;
+use App\Models\Clinic;
 use App\Models\ClinicUser;
 use App\Models\Settings\Configuration;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Mockery\Exception;
 
@@ -96,11 +98,16 @@ class AuthController extends Controller
                 return $this->success($this->badRequest, 'bunday login avvaldan mavjud');
             }
 
+            DB::beginTransaction();
+            $isSaved = true;
             $user = new User();
             $user->name = $request->name;
             $user->login = $request->login;
             $user->password = $request->password;
             $user->save();
+
+            $clinic = new Clinic();
+
 
             $user->token = $user->createToken('laravel-vue-admin')->plainTextToken;
             $data = [
