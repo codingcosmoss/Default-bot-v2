@@ -9,5 +9,5 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class MedicineCategory extends Model
 {
     use HasFactory, SoftDeletes;
-
+    protected $guarded = ['id'];
 }

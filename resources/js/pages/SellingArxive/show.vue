@@ -49,7 +49,7 @@
                         <div class="row">
                             <div class="col-sm-6 print_td_left mt-3">
                                 <address>
-                                    <strong>{{$t('PaymentType')}}:</strong><br>
+<!--                                    <strong>{{$t('PaymentType')}}:</strong><br>-->
                                     <strong>{{$t('Subtotal')}}:</strong><br>
                                     <strong>{{$t('Paid')}}:</strong><br>
                                     <strong>{{$t('Indebtedness')}}:</strong><br>
@@ -57,7 +57,7 @@
                             </div>
                             <div class="col-sm-6 mt-3 text-sm-end print_td_right">
                                 <address>
-                                    {{invoice.date}}<br>
+<!--                                    {{invoice.date}}<br>-->
                                     {{counterStore.formatNumber(invoice.subtotal)}} {{sign}}<br>
                                     {{counterStore.formatNumber(invoice.amount_paid)}} {{sign}}<br>
                                     {{counterStore.formatNumber(invoice.must_paid)}} {{sign}}<br>

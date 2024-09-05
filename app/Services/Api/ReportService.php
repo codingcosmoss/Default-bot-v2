@@ -58,6 +58,7 @@ class ReportService extends AbstractService
                 ];
             }
             $models = DB::table('invoices')
+                ->where('clinic_id', auth()->user()->clinic_id)
                 ->select( 'date', 'currency_id', DB::raw('SUM(subtotal) as total_subtotal'), DB::raw('SUM(amount) as total_amount'), DB::raw('SUM(must_paid) as must_paid'))
                 ->groupBy('date', 'currency_id')
                 ->paginate($count);
@@ -108,6 +109,7 @@ class ReportService extends AbstractService
                 ];
             }
             $models = DB::table('documents')
+                ->where('clinic_id', auth()->user()->clinic_id)
                 ->select(
                     'date',
                     'currency_id',
@@ -235,6 +237,7 @@ class ReportService extends AbstractService
              )');
                 })
                 ->select('medicines.*', 'remaining_drugs.*') // Agar kerak bo'lsa, tanlashni sozlashingiz mumkin
+                ->where('medicines.clinic_id', auth()->user()->clinic_id)
                 ->get();
 
             // Eng kop sotilgan dorilar
