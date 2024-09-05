@@ -89,7 +89,7 @@
                     <td>
                         {{ item.title }}
                     </td>
-                    <td>{{ counterStore.formatNumber(item.amount)}} {{item.currency != null ? item.currency.sign : ''}}</td>
+                    <td>{{ counterStore.formatNumber(item.amount) +' '+ item.currency.sign }}</td>
                     <td>{{ item.date }}</td>
                     <td>{{ item.category }}</td>
                     <td>
@@ -344,11 +344,11 @@
                         return false;
                     }
                     const response = await expenseDelete(id);
+                    this.items = response.data;
                     if (response.status){
                         Alert('success', this.$t('delete'));
                         this.indexPaginates(this.current_page)
                         this.getTotals()
-                        return;
                     }
                     Alert('error', this.$t('formError'));
                     return false;

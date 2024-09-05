@@ -130,7 +130,7 @@ export default {
             }
         },
         async show(id = null) {
-            if (this.Item == null){
+            if (id == null){
                 return;
             }
             try {
