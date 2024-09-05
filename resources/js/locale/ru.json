@@ -254,5 +254,19 @@
     "WarehouseNotAmount": "Medicines not left in the warehouse",
     "Loan": "Loan",
     "CreateYourProgram": "Create Your Program!",
-    "Soon": "Coming Soon"
+    "Soon": "Coming Soon",
+    "NewVersionComingSoon": "Новая версия скоро выйдет",
+    "NewVersion": "Новая версия",
+    "YouAreWelcome": "Добро пожаловать",
+    "CreateyourownPharmacy": "Создайте свою аптеку",
+    "PharmacyName": "Название аптеки",
+    "enter": "введите",
+    "Username": "Имя пользователя",
+    "ReturnedPassword": "Повторите пароль",
+    "PasswordError": "Ошибка при вводе пароля, пароль должен содержать не менее 5 символов",
+    "PasswordError2": "Пароли не совпадают",
+    "UsernameError": "Имя пользователя должно содержать не менее 5 символов",
+    "UsernameError2": "Имя пользователя уже занято",
+    "AccauntCreated": "Аккаунт создан",
+    "MainUserError": "Извините, в демо-версии смена пароля недоступна"
 }

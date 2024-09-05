@@ -254,5 +254,19 @@
     "WarehouseNotAmount": "Medicines not left in the warehouse",
     "Loan": "Loan",
     "CreateYourProgram": "Create Your Program!",
-    "Soon": "Coming Soon"
+    "Soon": "Coming Soon",
+    "NewVersionComingSoon": "New version coming soon",
+    "NewVersion": "New version",
+    "YouAreWelcome": "You are welcome",
+    "CreateyourownPharmacy": "Create your own pharmacy",
+    "PharmacyName": "Pharmacy name",
+    "enter": "enter",
+    "Username": "Username",
+    "ReturnedPassword": "Repeat password",
+    "PasswordError": "There is an error in the password input, the password must be at least 5 characters long",
+    "PasswordError2": "Passwords do not match",
+    "UsernameError": "The username must be at least 5 characters long",
+    "UsernameError2": "Username is already taken",
+    "AccauntCreated": "Account created",
+    "MainUserError": "Sorry, in the demo version changing the password is not allowed"
 }

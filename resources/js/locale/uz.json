@@ -270,6 +270,7 @@
     "PasswordError2": "Parol bir xil emas",
     "UsernameError": "Foydalanuvchi nomi eng kami 5ta harfdan iboratbolishi kerak",
     "UsernameError2": "Foydalanuvchi nomi band",
-    "AccauntCreated": "Akkaunt yaratildi"
+    "AccauntCreated": "Akkaunt yaratildi",
+    "MainUserError": "Kechirasiz demo versiyada parollni o'zgartirish mumkin emas"
 
 }
