@@ -3,9 +3,9 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Dorixona boshqaruv tizimi</title>
+        <title>Pharma Plus</title>
 
-        <link rel="shortcut icon" href="{{asset("")}}assets/images/favicon.ico">
+        <link rel="shortcut icon" href="{{asset("")}}/Photos/company-logo.png">
         <!-- Bootstrap Css -->
         <link href="{{asset("")}}assets/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
         <!-- Icons Css -->
