@@ -30,7 +30,7 @@ class ImportedMedicineResource extends JsonResource
             'clinic_id' => $this->clinic_id,
             'document_id' => $this->document_id,
             'document' => $this->document,
-            'batch_name' => $batch->name,
+            'batch_name' => isset($batch->name) ? $batch->name : '---',
             'supplier_id' => $this->supplier_id,
             'supplier' => $this->supplier,
             'warehouse_id' => $this->warehouse_id,
