@@ -311,6 +311,7 @@ export default {
                 this.loaderPass = true;
                 if (this.password.length > 0 && this.password != this.repeatPassword) {
                     this.passwordErrors = {password: this.$t('RepeatPasswordAlert')};
+                    this.loaderPass = false;
                     return false;
                 }
                 let data = {

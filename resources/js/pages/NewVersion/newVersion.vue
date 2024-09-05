@@ -1,7 +1,7 @@
 <template>
     <ModalCentered :Title="$t('NewVersion')" ModalName="newVersionModal" ModalTypes="modal-xl"  :isSubmit="false" >
         <div>
-          
+
 <!--            <p class="text-muted">10 Apr, 2020</p>-->
 
             <div class="position-relative mb-3">
