@@ -90,7 +90,14 @@ export default {
         return {counterStore}
     },
     props: {
-        Item: Object
+        Item: {
+            type: [Object, Array],
+            default: {
+                id: 0,
+                name: '',
+                category_id: 0
+            }
+        }
     },
     data() {
         return {
@@ -138,7 +145,12 @@ export default {
                 this.date = this.Item.date;
                 this.title = this.Item.title;
                 this.amount = this.Item.amount;
-                this.currency = this.Item.currency.sign;
+                // Tekshiruv qo'shish: currency va sign mavjudligini tekshiradi
+                if (this.Item.currency && this.Item.currency.sign) {
+                    this.currency = this.Item.currency.sign;
+                } else {
+                    this.currency = ''; // Agar sign mavjud bo'lmasa, default qiymat
+                }
                 this.currency_id = this.Item.currency_id;
                 this.expense_category_id = this.Item.category_id;
             } catch (error) {

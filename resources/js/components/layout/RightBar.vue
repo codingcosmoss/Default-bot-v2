@@ -52,7 +52,6 @@
             getSession(){
                 let mode =  sessionStorage.getItem('is_visited');
                 let fon = localStorage.getItem('fon');
-                console.log('Fon:', fon);
                 if (mode == 'dark-mode-switch' || fon == 'dark'){
                     this.darkMode = true;
                 }else {

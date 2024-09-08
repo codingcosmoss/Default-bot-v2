@@ -268,5 +268,7 @@
     "UsernameError": "The username must be at least 5 characters long",
     "UsernameError2": "Username is already taken",
     "AccauntCreated": "Account created",
-    "MainUserError": "Sorry, in the demo version changing the password is not allowed"
+    "MainUserError": "Sorry, in the demo version changing the password is not allowed",
+    "Image": "Image"
+
 }

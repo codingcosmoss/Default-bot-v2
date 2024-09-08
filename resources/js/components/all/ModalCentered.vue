@@ -28,10 +28,7 @@
 </template>
 
 <script>
-    import {isDisabled} from "@coreui/coreui/js/src/util/index.js";
-
     export default {
-        methods: {isDisabled},
         props:{
             Title: {
                 type: [String, Number],

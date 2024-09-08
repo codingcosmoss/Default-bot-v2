@@ -17,7 +17,7 @@
 export default {
     props: {
         Cols: {
-            type: Number,
+            type: [Number, String],
             default: 8
         },
         currentPage: {

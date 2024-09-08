@@ -1,5 +1,5 @@
 <template>
-    <div class="account-pages my-5 pt-sm-5">
+    <div class="account-pages my-5 pt-sm-5 mb-0">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-8 col-lg-6 col-xl-5">
@@ -41,11 +41,22 @@
 
                                     </slot>
                             </div>
-                            <div class="mt-5 text-center">
+                            <div class="mt-2 text-center">
                                 <div>
 <!--                                    <p>Hisobingiz yo‘qmi ? <a @click="this.$router.push('/register')" class="fw-medium text-primary"> Ro'yxatdan o'tish </a> </p>-->
                                     <p>© {{$t('PoweredByCodingCosmos')}}</p>
                                 </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-lg-12 m-0 cursor-pointer" @click="this.$emit('onCopy', true)">
+                        <div class="card border border-success m-0">
+                            <div class="card-header bg-transparent border-success d-flex justify-content-between align-items-center">
+                                <h5 class="my-0 text-success"><i class="mdi mdi-account me-3"></i>Admin</h5>
+                                <h5  class="my-0 text-success"><i class="mdi mdi-content-copy"></i></h5>
                             </div>
 
                         </div>

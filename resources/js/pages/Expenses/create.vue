@@ -138,6 +138,7 @@ export default {
                 this.title = response.data.login;
                 this.amount = response.data.amount;
                 this.currency_id = response.data.currency_id;
+
                 this.expense_category_id = response.data.phone;
             } catch (error) {
                 ApiError(this, error);

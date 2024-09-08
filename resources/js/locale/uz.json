@@ -271,6 +271,8 @@
     "UsernameError": "Foydalanuvchi nomi eng kami 5ta harfdan iboratbolishi kerak",
     "UsernameError2": "Foydalanuvchi nomi band",
     "AccauntCreated": "Akkaunt yaratildi",
-    "MainUserError": "Kechirasiz demo versiyada parollni o'zgartirish mumkin emas"
+    "MainUserError": "Kechirasiz demo versiyada parollni o'zgartirish mumkin emas",
+
+    "Image": "Rasm"
 
 }

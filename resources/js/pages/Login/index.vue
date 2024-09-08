@@ -1,6 +1,6 @@
 <template>
 
-    <Layout>
+    <Layout @onCopy="login = 'admin', password = '12345678adc', addForm() " >
         <LoginInput
             Label = "Username"
             Pholder="username"
@@ -20,10 +20,12 @@
         />
 
         <br>
-        <div class="mt-3 d-grid">
+
+        <div class=" d-grid">
             <button :class="Loader && 'disabled' "  @click="addForm()" class="btn btn-primary waves-effect waves-light" type="submit">Tizimga kirish</button>
         </div>
     </Layout>
+
 
 </template>
 <script>
@@ -43,8 +45,8 @@
         components:{LoginInput, Layout, Page},
         data(){
             return{
-                login: 'admin',
-                password: '12345678adc',
+                login: '',
+                password: '',
                 isError: false,
                 Loader: false,
                 errors: []
