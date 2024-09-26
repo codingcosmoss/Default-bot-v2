@@ -1,0 +1,1 @@
+import{_ as s,o as t,b as o,e}from"./app-kSgaNykg.js";const n={},r={style:{width:"100%","text-align":"center","margin-top":"15px"}},a=e("div",{class:"spinner-border text-info m-1",role:"status"},[e("span",{class:"sr-only"},"Loading...")],-1),c=[a];function i(_,d,p,l,f,m){return t(),o("div",r,c)}const h=s(n,[["render",i]]);export{h as L};
