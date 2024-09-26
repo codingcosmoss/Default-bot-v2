@@ -187,10 +187,10 @@ export default {
         async updatePassword(){
             try {
 
-                if (this.item.id == 1){
-                    Alert('info', this.$t('MainUserError'));
-                    return false;
-                }
+                // if (this.item.id == 1){
+                //     Alert('info', this.$t('MainUserError'));
+                //     return false;
+                // }
 
                 this.loaderPass = true;
                 if (this.password.length > 0 && this.password != this.repeatPassword){

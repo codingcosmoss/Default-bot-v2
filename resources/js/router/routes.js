@@ -7,6 +7,11 @@ export default[
         component: () => import('@/pages/Docs/Dashboard.vue'),
     },
     {
+        path: '/reset-password',
+        permission: 'public',
+        component: () => import('../pages/ResetPassword/index.vue'),
+    },
+    {
         path: '/admin/docs/tables',
         permission: 'public',
         component: () => import('@/pages/Docs/Tables.vue'),

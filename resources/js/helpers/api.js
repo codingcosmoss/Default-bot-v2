@@ -6,6 +6,9 @@ import {DELETE} from '@/helpers/Config.js';
 export const GetUser = async () => {
     return  GET('/user');
 };
+export const resetPassword = async () => {
+    return  GET('/reset-password');
+};
 export const GetPermissionUser = async () => {
     return  GET('/api/user');
 };

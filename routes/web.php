@@ -27,3 +27,5 @@ Route::get('login', [\App\Http\Controllers\Api\AuthController::class, 'unauthori
 Route::get('/{pathMatch}', function () {
     return view('index');
 })->where('pathMatch', '.*' );
+
+

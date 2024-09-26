@@ -14,25 +14,31 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Mockery\Exception;
 
+/**
+ * Author: Muhammadali
+ * Abstract service class providing common functionalities for public services.
+ **/
 class AbstractPublicService
 {
     protected $model;
     protected $resource;
     protected $menu;
-    protected $isClinic = false; // Clinikalarga bog'liqmi yoki yo'qmi
+    protected $isClinic = false; // Indicates whether the service is related to clinics.
     protected $columns = [];
 
+    /**
+     * Retrieve all items from the model.
+     * @return array
+     **/
     public function index()
     {
         try {
-
-
-            if ($this->isClinic){
+            if ($this->isClinic) {
                 $data = $this->resource::collection(
                     $this->model::where('clinic_id', auth()->user()->clinic_id)
                         ->get()
                 );
-            }else{
+            } else {
                 $data = $this->resource::collection($this->model::all());
             }
 
@@ -43,7 +49,7 @@ class AbstractPublicService
                 'data' => $data
             ];
 
-        }catch (Exception $e){
+        } catch (Exception $e) {
             return [
                 'status' => false,
                 'code' => $e->getCode(),
@@ -51,23 +57,24 @@ class AbstractPublicService
                 'data' => null
             ];
         }
-
     }
+
+    /**
+     * Retrieve paginated items from the model.
+     * @param int $count
+     * @return array
+     **/
     public function getPaginate($count = 10)
     {
-
         try {
-
-
-            if ($this->isClinic){
+            if ($this->isClinic) {
                 $models = $this->model::where('clinic_id', auth()->user()->clinic_id)
                     ->orderBy('id', 'asc')
                     ->paginate($count);
-            }else{
+            } else {
                 $models = $this->model::orderBy('id', 'asc')
                     ->paginate($count);
             }
-
 
             $data = [
                 'items' => $this->resource::collection($models),
@@ -87,7 +94,7 @@ class AbstractPublicService
                 'message' => 'Success',
                 'data' => $data
             ];
-        }catch (Exception $e){
+        } catch (Exception $e) {
             return [
                 'status' => false,
                 'code' => $e->getCode(),
@@ -96,16 +103,21 @@ class AbstractPublicService
             ];
         }
     }
+
+    /**
+     * Retrieve items ordered by a specific column.
+     * @param string $column
+     * @param string $type
+     * @return array
+     **/
     public function orderBy($column = 'id', $type = 'desc')
     {
         try {
-
-
-            if($this->isClinic){
+            if ($this->isClinic) {
                 $data = $this->model::where('clinic_id', auth()->user()->clinic_id)
                     ->orderBy($column, $type)
                     ->get();
-            }else{
+            } else {
                 $data = $this->model::orderBy($column, $type)->get();
             }
 
@@ -115,7 +127,7 @@ class AbstractPublicService
                 'message' => 'Success',
                 'data' => $data
             ];
-        }catch (Exception $e){
+        } catch (Exception $e) {
             return [
                 'status' => false,
                 'code' => $e->getCode(),
@@ -124,14 +136,18 @@ class AbstractPublicService
             ];
         }
     }
+
+    /**
+     * Retrieve active items from the model.
+     * @return array
+     **/
     public function activeIndex()
     {
         try {
-
-            if($this->isClinic){
+            if ($this->isClinic) {
                 $data = $this->model::where('clinic_id', auth()->user()->clinic_id)
                     ->where('status', Status::$status_active)->get();
-            }else{
+            } else {
                 $data = $this->model::where('status', Status::$status_active)->get();
             }
 
@@ -141,7 +157,7 @@ class AbstractPublicService
                 'message' => 'Success',
                 'data' => $data
             ];
-        }catch (Exception $e){
+        } catch (Exception $e) {
             return [
                 'status' => false,
                 'code' => $e->getCode(),
@@ -150,17 +166,22 @@ class AbstractPublicService
             ];
         }
     }
+
+    /**
+     * Retrieve a single item by its ID.
+     * @param int $id
+     * @return array
+     **/
     public function show($id)
     {
         try {
-
-            if ($this->isClinic){
-                $data =  new $this->resource(
+            if ($this->isClinic) {
+                $data = new $this->resource(
                     $this->model::where('clinic_id', auth()->user()->clinic_id)
                         ->first($id)
                 );
-            }else{
-                $data =  new $this->resource($this->model::find($id));
+            } else {
+                $data = new $this->resource($this->model::find($id));
             }
 
             return [
@@ -169,7 +190,7 @@ class AbstractPublicService
                 'message' => 'Success',
                 'data' => new $this->resource($data)
             ];
-        }catch (Exception $e){
+        } catch (Exception $e) {
             return [
                 'status' => false,
                 'code' => $e->getCode(),
@@ -178,10 +199,15 @@ class AbstractPublicService
             ];
         }
     }
+
+    /**
+     * Store a new item in the model.
+     * @param array $data
+     * @return array
+     **/
     public function store(array $data)
     {
         try {
-
             $validator = $this->dataValidator($data, $this->storeFields());
 
             if ($validator['status']) {
@@ -208,8 +234,7 @@ class AbstractPublicService
                 'data' => new $this->resource($object)
             ];
 
-
-        }catch (Exception $e){
+        } catch (Exception $e) {
             return [
                 'status' => false,
                 'code' => $e->getCode(),
@@ -217,12 +242,17 @@ class AbstractPublicService
                 'data' => null
             ];
         }
-
     }
+
+    /**
+     * Update an existing item in the model.
+     * @param array $data
+     * @param int $id
+     * @return array
+     **/
     public function update(array $data, $id)
     {
         try {
-
             $item = $this->model::find($id);
             $validator = $this->dataValidator($data, $this->updateFields());
             if ($validator['status']) {
@@ -248,7 +278,7 @@ class AbstractPublicService
                 'data' => new $this->resource($item)
             ];
 
-        }catch (Exception $e){
+        } catch (Exception $e) {
             return [
                 'status' => false,
                 'code' => $e->getCode(),
@@ -257,10 +287,15 @@ class AbstractPublicService
             ];
         }
     }
+
+    /**
+     * Search for items by a search term.
+     * @param string $search
+     * @return array
+     **/
     public function search($search = '')
     {
-
-        if ($this->isClinic){
+        if ($this->isClinic) {
             $data = $this->model::where(function ($query) use ($search) {
                 foreach ($this->columns as $column) {
                     $query->orWhere($column, 'like', '%' . $search . '%');
@@ -268,7 +303,7 @@ class AbstractPublicService
             })
                 ->where('clinic_id', auth()->user()->clinic_id)
                 ->get();
-        }else{
+        } else {
             $data = $this->model::where(function ($query) use ($search) {
                 foreach ($this->columns as $column) {
                     $query->orWhere($column, 'like', '%' . $search . '%');
@@ -283,6 +318,8 @@ class AbstractPublicService
             'data' => $this->resource::collection($data)
         ];
     }
+
+
     public function destroy($id)
     {
         try {

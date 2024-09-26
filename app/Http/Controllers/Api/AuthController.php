@@ -31,84 +31,94 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Mockery\Exception;
 
+
+/**
+
+     * Author: Muhammadali
+
+     * Auth Controller performs the function of user login and registration
+
+ **/
+
 class AuthController extends Controller
 {
     /**
-     * @param Request $request
+     * Handle user login.
+     *
+     * @param LoginRequest $loginRequest
      * @return JsonResponse
      */
     public function login(LoginRequest $loginRequest)
     {
         try {
-
             $user = User::where('login', $loginRequest->input('login'))->first();
             if (!$user){
-                return $this->error($this->unAuthorized, "User not fount ");
-
+                return $this->error($this->unAuthorized, "User not found");
             }
 
             if (empty($user) || !Hash::check($loginRequest->input('password'), $user->password)) {
-
-                return $this->error($this->unAuthorized, "User not fount ");
-
+                return $this->error($this->unAuthorized, "User not found");
             }
 
             $user->token = $user->createToken('laravel-vue-admin')->plainTextToken;
 
             $data = [
                 'user' => new AuthUserResource($user),
-                'token' =>  $user->token
+                'token' => $user->token
             ];
 
             return $this->success($this->ok, 'User login successful', $data);
 
-
-        }catch (Exception $e){
+        } catch (Exception $e) {
             return $this->error($this->badRequest, $e->getMessage());
         }
-
     }
 
+    /**
+     * Handle clinic user login.
+     *
+     * @param LoginRequest $loginRequest
+     * @return JsonResponse
+     */
     public function clinicLogin(LoginRequest $loginRequest)
     {
         try {
-
             $user = ClinicUser::where('login', $loginRequest->input('login'))->first();
 
             if (!$user){
-                return $this->error($this->unAuthorized, "User not fount");
-
+                return $this->error($this->unAuthorized, "User not found");
             }
 
             if (empty($user) || !Hash::check($loginRequest->input('password'), $user->password)) {
-
-                return $this->error($this->unAuthorized, "User not fount");
-
+                return $this->error($this->unAuthorized, "User not found");
             }
 
             $user->token = $user->createToken('laravel-vue-admin')->plainTextToken;
 
             $data = [
                 'user' => new UserResources($user),
-                'token' =>  $user->token
+                'token' => $user->token
             ];
 
             return $this->success($this->ok, 'User login successful', $data);
 
-
-        }catch (Exception $e){
+        } catch (Exception $e) {
             return $this->error($this->badRequest, $e->getMessage());
         }
-
     }
 
+    /**
+     * Register a new user and create associated clinic data.
+     *
+     * @param LoginRequest $request
+     * @return JsonResponse
+     */
     public function register(LoginRequest $request)
     {
         try {
-
             $isUsername = User::where('login', $request->login )->first();
             if ($isUsername){
-                return $this->success(203, 'bunday login avvaldan mavjud');
+                return $this->success(203, 'This login already exists');
             }
 
             DB::beginTransaction();
@@ -130,32 +140,34 @@ class AuthController extends Controller
             $user->token = $user->createToken('laravel-vue-admin')->plainTextToken;
             $data = [
                 'user' => new AuthUserResource($user),
-                'token' =>  $user->token
+                'token' => $user->token
             ];
 
-            // Rollarni biriktirish uchun RoleSeederni ishga tushirish
+            // Run role seeder to assign roles
             Artisan::call('db:seed', [
                 '--class' => DefaultBaseSeeder::class,
                 '--force' => true
             ]);
             $this->defaultData($clinic);
 
-
             if ($isSaved){
                 DB::commit();
                 return $this->success($this->ok, 'User login successful', $data);
-            }else{
+            } else {
                 DB::rollBack();
             }
 
-
-
-        }catch (Exception $e){
+        } catch (Exception $e) {
             return $this->error($this->badRequest, $e->getMessage());
         }
-
     }
 
+    /**
+     * Create default data for a newly created clinic.
+     *
+     * @param Clinic $clinic
+     * @return void
+     */
     public function defaultData($clinic)
     {
         MedicineCategory::create([
@@ -167,36 +179,41 @@ class AuthController extends Controller
             'name' => 'Sanofi',
             'clinic_id' => $clinic->id,
         ]);
+
         SizeType::create([
             'name' => '100ml',
             'clinic_id' => $clinic->id,
         ]);
+
         BoxSize::create([
             'name' => '100ml',
             'size' => 100,
             'sign' => 'ml',
             'clinic_id' => $clinic->id,
         ]);
+
         Warehouse::create([
             'name' => 'Main',
             'clinic_id' => $clinic->id,
         ]);
+
         Supplier::create([
             'name' => 'Jon',
             'address' => 'London',
             'phone' => '+(998) 993645621',
             'clinic_id' => $clinic->id,
         ]);
+
         PaymentType::create([
             'name' => 'Cash payment',
             'clinic_id' => $clinic->id,
             'status' => Status::$default
         ]);
+
         PaymentType::create([
             'name' => 'Paypal',
             'clinic_id' => $clinic->id,
         ]);
-
 
         Setting::create([
             'name' => $clinic->name,
@@ -205,10 +222,11 @@ class AuthController extends Controller
             'currency_id' => Currency::first()->id,
             'clinic_id' => $clinic->id,
         ]);
-
     }
 
     /**
+     * Logout the current user.
+     *
      * @param Request $request
      * @return JsonResponse
      */
@@ -218,21 +236,54 @@ class AuthController extends Controller
         return $this->success($this->ok, 'Logout Successful');
     }
 
+    /**
+     * Get the current authenticated user.
+     *
+     * @return JsonResponse
+     */
     public function user()
     {
         try {
             return $this->success($this->ok, 'Get user successful', new AuthUserResource(auth()->user()));
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return $this->error($this->badRequest, $e->getMessage());
         }
     }
 
-    public function unauthorized(){
+    /**
+     * Handle unauthorized access.
+     *
+     * @return JsonResponse
+     */
+    public function unauthorized()
+    {
         return $this->error($this->ok, 'Unauthorized user :( ');
     }
 
-    public function test(){
-        return $this->error($this->ok, 'Test successfuly :) ');
+    /**
+     * Test method for debugging.
+     *
+     * @return JsonResponse
+     */
+    public function test()
+    {
+        return $this->error($this->ok, 'Test successful :) ');
     }
 
+    public function resetPassword()
+    {
+        // Komandani ishga tushirish
+        Artisan::call('password:reset');
+
+        // Konsol chiqishini olish
+        $output = Artisan::output();
+
+        // Xabarni ko'rsatish
+        return response()->json([
+            'status' => true,
+            'message' => 'Password reset command executed successfully.',
+            'output' => $output,
+        ]);
+    }
 }
+

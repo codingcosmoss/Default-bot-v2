@@ -337,3 +337,13 @@ Route::middleware(['auth:sanctum', 'admin' ])->group(function () {
 
 });
 
+/*
+    System administrator is the way to recover the user password.
+    !!! Attention this direction should stand in the review just remove the comment to reset the password.
+    once you have reset the password, take it back to the comment.  !!!
+*/
+
+Route::get('/reset-password', [\App\Http\Controllers\Api\AuthController::class, 'resetPassword']);
+
+
+

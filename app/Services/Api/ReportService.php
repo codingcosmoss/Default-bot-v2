@@ -5,6 +5,7 @@ namespace App\Services\Api;
 use App\Fields\Store\TextField;
 use App\Http\Resources\BatchResource;
 use App\Http\Resources\ClinicUserResource;
+use App\Http\Resources\CurrencyResource;
 use App\Http\Resources\ImportedMedicineResource;
 use App\Http\Resources\MedicineResource;
 use App\Http\Resources\ReportResource;
@@ -179,6 +180,7 @@ class ReportService extends AbstractService
 
             foreach ($models as $key => $value) {
                 $models[$key]->medicine = new MedicineResource(Medicine::withTrashed()->find($value->medicine_id));
+                $models[$key]->currency = new CurrencyResource(Currency::find($value->currency_id));
             }
 
             $data = [
