@@ -43,7 +43,7 @@
         />
         <br>
         <div class="mt-3 d-grid">
-            <button :class="Loader && 'disabled' " @click="addForm" class="btn btn-primary waves-effect waves-light" type="submit">Ro'yxatdan o'tish</button>
+            <button :class="Loader && 'disabled' " @click="addForm" class="btn btn-primary waves-effect waves-light" type="submit">{{$t('Register')}}</button>
         </div>
 
     </Layout>

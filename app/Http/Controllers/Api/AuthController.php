@@ -15,7 +15,11 @@ use App\Models\ClinicUser;
 use App\Models\Currency;
 use App\Models\DrugCompany;
 use App\Models\MedicineCategory;
+use App\Models\Menu;
 use App\Models\PaymentType;
+use App\Models\Permission;
+use App\Models\Role;
+use App\Models\RolePermission;
 use App\Models\Setting;
 use App\Models\Settings\Configuration;
 use App\Models\SizeType;
@@ -143,6 +147,7 @@ class AuthController extends Controller
                 'token' => $user->token
             ];
 
+            $this->defaultRole($clinic->id);
             // Run role seeder to assign roles
             Artisan::call('db:seed', [
                 '--class' => DefaultBaseSeeder::class,
@@ -222,6 +227,48 @@ class AuthController extends Controller
             'currency_id' => Currency::first()->id,
             'clinic_id' => $clinic->id,
         ]);
+    }
+
+    public function defaultRole($clinic_id)
+    {
+        $isRole = Role::where('clinic_id', $clinic_id)->where('private', Status::$status_active)->first();
+        $allPermissions = Permission::all()->pluck('id')->toArray();
+        if (!$isRole){
+            // new Super admin role
+            $role = new Role();
+            $role->name = 'Super private admin';
+            $role->clinic_id = $clinic_id;
+            $role->private = Status::$status_active;
+            $role->save();
+
+            foreach ($allPermissions as $permission){
+                $modelPermission = Permission::find($permission);
+                $menu = Menu::find($modelPermission->menu_id);
+                if ($menu){
+                    $model = new RolePermission();
+                    $model->role_id = $role->id;
+                    $model->permission_id = $permission;
+                    $model->permission_name = $menu->name.'-'.$modelPermission->name;
+                    $model->save();
+                }
+            }
+        }
+        $defaultRole = new Role();
+        $defaultRole->name = 'Admin';
+        $defaultRole->clinic_id = $clinic_id;
+        $defaultRole->save();
+
+        foreach ($allPermissions as $permission){
+            $modelPermission = Permission::find($permission);
+            $menu = Menu::find($modelPermission->menu_id);
+            if ($menu){
+                $model = new RolePermission();
+                $model->role_id = $defaultRole->id;
+                $model->permission_id = $permission;
+                $model->permission_name = $menu->name.'-'.$modelPermission->name;
+                $model->save();
+            }
+        }
     }
 
     /**

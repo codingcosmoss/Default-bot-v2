@@ -269,6 +269,7 @@
     "UsernameError2": "Username is already taken",
     "AccauntCreated": "Account created",
     "MainUserError": "Sorry, in the demo version changing the password is not allowed",
-    "Image": "Image"
+    "Image": "Image",
+    "Register": "Sign up"
 
 }

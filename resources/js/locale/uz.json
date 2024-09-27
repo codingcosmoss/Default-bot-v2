@@ -271,6 +271,7 @@
     "UsernameError2": "Foydalanuvchi nomi band",
     "AccauntCreated": "Akkaunt yaratildi",
     "MainUserError": "Kechirasiz demo versiyada parollni o'zgartirish mumkin emas",
-    "Image": "Rasm"
+    "Image": "Rasm",
+    "Register": "Ro'yxatdan o'tish"
 
 }
