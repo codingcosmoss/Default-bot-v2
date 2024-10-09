@@ -272,6 +272,8 @@
     "AccauntCreated": "Akkaunt yaratildi",
     "MainUserError": "Kechirasiz demo versiyada parollni o'zgartirish mumkin emas",
     "Image": "Rasm",
-    "Register": "Ro'yxatdan o'tish"
+    "Register": "Ro'yxatdan o'tish",
+
+    "BestSellers": "Eng yaxshi sotuvchilar"
 
 }

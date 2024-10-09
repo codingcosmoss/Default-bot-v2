@@ -183,6 +183,7 @@ class ReportService extends AbstractService
                 $models[$key]->currency = new CurrencyResource(Currency::find($value->currency_id));
             }
 
+          
             $data = [
                 'items' => $models,
                 'pagination' => [
@@ -211,6 +212,8 @@ class ReportService extends AbstractService
             ];
         }
     }
+
+   
 
     public function dashboardCart1()
     {
@@ -260,6 +263,11 @@ class ReportService extends AbstractService
                 $bestSellers[$key]->name = Medicine::withTrashed()->find($value->medicine_id)->name;
             }
 
+            $groupedInvoices = DB::table('invoices')
+            ->join('users', 'invoices.user_id', '=', 'users.id') // Join qilish
+            ->select('invoices.user_id', 'users.name', DB::raw('SUM(invoices.amount) as total_amount'))
+            ->groupBy('invoices.user_id', 'users.name') // Guruhlash
+            ->get();
 
 
             $data = [
@@ -267,7 +275,8 @@ class ReportService extends AbstractService
                 'expiredMedicines' => BatchResource::collection($expiredMedicines),
                 'importedMedicines' => ImportedMedicineResource::collection($importedMedicines),
                 'realMedicinesCount' => $realMedicines,
-                'bestSellers' => $bestSellers
+                'bestSellers' => $bestSellers,
+                'bestSellerEmployees' => $groupedInvoices // Eng yaxshi sotuvchi xodimlar
             ];
 
             return [

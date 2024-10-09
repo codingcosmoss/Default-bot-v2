@@ -86,10 +86,21 @@
 
         <div class="row">
 
-            <BaseBox Col="col-xl-12" :Title="$t('SalesandPurchasestatistics')">
+            <BaseBox Col="col-xl-6" :Title="$t('BestSellers')">
+                <div id="dashboardChart0" v-if="isChart0">
+                    <apexchart
+                        type="bar"
+                        height="345"
+                        :options="chart0Data.chartOptions"
+                        :series="chart0Data.series"
+                    ></apexchart>
+                </div>
+            </BaseBox>
+            <BaseBox Col="col-xl-6" :Title="$t('SalesandPurchasestatistics')">
                 <div id="dashboardChart1">
                 </div>
             </BaseBox>
+
             <BaseBox :Title="$t('MostSoldMedicines')">
                 <div id="dashboardChart2" v-if="isChart2">
                     <apexchart
@@ -204,6 +215,7 @@ export default {
         return {
             items: [],
             item: [],
+            isChart0: false,
             paginateCount: 10,
             cardClassicLoader: false,
             column: 'id',
@@ -230,7 +242,35 @@ export default {
             netProfit: [],
             totalNetProfit: [],
             isChart2: false,
+            bestSellerEmployees: [],
+            bestSellerEmployeesAmount: [],
             chart2Data: {
+                series: [{
+                    data: []
+                }],
+                chartOptions: {
+                    chart: {
+                        type: 'bar',
+                        height: 380,
+                    },
+                    plotOptions: {
+                        bar: {
+                            borderRadius: 4,
+                            borderRadiusApplication: 'end',
+                            horizontal: true,
+                        }
+                    },
+                    dataLabels: {
+                        enabled: false
+                    },
+                    xaxis: {
+                        categories: [],
+                    }
+                },
+
+
+            },
+            chart0Data: {
                 series: [{
                     data: []
                 }],
@@ -264,12 +304,33 @@ export default {
         }
     },
     methods: {
-        chart1(){
+        chart0(){
             var options = {
                 chart: {
                     height: 380,
                     width: "100%",
                     type: "bar",
+                    animations: {
+                        initialAnimation: {
+                            enabled: false
+                        }
+                    }
+                },
+                series: this.bestSellerEmployees,
+                labels: this.bestSellerEmployeesAmount,
+
+            };
+            var chart = new ApexCharts(document.querySelector("#dashboardChart0"), options);
+            chart.render();
+
+        },
+        chart1(){
+            var options = {
+                chart: {
+                    height: 380,
+                    width: "100%",
+                    type: "area",
+                    zoom: false,
                     animations: {
                         zoom: false,
                         initialAnimation: {
@@ -366,7 +427,14 @@ export default {
                 const response = await dashboardCart1();
                 let data = response.data;
                 if (response.status){
-
+                    
+                    data.bestSellerEmployees.forEach(e =>{
+                        this.bestSellerEmployees.push(e.name);
+                        this.bestSellerEmployeesAmount.push(e.total_amount);
+                    });
+                    this.chart0Data.chartOptions.xaxis.categories = this.bestSellerEmployees;
+                    this.chart0Data.series[0].data = this.bestSellerEmployeesAmount;
+                    this.isChart0 = true;
 
                     this.registeredMedicines = data.medicines_count;
                     this.realMedicinesArr = data.realMedicinesCount;
@@ -402,11 +470,12 @@ export default {
                         this.importedMedicines += e.amount;
 
                     })
+
                     let bestSellerArr = [];
                     let bestSellerNumbers = [];
                     data.bestSellers.forEach(e =>{
                         bestSellerArr.push(e.name);
-                        bestSellerNumbers.push(e.total_amount)
+                        bestSellerNumbers.push(e.total_amount);
                     })
 
                     this.chart2Data.chartOptions.xaxis.categories = bestSellerArr;
