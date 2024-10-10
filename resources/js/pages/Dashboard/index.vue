@@ -60,7 +60,6 @@
                 </div>
             </BaseBox>
 
-
             <BaseBox v-for="sign in signsArr" Col="col-xl-6" :Title="$t('SalesandPurchasestatistics') + ' (' + sign + ')'">
                 <div :id="'dashboardChart1' + sign">
                 </div>
@@ -294,7 +293,7 @@ export default {
 
                 let options = {
                     chart: {
-                        height: 380,
+                        height: 345,
                         width: "100%",
                         type: "area",
                         zoom: false,
