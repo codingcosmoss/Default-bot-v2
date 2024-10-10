@@ -338,25 +338,46 @@ class ReportService extends AbstractService
                 ->groupBy('expenses.currency_id', 'currencies.sign') // currency_id va sign bo'yicha guruhlash
                 ->get();
 
-            $selling = DB::table('invoices')
-                ->select(
-                    'date',
-                    DB::raw('SUM(subtotal) as subtotal'),
-                )
-                ->where('clinic_id', auth()->user()->clinic_id)
-                ->groupBy('date') // currency_id va sign bo'yicha guruhlash
-                ->orderBy('date', 'asc')
-                ->get();
+            // $selling = DB::table('invoices')
+            //     ->select(
+            //         'date',
+            //         DB::raw('SUM(subtotal) as subtotal'),
+            //     )
+            //     ->where('clinic_id', auth()->user()->clinic_id)
+            //     ->groupBy('date') // currency_id va sign bo'yicha guruhlash
+            //     ->orderBy('date', 'asc')
+            //     ->get();
 
-            $purchases = DB::table('documents')
+                
+                $selling = DB::table('invoices')
                 ->select(
-                    'date',
-                    DB::raw('SUM(subtotal) as subtotal'),
+                    'invoices.date',
+                    'invoices.currency_id',
+                    'currencies.title', // currency sign qiymatini tanlab olish
+                    'currencies.sign', // currency sign qiymatini tanlab olish
+                    DB::raw('SUM(invoices.subtotal) as subtotal')
                 )
-                ->where('clinic_id', auth()->user()->clinic_id)
-                ->groupBy('date') // currency_id va sign bo'yicha guruhlash
-                ->orderBy('date', 'asc')
+                ->join('currencies', 'invoices.currency_id', '=', 'currencies.id') // invoices va currencies jadvallarini bog'lash
+                ->where('invoices.clinic_id', auth()->user()->clinic_id)
+                ->groupBy('invoices.date', 'invoices.currency_id') // date, currency_id va sign bo'yicha guruhlash
+                ->orderBy('invoices.date', 'asc')
                 ->get();
+            
+
+                $purchases = DB::table('documents')
+                ->select(
+                    'documents.date',
+                    'documents.currency_id',
+                    'currencies.title', // currency sign qiymatini tanlab olish
+                    'currencies.sign', // currency sign qiymatini tanlab olish
+                    DB::raw('SUM(documents.subtotal) as subtotal')
+                )
+                ->join('currencies', 'documents.currency_id', '=', 'currencies.id') // invoices va currencies jadvallarini bog'lash
+                ->where('documents.clinic_id', auth()->user()->clinic_id)
+                ->groupBy('documents.date', 'documents.currency_id', 'currencies.title', 'currencies.sign') // Barcha kerakli ustunlar bo'yicha guruhlash
+                ->orderBy('documents.date', 'asc')
+                ->get();
+            
 
 
             $data = [
