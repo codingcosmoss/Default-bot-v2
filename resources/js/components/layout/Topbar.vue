@@ -17,35 +17,6 @@
                     <i class="fa fa-fw fa-bars"></i>
                 </button>
 
-                <div class="align-items-center flex-wrap gap-3 d-sm-flex d-none " style="margin-right: 20px">
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                        <button @click="this.$router.push('/admin/documents')" type="button" class="btn btn-outline-primary">{{$t('ImportDocuments')}}</button>
-                        <button @click="this.$router.push('/selling')" type="button" class="btn btn-outline-primary">{{$t('Selling')}}</button>
-                        <button @click="this.$router.push('/admin/medicines')" type="button" class="btn btn-outline-primary">{{$t('AllMedicines')}}</button>
-                    </div>
-                </div>
-
-
-                <!--        Qo'shimcha qisimlar        -->
-                <div v-if="clinicId == 1" class="align-items-center flex-wrap gap-3 d-sm-flex d-none " >
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                        <button @click="this.$router.push('/register')" type="button" class="btn btn-primary">
-                            <i class="mdi mdi-gift-outline "></i>
-                            {{$t('CreateYourProgram')}}
-                        </button>
-                    </div>
-                </div>
-                <!-- end -->
-
-
-                <div class="align-items-center flex-wrap gap-3 d-sm-flex d-none " style="margin-left: 20px" >
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                        <button data-bs-toggle="modal" data-bs-target="#newVersionModal" type="button" class="btn btn-success">
-                            <i class="mdi mdi-new-box"></i>
-                            {{$t('NewVersion')}}
-                        </button>
-                    </div>
-                </div>
 
 
             </div>
@@ -110,7 +81,6 @@ export default {
         data(){return{
             locale: localStorage.getItem('locale'),
             logo: '',
-            clinicId: 0,
             locales:[
                 {
                     title: 'English',
@@ -209,8 +179,6 @@ export default {
             }
         },
 
-        mounted() {
-            this.clinicId =  this.counterStore.user.clinic_id;
-        }
+        
 }
 </script>

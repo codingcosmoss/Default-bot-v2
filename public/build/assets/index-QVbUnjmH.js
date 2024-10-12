@@ -1,0 +1,1 @@
+import{P as s}from"./Page-s6HucaFA.js";import{_ as t,e as a,w as n,f as c,o as r,a as e}from"./app-KIduKiR5.js";const _={components:{Page:s}},p=e("div",{class:"row"},[e("h1",null," Dashboard ")],-1);function d(i,f,l,m,u,h){const o=c("Page");return r(),a(o,{Title:""},{default:n(()=>[p]),_:1})}const $=t(_,[["render",d]]);export{$ as default};

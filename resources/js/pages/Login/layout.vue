@@ -23,7 +23,7 @@
                                 <a  class="auth-logo-light">
                                     <div class="avatar-md profile-user-wid mb-4">
                                             <span class="avatar-title rounded-circle bg-light">
-                                                <img :src="counterStore.baseUrl + '/assets/images/logo-light.svg'" alt="" class="rounded-circle" height="34">
+                                                <img :src="counterStore.baseUrl + '/Photos/company-logo.png'"  alt="" class="rounded-circle" height="54">
                                             </span>
                                     </div>
                                 </a>

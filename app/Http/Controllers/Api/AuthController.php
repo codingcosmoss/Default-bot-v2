@@ -56,6 +56,7 @@ class AuthController extends Controller
     {
         try {
             $user = User::where('login', $loginRequest->input('login'))->first();
+
             if (!$user){
                 return $this->error($this->unAuthorized, "User not found");
             }
@@ -63,6 +64,10 @@ class AuthController extends Controller
             if (empty($user) || !Hash::check($loginRequest->input('password'), $user->password)) {
                 return $this->error($this->unAuthorized, "User not found");
             }
+
+            // Shu yerda biz cliniccani tekshirib olamiz qaezdor yoki yo'qligini
+            
+            //...
 
             $user->token = $user->createToken('laravel-vue-admin')->plainTextToken;
 
@@ -128,6 +133,7 @@ class AuthController extends Controller
             DB::beginTransaction();
             $isSaved = true;
 
+            // Yangi klinika qo'shish
             $clinic = new Clinic();
             $clinic->name = isset($request->name) ? $request->name : 'Pharma Plus';
             $clinic->save() != true ? $isSaved = false : '';

@@ -48,50 +48,7 @@
                 <PrimaryButton :Loader="loader" @onButton="update">{{$t('Save')}}</PrimaryButton>
             </BaseBox>
 
-            <BaseBox Col="col-xl-6" :Title="$t('ProgramSettings')">
-
-                <DefaultSelect
-                    :Label="$t('Currency')"
-                    Name="currency_id"
-                    @onInput="currency_id = JSON.parse($event).id, sign = JSON.parse($event).sign ,  openModal()"
-                    :Validated="errors"
-                >
-                    <option v-for="currency in currencies" :selected="currency.id == currency_id" :value="JSON.stringify(currency)" >{{currency.title}} ({{currency.sign}})</option>
-                </DefaultSelect>
-
-
-            </BaseBox>
-            <ModalCentered
-                :Title="$t('NewCurrencyTitle')"
-                ModalName="Currency"
-                @onModal="onUpdate()"
-            >
-                <div class="col-12 mt-3">
-                    <div class="card border border-primary">
-                        <div class="card-body">
-                            <h5 class="card-title">{{$t('Info')}}</h5>
-                            <p class="card-text">{{$t('NewCurrencyInfo')}}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="w-100 d-flex justify-content-center align-items-center gap-3">
-                    <p class="m-0 font-size-20 text-success fw-bold">1 {{oldSign}}</p>
-                    <p class="m-0 font-size-20 text-success fw-bold">=</p>
-                    <DefaultIconInput
-                        Label=""
-                        Class="col-lg-6 col-sm-6 currency_input"
-                        :Value="counterStore.formatNumber(amount)"
-                        :Validated="errors"
-                        @onInput="onCurrency($event),  delete this.errors.amount"
-
-                    >
-                        {{sign}}
-                    </DefaultIconInput>
-
-                </div>
-
-
-            </ModalCentered>
+          
         </div>
     </Page>
 </template>
@@ -376,7 +333,6 @@
             },
         },
         mounted() {
-            this.getCurrencies();
             this.show(null)
         }
     }

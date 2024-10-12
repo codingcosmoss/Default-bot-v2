@@ -6,7 +6,7 @@
     </div>
 </template>
 <script>
-    import {GetUser, roleNotification, quantityVerification} from "./helpers/api.js";
+    import {GetUser, roleNotification} from "./helpers/api.js";
     import Topbar from "@/components/Layout/Topbar.vue";
     import LeftMenu from "@/components/Layout/LeftMenu.vue";
     import {useConterStore} from "@/store/counter.js";
@@ -36,24 +36,10 @@
                 const response = await roleNotification(this.counterStore.user.role_id);
                 localStorage.setItem('token', response.data.token);
             },
-            async quantityVerification(){
-                try {
-                    this.loader = true;
-                    const response = await quantityVerification();
-                    if (response.status){
-                        await this.search()
-                    }
-                    this.loader = false;
-                }catch(error){
-                    ApiError(this, error);
-                }
-            },
+            
         },
         mounted() {
             // this.getUser()
-            setInterval(() => {
-                this.quantityVerification();
-            }, 3600000);
             this.fon()
             this.changeRole();
         }
