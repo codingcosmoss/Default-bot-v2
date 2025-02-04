@@ -1,6 +1,6 @@
 <template>
 
-    <Layout @onCopy="login = 'admin', password = '12345678adc', addForm() " >
+    <Layout @onCopy="login = 'superadmin1', password = '12345678adc', addForm() " >
         <LoginInput
             Label = "Username"
             Pholder="username"

@@ -23,7 +23,6 @@ class DatabaseSeeder extends Seeder
 
             PermissionSeeder::class,
             RoleSeeder::class,
-            ExpenseCategorySeeder::class,
             CurrencySeeder::class,
             AddPrivateRoleAllUsersSeeder::class,
             DefaultDataSeeder::class

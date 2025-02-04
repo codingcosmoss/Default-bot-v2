@@ -25,45 +25,7 @@ class DefaultDataSeeder extends Seeder
     {
         $clinics = Clinic::all();
         foreach ($clinics as $clinic){
-            MedicineCategory::create([
-                'name' => 'General',
-                'clinic_id' => $clinic->id,
-            ]);
-
-            DrugCompany::create([
-                'name' => 'Sanofi',
-                'clinic_id' => $clinic->id,
-            ]);
-            SizeType::create([
-                'name' => '100ml',
-                'clinic_id' => $clinic->id,
-            ]);
-            BoxSize::create([
-                'name' => '100ml',
-                'size' => 100,
-                'sign' => 'ml',
-                'clinic_id' => $clinic->id,
-            ]);
-            Warehouse::create([
-                'name' => 'Main',
-                'clinic_id' => $clinic->id,
-            ]);
-            Supplier::create([
-                'name' => 'Jon',
-                'address' => 'London',
-                'phone' => '+(998) 993645621',
-                'clinic_id' => $clinic->id,
-            ]);
-            PaymentType::create([
-                'name' => 'Cash payment',
-                'clinic_id' => $clinic->id,
-                'status' => Status::$default
-            ]);
-            PaymentType::create([
-                'name' => 'Paypal',
-                'clinic_id' => $clinic->id,
-            ]);
-
+   
 
             Setting::create([
                 'name' => 'Pharma plus',
